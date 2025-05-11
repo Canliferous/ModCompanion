@@ -1,0 +1,36 @@
+{
+  "name": "mod_companion",
+  "productName": "mod_companion",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "build/main.js",
+  "scripts": {
+    "dev:renderer": "vite",
+    "dev:main": "tsc --watch --project tsconfig.main.json",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "dev": "concurrently -k \"npm:dev:*\""
+  },
+  "keywords": [],
+  "author": {
+    "name": "Stefan Heinz",
+    "email": "stefan.heinz.02@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/fuses": "^1.8.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "36.2.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.31.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  }
+}
