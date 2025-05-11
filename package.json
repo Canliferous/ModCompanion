@@ -10,7 +10,10 @@
     "dev:main": "tsc --watch --project tsconfig.main.json",
     "dev:electron": "cross-env NODE_ENV=development electron .",
     "dev": "concurrently -k \"npm:dev:*\"",
-    "deploy": "node scripts/deploy.js"
+    "build:renderer": "tsc --project tsconfig.main.json",
+    "build:main": "vite build",
+    "build": "concurrently -k \"npm:build:*\"",
+    "deploy": "node scripts/deploy.cjs"
   },
   "keywords": [],
   "author": {

@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'node:path';
+import { app, BrowserWindow } from "electron";
+import path from "node:path";
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -10,25 +10,25 @@ const createWindow = () => {
     },
   });
 
-  // if(process.env.NODE_ENV === "development") {
-    mainWindow.loadURL('http://localhost:5173');
+  if (process.env.NODE_ENV === "development") {
+    mainWindow.loadURL("http://localhost:5173");
     mainWindow.webContents.openDevTools();
-  // } else {
-  //   mainWindow.loadFile(path.join(__dirname, `renderer/index.html`));
-  // }
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `renderer/index.html`));
+  }
 
   mainWindow.webContents.openDevTools();
 };
 
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
