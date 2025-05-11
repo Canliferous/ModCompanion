@@ -1,17 +1,31 @@
 import "./main.css";
+import "@fontsource/inter";
+import "@fontsource-variable/jetbrains-mono";
 
 import { createApp } from "vue";
 import App from "./components/App.vue";
 import ui from "@nuxt/ui/vue-plugin";
-import { createRouter, createWebHistory } from "vue-router";
+import { createPinia } from "pinia";
+import { createMemoryHistory, createRouter } from "vue-router";
+import HomePage from "./components/pages/HomePage.vue";
+import GameAssetsPage from "./components/pages/GameAssetsPage.vue";
+import ContentAssetsPage from "./components/pages/ContentAssetsPage.vue";
+import MapsPage from "./components/pages/MapsPage.vue";
 
+const pinia = createPinia();
 const app = createApp(App);
 
 const router = createRouter({
-  routes: [],
-  history: createWebHistory(),
+  routes: [
+    { path: "/", component: HomePage },
+    { path: "/game-assets", component: GameAssetsPage },
+    { path: "/content-assets", component: ContentAssetsPage },
+    { path: "/maps", component: MapsPage },
+  ],
+  history: createMemoryHistory(),
 });
 
+app.use(pinia);
 app.use(ui);
 app.use(router);
 
