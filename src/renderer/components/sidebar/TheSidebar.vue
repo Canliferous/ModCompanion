@@ -14,14 +14,17 @@
     </div>
 
     <div class="grid gap-1 content-start">
-      <UButton size="small" variant="soft" color="neutral">Game</UButton>
-      <UButton size="small" variant="soft" color="neutral">Game (Dev)</UButton>
-      <UButton size="small" variant="soft" color="neutral"
-        >Game (Tools)</UButton
+      <UButton
+        v-for="btn of launcherButtons"
+        size="small"
+        variant="soft"
+        color="neutral"
       >
-      <UButton size="small" variant="soft" color="neutral">Hammer</UButton>
-      <UButton size="small" variant="soft" color="neutral">Faceposer</UButton>
-      <UButton size="small" variant="soft" color="neutral">HLMV</UButton>
+        <template #leading>
+          <img class="h-4 mx-2" :src="`/icons/${btn.icon}.png`" />
+        </template>
+        {{ btn.name }}
+      </UButton>
     </div>
   </aside>
 </template>
@@ -31,6 +34,12 @@ interface PageButton {
   name: string;
   icon: string;
   route: string;
+}
+
+interface LauncherButton {
+  name: string;
+  icon: string;
+  binary: string;
 }
 
 const pageButtons: PageButton[] = [
@@ -53,6 +62,39 @@ const pageButtons: PageButton[] = [
     name: "Maps",
     icon: "i-bx-map-alt",
     route: "/maps",
+  },
+];
+
+const launcherButtons: LauncherButton[] = [
+  {
+    name: "Game",
+    icon: "revolution",
+    binary: "revolution.exe",
+  },
+  {
+    name: "Game (Dev)",
+    icon: "revolution",
+    binary: "revolution.exe",
+  },
+  {
+    name: "Game (Tools)",
+    icon: "revolution",
+    binary: "revolution.exe",
+  },
+  {
+    name: "Hammer",
+    icon: "hammer",
+    binary: "revolution.exe",
+  },
+  {
+    name: "Faceposer",
+    icon: "faceposer",
+    binary: "revolution.exe",
+  },
+  {
+    name: "HLMV",
+    icon: "hlmv",
+    binary: "revolution.exe",
   },
 ];
 </script>

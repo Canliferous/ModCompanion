@@ -1,37 +1,41 @@
-import { app, BrowserWindow } from "electron";
-import path from "node:path";
+import { initWindowSystem } from "./main/systems/window-system.js";
+import { initConfigSystem } from "./main/systems/config-system.js";
 
-const createWindow = () => {
-  const mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 800,
-    webPreferences: {
-      // preload: path.join(__dirname, 'preload.js'),
-    },
-  });
+type SystemFunction = () => Promise<boolean> | boolean;
+interface System {
+    initFunction: SystemFunction;
+    name: string;
+}
+const systems: System[] = [
+    { name: "Config", initFunction: initConfigSystem },
+    { name: "Window", initFunction: initWindowSystem },
+];
 
-  if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL("http://localhost:5173");
-    mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadFile(path.join(__dirname, `renderer/index.html`));
-  }
+async function startSystems() {
+    console.log("Starting systems...");
 
-  mainWindow.webContents.openDevTools();
-};
+    let success = false;
+    for (const system of systems) {
+        const systemResult = system.initFunction();
 
-app.on("ready", createWindow);
+        success = false;
+        if (typeof systemResult === "boolean") {
+            success = systemResult;
+        } else if (typeof systemResult === "object") {
+            success = await systemResult;
+        }
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+        if (!success) {
+            console.error(`${system.name} System FAIL`);
+            break;
+        } else {
+            console.log(`${system.name} System OK`);
+        }
+    }
 
-app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
+    if (success) {
+        console.log("All systems started successfully!");
+    }
+}
+
+startSystems();
