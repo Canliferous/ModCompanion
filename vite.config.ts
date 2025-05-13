@@ -6,4 +6,7 @@ import ui from "@nuxt/ui/vite";
 export default defineConfig({
     plugins: [vue(), ui()],
     base: "./",
+    build: {
+        outDir: "build/renderer",
+    },
 });

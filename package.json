@@ -13,8 +13,8 @@
     "dev": "concurrently -k -n MAIN,VITE -c green,blue,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
     "build:main": "tsc --project tsconfig.main.json",
     "build:renderer": "vite build",
-    "build": "concurrently -k \"npm:build:*\"",
-    "deploy": "node scripts/deploy.cjs"
+    "build": "npm run build:main & npm run build:renderer",
+    "deploy": "npm run build & node scripts/deploy.cjs"
   },
   "keywords": [],
   "author": {

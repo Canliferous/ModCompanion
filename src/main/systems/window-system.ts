@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const mainRoot = path.join(dirname, "../../");
-const rendererRoot = path.join(dirname, "../../../dist/");
+const rendererRoot = path.join(dirname, "../../renderer/");
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
