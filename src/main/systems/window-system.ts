@@ -1,12 +1,17 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const mainRoot = path.join(dirname, "../../");
+const rendererRoot = path.join(dirname, "../../../dist/");
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 1400,
         height: 800,
         webPreferences: {
-            // preload: path.join(__dirname, 'preload.js'),
+            // preload: path.join(mainRoot, "preload.js"),
         },
     });
 
@@ -14,7 +19,7 @@ function createWindow() {
         mainWindow.loadURL("http://localhost:5173");
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(path.join(__dirname, `renderer/index.html`));
+        mainWindow.loadFile(path.join(rendererRoot, `index.html`));
     }
 
     mainWindow.webContents.openDevTools();
