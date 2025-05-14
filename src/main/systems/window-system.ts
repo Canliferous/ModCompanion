@@ -1,36 +1,17 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Tray, Event, Menu } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const mainRoot = path.join(dirname, "../../");
 const rendererRoot = path.join(dirname, "../../renderer/");
 
-function createWindow() {
-    const mainWindow = new BrowserWindow({
-        width: 1400,
-        height: 800,
-        webPreferences: {
-            // preload: path.join(mainRoot, "preload.js"),
-        },
-    });
-
-    if (process.env.NODE_ENV === "development") {
-        mainWindow.loadURL("http://localhost:5173");
-        mainWindow.webContents.openDevTools();
-    } else {
-        mainWindow.loadFile(path.join(rendererRoot, `index.html`));
-    }
-
-    mainWindow.webContents.openDevTools();
-}
+let window: BrowserWindow | undefined;
+let tray: Tray | undefined;
 
 export function initWindowSystem(): boolean {
-    app.on("window-all-closed", () => {
-        if (process.platform !== "darwin") {
-            app.quit();
-        }
-    });
+    // app.on("window-all-closed", (event) => {
+    //     event.preventDefault();
+    // });
 
     app.on("activate", () => {
         // On OS X it's common to re-create a window in the app when the
@@ -40,11 +21,51 @@ export function initWindowSystem(): boolean {
         }
     });
 
-    if (app.isReady()) {
-        createWindow();
-    } else {
-        app.on("ready", createWindow);
-    }
+    app.whenReady().then(handleReady);
 
     return true;
+}
+
+function handleReady(): void {
+    createTray();
+    createWindow();
+}
+
+function createWindow(): void {
+    window = new BrowserWindow({
+        width: 1400,
+        height: 800,
+        webPreferences: {
+            // preload: path.join(mainRoot, "preload.js"),
+        },
+        icon: path.join(rendererRoot, "icons/mod_companion_192.png"),
+    });
+
+    window.on("close", (event) => {
+        event.preventDefault();
+        window?.hide();
+    });
+
+    if (process.env.NODE_ENV === "development") {
+        window.loadURL("http://localhost:5173");
+        window.webContents.openDevTools();
+    } else {
+        window.loadFile(path.join(rendererRoot, `index.html`));
+    }
+}
+
+function createTray(): void {
+    tray = new Tray(path.join(rendererRoot, "icons/mod_companion_192.png"));
+
+    tray.setToolTip("Mod Companion");
+    tray.setContextMenu(
+        Menu.buildFromTemplate([
+            { label: "Show", click: () => window?.show() },
+            { label: "Quit", click: () => app.exit() },
+        ]),
+    );
+
+    tray.on("click", (event) => {
+        window?.show();
+    });
 }
