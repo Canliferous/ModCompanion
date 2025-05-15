@@ -19,7 +19,7 @@
                 size="small"
                 variant="soft"
                 color="neutral"
-                @click="launchSomething"
+                @click="() => launch(btn.launcherType)"
             >
                 <template #leading>
                     <img class="h-4 mx-2" :src="`./icons/${btn.icon}.png`" />
@@ -31,8 +31,10 @@
 </template>
 
 <script setup lang="ts">
-function launchSomething() {
-    window.electronAPI.launch();
+import { Launchers } from "../../../shared/Launchers.js";
+
+function launch(l: Launchers) {
+    window.electronAPI.launch(l);
 }
 
 interface PageButton {
@@ -45,6 +47,7 @@ interface LauncherButton {
     name: string;
     icon: string;
     binary: string;
+    launcherType: Launchers;
 }
 
 const pageButtons: PageButton[] = [
@@ -75,31 +78,37 @@ const launcherButtons: LauncherButton[] = [
         name: "Game",
         icon: "revolution",
         binary: "revolution.exe",
+        launcherType: "game",
     },
     {
         name: "Game (Dev)",
         icon: "revolution",
         binary: "revolution.exe",
+        launcherType: "game_dev",
     },
     {
         name: "Game (Tools)",
         icon: "revolution",
         binary: "revolution.exe",
+        launcherType: "game_tools",
     },
     {
         name: "Hammer",
         icon: "hammer",
         binary: "revolution.exe",
+        launcherType: "hammer",
     },
     {
         name: "Faceposer",
         icon: "faceposer",
         binary: "revolution.exe",
+        launcherType: "faceposer",
     },
     {
         name: "HLMV",
         icon: "hlmv",
         binary: "revolution.exe",
+        launcherType: "hlmv",
     },
 ];
 </script>

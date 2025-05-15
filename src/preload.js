@@ -4,5 +4,5 @@
 const { ipcRenderer, contextBridge } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
-    launch: () => ipcRenderer.send("launch"),
+    launch: (launcherType) => ipcRenderer.send("launch", launcherType),
 });

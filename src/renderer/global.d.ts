@@ -1,9 +1,11 @@
+import { Launchers } from "../shared/Launchers.js";
+
 export {};
 
 declare global {
     interface Window {
         electronAPI: {
-            launch: () => void;
+            launch: (launcherType: Launchers) => void;
         };
     }
 }
