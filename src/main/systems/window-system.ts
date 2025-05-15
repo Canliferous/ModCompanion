@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const rendererRoot = path.join(dirname, "../../renderer/");
+const mainAssetsRoot = path.join(dirname, "../../main_assets/");
 
 let window: BrowserWindow | undefined;
 let tray: Tray | undefined;
@@ -36,9 +37,11 @@ function createWindow(): void {
         width: 1400,
         height: 800,
         webPreferences: {
-            // preload: path.join(mainRoot, "preload.js"),
+            preload: path.join(dirname, "../..", "preload.js"),
+            contextIsolation: true,
+            nodeIntegration: false,
         },
-        icon: path.join(rendererRoot, "icons/mod_companion_192.png"),
+        icon: path.join(mainAssetsRoot, "mod_companion_192.png"),
     });
 
     window.on("close", (event) => {
@@ -55,7 +58,7 @@ function createWindow(): void {
 }
 
 function createTray(): void {
-    tray = new Tray(path.join(rendererRoot, "icons/mod_companion_192.png"));
+    tray = new Tray(path.join(mainAssetsRoot, "mod_companion_192.png"));
 
     tray.setToolTip("Mod Companion");
     tray.setContextMenu(

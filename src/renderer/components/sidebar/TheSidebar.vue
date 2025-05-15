@@ -14,7 +14,13 @@
         </div>
 
         <div class="grid gap-1 content-start">
-            <UButton v-for="btn of launcherButtons" size="small" variant="soft" color="neutral">
+            <UButton
+                v-for="btn of launcherButtons"
+                size="small"
+                variant="soft"
+                color="neutral"
+                @click="launchSomething"
+            >
                 <template #leading>
                     <img class="h-4 mx-2" :src="`./icons/${btn.icon}.png`" />
                 </template>
@@ -25,6 +31,10 @@
 </template>
 
 <script setup lang="ts">
+function launchSomething() {
+    window.electronAPI.launch();
+}
+
 interface PageButton {
     name: string;
     icon: string;

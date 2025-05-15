@@ -7,5 +7,6 @@
     "moduleResolution": "nodenext",
     "strict": true
   },
-  "include": ["src/main.ts", "src/preload.ts", "src/main"]
+  "include": ["src/main.ts", "src/main"],
+
 }
