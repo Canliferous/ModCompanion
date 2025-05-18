@@ -6,6 +6,7 @@ declare global {
     interface Window {
         electronAPI: {
             launch: (launcherType: Launchers) => void;
+            listMapSourceDirs: () => Promise<string[]>;
         };
     }
 }

@@ -1,6 +1,7 @@
 import { registerLauncherApi } from "../api/MainLauncherApi.js";
+import { registerMapScannerApi } from "../api/MainMapScannerApi.js";
 
-const apis: (() => boolean)[] = [registerLauncherApi];
+const apis: (() => boolean)[] = [registerLauncherApi, registerMapScannerApi];
 
 export function initApiSystem(): boolean {
     for (const api of apis) {

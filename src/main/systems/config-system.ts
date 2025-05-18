@@ -34,11 +34,14 @@ export interface AppConfig {
     cubemapArgs: string;
 
     gameName: string;
+
+    mapSourceDirs: string[];
 }
 
 interface ConfigFile {
     root: string;
     searchPath: string;
+    mapSourceDirs: string[];
 }
 
 let config: AppConfig = null!;
@@ -54,41 +57,43 @@ export async function initConfigSystem(): Promise<boolean> {
         return false;
     }
 
-    config = createRevolutionStandardConfig(cfgFile.root, cfgFile.searchPath);
+    config = createRevolutionStandardConfig(cfgFile);
     return true;
 }
 
-export function createRevolutionStandardConfig(rootPath: string, searchPath: string): AppConfig {
+export function createRevolutionStandardConfig(c: ConfigFile): AppConfig {
     return {
-        gameName: searchPath,
-        rootPath: rootPath,
-        contentPath: path.join(rootPath, "content"),
-        gamePath: path.join(rootPath, "game"),
+        gameName: c.searchPath,
+        rootPath: c.root,
+        contentPath: path.join(c.root, "content"),
+        gamePath: path.join(c.root, "game"),
 
-        textureSourcePath: path.join(rootPath, "content", searchPath, "materialsrc"),
-        textureOutputPath: path.join(rootPath, "game", searchPath, "materials"),
-        modelSourcePath: path.join(rootPath, "content", searchPath, "models"),
-        modelOutputPath: path.join(rootPath, "game", searchPath, "models"),
-        mapSourcePath: path.join(rootPath, "content", searchPath, "maps"),
-        mapOutputPath: path.join(rootPath, "game", searchPath, "maps"),
+        textureSourcePath: path.join(c.root, "content", c.searchPath, "materialsrc"),
+        textureOutputPath: path.join(c.root, "game", c.searchPath, "materials"),
+        modelSourcePath: path.join(c.root, "content", c.searchPath, "models"),
+        modelOutputPath: path.join(c.root, "game", c.searchPath, "models"),
+        mapSourcePath: path.join(c.root, "content", c.searchPath, "maps"),
+        mapOutputPath: path.join(c.root, "game", c.searchPath, "maps"),
 
-        studioMdlPath: path.join(rootPath, "game/bin/win64/studiomdl.exe"),
-        hlmvPath: path.join(rootPath, "game/bin/win64/hlmv.exe"),
-        hammerPath: path.join(rootPath, "game/bin/win64/hammer.exe"),
-        faceposerPath: path.join(rootPath, "game/bin/win64/hlfaceposer.exe"),
-        mdlInfoPath: path.join(rootPath, "game/bin/win64/mdlinfo.exe"),
-        gameExePath: path.join(rootPath, "game/bin/win64/revolution.exe"),
+        studioMdlPath: path.join(c.root, "game/bin/win64/studiomdl.exe"),
+        hlmvPath: path.join(c.root, "game/bin/win64/hlmv.exe"),
+        hammerPath: path.join(c.root, "game/bin/win64/hammer.exe"),
+        faceposerPath: path.join(c.root, "game/bin/win64/hlfaceposer.exe"),
+        mdlInfoPath: path.join(c.root, "game/bin/win64/mdlinfo.exe"),
+        gameExePath: path.join(c.root, "game/bin/win64/revolution.exe"),
 
-        vbspExePath: path.join(rootPath, "game/bin/win64/vbsp.exe"),
-        postcompilerExePath: path.join(rootPath, "game/bin/win64/postcompiler/postcompiler.exe"),
-        vvisExePath: path.join(rootPath, "game/bin/win64/vvis.exe"),
-        vradExePath: path.join(rootPath, "game/bin/win64/vrad.exe"),
+        vbspExePath: path.join(c.root, "game/bin/win64/vbsp.exe"),
+        postcompilerExePath: path.join(c.root, "game/bin/win64/postcompiler/postcompiler.exe"),
+        vvisExePath: path.join(c.root, "game/bin/win64/vvis.exe"),
+        vradExePath: path.join(c.root, "game/bin/win64/vrad.exe"),
 
-        vbspArgs: `-game ${searchPath}`,
+        vbspArgs: `-game ${c.searchPath}`,
         postcompilerArgs: "--nopack",
-        vvisArgs: `-game ${searchPath}`,
-        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${searchPath}`,
+        vvisArgs: `-game ${c.searchPath}`,
+        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
+
+        mapSourceDirs: c.mapSourceDirs,
     };
 }
 
