@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] gap-1">
         <div class="flex gap-2">
             <UButton
-                leading-icon="i-bx-plus"
+                :leading-icon="mapDrawerOpen ? 'i-bx-caret-up' : 'i-bx-caret-down'"
                 variant="subtle"
                 label="Add Maps"
                 @click="
@@ -13,15 +13,25 @@
             />
             <UInput placeholder="Search" block v-model="searchTerm" />
         </div>
-        <div class="flex flex-row">
-            <div v-show="mapDrawerOpen" class="p-2 w-80">
-                <UTree :items="drawerTree">
+        <div class="flex flex-row gap-1">
+            <div v-show="mapDrawerOpen" class="w-80 bg-primary/10 border-primary-800 border-1 rounded overflow-y-auto">
+                <UTree
+                    :items="drawerTree"
+                    color="primary"
+                    size="sm"
+                    :ui="{
+                        listWithChildren: 'border-primary-800',
+                        itemWithChildren: 'p-0',
+                        link: 'border-b-1 border-primary-800',
+                    }"
+                >
                     <template #item-trailing="{ item }">
                         <div v-if="isMapTreeItem(item)">
                             <UButton
                                 :class="{ invisible: isMapAdded(item.vmfPath) }"
                                 icon="i-bx-plus"
                                 variant="ghost"
+                                size="sm"
                                 @click="addMap(item.vmfPath)"
                             />
                         </div>

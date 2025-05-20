@@ -1,14 +1,12 @@
 <template>
-  <UApp>
-    <MainLayout>
-      <template #sidebar> <TheSidebar /></template>
-      <template #page>
-        <main>
-          <RouterView />
-        </main>
-      </template>
-    </MainLayout>
-  </UApp>
+    <UApp>
+        <MainLayout>
+            <template #sidebar> <TheSidebar /></template>
+            <template #page>
+                <RouterView />
+            </template>
+        </MainLayout>
+    </UApp>
 </template>
 
 <script setup lang="ts">
