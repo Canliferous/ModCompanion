@@ -3,30 +3,33 @@ import { IpcChannels } from "./IpcChannels.js";
 import { getConfig } from "../systems/config-system.js";
 import fs from "fs/promises";
 import path from "path";
+import { MapSourceDir } from "../../shared/SharedMapTypes.js";
 
 export function registerMapScannerApi(): boolean {
-    ipcMain.on(IpcChannels.ListMapSourceDirs, (event) => {
-        return listMapSourceDirs();
-    });
-
+    ipcMain.handle(IpcChannels.ListMapSourceDirs, listMapSourceDirs);
     return true;
 }
 
-export async function listMapSourceDirs(): Promise<string[]> {
+export async function listMapSourceDirs(): Promise<MapSourceDir[]> {
     const config = getConfig();
 
     const result = await fs.readdir(config.mapSourcePath);
 
-    const dirs: string[] = [];
+    const dirs: MapSourceDir[] = [];
     for (const r of result) {
-        const stat = await fs.stat(path.join(config.mapSourcePath, r));
+        const fullDirPath = path.join(config.mapSourcePath, r);
+        const stat = await fs.stat(fullDirPath);
         if (!stat.isDirectory()) continue;
+        if (!config.mapSourceDirs.includes(r)) continue;
 
-        if (config.mapSourceDirs.includes(r)) {
-            dirs.push(r);
-        }
+        let dirContents = await fs.readdir(fullDirPath);
+        dirContents = dirContents.filter((f) => path.extname(f) === ".vmf");
+        const dir: MapSourceDir = {
+            dirName: r,
+            vmfNames: dirContents,
+        };
+        dirs.push(dir);
     }
 
-    console.log(dirs);
     return dirs;
 }

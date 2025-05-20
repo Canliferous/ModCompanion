@@ -1,15 +1,42 @@
 <template>
     <div>
-        <div class="flex">
+        <div class="flex gap-2">
+            <UButton
+                leading-icon="i-bx-plus"
+                variant="subtle"
+                label="Add Maps"
+                @click="
+                    () => {
+                        mapDrawerOpen = !mapDrawerOpen;
+                    }
+                "
+            />
             <UInput placeholder="Search" block v-model="searchTerm" />
         </div>
-        <UTable
-            :columns="columns"
-            :data="tableItems"
-            :ui="{
-                tbody: 'map-table-tbody',
-            }"
-        />
+        <div class="flex flex-row">
+            <div v-show="mapDrawerOpen" class="p-2 w-80">
+                <UTree :items="drawerTree">
+                    <template #item-trailing="{ item }">
+                        <div v-if="isMapTreeItem(item)">
+                            <UButton
+                                :class="{ invisible: isMapAdded(item.vmfPath) }"
+                                icon="i-bx-plus"
+                                variant="ghost"
+                                @click="addMap(item.vmfPath)"
+                            />
+                        </div>
+                    </template>
+                </UTree>
+            </div>
+            <UTable
+                class="grow"
+                :columns="columns"
+                :data="tableItems"
+                :ui="{
+                    tbody: 'map-table-tbody',
+                }"
+            />
+        </div>
     </div>
 </template>
 
@@ -17,27 +44,52 @@
 import { TableColumn } from "@nuxt/ui/components/Table.vue.js";
 import { MapItem } from "../../model/MapItem.js";
 import UCheckbox from "@nuxt/ui/components/Checkbox.vue";
-import { h, ref } from "vue";
+import { computed, h, ref } from "vue";
 import { useFilter } from "../../composables/useFilter.js";
+import { filename } from "pathe/utils";
+import pathe from "pathe";
+import { TreeItem } from "@nuxt/ui/components/Tree.vue.js";
 
-// window.electronAPI.listMapSourceDirs().then((d) => console.log(d));
+interface MapTreeItem extends TreeItem {
+    // Relative to map source dir
+    vmfPath: string;
+}
+
+function isMapTreeItem(item: TreeItem): item is MapTreeItem {
+    return (item as any).vmfPath !== undefined;
+}
 
 const searchTerm = ref("");
 
-const items = ref([
-    {
-        mapName: "map1",
-        enabled: false,
-    },
-    {
-        mapName: "map2",
-        enabled: false,
-    },
-    {
-        mapName: "map3",
-        enabled: false,
-    },
-] as MapItem[]);
+const mapDrawerOpen = ref(false);
+
+const drawerTree = ref<any[]>([]);
+
+async function loadDrawerTree() {
+    const mapDirs = await window.electronAPI.listMapSourceDirs();
+    drawerTree.value = mapDirs.map<TreeItem>((d) => ({
+        label: d.dirName,
+        children: d.vmfNames.map<MapTreeItem>((m) => ({
+            label: filename(m),
+            vmfPath: pathe.join(d.dirName, m),
+        })),
+    }));
+}
+loadDrawerTree();
+
+const maps = ref(["map1", "map2", "map3"]);
+
+const items = computed(() => maps.value.map<MapItem>((m) => ({ mapName: m, enabled: true })));
+
+function isMapAdded(mapName: string) {
+    return maps.value.includes(mapName);
+}
+
+function addMap(mapName: string) {
+    if (isMapAdded(mapName)) return;
+
+    maps.value.push(mapName);
+}
 
 const columns: TableColumn<MapItem>[] = [
     {
