@@ -51,10 +51,12 @@ function createWindow(): void {
 
     if (process.env.NODE_ENV === "development") {
         window.loadURL("http://localhost:5173");
-        window.webContents.openDevTools();
     } else {
         window.loadFile(path.join(rendererRoot, `index.html`));
     }
+
+    window.removeMenu();
+    window.maximize();
 }
 
 function createTray(): void {
