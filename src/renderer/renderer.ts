@@ -16,13 +16,17 @@ const pinia = createPinia();
 const app = createApp(App);
 
 const router = createRouter({
-  routes: [
-    { path: "/", component: HomePage },
-    { path: "/game-assets", component: GameAssetsPage },
-    { path: "/content-assets", component: ContentAssetsPage },
-    { path: "/maps", component: MapsPage },
-  ],
-  history: createMemoryHistory(),
+    routes: [
+        { path: "/", component: HomePage },
+        { path: "/game-assets", component: GameAssetsPage },
+        { path: "/content-assets", component: ContentAssetsPage },
+        { path: "/maps", component: MapsPage },
+    ],
+    history: createMemoryHistory(),
+});
+
+router.afterEach((to, from, failure) => {
+    localStorage.setItem("last-route", to.fullPath);
 });
 
 app.use(pinia);
@@ -30,3 +34,8 @@ app.use(ui);
 app.use(router);
 
 app.mount("#app");
+
+const lastRoute = localStorage.getItem("last-route");
+if (lastRoute) {
+    router.push(lastRoute);
+}
