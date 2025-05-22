@@ -14,7 +14,7 @@
 
 <style scoped>
 .main-layout {
-    grid-template-columns: 10rem 0.25rem auto;
+    grid-template-columns: 10rem 0.25rem minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
 }
 </style>

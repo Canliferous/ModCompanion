@@ -1,11 +1,13 @@
 <template>
-    <div class="inline-flex gap-1">
+    <div class="h-full inline-flex gap-1">
         <UButton
             icon="i-bx-play"
             :variant="model !== State.Playing ? 'solid' : 'soft'"
             :color="model !== State.Playing ? 'info' : 'neutral'"
             @click="model = State.Playing"
             :disabled="model === State.Playing"
+            size="xl"
+            class="p-0 h-full aspect-square justify-center"
         />
         <UButton
             icon="i-bx-pause"
@@ -13,6 +15,8 @@
             :color="model === State.Playing ? 'info' : 'neutral'"
             @click="model = State.Paused"
             :disabled="model !== State.Playing"
+            size="xl"
+            class="p-0 h-full aspect-square justify-center"
         />
         <UButton
             icon="i-bx-stop"
@@ -20,6 +24,8 @@
             :color="model !== State.Stopped ? 'error' : 'neutral'"
             @click="model = State.Stopped"
             :disabled="model === State.Stopped"
+            size="xl"
+            class="p-0 h-full aspect-square justify-center"
         />
     </div>
 </template>

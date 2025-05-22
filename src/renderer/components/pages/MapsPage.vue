@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] gap-1">
+    <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] grid-cols-1 gap-1">
         <div class="flex gap-2">
             <UButton
                 :leading-icon="mapDrawerOpen ? 'i-bx-caret-up' : 'i-bx-caret-down'"
@@ -52,24 +52,31 @@
                     </template>
                 </UTree>
             </div>
-            <UTable
-                class="grow"
-                :columns="columns"
-                :data="tableItems"
-                :ui="{
-                    tbody: 'map-table-tbody',
-                }"
-            >
-                <template #action-cell="{ row }">
-                    <UButton icon="i-bx-play" color="secondary" variant="soft" />
-                </template>
-                <template #step-bsp-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-                <template #step-post-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-                <template #step-vis-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-                <template #step-rad-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-                <template #step-cubemap-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-                <template #step-summary-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
-            </UTable>
+
+            <div class="grow overflow-x-auto">
+                <UTable
+                    class="h-full"
+                    :columns="columns"
+                    :data="tableItems"
+                    :ui="{
+                        tbody: 'map-table-tbody',
+                    }"
+                >
+                    <template #action-cell="{ row }">
+                        <UButton icon="i-bx-play" color="secondary" variant="soft" />
+                    </template>
+                    <template #step-bsp-cell="{ row }">
+                        <div class="flex justify-center">
+                            <UIcon name="i-lucide-dot" />
+                        </div>
+                    </template>
+                    <template #step-post-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
+                    <template #step-vis-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
+                    <template #step-rad-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
+                    <template #step-cubemap-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
+                    <template #step-summary-cell="{ row }"><UIcon name="i-lucide-dot" /></template>
+                </UTable>
+            </div>
 
             <div v-show="consoleDrawerOpen" class="w-100 bg-secondary/10 border-secondary-800 border-1 rounded"></div>
         </div>
@@ -181,7 +188,7 @@ const columns: TableColumn<MapItem>[] = [
     },
     {
         id: "step-bsp",
-        header: "BSP",
+        header: "VBSP",
     },
     {
         id: "step-post",
@@ -189,19 +196,19 @@ const columns: TableColumn<MapItem>[] = [
     },
     {
         id: "step-vis",
-        header: "VIS",
+        header: "VVIS",
     },
     {
         id: "step-rad",
-        header: "RAD",
+        header: "VRAD",
     },
     {
         id: "step-cubemap",
-        header: "Cubemap",
+        header: "CMAP",
     },
     {
         id: "step-summary",
-        header: "Summary",
+        header: "DONE",
     },
     {
         id: "action",
