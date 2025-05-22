@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Event, Menu } from "electron";
+import { app, BrowserWindow, Tray, Event, Menu, globalShortcut } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "url";
 
@@ -30,6 +30,7 @@ export function initWindowSystem(): boolean {
 function handleReady(): void {
     createTray();
     createWindow();
+    createGlobalShortcuts();
 }
 
 function createWindow(): void {
@@ -51,6 +52,7 @@ function createWindow(): void {
 
     if (process.env.NODE_ENV === "development") {
         window.loadURL("http://localhost:5173");
+        window.webContents.openDevTools();
     } else {
         window.loadFile(path.join(rendererRoot, `index.html`));
     }
@@ -73,4 +75,24 @@ function createTray(): void {
     tray.on("click", (event) => {
         window?.show();
     });
+}
+
+let zoomFactor = 1;
+function createGlobalShortcuts() {
+    globalShortcut.register("Control+=", () => changeZoom(0.1));
+    globalShortcut.register("Control+-", () => changeZoom(-0.1));
+    globalShortcut.register("Control+0", () => resetZoom());
+    globalShortcut.register("Control+num0", () => resetZoom());
+    globalShortcut.register("Control+numadd", () => changeZoom(0.1));
+    globalShortcut.register("Control+numsub", () => changeZoom(-0.1));
+}
+
+function changeZoom(delta: number) {
+    zoomFactor = Math.max(0.1, zoomFactor + delta);
+    window?.webContents.setZoomFactor(zoomFactor);
+}
+
+function resetZoom() {
+    zoomFactor = 1.0;
+    window?.webContents.setZoomFactor(zoomFactor);
 }
