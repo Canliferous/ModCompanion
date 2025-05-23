@@ -10,7 +10,7 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import HomePage from "./components/pages/HomePage.vue";
 import GameAssetsPage from "./components/pages/GameAssetsPage.vue";
 import ContentAssetsPage from "./components/pages/ContentAssetsPage.vue";
-import MapsPage from "./components/pages/MapsPage.vue";
+import MapsPage from "./components/pages/maps/MapsPage.vue";
 
 const pinia = createPinia();
 const app = createApp(App);

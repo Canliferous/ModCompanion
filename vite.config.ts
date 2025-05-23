@@ -4,7 +4,35 @@ import ui from "@nuxt/ui/vite";
 
 // https://vitejs.dev/config
 export default defineConfig({
-    plugins: [vue(), ui({ ui: { button: { slots: { base: "cursor-pointer duration-0" } } } })],
+    plugins: [
+        vue(),
+        ui({
+            ui: {
+                button: { slots: { base: "cursor-pointer duration-0" } },
+                checkbox: { slots: { base: "cursor-pointer" } },
+                icons: {
+                    arrowLeft: "tdesign:arrow-left",
+                    arrowRight: "tdesign:arrow-right",
+                    check: "tdesign:check",
+                    chevronDoubleLeft: "tdesign:chevron-left-double",
+                    chevronDoubleRight: "tdesign:chevron-right-double",
+                    chevronDown: "tdesign:chevron-left",
+                    chevronLeft: "tdesign:chevron-right",
+                    chevronRight: "tdesign:chevron-right",
+                    chevronUp: "tdesign:chevron-up",
+                    close: "tdesign:close",
+                    ellipsis: "tdesign:ellipsis",
+                    external: "tdesign:arrow-right-up",
+                    folder: "tdesign:folder-filled",
+                    folderOpen: "tdesign:folder-open-1-filled",
+                    loading: "tdesign:load",
+                    minus: "tdesign:minus",
+                    plus: "tdesign:plus",
+                    search: "tdesign:search",
+                },
+            },
+        }),
+    ],
     base: "./",
     build: {
         outDir: "build/renderer",

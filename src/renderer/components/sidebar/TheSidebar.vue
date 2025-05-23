@@ -53,22 +53,22 @@ interface LauncherButton {
 const pageButtons: PageButton[] = [
     {
         name: "Home",
-        icon: "i-bxs-home",
+        icon: "tdesign:home",
         route: "/",
     },
     {
         name: "Game Assets",
-        icon: "i-bxs-cube",
+        icon: "tdesign:map-3d",
         route: "/game-assets",
     },
     {
         name: "Content Assets",
-        icon: "i-bx-cube",
+        icon: "tdesign:map-3d-filled",
         route: "/content-assets",
     },
     {
         name: "Maps",
-        icon: "i-bx-map-alt",
+        icon: "tdesign:map",
         route: "/maps",
     },
 ];
