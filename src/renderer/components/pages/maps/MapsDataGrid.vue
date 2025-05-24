@@ -39,8 +39,8 @@
                 <UIcon name="lucide:dot" />
             </div>
             <div class="flex gap-2">
-                <UButton icon="bx:play" color="info" variant="soft" />
-                <UButton icon="bx:minus" color="error" variant="soft" @click="() => handleRemoveRow(map)" />
+                <UButton icon="bx:play" color="info" variant="soft" @click="() => emit('addMapToQueue', map)" />
+                <UButton icon="bx:minus" color="error" variant="soft" @click="() => emit('removeMap', map)" />
             </div>
         </div>
     </div>
@@ -52,6 +52,8 @@ import pathe from "pathe";
 import { filename } from "pathe/utils";
 
 const props = defineProps<{ mapPaths: string[] }>();
+
+const emit = defineEmits<{ (e: "removeMap", mapPath: string): void; (e: "addMapToQueue", mapPath: string): void }>();
 
 const mapDisplayNames = computed(() => {
     let prefix: string | undefined = undefined;
@@ -80,13 +82,6 @@ const mapDisplayNames = computed(() => {
 
     return map;
 });
-
-function handleRemoveRow(filePath: string): void {
-    const idx = props.mapPaths.indexOf(filePath);
-    if (idx < 0) return;
-
-    props.mapPaths.splice(idx, 1);
-}
 </script>
 
 <style scoped></style>

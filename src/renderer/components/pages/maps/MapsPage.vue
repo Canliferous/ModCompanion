@@ -56,7 +56,11 @@
             </div>
 
             <div class="grow overflow-x-auto">
-                <MapsDataGrid :mapPaths="filteredMapPaths" />
+                <MapsDataGrid
+                    :mapPaths="filteredMapPaths"
+                    @remove-map="handleRemoveMap"
+                    @add-map-to-queue="handleAddMapToQueue"
+                />
             </div>
 
             <div v-show="consoleDrawerOpen" class="w-100 bg-secondary/10 border-secondary-800 border-1"></div>
@@ -74,6 +78,7 @@ import { State as PlayPauseStopControlsState } from "../../common/PlayPauseStopC
 import MapsDataGrid from "./MapsDataGrid.vue";
 import { useFilter } from "../../../composables/useFilter.js";
 import { useRemember, useRememberStringArray } from "../../../composables/useRemember.js";
+import { watchDeep } from "@vueuse/core";
 
 interface MapTreeItem extends TreeItem {
     // Relative to map source dir
@@ -82,6 +87,18 @@ interface MapTreeItem extends TreeItem {
 
 function isMapTreeItem(item: TreeItem): item is MapTreeItem {
     return (item as any).vmfPath !== undefined;
+}
+
+function handleRemoveMap(mapPath: string) {
+    const idx = mapPaths.value.indexOf(mapPath);
+    if (idx < 0) return;
+
+    mapPaths.value.splice(idx, 1);
+}
+
+function handleAddMapToQueue(mapPath: string) {
+    console.log("Compiling map", mapPath);
+    window.electronAPI.mapQueueAdd(mapPath);
 }
 
 const searchTerm = ref("");
@@ -122,6 +139,10 @@ onBeforeMount(() => {
     mountMapPath();
     mountMapDrawerOpen();
     mountConsoleDrawerOpen();
+
+    window.electronAPI.subscribeMapQueueUpdated((arg) => {
+        console.log(arg);
+    });
 });
 </script>
 

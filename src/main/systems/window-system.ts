@@ -9,6 +9,10 @@ const mainAssetsRoot = path.join(dirname, "../../main_assets/");
 let window: BrowserWindow | undefined;
 let tray: Tray | undefined;
 
+export function getMainWindow(): BrowserWindow | undefined {
+    return window;
+}
+
 export function initWindowSystem(): boolean {
     // app.on("window-all-closed", (event) => {
     //     event.preventDefault();
