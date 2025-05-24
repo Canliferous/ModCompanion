@@ -8,6 +8,7 @@ declare global {
         electronAPI: {
             launch: (launcherType: Launchers) => void;
             listMapSourceDirs: () => Promise<MapSourceDir[]>;
+            exitApp: () => void;
         };
     }
 }

@@ -8,6 +8,9 @@ export default defineConfig({
         vue(),
         ui({
             ui: {
+                colors: {
+                    primary: "fuchsia",
+                },
                 button: { slots: { base: "cursor-pointer duration-0" } },
                 checkbox: { slots: { base: "cursor-pointer" } },
                 icons: {
@@ -16,15 +19,15 @@ export default defineConfig({
                     check: "tdesign:check",
                     chevronDoubleLeft: "tdesign:chevron-left-double",
                     chevronDoubleRight: "tdesign:chevron-right-double",
-                    chevronDown: "tdesign:chevron-left",
-                    chevronLeft: "tdesign:chevron-right",
+                    chevronDown: "tdesign:chevron-down",
+                    chevronLeft: "tdesign:chevron-left",
                     chevronRight: "tdesign:chevron-right",
                     chevronUp: "tdesign:chevron-up",
                     close: "tdesign:close",
                     ellipsis: "tdesign:ellipsis",
                     external: "tdesign:arrow-right-up",
-                    folder: "tdesign:folder-filled",
-                    folderOpen: "tdesign:folder-open-1-filled",
+                    folder: "tdesign:folder",
+                    folderOpen: "tdesign:folder-open",
                     loading: "tdesign:load",
                     minus: "tdesign:minus",
                     plus: "tdesign:plus",

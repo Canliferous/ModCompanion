@@ -3,6 +3,7 @@
         <div class="flex gap-2">
             <UButton
                 :leading-icon="mapDrawerOpen ? 'tdesign:chevron-up' : 'tdesign:chevron-down'"
+                color="success"
                 variant="subtle"
                 label="Browse"
                 @click="
@@ -30,14 +31,14 @@
             />
         </div>
         <div class="flex flex-row gap-1">
-            <div v-show="mapDrawerOpen" class="w-80 bg-primary/10 border-primary-800 border-1 overflow-y-auto">
+            <div v-show="mapDrawerOpen" class="w-80 bg-success/10 border-success-800 border-1 overflow-y-auto">
                 <UTree
                     :items="drawerTree"
-                    color="primary"
+                    color="success"
                     :ui="{
-                        listWithChildren: 'border-primary-800',
+                        listWithChildren: 'border-success-800',
                         itemWithChildren: 'p-0',
-                        link: 'border-b-1 border-primary-800',
+                        link: 'border-b-1 border-success-800',
                     }"
                 >
                     <template #item-trailing="{ item }">
@@ -47,6 +48,7 @@
                                 icon="tdesign:arrow-right"
                                 variant="ghost"
                                 @click="addMap(item.vmfPath)"
+                                color="success"
                             />
                         </div>
                     </template>
@@ -54,7 +56,7 @@
             </div>
 
             <div class="grow overflow-x-auto">
-                <MapsDataGrid :mapPaths="mapPaths" />
+                <MapsDataGrid :mapPaths="filteredMapPaths" />
             </div>
 
             <div v-show="consoleDrawerOpen" class="w-100 bg-secondary/10 border-secondary-800 border-1"></div>
@@ -63,17 +65,15 @@
 </template>
 
 <script setup lang="ts">
-import { TableColumn } from "@nuxt/ui/components/Table.vue.js";
-import UCheckbox from "@nuxt/ui/components/Checkbox.vue";
-import { computed, h, onBeforeMount, ref } from "vue";
-import { useFilter } from "../../../composables/useFilter.js";
+import { onBeforeMount, ref } from "vue";
 import { filename } from "pathe/utils";
 import pathe from "pathe";
 import { TreeItem } from "@nuxt/ui/components/Tree.vue.js";
-import { watchDeep } from "@vueuse/core";
 import PlayPauseStopControls from "../../common/PlayPauseStopControls.vue";
 import { State as PlayPauseStopControlsState } from "../../common/PlayPauseStopControls.model.js";
 import MapsDataGrid from "./MapsDataGrid.vue";
+import { useFilter } from "../../../composables/useFilter.js";
+import { useRemember, useRememberStringArray } from "../../../composables/useRemember.js";
 
 interface MapTreeItem extends TreeItem {
     // Relative to map source dir
@@ -86,8 +86,9 @@ function isMapTreeItem(item: TreeItem): item is MapTreeItem {
 
 const searchTerm = ref("");
 
-const mapDrawerOpen = ref(false);
-const consoleDrawerOpen = ref(false);
+const { onBeforeMount: mountMapPath, ref: mapPaths } = useRememberStringArray(ref([]), "map-list");
+const { onBeforeMount: mountMapDrawerOpen, ref: mapDrawerOpen } = useRemember(ref(false), "map-drawer-open");
+const { onBeforeMount: mountConsoleDrawerOpen, ref: consoleDrawerOpen } = useRemember(ref(false), "map-console-open");
 
 const drawerTree = ref<any[]>([]);
 
@@ -105,7 +106,7 @@ async function loadDrawerTree() {
 }
 loadDrawerTree();
 
-const mapPaths = ref<string[]>([]);
+const filteredMapPaths = useFilter<string>(mapPaths, (item) => item.toLowerCase(), searchTerm);
 
 function isMapAdded(mapName: string) {
     return mapPaths.value.includes(mapName);
@@ -117,30 +118,10 @@ function addMap(mapName: string) {
     mapPaths.value.push(mapName);
 }
 
-watchDeep(mapPaths, (m) => {
-    localStorage.setItem("maplist", JSON.stringify(m));
-});
-
 onBeforeMount(() => {
-    console.log("Loading maplist from local storage...");
-    const maplistStr = localStorage.getItem("maplist");
-    if (!maplistStr) return;
-
-    const maplistAny = JSON.parse(maplistStr);
-
-    if (!Array.isArray(maplistAny)) {
-        console.warn("Loading maplist from local storage failed: Value is not array");
-        return;
-    }
-
-    const somethingNotString = maplistAny.some((m) => typeof m !== "string");
-    if (somethingNotString) {
-        console.warn("Loading maplist from local storage failed: Some array items are not string");
-        return;
-    }
-
-    mapPaths.value = maplistAny as string[];
-    console.log("Successfully loaded maplist from local storage");
+    mountMapPath();
+    mountMapDrawerOpen();
+    mountConsoleDrawerOpen();
 });
 </script>
 

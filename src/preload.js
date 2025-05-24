@@ -6,4 +6,5 @@ const { ipcRenderer, contextBridge } = require("electron");
 contextBridge.exposeInMainWorld("electronAPI", {
     launch: (launcherType) => ipcRenderer.send("launch", launcherType),
     listMapSourceDirs: () => ipcRenderer.invoke("list_map_source_dirs"),
+    exitApp: () => ipcRenderer.send("exit_app"),
 });

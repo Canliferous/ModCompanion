@@ -12,7 +12,7 @@
         <UButton
             icon="tdesign:pause"
             :variant="model === State.Playing ? 'solid' : 'soft'"
-            :color="model === State.Playing ? 'info' : 'neutral'"
+            :color="model === State.Playing ? 'warning' : 'neutral'"
             @click="model = State.Paused"
             :disabled="model !== State.Playing"
             size="xl"

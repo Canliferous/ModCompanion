@@ -6,6 +6,7 @@
                 variant="soft"
                 color="neutral"
                 active-color="primary"
+                class="border-l-4 active:border-l-primary"
                 :to="btn.route"
                 :leading-icon="btn.icon"
             >
@@ -20,11 +21,18 @@
                 variant="soft"
                 color="neutral"
                 @click="() => launch(btn.launcherType)"
+                :label="btn.name"
             >
                 <template #leading>
                     <img class="h-4 mx-2" :src="`./icons/${btn.icon}.png`" />
                 </template>
-                {{ btn.name }}
+            </UButton>
+
+            <USeparator />
+            <UButton size="small" variant="soft" color="neutral" label="Quit Sibelius" @click="() => quit()">
+                <template #leading>
+                    <UIcon class="h-4 mx-2" name="tdesign:close-rectangle-filled" />
+                </template>
             </UButton>
         </div>
     </aside>
@@ -35,6 +43,10 @@ import { Launchers } from "../../../shared/Launchers.js";
 
 function launch(l: Launchers) {
     window.electronAPI.launch(l);
+}
+
+function quit() {
+    window.electronAPI.exitApp();
 }
 
 interface PageButton {
@@ -53,22 +65,22 @@ interface LauncherButton {
 const pageButtons: PageButton[] = [
     {
         name: "Home",
-        icon: "tdesign:home",
+        icon: "tdesign:home-filled",
         route: "/",
     },
     {
         name: "Game Assets",
-        icon: "tdesign:map-3d",
+        icon: "tdesign:control-platform-filled",
         route: "/game-assets",
     },
     {
         name: "Content Assets",
-        icon: "tdesign:map-3d-filled",
+        icon: "tdesign:control-platform",
         route: "/content-assets",
     },
     {
         name: "Maps",
-        icon: "tdesign:map",
+        icon: "tdesign:map-3d-filled",
         route: "/maps",
     },
 ];
