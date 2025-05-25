@@ -20,7 +20,7 @@
                 size="small"
                 variant="soft"
                 color="neutral"
-                @click="() => launch(btn.launcherType)"
+                @click="() => launch(btn.launcherType, btn.launcherArgs)"
                 :label="btn.name"
             >
                 <template #leading>
@@ -41,12 +41,12 @@
 <script setup lang="ts">
 import { Launchers } from "../../../shared/Launchers.js";
 
-function launch(l: Launchers) {
-    window.electronAPI.launch(l);
+function launch(launcherType: Launchers, launcherArgs?: string) {
+    window.electronAPI.app.launch(launcherType, launcherArgs);
 }
 
 function quit() {
-    window.electronAPI.exitApp();
+    window.electronAPI.app.exit();
 }
 
 interface PageButton {
@@ -60,6 +60,7 @@ interface LauncherButton {
     icon: string;
     binary: string;
     launcherType: Launchers;
+    launcherArgs?: string;
 }
 
 const pageButtons: PageButton[] = [
@@ -96,13 +97,15 @@ const launcherButtons: LauncherButton[] = [
         name: "Game (Dev)",
         icon: "revolution",
         binary: "revolution.exe",
-        launcherType: "game_dev",
+        launcherType: "game",
+        launcherArgs: "-dev -condebug -novid",
     },
     {
         name: "Game (Tools)",
         icon: "revolution",
         binary: "revolution.exe",
-        launcherType: "game_tools",
+        launcherType: "game",
+        launcherArgs: "-tools",
     },
     {
         name: "Hammer",

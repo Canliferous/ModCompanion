@@ -39,8 +39,28 @@
                 <UIcon name="lucide:dot" />
             </div>
             <div class="flex gap-2">
-                <UButton icon="bx:play" color="info" variant="soft" @click="() => emit('addMapToQueue', map)" />
-                <UButton icon="bx:minus" color="error" variant="soft" @click="() => emit('removeMap', map)" />
+                <UTooltip text="Open in Hammer">
+                    <UButton
+                        icon="famicons:hammer-sharp"
+                        color="info"
+                        variant="soft"
+                        @click="() => handleOpenInHammer(map)"
+                    />
+                </UTooltip>
+                <UTooltip text="Open in Game">
+                    <UButton
+                        icon="tdesign:gamepad-1-filled"
+                        color="info"
+                        variant="soft"
+                        @click="() => handleOpenInGame(map)"
+                    />
+                </UTooltip>
+                <UTooltip text="Compile Now">
+                    <UButton icon="tdesign:play" color="success" variant="soft" @click="() => handleCompileNow(map)" />
+                </UTooltip>
+                <UTooltip text="Remove from list">
+                    <UButton icon="tdesign:minus" color="error" variant="soft" @click="() => emit('removeMap', map)" />
+                </UTooltip>
             </div>
         </div>
     </div>
@@ -50,10 +70,25 @@
 import { computed } from "vue";
 import pathe from "pathe";
 import { filename } from "pathe/utils";
+import { getAppConfig } from "../../../renderer-config.js";
 
 const props = defineProps<{ mapPaths: string[] }>();
 
-const emit = defineEmits<{ (e: "removeMap", mapPath: string): void; (e: "addMapToQueue", mapPath: string): void }>();
+const emit = defineEmits<{
+    (e: "removeMap", mapPath: string): void;
+}>();
+
+function handleCompileNow(mapPath: string) {
+    window.electronAPI.map.enqueue(mapPath);
+}
+function handleOpenInGame(mapPath: string) {
+    const mapName = filename(mapPath);
+    window.electronAPI.app.launch("game", `-dev -condebug +map ${mapName}`);
+}
+function handleOpenInHammer(mapPath: string) {
+    const fullPath = pathe.join(getAppConfig().mapSourcePath, mapPath);
+    window.electronAPI.app.launch("hammer", fullPath);
+}
 
 const mapDisplayNames = computed(() => {
     let prefix: string | undefined = undefined;

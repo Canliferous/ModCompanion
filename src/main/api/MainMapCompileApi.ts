@@ -3,7 +3,7 @@ import { IpcChannels } from "./IpcChannels.js";
 import { getMainWindow } from "../systems/window-system.js";
 
 export function registerMapCompileApi(): boolean {
-    ipcMain.on(IpcChannels.MapQueueAdd, (event, mapPath: string) => addToMapQueue(event, mapPath));
+    ipcMain.on(IpcChannels.MapEnqueue, (event, mapPath: string) => addToMapQueue(event, mapPath));
     return true;
 }
 
@@ -18,5 +18,5 @@ function addToMapQueue(event: IpcMainInvokeEvent, mapPath: string) {
     console.log("Adding map to queue", mapPath);
 
     mapCompileQueue.push(mapPath);
-    getMainWindow()?.webContents.send(IpcChannels.MapQueueAdd, mapCompileQueue);
+    getMainWindow()?.webContents.send(IpcChannels.MapEnqueue, mapCompileQueue);
 }

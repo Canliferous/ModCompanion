@@ -6,7 +6,7 @@ import path from "path";
 import { MapSourceDir } from "../../shared/SharedMapTypes.js";
 
 export function registerMapScannerApi(): boolean {
-    ipcMain.handle(IpcChannels.ListMapSourceDirs, listMapSourceDirs);
+    ipcMain.handle(IpcChannels.MapListSourceDirs, listMapSourceDirs);
     return true;
 }
 

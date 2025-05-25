@@ -1,8 +1,8 @@
 import { ipcMain, app } from "electron";
 import { IpcChannels } from "./IpcChannels.js";
 
-export function registerExitAppApi(): boolean {
-    ipcMain.on(IpcChannels.ExitApp, (event) => {
+export function registerAppExitApi(): boolean {
+    ipcMain.on(IpcChannels.AppExit, (event) => {
         app.exit();
     });
 

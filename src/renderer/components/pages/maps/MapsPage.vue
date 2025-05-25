@@ -56,11 +56,7 @@
             </div>
 
             <div class="grow overflow-x-auto">
-                <MapsDataGrid
-                    :mapPaths="filteredMapPaths"
-                    @remove-map="handleRemoveMap"
-                    @add-map-to-queue="handleAddMapToQueue"
-                />
+                <MapsDataGrid :mapPaths="filteredMapPaths" @remove-map="handleRemoveMap" />
             </div>
 
             <div v-show="consoleDrawerOpen" class="w-100 bg-secondary/10 border-secondary-800 border-1"></div>
@@ -95,10 +91,6 @@ function handleRemoveMap(mapPath: string) {
     mapPaths.value.splice(idx, 1);
 }
 
-function handleAddMapToQueue(mapPath: string) {
-    window.electronAPI.mapQueueAdd(mapPath);
-}
-
 const searchTerm = ref("");
 
 const { onBeforeMount: mountMapPath, ref: mapPaths } = useRememberStringArray(ref([]), "map-list");
@@ -110,7 +102,7 @@ const drawerTree = ref<any[]>([]);
 const compileState = ref<PlayPauseStopControlsState>(PlayPauseStopControlsState.Stopped);
 
 async function loadDrawerTree() {
-    const mapDirs = await window.electronAPI.listMapSourceDirs();
+    const mapDirs = await window.electronAPI.map.listSourceDirs();
     drawerTree.value = mapDirs.map<TreeItem>((d) => ({
         label: d.dirName,
         children: d.vmfNames.map<MapTreeItem>((m) => ({
@@ -138,7 +130,7 @@ onBeforeMount(() => {
     mountMapDrawerOpen();
     mountConsoleDrawerOpen();
 
-    window.electronAPI.subscribeMapQueueUpdated((arg) => {
+    window.electronAPI.map.subscribeQueueUpdated((arg) => {
         console.log(arg);
     });
 });

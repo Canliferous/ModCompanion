@@ -4,12 +4,19 @@
 const { ipcRenderer, contextBridge } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
-    exitApp: () => ipcRenderer.send("exit_app"),
-    launch: (launcherType) => ipcRenderer.send("launch", launcherType),
+    app: {
+        exit: () => ipcRenderer.send("app_exit"),
+        launch: (launcherType, launcherArgs) => ipcRenderer.send("app_launch", launcherType, launcherArgs),
+    },
 
-    // Maps
-    listMapSourceDirs: () => ipcRenderer.invoke("list_map_source_dirs"),
-    mapQueueAdd: (mapPath) => ipcRenderer.send("map_queue_add", mapPath),
-    subscribeMapQueueUpdated: (callback) => ipcRenderer.on("map_queue_updated", (e, v) => callback(v)),
-    // unsubscribeMapQueueUpdated: (callback) => ipcRenderer.off("map_queue_updated", (e, v) => callback(v)),
+    config: {
+        get: () => ipcRenderer.invoke("config_get"),
+    },
+
+    map: {
+        listSourceDirs: () => ipcRenderer.invoke("map_list_source_dirs"),
+        enqueue: (mapPath) => ipcRenderer.send("map_enqueue", mapPath),
+        subscribeQueueUpdated: (callback) => ipcRenderer.on("map_queue_updated", (e, v) => callback(v)),
+        // unsubscribeMapQueueUpdated: (callback) => ipcRenderer.off("map_queue_updated", (e, v) => callback(v)),
+    },
 });

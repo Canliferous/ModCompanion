@@ -5,24 +5,34 @@ import * as child_process from "node:child_process";
 import { getConfig } from "../systems/config-system.js";
 
 export function registerLauncherApi(): boolean {
-    ipcMain.on(IpcChannels.Launch, (event, launcherType: Launchers) => {
-        const config = getConfig();
-        console.log(launcherType);
-        if (launcherType === "game") {
-            child_process.exec(`${config.gameExePath}`);
-        } else if (launcherType === "game_dev") {
-            child_process.exec(`${config.gameExePath} -dev -condebug -novid`);
-        } else if (launcherType === "game_tools") {
-            child_process.exec(`${config.gameExePath} -tools`);
-        } else if (launcherType === "hammer") {
-            console.log(`${config.hammerPath} -game ${config.gameName}`);
-            child_process.exec(`${config.hammerPath} -game ${config.gameName}`);
-        } else if (launcherType === "hlmv") {
-            child_process.exec(`${config.hlmvPath} -game ${config.gameName}`);
-        } else if (launcherType === "faceposer") {
-            child_process.exec(`${config.faceposerPath} -game ${config.gameName}`);
+    ipcMain.on(IpcChannels.AppLaunch, (event, launcherType: Launchers, launcherArgs?: string) => {
+        const exe = getLauncherExe(launcherType);
+        if (!exe) {
+            console.warn("Unknown launcher type", launcherType);
+            return;
+        }
+
+        if (launcherArgs) {
+            child_process.exec(`${exe} ${launcherArgs}`);
+        } else {
+            child_process.exec(exe);
         }
     });
 
     return true;
+}
+
+export function getLauncherExe(launcherType: Launchers): string | undefined {
+    const config = getConfig();
+    if (launcherType === "game") {
+        return config.gameExePath;
+    } else if (launcherType === "hammer") {
+        return config.hammerPath;
+    } else if (launcherType === "hlmv") {
+        return config.hlmvPath;
+    } else if (launcherType === "faceposer") {
+        return config.faceposerPath;
+    }
+
+    return undefined;
 }

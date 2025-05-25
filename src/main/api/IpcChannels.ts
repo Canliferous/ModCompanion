@@ -1,8 +1,8 @@
 export const IpcChannels = {
-    Launch: "launch",
-    ListMapSourceDirs: "list_map_source_dirs",
-    ScanMapSourceDir: "scan_map_source_dir",
-    ExitApp: "exit_app",
-    MapQueueAdd: "map_queue_add",
+    AppLaunch: "app_launch",
+    AppExit: "app_exit",
+    ConfigGet: "config_get",
+    MapListSourceDirs: "map_list_source_dirs",
+    MapEnqueue: "map_enqueue",
     MapQueueUpdated: "map_queue_updated",
 } as const;
