@@ -78,7 +78,6 @@ import { State as PlayPauseStopControlsState } from "../../common/PlayPauseStopC
 import MapsDataGrid from "./MapsDataGrid.vue";
 import { useFilter } from "../../../composables/useFilter.js";
 import { useRemember, useRememberStringArray } from "../../../composables/useRemember.js";
-import { watchDeep } from "@vueuse/core";
 
 interface MapTreeItem extends TreeItem {
     // Relative to map source dir
@@ -97,7 +96,6 @@ function handleRemoveMap(mapPath: string) {
 }
 
 function handleAddMapToQueue(mapPath: string) {
-    console.log("Compiling map", mapPath);
     window.electronAPI.mapQueueAdd(mapPath);
 }
 
