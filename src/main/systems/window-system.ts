@@ -1,6 +1,7 @@
-import { app, BrowserWindow, Tray, Event, Menu, globalShortcut } from "electron";
+import { app, BrowserWindow, Tray, Event, Menu, globalShortcut, Rectangle } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "url";
+import settings from "electron-settings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const rendererRoot = path.join(dirname, "../../renderer/");
@@ -37,10 +38,29 @@ function handleReady(): void {
     createGlobalShortcuts();
 }
 
+interface WindowRect {
+    x?: number;
+    y?: number;
+    width: number;
+    height: number;
+}
+function getSettingsBounds(): WindowRect {
+    const defaultBounds: WindowRect = { width: 1400, height: 800 };
+    const bounds = (settings.getSync("settings.bounds") as Partial<Rectangle>) ?? defaultBounds;
+
+    bounds.width ??= defaultBounds.width;
+    bounds.height ??= defaultBounds.height;
+
+    return bounds as WindowRect;
+}
+
 function createWindow(): void {
+    const bounds = getSettingsBounds();
     window = new BrowserWindow({
-        width: 1400,
-        height: 800,
+        width: bounds.width,
+        height: bounds.height,
+        x: bounds.x,
+        y: bounds.y,
         webPreferences: {
             preload: path.join(dirname, "../..", "preload.js"),
             contextIsolation: true,
@@ -62,7 +82,22 @@ function createWindow(): void {
     }
 
     window.removeMenu();
-    window.maximize();
+
+    if (settings.getSync("window.maximized")) {
+        window.maximize();
+    }
+
+    window.on("maximize", () => settings.set("window.maximized", true));
+    window.on("unmaximize", () => settings.set("window.maximized", false));
+
+    window.on("close", (event) => {
+        console.log(window);
+        const bounds = window?.getBounds();
+        console.log(bounds);
+        if (bounds) {
+            settings.setSync("window.bounds", bounds as any);
+        }
+    });
 }
 
 function createTray(): void {

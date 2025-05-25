@@ -51,6 +51,7 @@
     "async-validator": "^4.2.5",
     "change-case": "^5.4.4",
     "drauu": "^0.4.3",
+    "electron-settings": "^4.0.4",
     "focus-trap": "^7.6.4",
     "idb-keyval": "^6.2.2",
     "jwt-decode": "^4.0.0",
