@@ -1,6 +1,6 @@
-import { initWindowSystem } from "./main/systems/window-system.js";
-import { initConfigSystem } from "./main/systems/config-system.js";
-import { initApiSystem } from "./main/systems/api-system.js";
+import { initWindowSystem } from "./main/systems/MainWindowSystem.js";
+import { initConfigSystem } from "./main/systems/MainConfigSystem.js";
+import { initApiSystem } from "./main/systems/MainApiSystem.js";
 import { app, dialog } from "electron";
 
 type SystemFunction = () => Promise<boolean> | boolean;

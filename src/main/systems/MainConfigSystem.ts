@@ -26,30 +26,31 @@ export async function initConfigSystem(): Promise<boolean> {
 }
 
 export function createRevolutionStandardConfig(c: ConfigFile): AppConfig {
+    const root = path.resolve(c.root);
     return {
         gameName: c.searchPath,
-        rootPath: c.root,
-        contentPath: path.join(c.root, "content"),
-        gamePath: path.join(c.root, "game"),
+        rootPath: root,
+        contentPath: path.join(root, "content"),
+        gamePath: path.join(root, "game"),
 
-        textureSourcePath: path.join(c.root, "content", c.searchPath, "materialsrc"),
-        textureOutputPath: path.join(c.root, "game", c.searchPath, "materials"),
-        modelSourcePath: path.join(c.root, "content", c.searchPath, "models"),
-        modelOutputPath: path.join(c.root, "game", c.searchPath, "models"),
-        mapSourcePath: path.join(c.root, "content", c.searchPath, "maps"),
-        mapOutputPath: path.join(c.root, "game", c.searchPath, "maps"),
+        textureSourcePath: path.join(root, "content", c.searchPath, "materialsrc"),
+        textureOutputPath: path.join(root, "game", c.searchPath, "materials"),
+        modelSourcePath: path.join(root, "content", c.searchPath, "models"),
+        modelOutputPath: path.join(root, "game", c.searchPath, "models"),
+        mapSourcePath: path.join(root, "content", c.searchPath, "maps"),
+        mapOutputPath: path.join(root, "game", c.searchPath, "maps"),
 
-        studioMdlPath: path.join(c.root, "game/bin/win64/studiomdl.exe"),
-        hlmvPath: path.join(c.root, "game/bin/win64/hlmv.exe"),
-        hammerPath: path.join(c.root, "game/bin/win64/hammer.exe"),
-        faceposerPath: path.join(c.root, "game/bin/win64/hlfaceposer.exe"),
-        mdlInfoPath: path.join(c.root, "game/bin/win64/mdlinfo.exe"),
-        gameExePath: path.join(c.root, "game/bin/win64/revolution.exe"),
+        studioMdlPath: path.join(root, "game/bin/win64/studiomdl.exe"),
+        hlmvPath: path.join(root, "game/bin/win64/hlmv.exe"),
+        hammerPath: path.join(root, "game/bin/win64/hammer.exe"),
+        faceposerPath: path.join(root, "game/bin/win64/hlfaceposer.exe"),
+        mdlInfoPath: path.join(root, "game/bin/win64/mdlinfo.exe"),
+        gameExePath: path.join(root, "game/bin/win64/revolution.exe"),
 
-        vbspExePath: path.join(c.root, "game/bin/win64/vbsp.exe"),
-        postcompilerExePath: path.join(c.root, "game/bin/win64/postcompiler/postcompiler.exe"),
-        vvisExePath: path.join(c.root, "game/bin/win64/vvis.exe"),
-        vradExePath: path.join(c.root, "game/bin/win64/vrad.exe"),
+        vbspExePath: path.join(root, "game/bin/win64/vbsp.exe"),
+        postcompilerExePath: path.join(root, "game/bin/win64/postcompiler/postcompiler.exe"),
+        vvisExePath: path.join(root, "game/bin/win64/vvis.exe"),
+        vradExePath: path.join(root, "game/bin/win64/vrad.exe"),
 
         vbspArgs: `-game ${c.searchPath}`,
         postcompilerArgs: "--nopack",

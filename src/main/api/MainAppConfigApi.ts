@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { IpcChannels } from "./IpcChannels.js";
-import { getConfig } from "../systems/config-system.js";
+import { IpcChannels } from "../../shared/IpcChannels.js";
+import { getConfig } from "../systems/MainConfigSystem.js";
 
 export function registerAppConfigApi(): boolean {
     ipcMain.handle(IpcChannels.ConfigGet, (event) => {

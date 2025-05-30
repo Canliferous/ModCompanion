@@ -1,6 +1,6 @@
 import { ipcMain, IpcMainInvokeEvent } from "electron";
-import { IpcChannels } from "./IpcChannels.js";
-import { getMainWindow } from "../systems/window-system.js";
+import { IpcChannels } from "../../shared/IpcChannels.js";
+import { getMainWindow } from "../systems/MainWindowSystem.js";
 
 export function registerMapCompileApi(): boolean {
     ipcMain.on(IpcChannels.MapEnqueue, (event, mapPath: string) => addToMapQueue(event, mapPath));

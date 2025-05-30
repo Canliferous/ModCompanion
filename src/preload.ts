@@ -2,7 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { Launchers } from "./shared/Launchers.js";
-import { IpcChannels } from "./main/api/IpcChannels.js";
+import { IpcChannels } from "./shared/IpcChannels.js";
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
 

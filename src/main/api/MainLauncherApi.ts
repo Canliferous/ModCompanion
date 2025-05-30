@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
-import { IpcChannels } from "./IpcChannels.js";
+import { IpcChannels } from "../../shared/IpcChannels.js";
 import { Launchers } from "../../shared/Launchers.js";
 import * as child_process from "node:child_process";
-import { getConfig } from "../systems/config-system.js";
+import { getConfig } from "../systems/MainConfigSystem.js";
 
 export function registerLauncherApi(): boolean {
     ipcMain.on(IpcChannels.AppLaunch, (event, launcherType: Launchers, launcherArgs?: string) => {

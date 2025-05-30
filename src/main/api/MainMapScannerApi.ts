@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { IpcChannels } from "./IpcChannels.js";
-import { getConfig } from "../systems/config-system.js";
+import { IpcChannels } from "../../shared/IpcChannels.js";
+import { getConfig } from "../systems/MainConfigSystem.js";
 import fs from "fs/promises";
 import path from "path";
 import { MapSourceDir } from "../../shared/SharedMapTypes.js";
