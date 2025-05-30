@@ -18,5 +18,5 @@ function addToMapQueue(event: IpcMainInvokeEvent, mapPath: string) {
     console.log("Adding map to queue", mapPath);
 
     mapCompileQueue.push(mapPath);
-    getMainWindow()?.webContents.send(IpcChannels.MapEnqueue, mapCompileQueue);
+    getMainWindow()?.webContents.send(IpcChannels.MapQueueUpdated, mapCompileQueue);
 }

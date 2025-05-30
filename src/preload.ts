@@ -2,25 +2,26 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { Launchers } from "./shared/Launchers.js";
+import { IpcChannels } from "./main/api/IpcChannels.js";
 
-const { ipcRenderer, contextBridge, IpcRendererEvent } = require("electron");
+import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
-        exit: () => ipcRenderer.send("app_exit"),
+        exit: () => ipcRenderer.send(IpcChannels.AppExit),
         launch: (launcherType: Launchers, launcherArgs: string) =>
-            ipcRenderer.send("app_launch", launcherType, launcherArgs),
+            ipcRenderer.send(IpcChannels.AppLaunch, launcherType, launcherArgs),
     },
 
     config: {
-        get: () => ipcRenderer.invoke("config_get"),
+        get: () => ipcRenderer.invoke(IpcChannels.ConfigGet),
     },
 
     map: {
-        listSourceDirs: () => ipcRenderer.invoke("map_list_source_dirs"),
-        enqueue: (mapPath: string) => ipcRenderer.send("map_enqueue", mapPath),
+        listSourceDirs: () => ipcRenderer.invoke(IpcChannels.MapListSourceDirs),
+        enqueue: (mapPath: string) => ipcRenderer.send(IpcChannels.MapEnqueue, mapPath),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
-            ipcRenderer.on("map_queue_updated", (e: typeof IpcRendererEvent, v: string[]) => callback(v)),
+            ipcRenderer.on(IpcChannels.MapQueueUpdated, (e: IpcRendererEvent, v: string[]) => callback(v)),
         // unsubscribeMapQueueUpdated: (callback) => ipcRenderer.off("map_queue_updated", (e, v) => callback(v)),
     },
 });
