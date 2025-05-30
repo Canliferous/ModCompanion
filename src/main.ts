@@ -1,6 +1,7 @@
 import { initWindowSystem } from "./main/systems/window-system.js";
 import { initConfigSystem } from "./main/systems/config-system.js";
 import { initApiSystem } from "./main/systems/api-system.js";
+import { app, dialog } from "electron";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -40,4 +41,31 @@ async function startSystems() {
     }
 }
 
-startSystems();
+function performPreStartChecks(): boolean {
+    const lock = app.requestSingleInstanceLock();
+    if (!lock) {
+        app.whenReady().then(() => {
+            dialog
+                .showMessageBox({
+                    title: "Mod Companion",
+                    message: "App is already running",
+                })
+                .then(() => {
+                    app.quit();
+                });
+        });
+        return false;
+    }
+
+    return true;
+}
+
+function start() {
+    if (!performPreStartChecks()) {
+        return;
+    }
+
+    startSystems();
+}
+
+start();
