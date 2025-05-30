@@ -7,8 +7,8 @@
             <div class="flex justify-center">POST</div>
             <div class="flex justify-center">VVIS</div>
             <div class="flex justify-center">VRAD</div>
-            <div class="flex justify-center">CUBEMAP</div>
-            <div class="flex justify-center">SUMMARY</div>
+            <div class="flex justify-center">GAME</div>
+            <div class="flex justify-center">DONE</div>
             <div></div>
         </div>
 
@@ -17,7 +17,7 @@
             v-for="map in props.mapPaths"
         >
             <UCheckbox size="lg" />
-            <div class="font-mono">
+            <div class="font-mono text-sm">
                 {{ mapDisplayNames.get(map) }}
             </div>
             <div class="flex justify-center">
