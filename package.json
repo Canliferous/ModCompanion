@@ -6,8 +6,8 @@
   "main": "dist/main.js",
   "type": "module",
   "scripts": {
-    "run-prod": "cross-env electron .",
-    "run-vite": "cross-env NODE_ENV=development electron .",
+    "run-prod": "cross-env electron dist/main.js",
+    "run-vite": "cross-env NODE_ENV=development electron build/main.js",
 
     "dev": "npm run dev:assets & npm run dev:preload & concurrently -k -n MAIN,VITE -c green,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
     "dev:main": "tsc --watch --project tsconfig.main.dev.json",

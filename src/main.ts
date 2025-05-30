@@ -61,6 +61,7 @@ function performPreStartChecks(): boolean {
 }
 
 function start() {
+    app.setName("Mod Companion");
     if (!performPreStartChecks()) {
         return;
     }
