@@ -1,6 +1,6 @@
-import { app, BrowserWindow, Tray, Event, Menu, globalShortcut, Rectangle } from "electron";
+import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 import settings from "electron-settings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));

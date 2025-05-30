@@ -38,6 +38,6 @@ export default defineConfig({
     ],
     base: "./",
     build: {
-        outDir: "build/renderer",
+        outDir: "dist/renderer",
     },
 });

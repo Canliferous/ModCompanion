@@ -8,15 +8,18 @@
   "scripts": {
     "run-prod": "cross-env electron .",
     "run-vite": "cross-env NODE_ENV=development electron .",
-    "dev:main": "npm run prebuild & tsc --watch --project tsconfig.main.json",
+
+    "dev": "npm run dev:assets & npm run dev:preload & concurrently -k -n MAIN,VITE -c green,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
+    "dev:main": "tsc --watch --project tsconfig.main.dev.json",
     "dev:renderer": "vite --clearScreen false",
-    "dev": "concurrently -k -n MAIN,VITE -c green,blue,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
-    "build:main": "npm run prebuild & tsc --project tsconfig.main.json",
+    "dev:assets": "copyfiles ./main_assets/* ./build/",
+    "dev:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./build/preload.js",
+
+    "build": "npm run build:assets & npm run build:preload & npm run build:main & npm run build:renderer",
+    "build:main": "tsc --project tsconfig.main.dist.json",
     "build:renderer": "vite build",
-    "build": "npm run build:main & npm run build:renderer",
-    "prebuild": "npm run prebuild:assets & npm run prebuild:preload",
-    "prebuild:assets": "copyfiles ./main_assets/* ./build/",
-    "prebuild:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./build/preload.js",
+    "build:assets": "copyfiles ./main_assets/* ./dist/",
+    "build:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./dist/preload.js",
     "deploy": "npm run build & node scripts/deploy.cjs"
   },
   "keywords": [],
