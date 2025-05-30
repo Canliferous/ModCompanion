@@ -32,5 +32,5 @@ export interface AppConfig {
 
     gameName: string;
 
-    mapSourceDirs: string[];
+    mapSourceDirs?: string[];
 }

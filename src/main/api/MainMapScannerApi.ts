@@ -13,6 +13,8 @@ export function registerMapScannerApi(): boolean {
 export async function listMapSourceDirs(): Promise<MapSourceDir[]> {
     const config = getConfig();
 
+    if (config.mapSourceDirs === undefined || config.mapSourceDirs.length === 0) return [];
+
     const result = await fs.readdir(config.mapSourcePath);
 
     const dirs: MapSourceDir[] = [];

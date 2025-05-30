@@ -3,9 +3,9 @@ import fs from "fs/promises";
 import { AppConfig } from "../../shared/AppConfig.js";
 
 interface ConfigFile {
-    root: string;
-    searchPath: string;
-    mapSourceDirs: string[];
+    root?: string;
+    searchPath?: string;
+    mapSourceDirs?: string[];
 }
 
 let config: AppConfig = null!;
@@ -21,11 +21,21 @@ export async function initConfigSystem(): Promise<boolean> {
         return false;
     }
 
-    config = createRevolutionStandardConfig(cfgFile);
+    const cfg = createRevolutionStandardConfig(cfgFile);
+    if (!cfg) return false;
+
+    config = cfg;
     return true;
 }
 
-export function createRevolutionStandardConfig(c: ConfigFile): AppConfig {
+export function createRevolutionStandardConfig(c: ConfigFile): AppConfig | undefined {
+    if (!c.root) {
+        return undefined;
+    }
+    if (!c.searchPath) {
+        return undefined;
+    }
+
     const root = path.resolve(c.root);
     return {
         gameName: c.searchPath,
