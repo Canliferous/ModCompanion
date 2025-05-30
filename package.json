@@ -3,7 +3,7 @@
   "productName": "Mod Companion",
   "version": "1.0.0",
   "description": "Source Engine Modding Tool",
-  "main": "build/main.js",
+  "main": "dist/main.js",
   "type": "module",
   "scripts": {
     "run-prod": "cross-env electron .",

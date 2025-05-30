@@ -7,11 +7,11 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const rendererRoot = path.join(dirname, "../../renderer/");
 const mainAssetsRoot = path.join(dirname, "../../main_assets/");
 
-let window: BrowserWindow | undefined;
+let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;
 
 export function getMainWindow(): BrowserWindow | undefined {
-    return window;
+    return mainWindow;
 }
 
 export function initWindowSystem(): boolean {
@@ -56,7 +56,7 @@ function getSettingsBounds(): WindowRect {
 
 function createWindow(): void {
     const bounds = getSettingsBounds();
-    window = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: bounds.width,
         height: bounds.height,
         x: bounds.x,
@@ -69,31 +69,30 @@ function createWindow(): void {
         icon: path.join(mainAssetsRoot, "mod_companion_192.png"),
     });
 
-    window.on("close", (event) => {
+    mainWindow.on("close", (event) => {
         event.preventDefault();
-        window?.hide();
+        mainWindow?.hide();
     });
 
     if (process.env.NODE_ENV === "development") {
-        window.loadURL("http://localhost:5173");
-        window.webContents.openDevTools();
+        mainWindow.loadURL("http://localhost:5173");
+        mainWindow.webContents.openDevTools();
     } else {
-        window.loadFile(path.join(rendererRoot, `index.html`));
+        mainWindow.loadFile(path.join(rendererRoot, `index.html`));
     }
 
-    window.removeMenu();
+    mainWindow.removeMenu();
 
     if (settings.getSync("window.maximized")) {
-        window.maximize();
+        mainWindow.maximize();
     }
 
-    window.on("maximize", () => settings.set("window.maximized", true));
-    window.on("unmaximize", () => settings.set("window.maximized", false));
+    mainWindow.on("maximize", () => settings.set("window.maximized", true));
+    mainWindow.on("unmaximize", () => settings.set("window.maximized", false));
 
-    window.on("close", (event) => {
-        console.log(window);
-        const bounds = window?.getBounds();
-        console.log(bounds);
+    // TODO: This doesnt work
+    mainWindow.on("close", (event) => {
+        const bounds = mainWindow?.getBounds();
         if (bounds) {
             settings.setSync("window.bounds", bounds as any);
         }
@@ -106,13 +105,13 @@ function createTray(): void {
     tray.setToolTip("Mod Companion");
     tray.setContextMenu(
         Menu.buildFromTemplate([
-            { label: "Show", click: () => window?.show() },
+            { label: "Show", click: () => mainWindow?.show() },
             { label: "Quit", click: () => app.exit() },
         ]),
     );
 
     tray.on("click", (event) => {
-        window?.show();
+        mainWindow?.show();
     });
 }
 
@@ -124,14 +123,24 @@ function createGlobalShortcuts() {
     globalShortcut.register("Control+num0", () => resetZoom());
     globalShortcut.register("Control+numadd", () => changeZoom(0.1));
     globalShortcut.register("Control+numsub", () => changeZoom(-0.1));
+
+    if (process.env.NODE_ENV !== "development") {
+        mainWindow?.webContents.on("before-input-event", (event, input) => {
+            if (input.key.toLowerCase() === "f12") {
+                event.preventDefault();
+                mainWindow?.webContents.toggleDevTools();
+            }
+        });
+    }
 }
 
 function changeZoom(delta: number) {
+    console.log("Change zoom", delta);
     zoomFactor = Math.max(0.1, zoomFactor + delta);
-    window?.webContents.setZoomFactor(zoomFactor);
+    mainWindow?.webContents.setZoomFactor(zoomFactor);
 }
 
 function resetZoom() {
     zoomFactor = 1.0;
-    window?.webContents.setZoomFactor(zoomFactor);
+    mainWindow?.webContents.setZoomFactor(zoomFactor);
 }
