@@ -14,7 +14,7 @@
 
         <div
             class="grid col-span-full grid-cols-subgrid p-2 items-center border-b-1 border-accented"
-            v-for="map in props.mapPaths"
+            v-for="map in listStore.filteredMapPaths"
         >
             <UCheckbox size="lg" />
             <div class="font-mono text-sm">
@@ -56,10 +56,22 @@
                     />
                 </UTooltip>
                 <UTooltip text="Compile Now">
-                    <UButton icon="tdesign:play" color="success" variant="soft" @click="() => handleCompileNow(map)" />
+                    <UButton
+                        icon="tdesign:play"
+                        variant="soft"
+                        @click="() => handleCompileNow(map)"
+                        :color="mapQueue.includes(map) ? 'neutral' : 'success'"
+                        :disabled="mapQueue.includes(map)"
+                    />
                 </UTooltip>
                 <UTooltip text="Remove from list">
-                    <UButton icon="tdesign:minus" color="error" variant="soft" @click="() => emit('removeMap', map)" />
+                    <UButton
+                        icon="tdesign:minus"
+                        variant="soft"
+                        @click="() => listStore.removeMap(map)"
+                        :color="hasQueue ? 'neutral' : 'error'"
+                        :disabled="hasQueue"
+                    />
                 </UTooltip>
             </div>
         </div>
@@ -67,16 +79,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import pathe from "pathe";
 import { filename } from "pathe/utils";
 import { getAppConfig } from "../../../renderer-config.js";
+import { useMapListStore } from "../../../store/MapListStore.js";
 
-const props = defineProps<{ mapPaths: string[] }>();
+const listStore = useMapListStore();
 
-const emit = defineEmits<{
-    (e: "removeMap", mapPath: string): void;
-}>();
+const mapQueue = ref<string[]>([]);
+const hasQueue = computed(() => mapQueue.value.length > 0);
+
+onBeforeMount(() => {
+    window.electronAPI.map.subscribeQueueUpdated((arg) => {
+        mapQueue.value = arg;
+    });
+});
 
 function handleCompileNow(mapPath: string) {
     window.electronAPI.map.enqueue(mapPath);
@@ -94,7 +112,7 @@ const mapDisplayNames = computed(() => {
     let prefix: string | undefined = undefined;
     let addPrefix = false;
 
-    for (const p of props.mapPaths) {
+    for (const p of listStore.mapPaths) {
         const dirName = pathe.dirname(p);
         if (prefix === undefined) {
             prefix = dirName;
@@ -105,7 +123,7 @@ const mapDisplayNames = computed(() => {
     }
 
     const map = new Map<string, string>();
-    for (const p of props.mapPaths) {
+    for (const p of listStore.mapPaths) {
         const fileName = filename(p) ?? "";
         if (addPrefix) {
             const dirName = pathe.dirname(p);

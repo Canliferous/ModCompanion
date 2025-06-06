@@ -21,7 +21,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
         listSourceDirs: () => ipcRenderer.invoke(IpcChannels.MapListSourceDirs),
         enqueue: (mapPath: string) => ipcRenderer.send(IpcChannels.MapEnqueue, mapPath),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
-            ipcRenderer.on(IpcChannels.MapQueueUpdated, (e: IpcRendererEvent, v: string[]) => callback(v)),
+            ipcRenderer.on(IpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
+        subscribeCompileLog: (callback: (log: string) => void) =>
+            ipcRenderer.on(IpcChannels.MapCompileLog, (e: IpcRendererEvent, log: string) => callback(log)),
         // unsubscribeMapQueueUpdated: (callback) => ipcRenderer.off("map_queue_updated", (e, v) => callback(v)),
     },
 });

@@ -18,7 +18,8 @@ declare global {
             map: {
                 listSourceDirs: () => Promise<MapSourceDir[]>;
                 enqueue: (mapPath: string) => void;
-                subscribeQueueUpdated: (callback: (arg: any) => void) => IpcRenderer;
+                subscribeQueueUpdated: (callback: (queue: string[]) => void) => IpcRenderer;
+                subscribeCompileLog: (callback: (log: string) => void) => IpcRenderer;
             };
         };
     }

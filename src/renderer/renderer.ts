@@ -13,6 +13,8 @@ import ContentAssetsPage from "./components/pages/ContentAssetsPage.vue";
 import MapsPage from "./components/pages/maps/MapsPage.vue";
 import { initVue } from "./renderer-vue.js";
 import { initConfig } from "./renderer-config.js";
+import { initMonaco } from "./renderer-monaco.js";
 
 initConfig();
+initMonaco();
 initVue();

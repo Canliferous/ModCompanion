@@ -1,22 +1,17 @@
 import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { IpcChannels } from "../../shared/IpcChannels.js";
 import { getMainWindow } from "../systems/MainWindowSystem.js";
+import { enqueueMap, getMapQueue } from "../systems/MainMapCompileSystem.js";
 
 export function registerMapCompileApi(): boolean {
-    ipcMain.on(IpcChannels.MapEnqueue, (event, mapPath: string) => addToMapQueue(event, mapPath));
+    ipcMain.on(IpcChannels.MapEnqueue, (event, mapPath: string) => enqueueMap(mapPath));
     return true;
 }
 
-const mapCompileQueue: string[] = [];
+export function notifyQueueUpdated() {
+    getMainWindow()?.webContents.send(IpcChannels.MapQueueUpdated, getMapQueue());
+}
 
-function addToMapQueue(event: IpcMainInvokeEvent, mapPath: string) {
-    if (mapCompileQueue.includes(mapPath)) {
-        console.warn(`Map ${mapPath} is already in queue`);
-        return;
-    }
-
-    console.log("Adding map to queue", mapPath);
-
-    mapCompileQueue.push(mapPath);
-    getMainWindow()?.webContents.send(IpcChannels.MapQueueUpdated, mapCompileQueue);
+export function notifyCompileLog(log: string) {
+    getMainWindow()?.webContents.send(IpcChannels.MapCompileLog, log);
 }

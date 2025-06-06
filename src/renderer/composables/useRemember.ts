@@ -2,39 +2,36 @@ import { Ref, watch } from "vue";
 import { watchDeep } from "@vueuse/core";
 
 export function useRemember<T>(ref: Ref<T>, keyName: string) {
-    const onBeforeMount = () => {
-        const val = localStorage.getItem(keyName);
-        if (val === null) return;
+    const val = localStorage.getItem(keyName);
+    if (val === null) return ref;
 
-        ref.value = JSON.parse(val);
-    };
+    ref.value = JSON.parse(val);
+
     watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 
-    return { onBeforeMount, ref };
+    return ref;
 }
 
 export function useRememberStringArray(ref: Ref<string[]>, keyName: string) {
-    const onBeforeMount = () => {
-        const arrStr = localStorage.getItem(keyName);
-        if (!arrStr) return;
+    const arrStr = localStorage.getItem(keyName);
+    if (!arrStr) return ref;
 
-        const arrAny = JSON.parse(arrStr);
+    const arrAny = JSON.parse(arrStr);
 
-        if (!Array.isArray(arrAny)) {
-            console.warn(`Loading ${keyName} from local storage failed: Value is not array`);
-            return;
-        }
+    if (!Array.isArray(arrAny)) {
+        console.warn(`Loading ${keyName} from local storage failed: Value is not array`);
+        return ref;
+    }
 
-        const somethingNotString = arrAny.some((m) => typeof m !== "string");
-        if (somethingNotString) {
-            console.warn(`Loading ${keyName} from local storage failed: Some array items are not string`);
-            return;
-        }
+    const somethingNotString = arrAny.some((m) => typeof m !== "string");
+    if (somethingNotString) {
+        console.warn(`Loading ${keyName} from local storage failed: Some array items are not string`);
+        return ref;
+    }
 
-        ref.value = arrAny as string[];
-    };
+    ref.value = arrAny as string[];
 
     watchDeep(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 
-    return { onBeforeMount, ref };
+    return ref;
 }

@@ -5,4 +5,5 @@ export const IpcChannels = {
     MapListSourceDirs: "map_list_source_dirs",
     MapEnqueue: "map_enqueue",
     MapQueueUpdated: "map_queue_updated",
+    MapCompileLog: "map_compile_log",
 } as const;

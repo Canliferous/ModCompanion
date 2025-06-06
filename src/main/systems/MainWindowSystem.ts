@@ -120,14 +120,14 @@ function createGlobalShortcuts() {
     globalShortcut.register("Control+numadd", () => changeZoom(0.1));
     globalShortcut.register("Control+numsub", () => changeZoom(-0.1));
 
-    if (process.env.NODE_ENV !== "development") {
-        mainWindow?.webContents.on("before-input-event", (event, input) => {
-            if (input.key.toLowerCase() === "f12") {
-                event.preventDefault();
-                mainWindow?.webContents.toggleDevTools();
-            }
-        });
-    }
+    // if (process.env.NODE_ENV !== "development") {
+    mainWindow?.webContents.on("before-input-event", (event, input) => {
+        if (input.key.toLowerCase() === "f12") {
+            event.preventDefault();
+            mainWindow?.webContents.toggleDevTools();
+        }
+    });
+    // }
 }
 
 function changeZoom(delta: number) {
