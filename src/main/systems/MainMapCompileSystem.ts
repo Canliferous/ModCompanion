@@ -1,5 +1,6 @@
 import { notifyCompileLog, notifyQueueUpdated } from "../api/MainMapCompileApi.js";
 import { MapCompilerAction, runVBsp, runVRad, runVVis } from "../launcher/MainMapCompilerLaunchers.js";
+import { MapCompileLogEventType } from "../../shared/MapCompileLogEvent.js";
 
 enum CompileState {
     Idle,
@@ -107,29 +108,22 @@ function _workMap(mapPath: string, steps: CompileStep[]) {
 }
 
 function _startStep(mapPath: string, stepIdx: number) {
-    stdOutBuffer = "";
-    stdErrBuffer = "";
-
     const step = mapQueueSteps.get(mapPath)![stepIdx];
     console.log("Starting step", step);
-    currentCompilePromise = step.action(mapPath, _handleStdOut, _handleStdErr);
+
+    notifyCompileLog({ type: MapCompileLogEventType.Clear, mapPath });
+    currentCompilePromise = step.action(
+        mapPath,
+        (msg: string) => {
+            notifyCompileLog({ type: MapCompileLogEventType.AppendMessage, mapPath, message: msg });
+        },
+        (msg: string) => {
+            notifyCompileLog({ type: MapCompileLogEventType.AppendError, mapPath, message: msg });
+        },
+    );
     step.state = CompileState.InProgress;
 
     currentCompilePromise.then((success) => {
         currentCompilePromise = undefined;
     });
-}
-
-let stdOutBuffer = "";
-let stdErrBuffer = "";
-function _handleStdOut(msg: string) {
-    stdOutBuffer += msg;
-    console.log(msg);
-    notifyCompileLog(msg);
-}
-
-function _handleStdErr(msg: string) {
-    stdErrBuffer += msg;
-    console.log(msg);
-    notifyCompileLog(msg);
 }

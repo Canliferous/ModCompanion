@@ -1,9 +1,15 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { State as PlayPauseStopControlsState } from "../components/common/PlayPauseStopControls.model.js";
+import { State, State as PlayPauseStopControlsState } from "../components/common/PlayPauseStopControls.model.js";
 
 export const useMapCompileStore = defineStore("map-compile", () => {
     const state = ref<PlayPauseStopControlsState>(PlayPauseStopControlsState.Stopped);
 
-    return { state };
+    function compileNow(mapPath: string) {
+        if (state.value !== State.Stopped) return;
+
+        window.electronAPI.map.enqueue(mapPath);
+    }
+
+    return { state, compileNow };
 });

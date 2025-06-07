@@ -13,8 +13,10 @@
         </div>
 
         <div
-            class="grid col-span-full grid-cols-subgrid p-2 items-center border-b-1 border-accented"
             v-for="map in listStore.filteredMapPaths"
+            class="grid col-span-full grid-cols-subgrid p-2 items-center border-b-1 border-accented"
+            :class="{ 'bg-neutral-500/10': listStore.selectedMap === map }"
+            @click="() => listStore.selectMap(map)"
         >
             <UCheckbox size="lg" />
             <div class="font-mono text-sm">
@@ -59,7 +61,7 @@
                     <UButton
                         icon="tdesign:play"
                         variant="soft"
-                        @click="() => handleCompileNow(map)"
+                        @click="() => compileStore.compileNow(map)"
                         :color="mapQueue.includes(map) ? 'neutral' : 'success'"
                         :disabled="mapQueue.includes(map)"
                     />
@@ -84,8 +86,10 @@ import pathe from "pathe";
 import { filename } from "pathe/utils";
 import { getAppConfig } from "../../../renderer-config.js";
 import { useMapListStore } from "../../../store/MapListStore.js";
+import { useMapCompileStore } from "../../../store/MapCompileStore.js";
 
 const listStore = useMapListStore();
+const compileStore = useMapCompileStore();
 
 const mapQueue = ref<string[]>([]);
 const hasQueue = computed(() => mapQueue.value.length > 0);
@@ -96,9 +100,6 @@ onBeforeMount(() => {
     });
 });
 
-function handleCompileNow(mapPath: string) {
-    window.electronAPI.map.enqueue(mapPath);
-}
 function handleOpenInGame(mapPath: string) {
     const mapName = filename(mapPath);
     window.electronAPI.app.launch("game", `-dev -condebug +map ${mapName}`);

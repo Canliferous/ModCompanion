@@ -23,7 +23,6 @@
 import PlayPauseStopControls from "../../common/PlayPauseStopControls.vue";
 import MapsDataGrid from "./MapsDataGrid.vue";
 import { useMapListStore } from "../../../store/MapListStore.js";
-import { useMapConsoleStore } from "../../../store/MapConsoleStore.js";
 import ToggleMapDrawerButton from "./ToggleMapDrawerButton.vue";
 import ToggleMapConsoleButton from "./ToggleMapConsoleButton.vue";
 import MapsDrawer from "./MapsDrawer.vue";
