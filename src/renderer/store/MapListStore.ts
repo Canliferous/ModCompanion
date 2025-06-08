@@ -11,7 +11,6 @@ export const useMapListStore = defineStore("map-list", () => {
     const mapQueue = ref<string[]>([]);
 
     function selectMap(mapPath: string | undefined) {
-        console.log(mapPath);
         selectedMap.value = mapPath;
     }
 

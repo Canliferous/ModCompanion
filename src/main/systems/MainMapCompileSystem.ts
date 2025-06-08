@@ -100,7 +100,6 @@ function _workMap(mapPath: string, steps: MapCompileStepStage[]) {
 
 function _startStage(mapPath: string, stageIdx: number) {
     const stage = mapQueueStages.get(mapPath)![stageIdx];
-    console.log("Starting stage", stage);
 
     notifyCompileLog({ type: SharedMapCompileLogEventType.Clear, mapPath });
     currentCompilePromise = stage.action(
