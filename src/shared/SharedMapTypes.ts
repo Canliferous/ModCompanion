@@ -1,4 +1,4 @@
-export interface MapSourceDir {
+export interface SharedMapSourceDir {
     dirName: string;
     vmfNames: string[];
 }

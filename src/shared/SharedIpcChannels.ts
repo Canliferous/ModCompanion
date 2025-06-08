@@ -7,4 +7,5 @@ export const SharedIpcChannels = {
     MapQueueUpdated: "map_queue_updated",
     MapCompileLog: "map_compile_log",
     MapCompileProgress: "map_compile_progress",
+    MapCreateTimeReport: "map_create_time_report",
 } as const;

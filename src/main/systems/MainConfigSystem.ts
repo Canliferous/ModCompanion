@@ -62,10 +62,10 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
         vvisExePath: path.join(root, "game/bin/win64/vvis.exe"),
         vradExePath: path.join(root, "game/bin/win64/vrad.exe"),
 
-        vbspArgs: `-game ${c.searchPath}`,
+        vbspArgs: `-report -game ${c.searchPath}`,
         postcompilerArgs: "--nopack",
-        vvisArgs: `-game ${c.searchPath}`,
-        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
+        vvisArgs: `-report -game ${c.searchPath}`,
+        vradArgs: `-report -PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
         mapSourceDirs: c.mapSourceDirs,

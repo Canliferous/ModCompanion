@@ -3,21 +3,21 @@ import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import fs from "fs/promises";
 import path from "path";
-import { MapSourceDir } from "../../shared/SharedMapTypes.js";
+import { SharedMapSourceDir } from "../../shared/SharedMapTypes.js";
 
 export function registerMapScannerApi(): boolean {
     ipcMain.handle(SharedIpcChannels.MapListSourceDirs, listMapSourceDirs);
     return true;
 }
 
-export async function listMapSourceDirs(): Promise<MapSourceDir[]> {
+export async function listMapSourceDirs(): Promise<SharedMapSourceDir[]> {
     const config = getConfig();
 
     if (config.mapSourceDirs === undefined || config.mapSourceDirs.length === 0) return [];
 
     const result = await fs.readdir(config.mapSourcePath);
 
-    const dirs: MapSourceDir[] = [];
+    const dirs: SharedMapSourceDir[] = [];
     for (const r of result) {
         const fullDirPath = path.join(config.mapSourcePath, r);
         const stat = await fs.stat(fullDirPath);
@@ -26,7 +26,7 @@ export async function listMapSourceDirs(): Promise<MapSourceDir[]> {
 
         let dirContents = await fs.readdir(fullDirPath);
         dirContents = dirContents.filter((f) => path.extname(f) === ".vmf");
-        const dir: MapSourceDir = {
+        const dir: SharedMapSourceDir = {
             dirName: r,
             vmfNames: dirContents,
         };

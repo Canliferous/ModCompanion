@@ -1,9 +1,12 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
-import { MapSourceDir } from "../shared/SharedMapTypes.js";
-import { IpcRenderer } from "electron";
+import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
+import { ipcRenderer, IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
+import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
+import { SharedMapPath } from "../shared/SharedMapPath.js";
+import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
 
 export {};
 
@@ -18,11 +21,12 @@ declare global {
                 get: () => Promise<SharedAppConfig>;
             };
             map: {
-                listSourceDirs: () => Promise<MapSourceDir[]>;
+                listSourceDirs: () => Promise<SharedMapSourceDir[]>;
                 enqueue: (mapPath: string) => void;
                 subscribeQueueUpdated: (callback: (queue: string[]) => void) => IpcRenderer;
                 subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) => IpcRenderer;
                 subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) => IpcRenderer;
+                createTimeReport: (maps: SharedMapPath[]) => Promise<SharedMapTimeReport>;
             };
         };
     }

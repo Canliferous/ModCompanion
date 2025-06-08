@@ -8,12 +8,24 @@
         <div class="font-mono text-sm">
             {{ mapDisplayNames.get(map) }}
         </div>
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VBsp" />
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Post" />
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VVis" />
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VRad" />
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Game" />
-        <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Done" />
+
+        <div v-if="!timeReportStore.showReport" class="grid grid-cols-subgrid col-span-6">
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VBsp" />
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Post" />
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VVis" />
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.VRad" />
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Game" />
+            <MapsDataGridProgressCell :map-path="map" :step="SharedMapCompileStep.Done" />
+        </div>
+        <div v-else class="grid grid-cols-subgrid col-span-6">
+            <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VBsp" />
+            <div />
+            <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VVis" />
+            <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VRad" />
+            <div />
+            <div />
+        </div>
+
         <div class="flex gap-2">
             <UTooltip text="Open in Hammer">
                 <UButton
@@ -62,9 +74,12 @@ import { computed } from "vue";
 import { useMapCompileStore } from "../../../store/MapCompileStore.js";
 import MapsDataGridProgressCell from "./MapsDataGridProgressCell.vue";
 import { SharedMapCompileStep } from "../../../../shared/SharedMapCompile.js";
+import { useMapTimeReportStore } from "../../../store/MapTimeReportStore.js";
+import MapsDataGridTimeReportCell from "./MapsDataGridTimeReportCell.vue";
 
 const listStore = useMapListStore();
 const compileStore = useMapCompileStore();
+const timeReportStore = useMapTimeReportStore();
 
 const props = defineProps<{ map: string }>();
 

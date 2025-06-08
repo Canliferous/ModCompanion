@@ -3,6 +3,7 @@ import { registerMapScannerApi } from "../api/MainMapScannerApi.js";
 import { registerAppExitApi } from "../api/MainAppExitApi.js";
 import { registerMapCompileApi } from "../api/MainMapCompileApi.js";
 import { registerAppConfigApi } from "../api/MainAppConfigApi.js";
+import { registerMapTimeReportApi } from "../api/MainMapTimeReportApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -10,6 +11,7 @@ const apis: (() => boolean)[] = [
     registerLauncherApi,
     registerMapScannerApi,
     registerMapCompileApi,
+    registerMapTimeReportApi,
 ];
 
 export function initApiSystem(): boolean {
