@@ -2,17 +2,18 @@ import { Ref, watch } from "vue";
 import { watchDeep } from "@vueuse/core";
 
 export function useRemember<T>(ref: Ref<T>, keyName: string) {
+    watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
+
     const val = localStorage.getItem(keyName);
     if (val === null) return ref;
 
     ref.value = JSON.parse(val);
-
-    watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
-
     return ref;
 }
 
 export function useRememberStringArray(ref: Ref<string[]>, keyName: string) {
+    watchDeep(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
+
     const arrStr = localStorage.getItem(keyName);
     if (!arrStr) return ref;
 
@@ -30,8 +31,5 @@ export function useRememberStringArray(ref: Ref<string[]>, keyName: string) {
     }
 
     ref.value = arrAny as string[];
-
-    watchDeep(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
-
     return ref;
 }
