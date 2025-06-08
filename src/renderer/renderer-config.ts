@@ -1,8 +1,8 @@
-import { AppConfig } from "../shared/AppConfig.js";
+import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 
-let config: AppConfig;
+let config: SharedAppConfig;
 
-export function getAppConfig(): AppConfig {
+export function getAppConfig(): SharedAppConfig {
     return config;
 }
 

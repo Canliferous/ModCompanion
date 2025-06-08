@@ -1,12 +1,12 @@
 import { ipcMain } from "electron";
-import { IpcChannels } from "../../shared/IpcChannels.js";
+import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import fs from "fs/promises";
 import path from "path";
 import { MapSourceDir } from "../../shared/SharedMapTypes.js";
 
 export function registerMapScannerApi(): boolean {
-    ipcMain.handle(IpcChannels.MapListSourceDirs, listMapSourceDirs);
+    ipcMain.handle(SharedIpcChannels.MapListSourceDirs, listMapSourceDirs);
     return true;
 }
 

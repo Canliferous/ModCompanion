@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { State, State as PlayPauseStopControlsState } from "../components/common/PlayPauseStopControls.model.js";
+import { SharedMapCompileState, SharedMapCompileStep } from "../../shared/SharedMapCompile.js";
 
 export const useMapCompileStore = defineStore("map-compile", () => {
     const state = ref<PlayPauseStopControlsState>(PlayPauseStopControlsState.Stopped);
+    const progress = reactive(new Map<string, SharedMapCompileState>());
 
     function compileNow(mapPath: string) {
         if (state.value !== State.Stopped) return;
@@ -11,5 +13,10 @@ export const useMapCompileStore = defineStore("map-compile", () => {
         window.electronAPI.map.enqueue(mapPath);
     }
 
-    return { state, compileNow };
+    window.electronAPI.map.subscribeCompileProgress((event) => {
+        const key = event.mapPath + event.step;
+        progress.set(key, event.state);
+    });
+
+    return { state, compileNow, progress };
 });

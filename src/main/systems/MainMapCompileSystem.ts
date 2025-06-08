@@ -1,23 +1,17 @@
-import { notifyCompileLog, notifyQueueUpdated } from "../api/MainMapCompileApi.js";
+import { notifyCompileLog, notifyCompileProgress, notifyQueueUpdated } from "../api/MainMapCompileApi.js";
 import { MapCompilerAction, runVBsp, runVRad, runVVis } from "../launcher/MainMapCompilerLaunchers.js";
-import { MapCompileLogEventType } from "../../shared/MapCompileLogEvent.js";
+import { SharedMapCompileLogEventType } from "../../shared/SharedMapCompileLogEvent.js";
+import { SharedMapCompileState, SharedMapCompileStep } from "../../shared/SharedMapCompile.js";
 
-enum CompileState {
-    Idle,
-    InProgress,
-    Completed,
-}
-
-interface CompileStep {
-    name: string;
-    state: CompileState;
+interface MapCompileStepStage {
+    step: SharedMapCompileStep;
+    state: SharedMapCompileState;
     action: MapCompilerAction;
-    log: string;
 }
 
 const mapQueue: string[] = [];
 let workerInterval: NodeJS.Timeout | undefined = undefined;
-const mapQueueSteps = new Map<string, CompileStep[]>();
+const mapQueueStages = new Map<string, MapCompileStepStage[]>();
 let currentCompilePromise: Promise<boolean> | undefined = undefined;
 
 export function initMapCompileSystem(): boolean {
@@ -33,7 +27,7 @@ export function enqueueMap(mapPath: string) {
     }
 
     mapQueue.push(mapPath);
-    mapQueueSteps.set(mapPath, _createSteps());
+    mapQueueStages.set(mapPath, _createStages());
     notifyQueueUpdated();
 }
 
@@ -41,24 +35,21 @@ export function getMapQueue(): string[] {
     return mapQueue;
 }
 
-function _createSteps(): CompileStep[] {
+function _createStages(): MapCompileStepStage[] {
     return [
         {
-            log: "",
-            state: CompileState.Idle,
-            name: "VBSP",
+            state: SharedMapCompileState.Idle,
+            step: SharedMapCompileStep.VBsp,
             action: runVBsp,
         },
         {
-            log: "",
-            state: CompileState.Idle,
-            name: "VVIS",
+            state: SharedMapCompileState.Idle,
+            step: SharedMapCompileStep.VVis,
             action: runVVis,
         },
         {
-            log: "",
-            state: CompileState.Idle,
-            name: "VRAD",
+            state: SharedMapCompileState.Idle,
+            step: SharedMapCompileStep.VRad,
             action: runVRad,
         },
     ];
@@ -73,13 +64,13 @@ function _workQueue() {
     _workMap(item.mapPath, item.steps);
 }
 
-function _isStepsCompleted(steps: CompileStep[]): boolean {
-    return !steps.some((s) => s.state !== CompileState.Completed);
+function _isStepsCompleted(steps: MapCompileStepStage[]): boolean {
+    return !steps.some((s) => s.state !== SharedMapCompileState.Completed);
 }
 
-function _getQueueWorkItem(): { mapPath: string; steps: CompileStep[] } | undefined {
+function _getQueueWorkItem(): { mapPath: string; steps: MapCompileStepStage[] } | undefined {
     for (let i = 0; i < mapQueue.length; i++) {
-        let steps = mapQueueSteps.get(mapQueue[i]);
+        let steps = mapQueueStages.get(mapQueue[i]);
         if (steps === undefined) {
             continue;
         }
@@ -92,38 +83,41 @@ function _getQueueWorkItem(): { mapPath: string; steps: CompileStep[] } | undefi
     return undefined;
 }
 
-function _workMap(mapPath: string, steps: CompileStep[]) {
-    const inProgressStepIdx = steps.findIndex((s) => s.state === CompileState.InProgress);
+function _workMap(mapPath: string, steps: MapCompileStepStage[]) {
+    const inProgressStepIdx = steps.findIndex((s) => s.state === SharedMapCompileState.InProgress);
     if (inProgressStepIdx > 0 || currentCompilePromise !== undefined) {
         return;
     }
 
     for (let i = 0; i < steps.length; i++) {
         let step = steps[i];
-        if (step.state === CompileState.Idle) {
-            _startStep(mapPath, i);
+        if (step.state === SharedMapCompileState.Idle) {
+            _startStage(mapPath, i);
             return;
         }
     }
 }
 
-function _startStep(mapPath: string, stepIdx: number) {
-    const step = mapQueueSteps.get(mapPath)![stepIdx];
-    console.log("Starting step", step);
+function _startStage(mapPath: string, stageIdx: number) {
+    const stage = mapQueueStages.get(mapPath)![stageIdx];
+    console.log("Starting stage", stage);
 
-    notifyCompileLog({ type: MapCompileLogEventType.Clear, mapPath });
-    currentCompilePromise = step.action(
+    notifyCompileLog({ type: SharedMapCompileLogEventType.Clear, mapPath });
+    currentCompilePromise = stage.action(
         mapPath,
         (msg: string) => {
-            notifyCompileLog({ type: MapCompileLogEventType.AppendMessage, mapPath, message: msg });
+            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendMessage, mapPath, message: msg });
         },
         (msg: string) => {
-            notifyCompileLog({ type: MapCompileLogEventType.AppendError, mapPath, message: msg });
+            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendError, mapPath, message: msg });
         },
     );
-    step.state = CompileState.InProgress;
+    stage.state = SharedMapCompileState.InProgress;
+    notifyCompileProgress({ mapPath, step: stage.step, state: stage.state });
 
     currentCompilePromise.then((success) => {
         currentCompilePromise = undefined;
+        stage.state = SharedMapCompileState.Completed;
+        notifyCompileProgress({ mapPath, step: stage.step, state: stage.state });
     });
 }

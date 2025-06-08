@@ -1,11 +1,11 @@
 import { ipcMain } from "electron";
-import { IpcChannels } from "../../shared/IpcChannels.js";
-import { Launchers } from "../../shared/Launchers.js";
+import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
+import { SharedLaunchers } from "../../shared/SharedLaunchers.js";
 import * as child_process from "node:child_process";
 import { getConfig } from "../systems/MainConfigSystem.js";
 
 export function registerLauncherApi(): boolean {
-    ipcMain.on(IpcChannels.AppLaunch, (event, launcherType: Launchers, launcherArgs?: string) => {
+    ipcMain.on(SharedIpcChannels.AppLaunch, (event, launcherType: SharedLaunchers, launcherArgs?: string) => {
         const exe = getLauncherExe(launcherType);
         if (!exe) {
             console.warn("Unknown launcher type", launcherType);
@@ -22,7 +22,7 @@ export function registerLauncherApi(): boolean {
     return true;
 }
 
-export function getLauncherExe(launcherType: Launchers): string | undefined {
+export function getLauncherExe(launcherType: SharedLaunchers): string | undefined {
     const config = getConfig();
     if (launcherType === "game") {
         return config.gameExePath;

@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { AppConfig } from "../../shared/AppConfig.js";
+import { SharedAppConfig } from "../../shared/SharedAppConfig.js";
 
 interface ConfigFile {
     root?: string;
@@ -8,9 +8,9 @@ interface ConfigFile {
     mapSourceDirs?: string[];
 }
 
-let config: AppConfig = null!;
+let config: SharedAppConfig = null!;
 
-export function getConfig(): AppConfig {
+export function getConfig(): SharedAppConfig {
     return config;
 }
 
@@ -28,7 +28,7 @@ export async function initConfigSystem(): Promise<boolean> {
     return true;
 }
 
-export function createRevolutionStandardConfig(c: ConfigFile): AppConfig | undefined {
+export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undefined {
     if (!c.root) {
         return undefined;
     }

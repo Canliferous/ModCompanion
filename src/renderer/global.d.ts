@@ -1,8 +1,9 @@
-import { Launchers } from "../shared/Launchers.js";
+import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { MapSourceDir } from "../shared/SharedMapTypes.js";
 import { IpcRenderer } from "electron";
-import { AppConfig } from "../shared/AppConfig.js";
-import { MapCompileLogEvent } from "../shared/MapCompileLogEvent.js";
+import { SharedAppConfig } from "../shared/SharedAppConfig.js";
+import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
+import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
 
 export {};
 
@@ -10,17 +11,18 @@ declare global {
     interface Window {
         electronAPI: {
             app: {
-                launch: (launcherType: Launchers, launcherArgs: string | undefined) => void;
+                launch: (launcherType: SharedLaunchers, launcherArgs: string | undefined) => void;
                 exit: () => void;
             };
             config: {
-                get: () => Promise<AppConfig>;
+                get: () => Promise<SharedAppConfig>;
             };
             map: {
                 listSourceDirs: () => Promise<MapSourceDir[]>;
                 enqueue: (mapPath: string) => void;
                 subscribeQueueUpdated: (callback: (queue: string[]) => void) => IpcRenderer;
-                subscribeCompileLog: (callback: (event: MapCompileLogEvent) => void) => IpcRenderer;
+                subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) => IpcRenderer;
+                subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) => IpcRenderer;
             };
         };
     }

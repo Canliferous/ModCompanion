@@ -1,4 +1,4 @@
-export const IpcChannels = {
+export const SharedIpcChannels = {
     AppLaunch: "app_launch",
     AppExit: "app_exit",
     ConfigGet: "config_get",
@@ -6,4 +6,5 @@ export const IpcChannels = {
     MapEnqueue: "map_enqueue",
     MapQueueUpdated: "map_queue_updated",
     MapCompileLog: "map_compile_log",
+    MapCompileProgress: "map_compile_progress",
 } as const;

@@ -1,29 +1,37 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
-import { Launchers } from "./shared/Launchers.js";
-import { IpcChannels } from "./shared/IpcChannels.js";
+import { SharedLaunchers } from "./shared/SharedLaunchers.js";
+import { SharedIpcChannels } from "./shared/SharedIpcChannels.js";
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
+import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
+import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
-        exit: () => ipcRenderer.send(IpcChannels.AppExit),
-        launch: (launcherType: Launchers, launcherArgs: string) =>
-            ipcRenderer.send(IpcChannels.AppLaunch, launcherType, launcherArgs),
+        exit: () => ipcRenderer.send(SharedIpcChannels.AppExit),
+        launch: (launcherType: SharedLaunchers, launcherArgs: string) =>
+            ipcRenderer.send(SharedIpcChannels.AppLaunch, launcherType, launcherArgs),
     },
 
     config: {
-        get: () => ipcRenderer.invoke(IpcChannels.ConfigGet),
+        get: () => ipcRenderer.invoke(SharedIpcChannels.ConfigGet),
     },
 
     map: {
-        listSourceDirs: () => ipcRenderer.invoke(IpcChannels.MapListSourceDirs),
-        enqueue: (mapPath: string) => ipcRenderer.send(IpcChannels.MapEnqueue, mapPath),
+        listSourceDirs: () => ipcRenderer.invoke(SharedIpcChannels.MapListSourceDirs),
+        enqueue: (mapPath: string) => ipcRenderer.send(SharedIpcChannels.MapEnqueue, mapPath),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
-            ipcRenderer.on(IpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
-        subscribeCompileLog: (callback: (log: string) => void) =>
-            ipcRenderer.on(IpcChannels.MapCompileLog, (e: IpcRendererEvent, log: string) => callback(log)),
-        // unsubscribeMapQueueUpdated: (callback) => ipcRenderer.off("map_queue_updated", (e, v) => callback(v)),
+            ipcRenderer.on(SharedIpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
+        subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) =>
+            ipcRenderer.on(SharedIpcChannels.MapCompileLog, (e: IpcRendererEvent, event: SharedMapCompileLogEvent) =>
+                callback(event),
+            ),
+        subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) =>
+            ipcRenderer.on(
+                SharedIpcChannels.MapCompileProgress,
+                (e: IpcRendererEvent, event: SharedMapCompileProgressEvent) => callback(event),
+            ),
     },
 });

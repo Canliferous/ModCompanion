@@ -39,9 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import { Launchers } from "../../../shared/Launchers.js";
+import { SharedLaunchers } from "../../../shared/SharedLaunchers.js";
 
-function launch(launcherType: Launchers, launcherArgs?: string) {
+function launch(launcherType: SharedLaunchers, launcherArgs?: string) {
     window.electronAPI.app.launch(launcherType, launcherArgs);
 }
 
@@ -59,7 +59,7 @@ interface LauncherButton {
     name: string;
     icon: string;
     binary: string;
-    launcherType: Launchers;
+    launcherType: SharedLaunchers;
     launcherArgs?: string;
 }
 

@@ -1,4 +1,4 @@
-export interface AppConfig {
+export interface SharedAppConfig {
     rootPath: string;
     contentPath: string;
     gamePath: string;

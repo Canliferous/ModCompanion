@@ -5,8 +5,8 @@ import {
     isAppendErrorEvent,
     isAppendMessageEvent,
     isClearEvent,
-    MapCompileLogEvent,
-} from "../../shared/MapCompileLogEvent.js";
+    SharedMapCompileLogEvent,
+} from "../../shared/SharedMapCompileLogEvent.js";
 
 export const useMapConsoleStore = defineStore("map-console", () => {
     const isOpen = useRemember(ref(false), "map-console-open");
@@ -17,7 +17,7 @@ export const useMapConsoleStore = defineStore("map-console", () => {
         isOpen.value = !isOpen.value;
     }
 
-    window.electronAPI.map.subscribeCompileLog((event: MapCompileLogEvent) => {
+    window.electronAPI.map.subscribeCompileLog((event: SharedMapCompileLogEvent) => {
         if (isClearEvent(event)) {
             logMessageTextMap.set(event.mapPath, "");
         } else if (isAppendMessageEvent(event)) {

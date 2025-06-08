@@ -8,6 +8,7 @@ export const useMapListStore = defineStore("map-list", () => {
     const searchTerm = ref<string>("");
     const filteredMapPaths = useFilter<string>(mapPaths, (item) => item.toLowerCase(), searchTerm);
     const selectedMap = ref<string | undefined>();
+    const mapQueue = ref<string[]>([]);
 
     function selectMap(mapPath: string | undefined) {
         console.log(mapPath);
@@ -31,5 +32,9 @@ export const useMapListStore = defineStore("map-list", () => {
         mapPaths.value.splice(idx, 1);
     }
 
-    return { mapPaths, filteredMapPaths, addMap, removeMap, isMapAdded, searchTerm, selectedMap, selectMap };
+    window.electronAPI.map.subscribeQueueUpdated((arg) => {
+        mapQueue.value = arg;
+    });
+
+    return { mapPaths, filteredMapPaths, addMap, removeMap, isMapAdded, searchTerm, selectedMap, selectMap, mapQueue };
 });
