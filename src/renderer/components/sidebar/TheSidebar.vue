@@ -17,14 +17,14 @@
         <div class="grid gap-1 content-start">
             <UButton
                 v-for="btn of launcherButtons"
-                size="small"
-                variant="soft"
-                color="neutral"
+                :color="btn.color"
                 @click="() => launch(btn.launcherType, btn.launcherArgs)"
                 :label="btn.name"
+                size="small"
+                variant="soft"
             >
                 <template #leading>
-                    <img class="h-4 mx-2" :src="`./icons/${btn.icon}.png`" />
+                    <BitmapIcon :name="btn.icon" class="size-4 mx-2" />
                 </template>
             </UButton>
 
@@ -39,11 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { SharedLaunchers } from "../../../shared/SharedLaunchers.js";
-
-function launch(launcherType: SharedLaunchers, launcherArgs?: string) {
-    window.electronAPI.app.launch(launcherType, launcherArgs);
-}
+import BitmapIcon from "../common/BitmapIcon.vue";
+import { launch, launcherButtons } from "../../model/LauncherButtons.js";
 
 function quit() {
     window.electronAPI.app.exit();
@@ -53,14 +50,6 @@ interface PageButton {
     name: string;
     icon: string;
     route: string;
-}
-
-interface LauncherButton {
-    name: string;
-    icon: string;
-    binary: string;
-    launcherType: SharedLaunchers;
-    launcherArgs?: string;
 }
 
 const pageButtons: PageButton[] = [
@@ -83,47 +72,6 @@ const pageButtons: PageButton[] = [
         name: "Maps",
         icon: "tdesign:map-3d-filled",
         route: "/maps",
-    },
-];
-
-const launcherButtons: LauncherButton[] = [
-    {
-        name: "Game",
-        icon: "revolution",
-        binary: "revolution.exe",
-        launcherType: "game",
-    },
-    {
-        name: "Game (Dev)",
-        icon: "revolution",
-        binary: "revolution.exe",
-        launcherType: "game",
-        launcherArgs: "-dev -condebug -novid",
-    },
-    {
-        name: "Game (Tools)",
-        icon: "revolution",
-        binary: "revolution.exe",
-        launcherType: "game",
-        launcherArgs: "-tools",
-    },
-    {
-        name: "Hammer",
-        icon: "hammer",
-        binary: "revolution.exe",
-        launcherType: "hammer",
-    },
-    {
-        name: "Faceposer",
-        icon: "faceposer",
-        binary: "revolution.exe",
-        launcherType: "faceposer",
-    },
-    {
-        name: "HLMV",
-        icon: "hlmv",
-        binary: "revolution.exe",
-        launcherType: "hlmv",
     },
 ];
 </script>
