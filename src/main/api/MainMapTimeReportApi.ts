@@ -39,7 +39,10 @@ async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeRe
 
     const srcPath = config.mapSourcePath;
 
-    const report: SharedMapTimeReport = { maps: new Map<string, SharedSeconds>() };
+    const report: SharedMapTimeReport = {
+        maps: new Map<string, SharedSeconds>(),
+        totals: new Map<SharedMapPath, SharedSeconds>(),
+    };
 
     for (const map of maps) {
         for (const step of reportExtensions) {
@@ -52,9 +55,12 @@ async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeRe
 
             const logContents = await fs.readFile(reportPath, { encoding: "utf-8" });
             const time = _getCompileTime(logContents);
-            if (time) {
-                report.maps.set(map + step, time);
-            }
+            if (time === undefined) continue;
+
+            report.maps.set(map + step, time);
+
+            const mapTotal = report.totals.get(map) ?? 0;
+            report.totals.set(map, mapTotal + time);
         }
     }
 

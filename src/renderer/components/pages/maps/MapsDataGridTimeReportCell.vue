@@ -1,5 +1,5 @@
 <template>
-    <span class="text-center">{{ seconds }}</span>
+    <span class="text-center text-xs text-neutral-400" v-show="seconds !== undefined">{{ seconds }}s</span>
 </template>
 
 <script setup lang="ts">

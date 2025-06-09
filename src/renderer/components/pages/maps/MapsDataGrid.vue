@@ -4,11 +4,12 @@
             <UCheckbox size="lg" />
             <div>Name</div>
             <div class="flex justify-center">VBSP</div>
-            <div class="flex justify-center">POST</div>
+            <div class="flex justify-center" v-if="!timeReportStore.showReport">POST</div>
             <div class="flex justify-center">VVIS</div>
             <div class="flex justify-center">VRAD</div>
-            <div class="flex justify-center">GAME</div>
-            <div class="flex justify-center">DONE</div>
+            <div class="flex justify-center" v-if="!timeReportStore.showReport">GAME</div>
+            <div class="flex justify-center" v-if="!timeReportStore.showReport">DONE</div>
+            <div class="flex justify-center" v-if="timeReportStore.showReport">TOTAL</div>
             <div></div>
         </div>
 
@@ -19,8 +20,10 @@
 <script setup lang="ts">
 import { useMapListStore } from "../../../store/MapListStore.js";
 import MapsDataGridRow from "./MapsDataGridRow.vue";
+import { useMapTimeReportStore } from "../../../store/MapTimeReportStore.js";
 
 const listStore = useMapListStore();
+const timeReportStore = useMapTimeReportStore();
 </script>
 
 <style scoped></style>

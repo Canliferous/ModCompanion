@@ -1,12 +1,27 @@
 <template>
     <div
-        class="grid col-span-full grid-cols-subgrid p-2 items-center border-b-1 border-accented"
+        class="grid col-span-full grid-cols-subgrid grid-rows-1 p-2 items-center border-b-1 border-accented"
         :class="{ 'bg-neutral-500/10': listStore.selectedMap === map }"
         @click="() => listStore.selectMap(map)"
     >
         <UCheckbox size="lg" />
-        <div class="font-mono text-sm">
-            {{ mapDisplayNames.get(map) }}
+
+        <div>
+            <div
+                class="bg-primary-500/30"
+                :style="{ width: chartWidth }"
+                v-if="timeReportStore.showReport && chartWidth !== undefined"
+            >
+                <!-- Text intentionally overflows the boxes -->
+                <span class="font-mono text-sm">
+                    {{ mapDisplayNames.get(map) }}
+                </span>
+            </div>
+            <div v-else>
+                <span class="font-mono text-sm">
+                    {{ mapDisplayNames.get(map) }}
+                </span>
+            </div>
         </div>
 
         <div v-if="!timeReportStore.showReport" class="grid grid-cols-subgrid col-span-6">
@@ -19,11 +34,9 @@
         </div>
         <div v-else class="grid grid-cols-subgrid col-span-6">
             <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VBsp" />
-            <div />
             <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VVis" />
             <MapsDataGridTimeReportCell :map-path="map" :step="SharedMapCompileStep.VRad" />
-            <div />
-            <div />
+            <MapsDataGridTimeReportTotalCell :map-path="map" />
         </div>
 
         <div class="flex gap-2">
@@ -76,6 +89,7 @@ import MapsDataGridProgressCell from "./MapsDataGridProgressCell.vue";
 import { SharedMapCompileStep } from "../../../../shared/SharedMapCompile.js";
 import { useMapTimeReportStore } from "../../../store/MapTimeReportStore.js";
 import MapsDataGridTimeReportCell from "./MapsDataGridTimeReportCell.vue";
+import MapsDataGridTimeReportTotalCell from "./MapsDataGridTimeReportTotalCell.vue";
 
 const listStore = useMapListStore();
 const compileStore = useMapCompileStore();
@@ -93,6 +107,13 @@ function handleOpenInHammer(mapPath: string) {
     const fullPath = pathe.join(getAppConfig().mapSourcePath, mapPath);
     window.electronAPI.app.launch("hammer", fullPath);
 }
+
+const chartWidth = computed(() => {
+    const percentage = timeReportStore.reportChart?.get(props.map);
+    if (percentage === undefined) return undefined;
+
+    return `${percentage}%`;
+});
 
 const mapDisplayNames = computed(() => {
     let prefix: string | undefined = undefined;
