@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
         exit: () => ipcRenderer.send(SharedIpcChannels.AppExit),
         launch: (launcherType: SharedLaunchers, launcherArgs: string) =>
             ipcRenderer.send(SharedIpcChannels.AppLaunch, launcherType, launcherArgs),
+        browseToFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.AppBrowseToFile, filePath),
     },
 
     config: {
