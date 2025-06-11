@@ -40,6 +40,8 @@ async function startSystems() {
 
     if (success) {
         console.log("All systems started successfully!");
+    } else {
+        app.quit(-1);
     }
 }
 
