@@ -1,6 +1,6 @@
 <template>
     <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] grid-cols-1 gap-1">
-        <div class="flex gap-2">
+        <div class="flex gap-1">
             <MapsToggleDrawerButton />
             <UInput placeholder="Search" block v-model="listStore.searchTerm" leading-icon="tdesign:search" />
 
