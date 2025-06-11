@@ -3,6 +3,7 @@ import { initConfigSystem } from "./main/systems/MainConfigSystem.js";
 import { initApiSystem } from "./main/systems/MainApiSystem.js";
 import { app, dialog } from "electron";
 import { initMapCompileSystem } from "./main/systems/MainMapCompileSystem.js";
+import {initAssetScannerSystem} from "./main/systems/MainAssetScannerSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -14,6 +15,7 @@ const systems: System[] = [
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: initWindowSystem },
     { name: "MapCompile", initFunction: initMapCompileSystem },
+    { name: "AssetScanner", initFunction: initAssetScannerSystem },
 ];
 
 async function startSystems() {
