@@ -9,6 +9,7 @@ import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 import { SharedMapPath } from "./shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "./shared/SharedMapTimeReport.js";
+import { SharedAsset, SharedAssetRescanEvent } from "./shared/SharedAsset.js";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -38,5 +39,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
         createTimeReport: (maps: SharedMapPath[]) =>
             ipcRenderer.invoke(SharedIpcChannels.MapCreateTimeReport, maps) as Promise<SharedMapTimeReport>,
+    },
+
+    asset: {
+        subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) =>
+            ipcRenderer.on(SharedIpcChannels.AssetRescanned, (e: IpcRendererEvent, event: SharedAssetRescanEvent) =>
+                callback(event),
+            ),
     },
 });

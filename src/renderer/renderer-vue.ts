@@ -4,8 +4,7 @@ import App from "./components/App.vue";
 import ui from "@nuxt/ui/vue-plugin";
 import { createMemoryHistory, createRouter, Router } from "vue-router";
 import HomePage from "./components/pages/HomePage.vue";
-import GameAssetsPage from "./components/pages/GameAssetsPage.vue";
-import ContentAssetsPage from "./components/pages/ContentAssetsPage.vue";
+import AssetsPage from "./components/pages/AssetsPage.vue";
 import MapsPage from "./components/pages/maps/MapsPage.vue";
 
 export function initVue() {
@@ -30,8 +29,7 @@ function _initRouter(): Router {
     const router = createRouter({
         routes: [
             { path: "/", component: HomePage },
-            { path: "/game-assets", component: GameAssetsPage },
-            { path: "/content-assets", component: ContentAssetsPage },
+            { path: "/assets", component: AssetsPage },
             { path: "/maps", component: MapsPage },
         ],
         history: createMemoryHistory(),

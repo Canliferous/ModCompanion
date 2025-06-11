@@ -59,14 +59,9 @@ const pageButtons: PageButton[] = [
         route: "/",
     },
     {
-        name: "Game Assets",
-        icon: "tdesign:control-platform-filled",
-        route: "/game-assets",
-    },
-    {
-        name: "Content Assets",
+        name: "Assets",
         icon: "tdesign:control-platform",
-        route: "/content-assets",
+        route: "/assets",
     },
     {
         name: "Maps",
