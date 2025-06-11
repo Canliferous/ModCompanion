@@ -17,6 +17,10 @@
     --ui-color-neutral-950: var(--color-neutral-950);
 }
 
+* {
+    scrollbar-width: thin;
+}
+
 @theme {
     --font-sans: "Inter", sans-serif;
     --font-mono: "JetBrains Mono Variable", monospace;
