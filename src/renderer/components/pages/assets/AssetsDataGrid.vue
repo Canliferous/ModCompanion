@@ -5,7 +5,7 @@
             <div>Asset</div>
         </div>
         <div class="grid col-span-full grid-cols-subgrid overflow-y-scroll">
-            <AssetsDataGridRow v-for="asset in listStore.filteredMapPaths" :asset="asset" />
+            <AssetsDataGridRow v-for="asset in listStore.filteredAssets" :asset="asset" />
         </div>
     </div>
 </template>

@@ -55,15 +55,14 @@ function _addGameFilesToAsset(
         assets.set(assetHash, {
             displayName: assetDisplayName,
             contentFiles: [],
-            gameFiles: gameFiles ?? [],
+            gameFiles: gameFiles,
             hash: assetHash,
         });
+        return;
     }
 
     const asset = assets.get(assetHash)!;
-    if (gameFiles) {
-        asset.gameFiles.push(...gameFiles);
-    }
+    asset.gameFiles.push(...gameFiles);
 }
 
 function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile: string): void {
@@ -76,6 +75,7 @@ function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile
             gameFiles: [gameFile],
             hash: hash,
         });
+        return;
     }
 
     const asset = assets.get(hash)!;
@@ -95,6 +95,7 @@ function _addContentFilesToAsset(
             gameFiles: [],
             hash: assetHash,
         });
+        return;
     }
 
     const asset = assets.get(assetHash)!;
@@ -111,6 +112,7 @@ function _addContentFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, conte
             gameFiles: [],
             hash: hash,
         });
+        return;
     }
 
     const asset = assets.get(hash)!;

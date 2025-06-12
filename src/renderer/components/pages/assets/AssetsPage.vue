@@ -7,7 +7,9 @@
             </div>
             <AssetsDataGrid />
         </div>
-        <div>fsdfd</div>
+        <div>
+            <AssetsInfo />
+        </div>
     </div>
 </template>
 
@@ -15,6 +17,7 @@
 import AssetsDataGrid from "./AssetsDataGrid.vue";
 import AssetsRefreshButton from "./AssetsRefreshButton.vue";
 import AssetsSearchInput from "./AssetsSearchInput.vue";
+import AssetsInfo from "./AssetsInfo.vue";
 </script>
 
 <style scoped></style>

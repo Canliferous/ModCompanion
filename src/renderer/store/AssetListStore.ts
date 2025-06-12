@@ -8,7 +8,9 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const refreshing = ref(true);
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
-    const filteredMapPaths = useAssetsFilter(assetsEntries, searchTerm);
+    const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
+    const selectedAssetHash = ref("");
+    const selectedAsset = computed(() => assets.value.get(selectedAssetHash.value));
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -25,10 +27,23 @@ export const useAssetListStore = defineStore("asset-list", () => {
         });
     });
 
-    function forceRefresh() {
+    function forceRefresh(): void {
         window.electronAPI.asset.forceRescan();
         refreshing.value = true;
     }
 
-    return { assets, refreshing, forceRefresh, searchTerm, filteredMapPaths };
+    function selectAsset(assetHash: string): void {
+        selectedAssetHash.value = assetHash;
+    }
+
+    return {
+        assets,
+        refreshing,
+        forceRefresh,
+        searchTerm,
+        filteredAssets,
+        selectedAssetHash,
+        selectAsset,
+        selectedAsset,
+    };
 });
