@@ -41,21 +41,101 @@ async function _scanAssets(): Promise<Map<SharedAssetHash, SharedAsset>> {
 
     const assets = new Map<SharedAssetHash, SharedAsset>();
     _buildContentMaterialSrcAssets(assets, contentGroups.get("materialsrc") ?? []);
+    _buildGameMaterialAssets(assets, gameGroups.get("materials") ?? []);
     return assets;
+}
+
+function _addGameFilesToAsset(
+    assets: Map<SharedAssetHash, SharedAsset>,
+    assetHash: string,
+    assetDisplayName: string,
+    gameFiles: string[],
+): void {
+    if (!assets.has(assetHash)) {
+        assets.set(assetHash, {
+            displayName: assetDisplayName,
+            contentFiles: [],
+            gameFiles: gameFiles ?? [],
+            hash: assetHash,
+        });
+    }
+
+    const asset = assets.get(assetHash)!;
+    if (gameFiles) {
+        asset.gameFiles.push(...gameFiles);
+    }
+}
+
+function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile: string): void {
+    const displayName = _createAssetName(gameFile);
+    const hash = _createAssetHash(gameFile);
+    if (!assets.has(hash)) {
+        assets.set(hash, {
+            displayName: displayName,
+            contentFiles: [],
+            gameFiles: [gameFile],
+            hash: hash,
+        });
+    }
+
+    const asset = assets.get(hash)!;
+    asset.gameFiles.push(gameFile);
+}
+
+function _addContentFilesToAsset(
+    assets: Map<SharedAssetHash, SharedAsset>,
+    assetHash: string,
+    assetDisplayName: string,
+    contentFiles: string[],
+): void {
+    if (!assets.has(assetHash)) {
+        assets.set(assetHash, {
+            displayName: assetDisplayName,
+            contentFiles: contentFiles,
+            gameFiles: [],
+            hash: assetHash,
+        });
+    }
+
+    const asset = assets.get(assetHash)!;
+    asset.contentFiles.push(...contentFiles);
+}
+
+function _addContentFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, contentFile: string): void {
+    const displayName = _createAssetName(contentFile);
+    const hash = _createAssetHash(contentFile);
+    if (!assets.has(hash)) {
+        assets.set(hash, {
+            displayName: displayName,
+            contentFiles: [contentFile],
+            gameFiles: [],
+            hash: hash,
+        });
+    }
+
+    const asset = assets.get(hash)!;
+    asset.contentFiles.push(contentFile);
 }
 
 const materialSrcExts = [".png", ".jpg", ".tga", ".tiff"];
 function _buildContentMaterialSrcAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
     for (const file of files) {
-        const ext = path.extname(file);
+        const lowerFile = file.toLowerCase();
+        const ext = path.extname(lowerFile);
+
         if (materialSrcExts.includes(ext)) {
-            const asset: SharedAsset = {
-                displayName: filename(file) ?? "unknown",
-                contentFiles: [file],
-                gameFiles: [],
-            };
-            const hash = _createAssetHash(file);
-            assets.set(hash, asset);
+            _addContentFileToAsset(assets, lowerFile);
+        }
+    }
+}
+
+function _buildGameMaterialAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
+    for (let file of files) {
+        const lowerFile = file.toLowerCase();
+        const ext = path.extname(lowerFile);
+
+        if (ext === ".vtf") {
+            _addGameFileToAsset(assets, lowerFile);
         }
     }
 }
@@ -64,6 +144,10 @@ function _createAssetHash(assetPath: string): SharedAssetHash {
     const hasher = createHash("sha256");
     hasher.write(assetPath);
     return hasher.digest("hex");
+}
+
+function _createAssetName(fileName: string): string {
+    return filename(fileName) ?? "unknown";
 }
 
 function _buildGroups(contentTree: string[]): Map<string, string[]> {

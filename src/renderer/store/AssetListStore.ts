@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
 import { SharedAsset, SharedAssetHash } from "../../shared/SharedAsset.js";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { useAssetsFilter } from "../composables/useFilter.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref(new Map<SharedAssetHash, SharedAsset>());
     const refreshing = ref(true);
+    const searchTerm = ref("");
+    const assetsEntries = computed(() => [...assets.value.values()]);
+    const filteredMapPaths = useAssetsFilter(assetsEntries, searchTerm);
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -26,5 +30,5 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing.value = true;
     }
 
-    return { assets, refreshing, forceRefresh };
+    return { assets, refreshing, forceRefresh, searchTerm, filteredMapPaths };
 });

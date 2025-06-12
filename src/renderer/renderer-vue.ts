@@ -4,7 +4,7 @@ import App from "./components/App.vue";
 import ui from "@nuxt/ui/vue-plugin";
 import { createMemoryHistory, createRouter, Router } from "vue-router";
 import HomePage from "./components/pages/HomePage.vue";
-import AssetsPage from "./components/pages/AssetsPage.vue";
+import AssetsPage from "./components/pages/assets/AssetsPage.vue";
 import MapsPage from "./components/pages/maps/MapsPage.vue";
 
 export function initVue() {

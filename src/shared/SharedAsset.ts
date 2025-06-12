@@ -1,4 +1,5 @@
 export interface SharedAsset {
+    hash: string;
     displayName: string;
     contentFiles: string[];
     gameFiles: string[];
