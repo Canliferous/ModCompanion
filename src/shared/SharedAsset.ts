@@ -8,4 +8,5 @@ export type SharedAssetHash = string;
 
 export interface SharedAssetRescanEvent {
     assets: Map<SharedAssetHash, SharedAsset>;
+    totalTimeMillis: number;
 }

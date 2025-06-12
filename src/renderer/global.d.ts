@@ -31,6 +31,7 @@ declare global {
                 createTimeReport: (maps: SharedMapPath[]) => Promise<SharedMapTimeReport>;
             };
             asset: {
+                forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
             };
         };

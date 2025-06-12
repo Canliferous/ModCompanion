@@ -4,6 +4,18 @@
             <div class="flex gap-1">
                 <UInput placeholder="Search" leading-icon="tdesign:search" class="grow" autofocus />
                 <!--                <USelectMenu />-->
+                <UTooltip :text="listStore.refreshing ? 'Refreshing' : 'Force Refresh'">
+                    <UButton
+                        color="neutral"
+                        variant="subtle"
+                        @click="listStore.forceRefresh()"
+                        :disabled="listStore.refreshing"
+                    >
+                        <template #default>
+                            <UIcon name="tdesign:refresh" :class="{ 'animate-spin': listStore.refreshing }" />
+                        </template>
+                    </UButton>
+                </UTooltip>
             </div>
             <div class="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-x-2">
                 <div class="grid col-span-full grid-cols-subgrid items-center bg-elevated p-2 text-xs tracking-wider">

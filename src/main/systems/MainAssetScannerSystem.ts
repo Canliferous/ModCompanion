@@ -18,11 +18,20 @@ const trees: Trees = {
 };
 
 export function initAssetScannerSystem(): boolean {
-    _rescan().then((a) => notifyAssetsRescanned({ assets: a }));
+    rescan();
     return true;
 }
 
-async function _rescan(): Promise<Map<SharedAssetHash, SharedAsset>> {
+export async function rescan() {
+    console.log("Rescanning...");
+
+    const startMillis = new Date().getTime();
+    const assets = await _scanAssets();
+    const endMillis = new Date().getTime();
+    notifyAssetsRescanned({ assets, totalTimeMillis: endMillis - startMillis });
+}
+
+async function _scanAssets(): Promise<Map<SharedAssetHash, SharedAsset>> {
     const { gameTree, contentTree } = await _scanGameAndContent();
     trees.contentTree = contentTree;
     trees.gameTree = gameTree;

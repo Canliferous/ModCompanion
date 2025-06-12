@@ -42,6 +42,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     asset: {
+        forceRescan: () => ipcRenderer.send(SharedIpcChannels.AssetForceRescan),
         subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) =>
             ipcRenderer.on(SharedIpcChannels.AssetRescanned, (e: IpcRendererEvent, event: SharedAssetRescanEvent) =>
                 callback(event),

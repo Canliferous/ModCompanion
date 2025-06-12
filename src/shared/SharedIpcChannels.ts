@@ -10,4 +10,5 @@ export const SharedIpcChannels = {
     MapCompileProgress: "map_compile_progress",
     MapCreateTimeReport: "map_create_time_report",
     AssetRescanned: "asset_rescanned",
+    AssetForceRescan: "asset_force_rescan",
 } as const;

@@ -5,6 +5,7 @@ import { registerMapCompileApi } from "../api/MainMapCompileApi.js";
 import { registerAppConfigApi } from "../api/MainAppConfigApi.js";
 import { registerMapTimeReportApi } from "../api/MainMapTimeReportApi.js";
 import { registerFileBrowserApi } from "../api/MainFileBrowserApi.js";
+import { registerAssetApi } from "../api/MainAssetApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -14,6 +15,7 @@ const apis: (() => boolean)[] = [
     registerMapCompileApi,
     registerMapTimeReportApi,
     registerFileBrowserApi,
+    registerAssetApi,
 ];
 
 export function initApiSystem(): boolean {
