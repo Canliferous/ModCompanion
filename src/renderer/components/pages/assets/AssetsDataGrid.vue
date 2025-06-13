@@ -4,7 +4,7 @@
             <div>Hash</div>
             <div>Asset</div>
         </div>
-        <div class="grid col-span-full grid-cols-subgrid overflow-y-scroll">
+        <div class="grid col-span-full grid-cols-subgrid content-start overflow-y-scroll">
             <AssetsDataGridRow v-for="asset in listStore.filteredAssets" :asset="asset" />
         </div>
     </div>
