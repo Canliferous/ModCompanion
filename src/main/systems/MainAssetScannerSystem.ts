@@ -143,7 +143,7 @@ function _buildGameMaterialAssets(assets: Map<SharedAssetHash, SharedAsset>, fil
 
 function _createAssetHash(assetPath: string): SharedAssetHash {
     const hasher = createHash("sha256");
-    hasher.write(assetPath);
+    hasher.write(filename(assetPath.toLowerCase()));
     return hasher.digest("hex");
 }
 
