@@ -6,6 +6,7 @@ import { createMemoryHistory, createRouter, Router } from "vue-router";
 import HomePage from "./components/pages/HomePage.vue";
 import AssetsPage from "./components/pages/assets/AssetsPage.vue";
 import MapsPage from "./components/pages/maps/MapsPage.vue";
+import { useAssetListStore } from "./store/AssetListStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -29,7 +30,14 @@ function _initRouter(): Router {
     const router = createRouter({
         routes: [
             { path: "/", component: HomePage },
-            { path: "/assets", component: AssetsPage },
+            {
+                path: "/assets",
+                component: AssetsPage,
+                beforeEnter: (to, from) => {
+                    const assetListStore = useAssetListStore();
+                    assetListStore.forceRefresh();
+                },
+            },
             { path: "/maps", component: MapsPage },
         ],
         history: createMemoryHistory(),

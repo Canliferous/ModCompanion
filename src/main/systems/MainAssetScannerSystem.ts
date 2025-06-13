@@ -18,7 +18,6 @@ const trees: Trees = {
 };
 
 export function initAssetScannerSystem(): boolean {
-    rescan();
     return true;
 }
 

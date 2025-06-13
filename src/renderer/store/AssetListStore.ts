@@ -5,7 +5,7 @@ import { useAssetsFilter } from "../composables/useFilter.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref(new Map<SharedAssetHash, SharedAsset>());
-    const refreshing = ref(true);
+    const refreshing = ref(false);
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
