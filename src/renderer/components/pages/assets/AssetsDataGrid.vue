@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-x-2">
         <div class="grid col-span-full grid-cols-subgrid items-center bg-elevated p-2 text-xs tracking-wider">
-            <div>Hash</div>
+            <div></div>
             <div>Asset</div>
         </div>
         <div class="grid col-span-full grid-cols-subgrid content-start overflow-y-scroll">

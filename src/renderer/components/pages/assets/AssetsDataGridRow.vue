@@ -7,8 +7,27 @@
         @keydown.up="navigateUp()"
         ref="btn"
     >
-        <span class="text-xs font-mono">{{ asset.hash.substring(0, 5) }}</span>
-        <span class="text-sm">{{ asset.displayName }}</span>
+        <div class="grid col-span-full grid-cols-subgrid gap-y-1">
+            <div class="flex items-center"><AssetTypeIcon :type="asset.type" /></div>
+            <div class="text-sm font-mono">{{ asset.displayName }}</div>
+
+            <div v-if="isSelected" class="col-span-full grid grid-cols-subgrid gap-y-1">
+                <div
+                    v-for="contentFile in asset.contentFiles"
+                    class="col-span-full grid grid-cols-subgrid text-amber-500 items-center"
+                >
+                    <ContentAssetIcon />
+                    <div class="text-sm font-mono">{{ contentFile }}</div>
+                </div>
+                <div
+                    v-for="gameFile in asset.gameFiles"
+                    class="col-span-full grid grid-cols-subgrid text-lime-500 items-center"
+                >
+                    <GameAssetIcon />
+                    <div class="text-sm font-mono">{{ gameFile }}</div>
+                </div>
+            </div>
+        </div>
     </button>
 </template>
 
@@ -16,6 +35,9 @@
 import { SharedAsset } from "../../../../shared/SharedAsset.js";
 import { useAssetListStore } from "../../../store/AssetListStore.js";
 import { computed, useTemplateRef, watch } from "vue";
+import AssetTypeIcon from "../../common/AssetTypeIcon.vue";
+import GameAssetIcon from "../../common/GameAssetIcon.vue";
+import ContentAssetIcon from "../../common/ContentAssetIcon.vue";
 
 const listStore = useAssetListStore();
 

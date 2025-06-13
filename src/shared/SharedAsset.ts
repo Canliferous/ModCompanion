@@ -1,8 +1,16 @@
+export enum SharedAssetType {
+    Unknown,
+    Texture,
+    Model,
+    Material,
+}
+
 export interface SharedAsset {
     hash: string;
     displayName: string;
     contentFiles: string[];
     gameFiles: string[];
+    type: SharedAssetType;
 }
 
 export type SharedAssetHash = string;

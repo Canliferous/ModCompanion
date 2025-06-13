@@ -3,7 +3,7 @@ import path from "path";
 import { filename } from "pathe/utils";
 import { getConfig } from "./MainConfigSystem.js";
 import { timeMillisAsync } from "../helpers/MainTiming.js";
-import { SharedAsset, SharedAssetHash } from "../../shared/SharedAsset.js";
+import { SharedAsset, SharedAssetHash, SharedAssetType } from "../../shared/SharedAsset.js";
 import { notifyAssetsRescanned } from "../api/MainAssetApi.js";
 import { createHash } from "node:crypto";
 
@@ -39,8 +39,8 @@ async function _scanAssets(): Promise<Map<SharedAssetHash, SharedAsset>> {
     const gameGroups = _buildGroups(gameTree);
 
     const assets = new Map<SharedAssetHash, SharedAsset>();
-    _buildContentMaterialSrcAssets(assets, contentGroups.get("materialsrc") ?? []);
-    _buildGameMaterialAssets(assets, gameGroups.get("materials") ?? []);
+    _buildContentTextureAssets(assets, contentGroups.get("materialsrc") ?? []);
+    _buildGameTextureAssets(assets, gameGroups.get("materials") ?? []);
     return assets;
 }
 
@@ -49,6 +49,7 @@ function _addGameFilesToAsset(
     assetHash: string,
     assetDisplayName: string,
     gameFiles: string[],
+    type: SharedAssetType,
 ): void {
     if (!assets.has(assetHash)) {
         assets.set(assetHash, {
@@ -56,6 +57,7 @@ function _addGameFilesToAsset(
             contentFiles: [],
             gameFiles: gameFiles,
             hash: assetHash,
+            type,
         });
         return;
     }
@@ -64,7 +66,7 @@ function _addGameFilesToAsset(
     asset.gameFiles.push(...gameFiles);
 }
 
-function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile: string): void {
+function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile: string, type: SharedAssetType): void {
     const displayName = _createAssetName(gameFile);
     const hash = _createAssetHash(gameFile);
     if (!assets.has(hash)) {
@@ -73,6 +75,7 @@ function _addGameFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, gameFile
             contentFiles: [],
             gameFiles: [gameFile],
             hash: hash,
+            type,
         });
         return;
     }
@@ -86,6 +89,7 @@ function _addContentFilesToAsset(
     assetHash: string,
     assetDisplayName: string,
     contentFiles: string[],
+    type: SharedAssetType,
 ): void {
     if (!assets.has(assetHash)) {
         assets.set(assetHash, {
@@ -93,6 +97,7 @@ function _addContentFilesToAsset(
             contentFiles: contentFiles,
             gameFiles: [],
             hash: assetHash,
+            type,
         });
         return;
     }
@@ -101,7 +106,11 @@ function _addContentFilesToAsset(
     asset.contentFiles.push(...contentFiles);
 }
 
-function _addContentFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, contentFile: string): void {
+function _addContentFileToAsset(
+    assets: Map<SharedAssetHash, SharedAsset>,
+    contentFile: string,
+    type: SharedAssetType,
+): void {
     const displayName = _createAssetName(contentFile);
     const hash = _createAssetHash(contentFile);
     if (!assets.has(hash)) {
@@ -110,6 +119,7 @@ function _addContentFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, conte
             contentFiles: [contentFile],
             gameFiles: [],
             hash: hash,
+            type,
         });
         return;
     }
@@ -118,25 +128,25 @@ function _addContentFileToAsset(assets: Map<SharedAssetHash, SharedAsset>, conte
     asset.contentFiles.push(contentFile);
 }
 
-const materialSrcExts = [".png", ".jpg", ".tga", ".tiff"];
-function _buildContentMaterialSrcAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
+const textureSourceExts = [".png", ".jpg", ".tga", ".tiff"];
+function _buildContentTextureAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
     for (const file of files) {
         const lowerFile = file.toLowerCase();
         const ext = path.extname(lowerFile);
 
-        if (materialSrcExts.includes(ext)) {
-            _addContentFileToAsset(assets, lowerFile);
+        if (textureSourceExts.includes(ext)) {
+            _addContentFileToAsset(assets, lowerFile, SharedAssetType.Texture);
         }
     }
 }
 
-function _buildGameMaterialAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
+function _buildGameTextureAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
     for (let file of files) {
         const lowerFile = file.toLowerCase();
         const ext = path.extname(lowerFile);
 
         if (ext === ".vtf") {
-            _addGameFileToAsset(assets, lowerFile);
+            _addGameFileToAsset(assets, lowerFile, SharedAssetType.Texture);
         }
     }
 }

@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import BitmapIcon from "../common/BitmapIcon.vue";
 import { launch, launcherButtons } from "../../model/LauncherButtons.js";
+import AppDesign from "../../design/AppDesign.js";
 
 function quit() {
     window.electronAPI.app.exit();
@@ -60,7 +61,7 @@ const pageButtons: PageButton[] = [
     },
     {
         name: "Assets",
-        icon: "tdesign:control-platform",
+        icon: AppDesign.icons.asset,
         route: "/assets",
     },
     {
