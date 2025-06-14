@@ -19,3 +19,5 @@ export interface SharedAssetRescanEvent {
     assets: Map<SharedAssetHash, SharedAsset>;
     totalTimeMillis: number;
 }
+
+export type SharedAssetMap = Map<SharedAssetHash, SharedAsset>;

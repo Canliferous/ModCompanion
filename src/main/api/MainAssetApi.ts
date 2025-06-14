@@ -2,11 +2,11 @@ import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
 import { SharedAssetRescanEvent } from "../../shared/SharedAsset.js";
 import { ipcMain } from "electron";
-import { rescan } from "../systems/MainAssetScannerSystem.js";
+import MainAssetRepository from "../systems/assets/MainAssetRepository.js";
 
 export function registerAssetApi(): boolean {
     ipcMain.on(SharedIpcChannels.AssetForceRescan, (event) => {
-        rescan();
+        MainAssetRepository.rescan();
     });
 
     return true;
