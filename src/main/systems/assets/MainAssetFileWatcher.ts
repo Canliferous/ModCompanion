@@ -3,7 +3,8 @@ import { getConfig } from "../MainConfigSystem.js";
 import MainAssetTextureScanner from "./MainAssetTextureScanner.js";
 import MainAssetRepository from "./MainAssetRepository.js";
 import { SharedAssetType } from "../../../shared/SharedAsset.js";
-import path from "path";
+import { notifyAssetsAdded } from "../../api/MainAssetApi.js";
+import MainSourceFs from "../../helpers/MainSourceFs.js";
 
 let watcher: FSWatcher | undefined = undefined;
 export function startFileWatcher(): boolean {
@@ -17,25 +18,16 @@ export function startFileWatcher(): boolean {
     return true;
 }
 
-// TODO: Move away
-function _getContentRelativePath(filePath: string): string {
-    const config = getConfig();
-    const contentPath = path.join(config.contentPath, config.gameName);
-    if (filePath.toLowerCase().startsWith(contentPath.toLowerCase())) {
-        return filePath.substring(contentPath.length);
-    }
-
-    return filePath;
-}
-
 function _handleAdded(filePath: string): void {
     if (MainAssetTextureScanner.isContentTextureSource(filePath)) {
-        const relativePath = _getContentRelativePath(filePath);
-        MainAssetRepository.addContentFileToAsset(
-            MainAssetRepository.getAssetMap(),
+        const relativePath = MainSourceFs.getContentRelativePath(filePath);
+        const { asset, created } = MainAssetRepository.addContentFile(
             relativePath.toLowerCase(),
             SharedAssetType.Texture,
         );
+        if (created) {
+            notifyAssetsAdded({ assets: [asset] });
+        }
     }
 }
 function _handleChanged(filePath: string): void {}

@@ -9,21 +9,20 @@ export function isContentTextureSource(filePath: string): boolean {
     return textureSourceExts.includes(ext);
 }
 
-export function buildContentTextureAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
+export function buildContentTextureAssets(files: string[]): void {
     for (const file of files) {
         if (isContentTextureSource(file)) {
-            MainAssetRepository.addContentFileToAsset(assets, file.toLowerCase(), SharedAssetType.Texture);
+            MainAssetRepository.addContentFile(file, SharedAssetType.Texture);
         }
     }
 }
 
-export function buildGameTextureAssets(assets: Map<SharedAssetHash, SharedAsset>, files: string[]): void {
+export function buildGameTextureAssets(files: string[]): void {
     for (let file of files) {
-        const lowerFile = file.toLowerCase();
-        const ext = path.extname(lowerFile);
+        const ext = path.extname(file).toLowerCase();
 
         if (ext === ".vtf") {
-            MainAssetRepository.addGameFileToAsset(assets, lowerFile, SharedAssetType.Texture);
+            MainAssetRepository.addGameFile(file, SharedAssetType.Texture);
         }
     }
 }

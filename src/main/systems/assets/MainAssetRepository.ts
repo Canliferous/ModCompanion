@@ -1,8 +1,9 @@
 import { SharedAsset, SharedAssetHash, SharedAssetMap, SharedAssetType } from "../../../shared/SharedAsset.js";
 import { createHash } from "node:crypto";
 import { filename } from "pathe/utils";
-import MainAssetScanner from "./MainAssetScanner.js";
+import MainAssetScanner, { AssetGroups } from "./MainAssetScanner.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
+import MainAssetTextureScanner from "./MainAssetTextureScanner.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetHash, SharedAsset>();
 
@@ -14,10 +15,17 @@ export async function rescan() {
     console.log("Rescanning...");
 
     const startMillis = new Date().getTime();
-    const assets = await MainAssetScanner.scanAssets();
+    const groups = await MainAssetScanner.scanAssets();
     const endMillis = new Date().getTime();
-    assetMap = assets;
-    notifyAssetsRescanned({ assets, totalTimeMillis: endMillis - startMillis });
+
+    assetMap = new Map<SharedAssetHash, SharedAsset>();
+    _buildAssets(groups);
+    notifyAssetsRescanned({ assets: assetMap, totalTimeMillis: endMillis - startMillis });
+}
+
+function _buildAssets(groups: AssetGroups) {
+    MainAssetTextureScanner.buildContentTextureAssets(groups.content.get("materialsrc") ?? []);
+    MainAssetTextureScanner.buildGameTextureAssets(groups.game.get("materials") ?? []);
 }
 
 export function createAssetHash(assetPath: string): SharedAssetHash {
@@ -30,99 +38,50 @@ export function createAssetName(fileName: string): string {
     return filename(fileName) ?? "unknown";
 }
 
-export function addGameFileToAsset(
-    assets: Map<SharedAssetHash, SharedAsset>,
-    gameFile: string,
-    type: SharedAssetType,
-): void {
-    const displayName = createAssetName(gameFile);
-    const hash = createAssetHash(gameFile);
-    if (!assets.has(hash)) {
-        assets.set(hash, {
+export interface FileAddResult {
+    asset: SharedAsset;
+    created: boolean;
+}
+
+export function addFile(filePath: string, type: SharedAssetType, isContentFile?: boolean): FileAddResult {
+    const file = filePath.toLowerCase();
+    const displayName = createAssetName(file);
+    const hash = createAssetHash(file);
+    if (!assetMap.has(hash)) {
+        const asset: SharedAsset = {
             displayName: displayName,
-            contentFiles: [],
-            gameFiles: [gameFile],
+            contentFiles: isContentFile ? [file] : [],
+            gameFiles: !isContentFile ? [file] : [],
             hash: hash,
             type,
-        });
-        return;
+        };
+        assetMap.set(hash, asset);
+        return { asset, created: true };
     }
 
-    const asset = assets.get(hash)!;
-    asset.gameFiles.push(gameFile);
+    const asset = assetMap.get(hash)!;
+    const arr = isContentFile ? asset.contentFiles : asset.gameFiles;
+    if (arr.includes(file)) {
+        return { asset, created: false };
+    }
+
+    arr.push(file);
+    return { asset, created: false };
 }
 
-export function addContentFileToAsset(
-    assets: Map<SharedAssetHash, SharedAsset>,
-    contentFile: string,
-    type: SharedAssetType,
-): void {
-    const displayName = createAssetName(contentFile);
-    const hash = createAssetHash(contentFile);
-    if (!assets.has(hash)) {
-        assets.set(hash, {
-            displayName: displayName,
-            contentFiles: [contentFile],
-            gameFiles: [],
-            hash: hash,
-            type,
-        });
-        return;
-    }
-
-    const asset = assets.get(hash)!;
-    asset.contentFiles.push(contentFile);
+export function addContentFile(filePath: string, type: SharedAssetType): FileAddResult {
+    return addFile(filePath, type, true);
 }
 
-export function addGameFilesToAsset(
-    assets: Map<SharedAssetHash, SharedAsset>,
-    assetHash: string,
-    assetDisplayName: string,
-    gameFiles: string[],
-    type: SharedAssetType,
-): void {
-    if (!assets.has(assetHash)) {
-        assets.set(assetHash, {
-            displayName: assetDisplayName,
-            contentFiles: [],
-            gameFiles: gameFiles,
-            hash: assetHash,
-            type,
-        });
-        return;
-    }
-
-    const asset = assets.get(assetHash)!;
-    asset.gameFiles.push(...gameFiles);
-}
-
-export function addContentFilesToAsset(
-    assets: Map<SharedAssetHash, SharedAsset>,
-    assetHash: string,
-    assetDisplayName: string,
-    contentFiles: string[],
-    type: SharedAssetType,
-): void {
-    if (!assets.has(assetHash)) {
-        assets.set(assetHash, {
-            displayName: assetDisplayName,
-            contentFiles: contentFiles,
-            gameFiles: [],
-            hash: assetHash,
-            type,
-        });
-        return;
-    }
-
-    const asset = assets.get(assetHash)!;
-    asset.contentFiles.push(...contentFiles);
+export function addGameFile(filePath: string, type: SharedAssetType): FileAddResult {
+    return addFile(filePath, type, false);
 }
 
 export default {
-    addContentFileToAsset,
-    addContentFilesToAsset,
-    addGameFileToAsset,
-    addGameFilesToAsset,
+    addFile,
+    addContentFile,
+    // TODO: Move away
+    addGameFile,
     createAssetHash,
     createAssetName,
     rescan,

@@ -18,11 +18,38 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
         const toast = useToast();
         const assetCount = event.assets.size;
-        const seconds = (event.totalTimeMillis * 0.001).toFixed(2);
+        if (event.totalTimeMillis) {
+            const seconds = (event.totalTimeMillis * 0.001).toFixed(2);
+            toast.add({
+                title: "Asset scan complete",
+                description: `Scanned ${assetCount} assets in ${seconds}s`,
+                icon: "tdesign:task-checked-1",
+                color: "success",
+            });
+        } else {
+            toast.add({
+                title: "Scan complete",
+                description: `Scanned ${assetCount} assets`,
+                icon: "tdesign:task-checked-1",
+                color: "success",
+            });
+        }
+    });
+
+    window.electronAPI.asset.subscribeAdded((event) => {
+        const newAssets = event.assets;
+        if (newAssets.length === 0) return;
+
+        for (const newAsset of newAssets) {
+            assets.value.set(newAsset.hash, newAsset);
+        }
+
+        const toast = useToast();
+        const assetList = newAssets.map((a) => `+ ${a.displayName}`).join("\n");
         toast.add({
-            title: "Scan complete",
-            description: `Scanned ${assetCount} assets in ${seconds}s`,
-            icon: "tdesign:task-checked-1",
+            title: "Assets added",
+            description: assetList,
+            icon: "tdesign:task-add-1",
             color: "success",
         });
     });

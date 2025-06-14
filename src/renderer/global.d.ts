@@ -7,7 +7,7 @@ import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgres
 import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
 import { SharedMapPath } from "../shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
-import { SharedAsset, SharedAssetRescanEvent } from "../shared/SharedAsset.js";
+import { SharedAsset, SharedAssetAddedEvent, SharedAssetRescanEvent } from "../shared/SharedAsset.js";
 
 export {};
 
@@ -33,6 +33,7 @@ declare global {
             asset: {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
+                subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) => IpcRenderer;
             };
         };
     }

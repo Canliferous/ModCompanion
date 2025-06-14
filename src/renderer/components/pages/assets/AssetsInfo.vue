@@ -10,6 +10,12 @@
                     <li v-for="asset in listStore.selectedAsset.contentFiles" class="font-mono">
                         {{ asset }}
                     </li>
+                    <li
+                        v-if="listStore.selectedAsset.contentFiles.length === 0"
+                        class="text-center text-sm text-neutral-400"
+                    >
+                        None
+                    </li>
                 </ul>
             </div>
             <div class="border border-lime-500 border-t-0">
@@ -17,6 +23,12 @@
                 <ul class="p-1">
                     <li v-for="asset in listStore.selectedAsset.gameFiles" class="font-mono">
                         {{ asset }}
+                    </li>
+                    <li
+                        v-if="listStore.selectedAsset.gameFiles.length === 0"
+                        class="text-center text-sm text-neutral-400"
+                    >
+                        None
                     </li>
                 </ul>
             </div>

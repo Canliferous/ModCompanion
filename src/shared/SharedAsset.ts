@@ -17,7 +17,11 @@ export type SharedAssetHash = string;
 
 export interface SharedAssetRescanEvent {
     assets: Map<SharedAssetHash, SharedAsset>;
-    totalTimeMillis: number;
+    totalTimeMillis?: number;
+}
+
+export interface SharedAssetAddedEvent {
+    assets: SharedAsset[];
 }
 
 export type SharedAssetMap = Map<SharedAssetHash, SharedAsset>;

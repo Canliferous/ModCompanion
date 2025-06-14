@@ -2,31 +2,19 @@ import { getConfig } from "../MainConfigSystem.js";
 import path from "path";
 import { timeMillisAsync } from "../../helpers/MainTiming.js";
 import fs from "fs/promises";
-import { SharedAsset, SharedAssetHash } from "../../../shared/SharedAsset.js";
-import MainAssetTextureScanner from "./MainAssetTextureScanner.js";
 
-interface Trees {
-    contentTree: string[];
-    gameTree: string[];
+export interface AssetGroups {
+    content: Map<string, string[]>;
+    game: Map<string, string[]>;
 }
 
-const trees: Trees = {
-    contentTree: [],
-    gameTree: [],
-};
-
-export async function scanAssets(): Promise<Map<SharedAssetHash, SharedAsset>> {
+export async function scanAssets(): Promise<AssetGroups> {
     const { gameTree, contentTree } = await _scanGameAndContent();
-    trees.contentTree = contentTree;
-    trees.gameTree = gameTree;
 
     const contentGroups = _buildGroups(contentTree);
     const gameGroups = _buildGroups(gameTree);
 
-    const assets = new Map<SharedAssetHash, SharedAsset>();
-    MainAssetTextureScanner.buildContentTextureAssets(assets, contentGroups.get("materialsrc") ?? []);
-    MainAssetTextureScanner.buildGameTextureAssets(assets, gameGroups.get("materials") ?? []);
-    return assets;
+    return { content: contentGroups, game: gameGroups };
 }
 
 export default { scanAssets };
