@@ -4,40 +4,15 @@
             <div class="bg-accented p-1">
                 <span class="text-sm font-mono">{{ listStore.selectedAsset.displayName }}</span>
             </div>
-            <div class="border border-amber-500 border-t-0">
-                <p class="bg-amber-500 p-1 text-xs text-amber-950 font-bold uppercase">Content files</p>
-                <ul class="p-1">
-                    <li v-for="asset in listStore.selectedAsset.contentFiles" class="font-mono">
-                        {{ asset }}
-                    </li>
-                    <li
-                        v-if="listStore.selectedAsset.contentFiles.length === 0"
-                        class="text-center text-sm text-neutral-400"
-                    >
-                        None
-                    </li>
-                </ul>
-            </div>
-            <div class="border border-lime-500 border-t-0">
-                <p class="bg-lime-500 p-1 text-xs text-lime-950 font-bold uppercase">Game files</p>
-                <ul class="p-1">
-                    <li v-for="asset in listStore.selectedAsset.gameFiles" class="font-mono">
-                        {{ asset }}
-                    </li>
-                    <li
-                        v-if="listStore.selectedAsset.gameFiles.length === 0"
-                        class="text-center text-sm text-neutral-400"
-                    >
-                        None
-                    </li>
-                </ul>
-            </div>
+            <AssetsInfoFiles color="amber" :files="listStore.selectedAsset.contentFiles" header="Content Files" />
+            <AssetsInfoFiles color="lime" :files="listStore.selectedAsset.gameFiles" header="Game Files" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useAssetListStore } from "../../../store/AssetListStore.js";
+import AssetsInfoFiles from "~/components/pages/assets/AssetsInfoFiles.vue";
 
 const listStore = useAssetListStore();
 </script>
