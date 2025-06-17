@@ -1,12 +1,12 @@
-import { createPinia } from "pinia";
 import { createApp } from "vue";
-import App from "./components/App.vue";
-import ui from "@nuxt/ui/vue-plugin";
+import { createPinia } from "pinia";
 import { createMemoryHistory, createRouter, Router } from "vue-router";
-import HomePage from "./components/pages/HomePage.vue";
-import AssetsPage from "./components/pages/assets/AssetsPage.vue";
-import MapsPage from "./components/pages/maps/MapsPage.vue";
-import { useAssetListStore } from "./store/AssetListStore.js";
+import ui from "@nuxt/ui/vue-plugin";
+import App from "~/components/App.vue";
+import HomePage from "~/components/pages/HomePage.vue";
+import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
+import MapsPage from "~/components/pages/maps/MapsPage.vue";
+import { useAssetListStore } from "~/store/AssetListStore.ts";
 
 export function initVue() {
     const pinia = createPinia();

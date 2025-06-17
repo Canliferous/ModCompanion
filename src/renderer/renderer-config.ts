@@ -1,4 +1,4 @@
-import { SharedAppConfig } from "../shared/SharedAppConfig.js";
+import { SharedAppConfig } from "Shared/SharedAppConfig.js";
 
 let config: SharedAppConfig;
 

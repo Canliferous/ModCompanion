@@ -1,12 +1,12 @@
-import { defineStore } from "pinia";
-import { useRemember } from "../composables/useRemember.js";
 import { reactive, ref } from "vue";
+import { defineStore } from "pinia";
+import { useRemember } from "~/composables/useRemember.js";
 import {
     isAppendErrorEvent,
     isAppendMessageEvent,
     isClearEvent,
     SharedMapCompileLogEvent,
-} from "../../shared/SharedMapCompileLogEvent.js";
+} from "Shared/SharedMapCompileLogEvent.js";
 
 export const useMapConsoleStore = defineStore("map-console", () => {
     const isOpen = useRemember(ref(false), "map-console-open");

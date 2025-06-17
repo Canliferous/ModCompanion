@@ -1,4 +1,4 @@
-import { SharedLaunchers } from "../../shared/SharedLaunchers.js";
+import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 
 export interface LauncherButton {
     name: string;

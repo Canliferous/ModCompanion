@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { useMapListStore } from "./MapListStore.js";
 import { ref } from "vue";
-import { SharedMapTimeReport } from "../../shared/SharedMapTimeReport.js";
-import { SharedMapPath } from "../../shared/SharedMapPath.js";
+import { defineStore } from "pinia";
+import { useMapListStore } from "~/store/MapListStore.ts";
+import { SharedMapTimeReport } from "Shared/SharedMapTimeReport.ts";
+import { SharedMapPath } from "Shared/SharedMapPath.ts";
 
 export const useMapTimeReportStore = defineStore("map-time-report", () => {
     const report = ref<SharedMapTimeReport | undefined>();

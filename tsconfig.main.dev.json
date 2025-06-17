@@ -6,8 +6,10 @@
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
     "strict": true,
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext", "DOM"],
+    "paths": {
+      "shared": ["./src/shared"]
+    }
   },
   "include": ["src/main.ts", "src/main"],
-
 }

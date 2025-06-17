@@ -40,4 +40,10 @@ export default defineConfig({
     build: {
         outDir: "dist/renderer",
     },
+    resolve: {
+        alias: {
+            "~": "/src/renderer",
+            Shared: "/src/shared",
+        },
+    },
 });

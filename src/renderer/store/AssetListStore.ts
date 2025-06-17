@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { SharedAsset, SharedAssetHash } from "../../shared/SharedAsset.js";
 import { computed, ref } from "vue";
-import { useAssetsFilter } from "../composables/useFilter.js";
+import { defineStore } from "pinia";
+import { useAssetsFilter } from "~/composables/useFilter.ts";
+import { SharedAsset, SharedAssetHash } from "Shared/SharedAsset.ts";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref(new Map<SharedAssetHash, SharedAsset>());

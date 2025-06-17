@@ -1,10 +1,10 @@
-import { useRemember } from "../composables/useRemember.js";
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { TreeItem } from "@nuxt/ui/components/Tree.vue.js";
 import { filename } from "pathe/utils";
 import pathe from "pathe";
-import { MapTreeItem } from "../model/MapTreeItem.js";
+import { TreeItem } from "@nuxt/ui/components/Tree.vue";
+import { useRemember } from "~/composables/useRemember.ts";
+import { MapTreeItem } from "~/model/MapTreeItem.ts";
 
 export const useMapDrawerStore = defineStore("map-drawer", () => {
     const isOpen = useRemember(ref(false), "map-drawer-open");
