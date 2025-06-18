@@ -25,3 +25,27 @@ export function browseToFile(filePath: string): void {
         }
     });
 }
+
+export function openFile(filePath: string): void {
+    const normalizedPath = path.resolve(filePath);
+    const platform = os.platform();
+
+    let command = "";
+
+    if (platform === "win32") {
+        command = `"${normalizedPath}"`;
+    } else if (platform === "darwin") {
+        command = `open "${normalizedPath}"`;
+    } else if (platform === "linux") {
+        command = `xdg-open "${normalizedPath}"`;
+    } else {
+        console.error(`Unsupported platform: ${platform}`);
+        return;
+    }
+
+    child_process.exec(command, (error) => {
+        if (error) {
+            console.error(`Failed to open: ${error.message}`);
+        }
+    });
+}

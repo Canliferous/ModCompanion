@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { State } from "./PlayPauseStopControls.model";
-import { useMapCompileStore } from "../../store/MapCompileStore.js";
+import { useMapCompileStore } from "~/store/MapCompileStore.js";
 
 const compileStore = useMapCompileStore();
 </script>

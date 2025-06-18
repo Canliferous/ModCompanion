@@ -18,6 +18,7 @@ declare global {
                 launch: (launcherType: SharedLaunchers, launcherArgs: string | undefined) => void;
                 exit: () => void;
                 browseToFile: (filePath: string) => void;
+                openFile: (filePath: string) => void;
             };
             config: {
                 get: () => Promise<SharedAppConfig>;

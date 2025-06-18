@@ -5,7 +5,11 @@
     "module": "NodeNext",
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
-    "strict": true
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "paths": {
+      "shared": ["./src/shared"]
+    }
   },
   "include": ["src/main.ts", "src/main"],
 

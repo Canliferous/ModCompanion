@@ -18,5 +18,5 @@
       "Shared/*": ["./src/shared/*"]
     },
   },
-  "include": ["src/renderer"]
+  "include": ["src/renderer", "auto-imports.d.ts", "components.d.ts"]
 }
