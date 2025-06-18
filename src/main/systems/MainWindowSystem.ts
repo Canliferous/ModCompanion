@@ -61,6 +61,7 @@ function createWindow(): void {
             preload: path.join(dirname, "../..", "preload.js"),
             contextIsolation: true,
             nodeIntegration: false,
+            webSecurity: false,
         },
         icon: path.join(mainAssetsRoot, "mod_companion_192.png"),
     });
