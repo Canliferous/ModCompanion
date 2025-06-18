@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AssetsInfoFilesItem from "~/components/pages/assets/AssetsInfoFilesItem.vue";
+import AssetsTabFilesListItem from "~/components/pages/assets/tabs/files/AssetsTabFilesListItem.vue";
 
 const props = defineProps<{ color: string; files: string[]; header: string; filesRoot: string }>();
 </script>
@@ -10,7 +10,7 @@ const props = defineProps<{ color: string; files: string[]; header: string; file
         <div class="py-1">
             <span v-if="files.length === 0" class="text-center text-sm text-neutral-400">None</span>
 
-            <AssetsInfoFilesItem v-for="file in files" :file="file" :files-root="filesRoot" />
+            <AssetsTabFilesListItem v-for="file in files" :file="file" :files-root="filesRoot" />
         </div>
     </div>
 </template>
