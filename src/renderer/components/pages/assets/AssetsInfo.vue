@@ -10,7 +10,7 @@
                 <template #files>
                     <AssetsTabFiles :asset="listStore.selectedAsset" />
                 </template>
-                <template #texture><AssetsTabTexture /></template>
+                <template #texture><AssetsTabTexture :asset="listStore.selectedAsset" /></template>
             </UTabs>
         </div>
     </div>
@@ -37,11 +37,11 @@ const tabs = computed(() => {
     switch (asset?.type) {
         case SharedAssetType.Texture: {
             return [
-                filesTab,
                 {
                     label: "Texture",
                     slot: "texture",
                 },
+                filesTab,
             ];
         }
 
