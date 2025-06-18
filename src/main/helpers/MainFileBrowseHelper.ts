@@ -13,6 +13,7 @@ export function browseToFile(filePath: string): void {
     } else if (platform === "darwin") {
         command = `open "${normalizedPath}"`;
     } else if (platform === "linux") {
+        // TODO: This doesn't actually BROWSE to the file
         command = `xdg-open "${normalizedPath}"`;
     } else {
         console.error(`Unsupported platform: ${platform}`);
