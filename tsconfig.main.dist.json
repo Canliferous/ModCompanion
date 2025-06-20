@@ -8,7 +8,7 @@
     "strict": true,
     "lib": ["ESNext", "DOM"],
     "paths": {
-      "shared": ["./src/shared"]
+      "Shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src/main.ts", "src/main"],

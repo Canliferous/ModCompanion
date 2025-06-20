@@ -27,14 +27,12 @@ import AssetsTabTexture from "~/components/pages/assets/tabs/texture/AssetsTabTe
 
 const listStore = useAssetListStore();
 
-const asset = listStore.selectedAsset;
-
 const filesTab: TabsItem = {
     label: "Files",
     slot: "files",
 };
 const tabs = computed(() => {
-    switch (asset?.type) {
+    switch (listStore.selectedAsset?.type) {
         case SharedAssetType.Texture: {
             return [
                 {

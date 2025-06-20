@@ -8,6 +8,8 @@ import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
 import { SharedMapPath } from "../shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
 import { SharedAsset, SharedAssetAddedEvent, SharedAssetRescanEvent } from "../shared/SharedAsset.js";
+import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
+import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 
 export {};
 
@@ -35,6 +37,9 @@ declare global {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
                 subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) => IpcRenderer;
+            };
+            image: {
+                getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;
             };
         };
     }

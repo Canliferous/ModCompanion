@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref } from "vue";
-import { SharedAsset } from "Shared/SharedAsset.ts";
+import { SharedAsset } from "Shared/SharedAsset.js";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
     return computed(() => {

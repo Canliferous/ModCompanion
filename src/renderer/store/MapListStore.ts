@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { useRememberStringArray } from "~/composables/useRemember.ts";
-import { useFilter } from "~/composables/useFilter.ts";
+import { useRememberStringArray } from "~/composables/useRemember.js";
+import { useFilter } from "~/composables/useFilter.js";
 
 export const useMapListStore = defineStore("map-list", () => {
     const mapPaths = useRememberStringArray(ref([]), "map-list");

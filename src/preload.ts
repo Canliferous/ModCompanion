@@ -10,6 +10,7 @@ import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgress
 import { SharedMapPath } from "./shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "./shared/SharedMapTimeReport.js";
 import { SharedAsset, SharedAssetAddedEvent, SharedAssetRescanEvent } from "./shared/SharedAsset.js";
+import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -52,5 +53,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.on(SharedIpcChannels.AssetAdded, (e: IpcRendererEvent, event: SharedAssetAddedEvent) =>
                 callback(event),
             ),
+    },
+
+    image: {
+        getMeta: (imageFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.ImageGetMeta),
     },
 });
