@@ -56,6 +56,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     image: {
-        getMeta: (imageFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.ImageGetMeta),
+        getMeta: (imageFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.ImageGetMeta, imageFilePath),
     },
 });

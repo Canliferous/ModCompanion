@@ -8,4 +8,13 @@ export interface SharedImageMetaReport {
     fileSizeBytes?: number;
     bitDepth?: number;
     colorSpace?: keyof ColourspaceEnum;
+    data?: string;
+    channels?: SharedImageChannels;
+}
+
+export interface SharedImageChannels {
+    redData?: string;
+    greenData?: string;
+    blueData?: string;
+    alphaData?: string;
 }
