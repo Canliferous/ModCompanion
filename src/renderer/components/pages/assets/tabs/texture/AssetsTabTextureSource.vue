@@ -1,0 +1,61 @@
+<script setup async lang="ts">
+import { ref } from "vue";
+import { getAppConfig } from "~/renderer-config.js";
+import pathe from "pathe";
+import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
+import { useTextureViewOptionsStore } from "~/store/TextureViewOptionsStore.js";
+import AssetsTabTextureChannel from "~/components/pages/assets/tabs/texture/AssetsTabTextureChannel.vue";
+import AssetsTabTextureMetaTable from "~/components/pages/assets/tabs/texture/AssetsTabTextureMetaTable.vue";
+import { base64ImageUrl } from "~/helper/ImageHelper.js";
+import { useImageCacheStore } from "~/store/ImageCacheStore.js";
+
+const props = defineProps<{ sourceFile: string }>();
+
+const optionsStore = useTextureViewOptionsStore();
+const imageCacheStore = useImageCacheStore();
+
+const fullPath = pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.sourceFile);
+
+const imageMeta = ref<SharedImageMetaReport | undefined>(await imageCacheStore.getMeta(fullPath));
+
+function onOpen() {
+    window.electronAPI.app.openFile(fullPath);
+}
+function onBrowse() {
+    window.electronAPI.app.browseToFile(fullPath);
+}
+</script>
+
+<template>
+    <div>
+        <div class="bg-amber-500 px-2 py-1 text-xs w-max text-neutral-900 font-medium">Source Image</div>
+        <div class="border border-amber-500 bg-amber-500/5">
+            <p class="m-2 mb-0 text-xs font-mono text-neutral-300">{{ sourceFile }}</p>
+
+            <div class="grid grid-cols-2 gap-2 text-sm p-2">
+                <div>
+                    <img v-if="imageMeta?.data" :src="base64ImageUrl(imageMeta.data)" alt="" class="max-h-full" />
+                </div>
+                <div class="grid grid-cols-2 gap-2" v-if="imageMeta?.channels !== undefined">
+                    <AssetsTabTextureChannel :data="imageMeta?.channels?.redData" label-name="R" />
+                    <AssetsTabTextureChannel :data="imageMeta?.channels?.greenData" label-name="G" />
+                    <AssetsTabTextureChannel :data="imageMeta?.channels?.blueData" label-name="B" />
+                    <AssetsTabTextureChannel :data="imageMeta?.channels?.alphaData" label-name="A" />
+                </div>
+                <AssetsTabTextureMetaTable v-if="imageMeta" :image-meta="imageMeta" />
+            </div>
+
+            <div class="mx-2 border-t border-t-amber-500/25" />
+
+            <div class="p-2 flex items-center gap-2">
+                <UButton label="Open" size="xs" color="neutral" variant="subtle" @click="onOpen" />
+                <UButton label="Browse To" size="xs" color="neutral" variant="subtle" @click="onBrowse" />
+                <div class="ml-auto">
+                    <UCheckbox v-model="optionsStore.showChannels" size="sm" color="neutral" label="Show Channels" />
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped></style>
