@@ -37,6 +37,7 @@ declare global {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
                 subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) => IpcRenderer;
+                subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

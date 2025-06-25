@@ -2,6 +2,7 @@ import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
 import { SharedAsset, SharedAssetHash } from "Shared/SharedAsset.js";
+import { useRouter } from "vue-router";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref(new Map<SharedAssetHash, SharedAsset>());
@@ -52,6 +53,12 @@ export const useAssetListStore = defineStore("asset-list", () => {
             icon: "tdesign:task-add-1",
             color: "success",
         });
+    });
+
+    window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
+        selectedAssetHash.value = assetHash;
+        const router = useRouter();
+        router.push("/assets");
     });
 
     function forceRefresh(): void {

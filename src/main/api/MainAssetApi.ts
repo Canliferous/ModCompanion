@@ -19,3 +19,7 @@ export function notifyAssetsRescanned(event: SharedAssetRescanEvent): void {
 export function notifyAssetsAdded(event: SharedAssetAddedEvent): void {
     getMainWindow()?.webContents.send(SharedIpcChannels.AssetAdded, event);
 }
+
+export function notifyNavigateToAssetHash(assetHash: string): void {
+    getMainWindow()?.webContents.send(SharedIpcChannels.AssetNavigateToHash, assetHash);
+}

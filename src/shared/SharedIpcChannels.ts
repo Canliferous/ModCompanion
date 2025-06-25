@@ -13,5 +13,6 @@ export const SharedIpcChannels = {
     AssetRescanned: "asset_rescanned",
     AssetAdded: "asset_added",
     AssetForceRescan: "asset_force_rescan",
+    AssetNavigateToHash: "asset_navigate_to_hash",
     ImageGetMeta: "image_get_meta",
 } as const;

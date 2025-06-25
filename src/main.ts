@@ -1,9 +1,10 @@
+import { app, dialog } from "electron";
 import { initWindowSystem } from "./main/systems/MainWindowSystem.js";
 import { initConfigSystem } from "./main/systems/MainConfigSystem.js";
 import { initApiSystem } from "./main/systems/MainApiSystem.js";
-import { app, dialog } from "electron";
 import { initMapCompileSystem } from "./main/systems/MainMapCompileSystem.js";
-import {initAssetScannerSystem} from "./main/systems/MainAssetScannerSystem.js";
+import { initAssetScannerSystem } from "./main/systems/MainAssetScannerSystem.js";
+import { initProtocolSystem } from "./main/systems/MainProtocolSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -12,6 +13,7 @@ interface System {
 }
 const systems: System[] = [
     { name: "Config", initFunction: initConfigSystem },
+    { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: initWindowSystem },
     { name: "MapCompile", initFunction: initMapCompileSystem },
