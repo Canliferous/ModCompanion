@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { SharedAssetType } from "../../../shared/SharedAsset.js";
-import { getIconForAssetType } from "../../design/AppDesign.js";
+import { SharedAssetType } from "Shared/SharedAsset.js";
+import { getIconForAssetType } from "~/design/AppDesign.js";
 import { computed } from "vue";
 
 const props = defineProps<{

@@ -29,14 +29,19 @@ function onBrowse() {
 <template>
     <div>
         <div class="bg-amber-500 px-2 py-1 text-xs w-max text-neutral-900 font-medium">Source Image</div>
-        <div class="border border-amber-500 bg-amber-500/5">
+        <div class="border border-amber-500 bg-amber-500/5 @container">
             <p class="m-2 mb-0 text-xs font-mono text-neutral-300">{{ sourceFile }}</p>
 
-            <div class="grid grid-cols-2 gap-2 text-sm p-2">
-                <div>
+            <div
+                class="grid grid-cols-1 @lg:grid-cols-[auto_auto] @2xl:grid-cols-[auto_auto_auto] justify-start gap-2 text-sm p-2"
+            >
+                <div class="max-h-60">
                     <img v-if="imageMeta?.data" :src="base64ImageUrl(imageMeta.data)" alt="" class="max-h-full" />
                 </div>
-                <div class="grid grid-cols-2 gap-2" v-if="imageMeta?.channels !== undefined">
+                <div
+                    class="grid grid-cols-[auto_auto] grid-rows-2 gap-2 justify-start max-h-60"
+                    v-if="imageMeta?.channels !== undefined"
+                >
                     <AssetsTabTextureChannel :data="imageMeta?.channels?.redData" label-name="R" />
                     <AssetsTabTextureChannel :data="imageMeta?.channels?.greenData" label-name="G" />
                     <AssetsTabTextureChannel :data="imageMeta?.channels?.blueData" label-name="B" />

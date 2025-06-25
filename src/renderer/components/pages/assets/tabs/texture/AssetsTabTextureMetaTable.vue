@@ -2,6 +2,8 @@
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { computed } from "vue";
 import Humanize from "humanize-plus";
+import VerticalTable from "~/components/common/VerticalTable.vue";
+import { VerticalTableItem } from "~/components/common/VerticalTable.model.js";
 
 const props = defineProps<{ imageMeta: SharedImageMetaReport }>();
 
@@ -9,22 +11,27 @@ const fileSize = computed(() => {
     if (props.imageMeta?.fileSizeBytes === undefined) return "unknown";
     return Humanize.fileSize(props.imageMeta.fileSizeBytes);
 });
+
+const items = computed(() => {
+    const itms = [
+        { name: "Resolution", value: `${props.imageMeta.width ?? "?"}x${props.imageMeta.height ?? "?"}` },
+        { name: "Size", value: fileSize.value },
+        { name: "Format", value: props.imageMeta.format },
+    ] satisfies VerticalTableItem[];
+
+    if (props.imageMeta.bitDepth) {
+        itms.push({ name: "Bit Depth", value: "" + props.imageMeta.bitDepth });
+    }
+    if (props.imageMeta.colorSpace) {
+        itms.push({ name: "Color Space", value: props.imageMeta.colorSpace });
+    }
+
+    return itms;
+});
 </script>
 
 <template>
-    <div class="grid grid-cols-[auto,_1fr] content-start">
-        <span class="font-bold col-span-2">Metadata</span>
-        <span>Resolution</span>
-        <span>{{ imageMeta.width ?? "?" }}x{{ imageMeta.height ?? "?" }}</span>
-        <span>Size</span>
-        <span>{{ fileSize }}</span>
-        <span>Format</span>
-        <span>{{ imageMeta.format }}</span>
-        <span v-if="imageMeta.bitDepth">Bit Depth</span>
-        <span v-if="imageMeta.bitDepth">{{ imageMeta.bitDepth }}</span>
-        <span>Color Space</span>
-        <span>{{ imageMeta.colorSpace }}</span>
-    </div>
+    <VerticalTable :items="items" />
 </template>
 
 <style scoped></style>

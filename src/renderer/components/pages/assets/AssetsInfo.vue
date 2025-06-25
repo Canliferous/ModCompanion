@@ -2,9 +2,10 @@
     <div>
         <div v-if="listStore.selectedAsset" class="grid gap-1">
             <div class="bg-accented p-1 flex gap-1 items-center">
-                <AssetTypeIcon :type="listStore.selectedAsset.type" />
-                <span class="text-sm font-mono">{{ listStore.selectedAsset.displayName }}</span>
-                <span class="text-sm font-mono ml-auto">{{ listStore.selectedAsset.hash.substring(0, 5) }}</span>
+                <AssetName :name="listStore.selectedAsset.displayName" :type="listStore.selectedAsset.type" />
+                <div class="ml-auto">
+                    <AssetHash :hash="listStore.selectedAssetHash" />
+                </div>
             </div>
             <UTabs :items="tabs" variant="link" size="xs" color="neutral">
                 <template #files>
@@ -24,6 +25,8 @@ import AssetsTabFiles from "~/components/pages/assets/tabs/files/AssetsTabFiles.
 import { SharedAssetType } from "Shared/SharedAsset.js";
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
 import AssetsTabTexture from "~/components/pages/assets/tabs/texture/AssetsTabTexture.vue";
+import AssetHash from "~/components/common/AssetHash.vue";
+import AssetName from "~/components/common/AssetName.vue";
 
 const listStore = useAssetListStore();
 
