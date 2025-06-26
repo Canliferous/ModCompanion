@@ -5,7 +5,7 @@
                 <AssetsSearchInput />
                 <AssetsRefreshButton />
             </div>
-            <AssetsDataGrid />
+            <AssetsList />
         </div>
         <div>
             <AssetsInfo />
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import AssetsDataGrid from "./AssetsDataGrid.vue";
+import AssetsList from "~/components/pages/assets/list/AssetsList.vue";
 import AssetsRefreshButton from "./AssetsRefreshButton.vue";
 import AssetsSearchInput from "./AssetsSearchInput.vue";
 import AssetsInfo from "./AssetsInfo.vue";
