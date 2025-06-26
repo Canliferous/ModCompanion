@@ -2,10 +2,7 @@ import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "elect
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import settings from "electron-settings";
-
-const dirname = path.dirname(fileURLToPath(import.meta.url));
-const rendererRoot = path.join(dirname, "../../renderer/");
-const mainAssetsRoot = path.join(dirname, "../../main_assets/");
+import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem";
 
 let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;
@@ -58,12 +55,12 @@ function createWindow(): void {
         x: bounds.x,
         y: bounds.y,
         webPreferences: {
-            preload: path.join(dirname, "../..", "preload.js"),
+            preload: path.join(getRootDir(), "preload.js"),
             contextIsolation: true,
             nodeIntegration: false,
             webSecurity: false,
         },
-        icon: path.join(mainAssetsRoot, "mod_companion_192.png"),
+        icon: path.join(getMainAssetsDir(), "mod_companion_192.png"),
     });
 
     mainWindow.on("close", (event) => {
@@ -75,7 +72,7 @@ function createWindow(): void {
         mainWindow.loadURL("http://localhost:5173");
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(path.join(rendererRoot, `index.html`));
+        mainWindow.loadFile(path.join(getRendererDir(), `index.html`));
     }
 
     mainWindow.removeMenu();
@@ -97,7 +94,7 @@ function createWindow(): void {
 }
 
 function createTray(): void {
-    tray = new Tray(path.join(mainAssetsRoot, "mod_companion_192.png"));
+    tray = new Tray(path.join(getMainAssetsDir(), "mod_companion_192.png"));
 
     tray.setToolTip("Mod Companion");
     tray.setContextMenu(
