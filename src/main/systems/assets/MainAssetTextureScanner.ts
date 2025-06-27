@@ -4,14 +4,18 @@ import MainAssetRepository from "./MainAssetRepository.js";
 
 const textureSourceExts = [".png", ".jpg", ".tga", ".tiff"];
 
-export function isContentTextureSource(filePath: string): boolean {
+export function isContentTexture(filePath: string): boolean {
     const ext = path.extname(filePath).toLowerCase();
     return textureSourceExts.includes(ext);
 }
 
+export function isGameTexture(filePath: string): boolean {
+    return path.extname(filePath).toLowerCase() === ".vtf";
+}
+
 export function buildContentTextureAssets(files: string[]): void {
     for (const file of files) {
-        if (isContentTextureSource(file)) {
+        if (isContentTexture(file)) {
             MainAssetRepository.addContentFile(file, SharedAssetType.Texture);
         }
     }
@@ -19,12 +23,10 @@ export function buildContentTextureAssets(files: string[]): void {
 
 export function buildGameTextureAssets(files: string[]): void {
     for (let file of files) {
-        const ext = path.extname(file).toLowerCase();
-
-        if (ext === ".vtf") {
+        if (isGameTexture(file)) {
             MainAssetRepository.addGameFile(file, SharedAssetType.Texture);
         }
     }
 }
 
-export default { buildContentTextureAssets, buildGameTextureAssets, isContentTextureSource };
+export default { buildContentTextureAssets, buildGameTextureAssets, isContentTexture, isGameTexture };

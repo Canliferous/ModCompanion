@@ -7,7 +7,12 @@ import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgres
 import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
 import { SharedMapPath } from "../shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
-import { SharedAsset, SharedAssetAddedEvent, SharedAssetRescanEvent } from "../shared/SharedAsset.js";
+import {
+    SharedAsset,
+    SharedAssetAddedEvent,
+    SharedAssetRescanEvent,
+    SharedAssetUpdatedEvent,
+} from "../shared/SharedAsset.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 
@@ -37,6 +42,7 @@ declare global {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
                 subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) => IpcRenderer;
+                subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
             };
             image: {

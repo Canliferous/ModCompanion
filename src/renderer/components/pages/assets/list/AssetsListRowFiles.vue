@@ -13,14 +13,14 @@ defineProps<{ asset: SharedAsset }>();
             class="col-span-full grid grid-cols-subgrid text-amber-500 items-center"
         >
             <ContentAssetIcon />
-            <div class="text-sm font-mono">{{ contentFile }}</div>
+            <div class="text-sm font-mono max-w-full overflow-x-hidden overflow-ellipsis">{{ contentFile }}</div>
         </div>
         <div
             v-for="gameFile in asset.gameFiles"
             class="col-span-full grid grid-cols-subgrid text-lime-500 items-center"
         >
             <GameAssetIcon />
-            <div class="text-sm font-mono">{{ gameFile }}</div>
+            <div class="text-sm font-mono max-w-full overflow-x-hidden overflow-ellipsis">{{ gameFile }}</div>
         </div>
     </div>
 </template>

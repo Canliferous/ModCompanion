@@ -2,7 +2,7 @@ import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "elect
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import settings from "electron-settings";
-import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem";
+import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
 
 let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;

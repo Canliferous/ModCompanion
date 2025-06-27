@@ -1,8 +1,8 @@
 import os from "node:os";
 import path from "node:path";
-import { getMainAssetsDir } from "../helpers/MainFilesystem";
-import { buildMareTfCreateArgs, VtfCreateOptions } from "../helpers/MainMareTf";
 import * as child_process from "node:child_process";
+import { getMainAssetsDir } from "../helpers/MainFilesystem.js";
+import { buildMareTfCreateArgs, VtfCreateOptions } from "../helpers/MainMareTf.js";
 
 let binary = "";
 

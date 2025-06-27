@@ -24,4 +24,8 @@ export interface SharedAssetAddedEvent {
     assets: SharedAsset[];
 }
 
+export interface SharedAssetUpdatedEvent {
+    assets: SharedAsset[];
+}
+
 export type SharedAssetMap = Map<SharedAssetHash, SharedAsset>;

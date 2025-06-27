@@ -9,7 +9,12 @@ import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 import { SharedMapPath } from "./shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "./shared/SharedMapTimeReport.js";
-import { SharedAsset, SharedAssetAddedEvent, SharedAssetRescanEvent } from "./shared/SharedAsset.js";
+import {
+    SharedAsset,
+    SharedAssetAddedEvent,
+    SharedAssetRescanEvent,
+    SharedAssetUpdatedEvent,
+} from "./shared/SharedAsset.js";
 import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 
 contextBridge.exposeInMainWorld("electronAPI", {
@@ -51,6 +56,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
         subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) =>
             ipcRenderer.on(SharedIpcChannels.AssetAdded, (e: IpcRendererEvent, event: SharedAssetAddedEvent) =>
+                callback(event),
+            ),
+        subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) =>
+            ipcRenderer.on(SharedIpcChannels.AssetUpdated, (e: IpcRendererEvent, event: SharedAssetUpdatedEvent) =>
                 callback(event),
             ),
         subscribeNavigateToHash: (callback: (assetHash: string) => void) =>

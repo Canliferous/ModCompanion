@@ -4,6 +4,7 @@ import { filename } from "pathe/utils";
 import MainAssetScanner, { AssetGroups } from "./MainAssetScanner.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
 import MainAssetTextureScanner from "./MainAssetTextureScanner.js";
+import MainSourceFs from "../../helpers/MainSourceFs.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetHash, SharedAsset>();
 
@@ -43,6 +44,10 @@ export interface FileAddResult {
     created: boolean;
 }
 
+export interface FileRemoveResult {
+    asset: SharedAsset;
+}
+
 export function addFile(filePath: string, type: SharedAssetType, isContentFile?: boolean): FileAddResult {
     const file = filePath.toLowerCase();
     const displayName = createAssetName(file);
@@ -69,6 +74,31 @@ export function addFile(filePath: string, type: SharedAssetType, isContentFile?:
     return { asset, created: false };
 }
 
+export function removeFile(filePath: string): FileRemoveResult | undefined {
+    let isContent = MainSourceFs.isContentFile(filePath);
+    const relativePath = isContent
+        ? MainSourceFs.getContentRelativePath(filePath)
+        : MainSourceFs.getGameRelativePath(filePath);
+
+    const assetHash = getAssetFromFile(relativePath);
+    if (!assetHash) return undefined;
+
+    const asset = getAssetFromHash(assetHash);
+    if (!asset) return undefined;
+
+    if (isContent) {
+        asset.contentFiles.splice(asset.contentFiles.indexOf(relativePath), 1);
+    } else {
+        asset.gameFiles.splice(asset.gameFiles.indexOf(relativePath), 1);
+    }
+
+    assetMap.set(assetHash, asset);
+
+    return {
+        asset,
+    };
+}
+
 export function addContentFile(filePath: string, type: SharedAssetType): FileAddResult {
     return addFile(filePath, type, true);
 }
@@ -77,13 +107,28 @@ export function addGameFile(filePath: string, type: SharedAssetType): FileAddRes
     return addFile(filePath, type, false);
 }
 
+export function getAssetFromFile(filePath: string): SharedAssetHash | undefined {
+    for (let asset of assetMap.values()) {
+        if (asset.gameFiles.includes(filePath)) return asset.hash;
+        if (asset.contentFiles.includes(filePath)) return asset.hash;
+    }
+
+    return undefined;
+}
+
+export function getAssetFromHash(hash: SharedAssetHash): SharedAsset | undefined {
+    return assetMap.get(hash);
+}
+
 export default {
     addFile,
     addContentFile,
-    // TODO: Move away
     addGameFile,
+    removeFile,
     createAssetHash,
     createAssetName,
     rescan,
     getAssetMap,
+    getAssetFromFile,
+    getAssetFromHash,
 };

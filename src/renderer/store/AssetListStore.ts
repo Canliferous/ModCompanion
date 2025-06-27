@@ -55,6 +55,22 @@ export const useAssetListStore = defineStore("asset-list", () => {
         });
     });
 
+    window.electronAPI.asset.subscribeUpdated((event) => {
+        const newAssets = event.assets;
+        for (let asset of newAssets) {
+            assets.value.set(asset.hash, asset);
+        }
+
+        const toast = useToast();
+        const assetList = newAssets.map((a) => `~ ${a.displayName}`).join("\n");
+        toast.add({
+            title: "Assets updated",
+            description: assetList,
+            icon: "tdesign:task-add-1",
+            color: "success",
+        });
+    });
+
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
         selectedAssetHash.value = assetHash;
         const router = useRouter();

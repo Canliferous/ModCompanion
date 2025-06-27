@@ -5,7 +5,7 @@ import { initApiSystem } from "./main/systems/MainApiSystem.js";
 import { initMapCompileSystem } from "./main/systems/MainMapCompileSystem.js";
 import { initAssetScannerSystem } from "./main/systems/MainAssetScannerSystem.js";
 import { initProtocolSystem } from "./main/systems/MainProtocolSystem.js";
-import { initMateTfSystem } from "./main/systems/MainMaretfSystem";
+import { initMateTfSystem } from "./main/systems/MainMaretfSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {

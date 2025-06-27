@@ -12,6 +12,7 @@ export const SharedIpcChannels = {
     MapCreateTimeReport: "map_create_time_report",
     AssetRescanned: "asset_rescanned",
     AssetAdded: "asset_added",
+    AssetUpdated: "asset_updated",
     AssetForceRescan: "asset_force_rescan",
     AssetNavigateToHash: "asset_navigate_to_hash",
     ImageGetMeta: "image_get_meta",

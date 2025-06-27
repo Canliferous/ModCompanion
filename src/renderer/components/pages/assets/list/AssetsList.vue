@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-[auto_1fr_auto] grid-rows-[auto_1fr] gap-x-2">
+    <div class="grid grid-cols-[auto_minmax(0,_1fr)_auto] grid-rows-[auto_1fr] gap-x-2">
         <div
             class="grid col-span-full grid-cols-subgrid items-center bg-elevated py-1.5 px-2 text-xs tracking-wider pr-4 select-none"
         >
