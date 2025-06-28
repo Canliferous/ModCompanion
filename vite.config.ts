@@ -7,6 +7,18 @@ export default defineConfig({
     plugins: [
         vue(),
         ui({
+            components: {
+                dts: "./src/renderer/components.d.ts",
+                dirs: ["./src/renderer/components"],
+                extensions: ["vue"],
+                deep: true,
+            },
+            autoImport: {
+                vueDirectives: true,
+                vueTemplate: true,
+                dts: "./src/renderer/auto-imports.d.ts",
+                imports: ["vue"],
+            },
             ui: {
                 colors: {
                     primary: "fuchsia",

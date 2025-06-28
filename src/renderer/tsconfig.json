@@ -17,5 +17,5 @@
       "Shared/*": ["../shared/*"]
     }
   },
-  "include": [".", "../../auto-imports.d.ts", "../../components.d.ts"]
+  "include": ["."]
 }

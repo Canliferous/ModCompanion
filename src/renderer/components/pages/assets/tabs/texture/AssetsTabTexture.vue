@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { SharedAsset } from "Shared/SharedAsset.js";
-import AssetsTabTextureSource from "~/components/pages/assets/tabs/texture/AssetsTabTextureSource.vue";
 
 const props = defineProps<{ asset: SharedAsset }>();
 </script>

@@ -18,15 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
-import AssetsTabFiles from "~/components/pages/assets/tabs/files/AssetsTabFiles.vue";
 import { SharedAssetType } from "Shared/SharedAsset.js";
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
-import AssetsTabTexture from "~/components/pages/assets/tabs/texture/AssetsTabTexture.vue";
-import AssetHash from "~/components/common/AssetHash.vue";
-import AssetName from "~/components/common/AssetName.vue";
 
 const listStore = useAssetListStore();
 
