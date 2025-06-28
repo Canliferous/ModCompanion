@@ -3,6 +3,7 @@ import { useClipboard } from "@vueuse/core";
 import { watch } from "vue";
 import { SharedAssetType } from "Shared/SharedAsset.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
+
 const props = defineProps<{ name: string; type?: SharedAssetType }>();
 
 const { copy, copied } = useClipboard({ source: props.name });
@@ -28,7 +29,7 @@ watch(copied, (newVal) => {
             @click="copy()"
             class="font-mono"
             :label="name"
-            :leading="type"
+            :leading="type !== SharedAssetType.Unknown"
         >
             <template #leading>
                 <AssetTypeIcon v-if="type" :type="type" class="size-4" />
