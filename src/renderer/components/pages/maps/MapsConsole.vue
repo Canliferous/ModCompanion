@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 import { computed, watch, useTemplateRef } from "vue";
-import { useMapConsoleStore } from "../../../store/MapConsoleStore.js";
-import { useMapListStore } from "../../../store/MapListStore.js";
+import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
+import { useMapListStore } from "~/store/MapListStore.js";
 
 const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();

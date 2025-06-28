@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { useMapListStore } from "../../../store/MapListStore.js";
 import MapsDataGridRow from "./MapsDataGridRow.vue";
-import { useMapTimeReportStore } from "../../../store/MapTimeReportStore.js";
+import { useMapListStore } from "~/store/MapListStore.js";
+import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();

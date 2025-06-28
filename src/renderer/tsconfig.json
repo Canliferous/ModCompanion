@@ -13,8 +13,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/renderer/*"],
-      "Shared/*": ["./src/shared/*"]
+      "~/*": ["./*"],
+      "Shared/*": ["../shared/*"]
     }
   },
   "include": [".", "../../auto-imports.d.ts", "../../components.d.ts"]
