@@ -1,7 +1,14 @@
-import { getAssetMap } from "./assets/MainAssetRepository.js";
+import { getAssetFromHash, getAssetMap } from "./assets/MainAssetRepository.js";
 import { SharedAsset, SharedAssetHash, SharedAssetType, SharedTextureAsset } from "Shared/SharedAsset.js";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
+import _ from "lodash";
+import { _convertTextureAsset } from "./converter/MainTextureConverter.js";
+
+const MAX_PARALLEL_JOBS = 5;
+
+type JobResult = boolean;
+const conversionJobs: Map<SharedAssetHash, Promise<JobResult>> = new Map<SharedAssetHash, Promise<JobResult>>();
 
 let agentInterval: NodeJS.Timeout | undefined;
 const conversions: Map<SharedAssetHash, SharedConversion> = new Map<SharedAssetHash, SharedConversion>();
@@ -23,24 +30,79 @@ export function stopConversionAgent(): void {
 }
 
 function _runAgent(): void {
-    let updated = _updateConversionStates(getAssetMap().values());
+    const assetsIter = getAssetMap().values();
+    let updated = _updateStaleStates(assetsIter);
+    const assetsToConvert = _getAssetsToConvert();
+    if (assetsToConvert.length > 0) {
+        updated = true;
+        _startConversions(assetsToConvert);
+    }
 
     if (updated) {
         notifyConversionsUpdated({ conversions });
     }
 }
 
-function _updateConversionStates(assets: MapIterator<SharedAsset>): boolean {
+function _getAssetsToConvert(): SharedAssetHash[] {
+    let newJobsCount = MAX_PARALLEL_JOBS - conversionJobs.size;
+    if (newJobsCount === 0) return [];
+
+    const result: SharedAssetHash[] = [];
+
+    for (const conv of conversions.values()) {
+        if (newJobsCount === 0) break;
+
+        const alreadyAdded = conversionJobs.has(conv.hash);
+        if (conv.state === SharedConversionState.Pending && !alreadyAdded) {
+            result.push(conv.hash);
+            newJobsCount--;
+        }
+    }
+
+    return result;
+}
+
+function _startConversions(hashes: SharedAssetHash[]): void {
+    for (const hash of hashes) {
+        const asset = getAssetFromHash(hash);
+        if (!asset) {
+            _setState(hash, SharedConversionState.Unknown);
+            continue;
+        }
+        _setState(hash, SharedConversionState.InProgress);
+
+        const timeoutPromise = _convertAsset(asset);
+
+        timeoutPromise.finally(() => _onJobPromiseFinished(hash));
+        conversionJobs.set(hash, timeoutPromise);
+    }
+}
+
+async function _convertAsset(asset: SharedAsset): Promise<boolean> {
+    switch (asset.type) {
+        case SharedAssetType.Texture:
+            return _convertTextureAsset(asset as SharedTextureAsset);
+        default:
+            return false;
+    }
+}
+
+function _onJobPromiseFinished(hash: SharedAssetHash) {
+    conversionJobs.delete(hash);
+    _setState(hash, SharedConversionState.FinishedJob);
+}
+
+function _updateStaleStates(assets: MapIterator<SharedAsset>): boolean {
     let updated = false;
     for (let asset of assets) {
-        if (_updateConversionState(asset)) {
+        if (_updateStaleState(asset)) {
             updated = true;
         }
     }
     return updated;
 }
 
-function _updateConversionState(asset: SharedAsset): boolean {
+function _updateStaleState(asset: SharedAsset): boolean {
     const state = conversions.get(asset.hash)?.state ?? SharedConversionState.Unknown;
     const isConverted = _isConverted(asset);
 
@@ -49,12 +111,8 @@ function _updateConversionState(asset: SharedAsset): boolean {
         return true;
     }
 
-    if (isConverted && state !== SharedConversionState.Finished) {
-        if (conversions.has(asset.hash)) {
-            conversions.get(asset.hash)!.state = SharedConversionState.Finished;
-        } else {
-            conversions.set(asset.hash, { hash: asset.hash, state: SharedConversionState.Finished });
-        }
+    if (isConverted && state !== SharedConversionState.FinishedConfirmed) {
+        _setState(asset.hash, SharedConversionState.FinishedConfirmed);
         return true;
     }
 
@@ -79,4 +137,12 @@ export function _isConverted(asset: SharedAsset): boolean {
 
 export function _isTextureConverted(asset: SharedTextureAsset): boolean {
     return asset.gameFiles.length > 0;
+}
+
+function _setState(hash: SharedAssetHash, state: SharedConversionState) {
+    if (conversions.has(hash)) {
+        conversions.get(hash)!.state = state;
+    } else {
+        conversions.set(hash, { hash, state });
+    }
 }

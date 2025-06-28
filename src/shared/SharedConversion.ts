@@ -4,7 +4,8 @@ export enum SharedConversionState {
     Unknown,
     Pending,
     InProgress,
-    Finished,
+    FinishedJob,
+    FinishedConfirmed,
 }
 
 export interface SharedConversion {

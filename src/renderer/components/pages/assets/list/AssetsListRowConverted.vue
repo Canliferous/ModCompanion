@@ -13,7 +13,7 @@ defineProps<{ state: SharedConversionState }>();
             name="tdesign:loading"
             class="text-info animate-spin"
         />
-        <UIcon v-if="state === SharedConversionState.Finished" name="tdesign:check" class="text-success" />
+        <UIcon v-if="state === SharedConversionState.FinishedConfirmed" name="tdesign:check" class="text-success" />
     </div>
 </template>
 

@@ -29,6 +29,7 @@
   "devDependencies": {
     "@electron/fuses": "^1.8.0",
     "@types/humanize-plus": "^1.8.2",
+    "@types/lodash": "^4.17.19",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
     "@vitejs/plugin-vue": "^5.2.4",
@@ -64,6 +65,7 @@
     "humanize-plus": "^1.8.2",
     "idb-keyval": "^6.2.2",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.2",
     "qrcode": "^1.5.4",
