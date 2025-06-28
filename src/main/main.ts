@@ -6,6 +6,7 @@ import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { initAssetScannerSystem } from "./systems/MainAssetScannerSystem.js";
 import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
+import { initConvertAgentSystem } from "./systems/MainConversionAgentSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -20,6 +21,7 @@ const systems: System[] = [
     { name: "MapCompile", initFunction: initMapCompileSystem },
     { name: "AssetScanner", initFunction: initAssetScannerSystem },
     { name: "MareTf", initFunction: initMateTfSystem },
+    { name: "ConversionAgent", initFunction: initConvertAgentSystem },
 ];
 
 async function startSystems() {

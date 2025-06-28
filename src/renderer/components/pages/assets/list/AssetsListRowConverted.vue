@@ -1,11 +1,19 @@
 <script setup lang="ts">
-defineProps<{ converted: boolean }>();
+import { SharedConversionState } from "Shared/SharedConversion.js";
+
+defineProps<{ state: SharedConversionState }>();
 </script>
 
 <template>
     <div class="grid place-items-center">
-        <UIcon v-if="converted" name="tdesign:check" class="text-success" />
-        <UIcon v-if="!converted" name="tdesign:close" class="text-error" />
+        <UIcon v-if="state === SharedConversionState.Unknown" name="tdesign:close" class="text-error" />
+        <UIcon v-if="state === SharedConversionState.Pending" name="lucide:dot" class="text-neutral-400" />
+        <UIcon
+            v-if="state === SharedConversionState.InProgress"
+            name="tdesign:loading"
+            class="text-info animate-spin"
+        />
+        <UIcon v-if="state === SharedConversionState.Finished" name="tdesign:check" class="text-success" />
     </div>
 </template>
 

@@ -15,6 +15,7 @@ import {
 } from "../shared/SharedAsset.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
+import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 
 export {};
 
@@ -47,6 +48,11 @@ declare global {
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;
+            };
+            conversion: {
+                startAgent: () => void;
+                stopAgent: () => void;
+                subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) => IpcRenderer;
             };
         };
     }

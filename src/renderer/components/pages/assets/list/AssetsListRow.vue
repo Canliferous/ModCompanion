@@ -10,7 +10,7 @@
         <div class="grid col-span-full grid-cols-subgrid gap-y-1">
             <div class="flex items-center"><AssetTypeIcon :type="asset.type" /></div>
             <div class="text-sm font-mono">{{ asset.displayName }}</div>
-            <AssetsListRowConverted :converted="asset.gameFiles.length > 0" />
+            <AssetsListRowConverted :state="conversionStore.getState(asset.hash)" />
             <AssetsListRowFiles v-if="isSelected" :asset="asset" />
         </div>
     </button>
@@ -23,7 +23,9 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import AssetsListRowFiles from "~/components/pages/assets/list/AssetsListRowFiles.vue";
 import AssetsListRowConverted from "~/components/pages/assets/list/AssetsListRowConverted.vue";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 
+const conversionStore = useAssetConversionStore();
 const listStore = useAssetListStore();
 
 const props = defineProps<{ asset: SharedAsset }>();

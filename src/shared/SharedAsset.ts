@@ -29,3 +29,11 @@ export interface SharedAssetUpdatedEvent {
 }
 
 export type SharedAssetMap = Map<SharedAssetHash, SharedAsset>;
+
+export interface SharedTextureAsset extends SharedAsset {
+    type: SharedAssetType.Texture;
+}
+
+export function isTextureAsset(asset: SharedAsset): asset is SharedTextureAsset {
+    return asset.type === SharedAssetType.Texture;
+}

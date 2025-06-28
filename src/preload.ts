@@ -16,6 +16,7 @@ import {
     SharedAssetUpdatedEvent,
 } from "./shared/SharedAsset.js";
 import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
+import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -70,5 +71,15 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     image: {
         getMeta: (imageFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.ImageGetMeta, imageFilePath),
+    },
+
+    conversion: {
+        startAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStart),
+        stopAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStop),
+        subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) =>
+            ipcRenderer.on(
+                SharedIpcChannels.ConversionUpdated,
+                (e: IpcRendererEvent, event: SharedConversionUpdateEvent) => callback(event),
+            ),
     },
 });

@@ -43,6 +43,10 @@ npm run dev
 npm run run-dev
 ```
 
+Caveats:
+
+- `npm run dev` does not watch or reload changes to `preload.ts` or main assets. Restart the command when changing those
+
 ## Test production build without deploying
 ```bash
 npm run build
