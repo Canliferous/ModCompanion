@@ -48,6 +48,8 @@ out/
 .idea
 build
 dist
+build_dist
+build_dev
 auto-imports.d.ts
 components.d.ts
 appconfig.json

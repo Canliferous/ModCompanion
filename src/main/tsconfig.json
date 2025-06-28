@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "../../build_dist",
     "target": "ES2020",
     "module": "NodeNext",
     "esModuleInterop": true,
@@ -8,9 +8,8 @@
     "strict": true,
     "lib": ["ESNext", "DOM"],
     "paths": {
-      "Shared/*": ["./src/shared/*"]
+      "Shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/main.ts", "src/main"],
-
+  "include": ["."]
 }

@@ -1,11 +1,11 @@
 import { app, dialog } from "electron";
-import { initWindowSystem } from "./main/systems/MainWindowSystem.js";
-import { initConfigSystem } from "./main/systems/MainConfigSystem.js";
-import { initApiSystem } from "./main/systems/MainApiSystem.js";
-import { initMapCompileSystem } from "./main/systems/MainMapCompileSystem.js";
-import { initAssetScannerSystem } from "./main/systems/MainAssetScannerSystem.js";
-import { initProtocolSystem } from "./main/systems/MainProtocolSystem.js";
-import { initMateTfSystem } from "./main/systems/MainMaretfSystem.js";
+import { initWindowSystem } from "./systems/MainWindowSystem.js";
+import { initConfigSystem } from "./systems/MainConfigSystem.js";
+import { initApiSystem } from "./systems/MainApiSystem.js";
+import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
+import { initAssetScannerSystem } from "./systems/MainAssetScannerSystem.js";
+import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
+import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {

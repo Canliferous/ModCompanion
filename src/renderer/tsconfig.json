@@ -9,13 +9,13 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "../../build_dist",
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/renderer/*"],
       "Shared/*": ["./src/shared/*"]
-    },
+    }
   },
-  "include": ["src/renderer", "auto-imports.d.ts", "components.d.ts"]
+  "include": [".", "../../auto-imports.d.ts", "../../components.d.ts"]
 }

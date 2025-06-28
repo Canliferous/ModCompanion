@@ -38,7 +38,7 @@ export default defineConfig({
     ],
     base: "./",
     build: {
-        outDir: "dist/renderer",
+        outDir: "build_dist/renderer",
     },
     resolve: {
         alias: {
