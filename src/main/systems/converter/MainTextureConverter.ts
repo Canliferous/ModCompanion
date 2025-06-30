@@ -5,7 +5,7 @@ import path from "path";
 import { filename } from "pathe/utils";
 
 export async function _convertTextureAsset(asset: SharedTextureAsset): Promise<boolean> {
-    if (asset.contentFiles.length === 0) return false;
+    if (asset.contentFiles === undefined || asset.contentFiles?.length === 0) return false;
 
     const srcFileRel = asset.contentFiles[0];
     const config = getConfig();

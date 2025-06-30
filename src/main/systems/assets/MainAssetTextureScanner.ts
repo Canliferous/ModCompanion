@@ -1,4 +1,4 @@
-import { SharedAsset, SharedAssetHash, SharedAssetType } from "../../../shared/SharedAsset.js";
+import { SharedAsset, SharedAssetId, SharedAssetType } from "../../../shared/SharedAsset.js";
 import path from "path";
 import MainAssetRepository from "./MainAssetRepository.js";
 
@@ -13,20 +13,20 @@ export function isGameTexture(filePath: string): boolean {
     return path.extname(filePath).toLowerCase() === ".vtf";
 }
 
-export function buildContentTextureAssets(files: string[]): void {
-    for (const file of files) {
-        if (isContentTexture(file)) {
-            MainAssetRepository.addContentFile(file, SharedAssetType.Texture);
-        }
-    }
-}
+// export function buildContentTextureAssets(files: string[]): void {
+//     for (const file of files) {
+//         if (isContentTexture(file)) {
+//             MainAssetRepository.addContentFile(file, SharedAssetType.Texture);
+//         }
+//     }
+// }
+//
+// export function buildGameTextureAssets(files: string[]): void {
+//     for (let file of files) {
+//         if (isGameTexture(file)) {
+//             MainAssetRepository.addGameFile(file, SharedAssetType.Texture);
+//         }
+//     }
+// }
 
-export function buildGameTextureAssets(files: string[]): void {
-    for (let file of files) {
-        if (isGameTexture(file)) {
-            MainAssetRepository.addGameFile(file, SharedAssetType.Texture);
-        }
-    }
-}
-
-export default { buildContentTextureAssets, buildGameTextureAssets, isContentTexture, isGameTexture };
+// export default { buildContentTextureAssets, buildGameTextureAssets, isContentTexture, isGameTexture };

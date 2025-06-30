@@ -5,10 +5,8 @@ const props = defineProps<{ asset: SharedAsset }>();
 </script>
 
 <template>
-    <div>
-        <Suspense>
-            <AssetsTabTextureSource :source-file="asset.contentFiles[0]" v-if="asset.contentFiles.length > 0" />
-        </Suspense>
+    <div v-if="asset.contentFiles !== undefined && asset.contentFiles.length > 0">
+        <AssetsTabTextureSource :source-file="asset.contentFiles[0]" />
     </div>
 </template>
 

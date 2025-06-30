@@ -1,11 +1,11 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
-import { SharedAsset, SharedAssetHash } from "Shared/SharedAsset.js";
+import { SharedAsset, SharedAssetId } from "Shared/SharedAsset.js";
 import { useRouter } from "vue-router";
 
 export const useAssetListStore = defineStore("asset-list", () => {
-    const assets = ref(new Map<SharedAssetHash, SharedAsset>());
+    const assets = ref(new Map<SharedAssetId, SharedAsset>());
     const refreshing = ref(false);
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
@@ -42,7 +42,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         if (newAssets.length === 0) return;
 
         for (const newAsset of newAssets) {
-            assets.value.set(newAsset.hash, newAsset);
+            assets.value.set(newAsset.id, newAsset);
         }
 
         const toast = useToast();
@@ -58,7 +58,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     window.electronAPI.asset.subscribeUpdated((event) => {
         const newAssets = event.assets;
         for (let asset of newAssets) {
-            assets.value.set(asset.hash, asset);
+            assets.value.set(asset.id, asset);
         }
 
         const toast = useToast();

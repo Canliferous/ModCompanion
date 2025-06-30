@@ -2,7 +2,10 @@
     <div>
         <div v-if="listStore.selectedAsset" class="grid gap-1">
             <div class="bg-accented p-1 flex gap-1 items-center">
-                <AssetName :name="listStore.selectedAsset.displayName" :type="listStore.selectedAsset.type" />
+                <AssetName
+                    :name="listStore.selectedAsset.displayName ?? '(Unknown)'"
+                    :type="listStore.selectedAsset.type"
+                />
                 <div class="ml-auto">
                     <AssetHash :hash="listStore.selectedAssetHash" />
                 </div>

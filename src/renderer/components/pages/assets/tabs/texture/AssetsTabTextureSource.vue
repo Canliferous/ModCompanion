@@ -1,4 +1,4 @@
-<script setup async lang="ts">
+<script setup lang="ts">
 import { ref } from "vue";
 import { getAppConfig } from "~/renderer-config.js";
 import pathe from "pathe";
@@ -14,15 +14,20 @@ const props = defineProps<{ sourceFile: string }>();
 const optionsStore = useTextureViewOptionsStore();
 const imageCacheStore = useImageCacheStore();
 
-const fullPath = pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.sourceFile);
+const fullPath = computed(() => pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.sourceFile));
 
-const imageMeta = ref<SharedImageMetaReport | undefined>(await imageCacheStore.getMeta(fullPath));
+const imageMeta = ref<SharedImageMetaReport | undefined>();
+
+watch(fullPath, async () => {
+    imageMeta.value = await imageCacheStore.getMeta(fullPath.value);
+});
+imageCacheStore.getMeta(fullPath.value).then((meta) => (imageMeta.value = meta));
 
 function onOpen() {
-    window.electronAPI.app.openFile(fullPath);
+    window.electronAPI.app.openFile(fullPath.value);
 }
 function onBrowse() {
-    window.electronAPI.app.browseToFile(fullPath);
+    window.electronAPI.app.browseToFile(fullPath.value);
 }
 </script>
 

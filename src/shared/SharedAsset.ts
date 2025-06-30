@@ -1,22 +1,25 @@
 export enum SharedAssetType {
-    Unknown,
-    Texture,
-    Model,
-    Material,
+    Unknown = "",
+    Texture = "texture",
+    Model = "model",
+}
+
+export function isValidAssetType(str: string): str is SharedAssetType {
+    return (Object.values(SharedAssetType) as string[]).includes(str);
 }
 
 export interface SharedAsset {
-    hash: string;
-    displayName: string;
-    contentFiles: string[];
-    gameFiles: string[];
-    type: SharedAssetType;
+    readonly id: string;
+    readonly type: SharedAssetType;
+    readonly displayName?: string;
+    readonly contentFiles?: string[];
+    readonly gameFiles?: string[];
 }
 
-export type SharedAssetHash = string;
+export type SharedAssetId = string;
 
 export interface SharedAssetRescanEvent {
-    assets: Map<SharedAssetHash, SharedAsset>;
+    assets: Map<SharedAssetId, SharedAsset>;
     totalTimeMillis?: number;
 }
 
@@ -28,7 +31,7 @@ export interface SharedAssetUpdatedEvent {
     assets: SharedAsset[];
 }
 
-export type SharedAssetMap = Map<SharedAssetHash, SharedAsset>;
+export type SharedAssetMap = Map<SharedAssetId, SharedAsset>;
 
 export interface SharedTextureAsset extends SharedAsset {
     type: SharedAssetType.Texture;

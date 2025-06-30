@@ -72,6 +72,7 @@
     "sharp": "^0.34.2",
     "sortablejs": "^1.15.6",
     "universal-cookie": "^7.2.2",
+    "uuid": "^11.1.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   }

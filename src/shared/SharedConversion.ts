@@ -1,4 +1,4 @@
-import { SharedAssetHash } from "./SharedAsset.js";
+import { SharedAssetId } from "./SharedAsset.js";
 
 export enum SharedConversionState {
     Unknown,
@@ -10,9 +10,9 @@ export enum SharedConversionState {
 
 export interface SharedConversion {
     state: SharedConversionState;
-    hash: SharedAssetHash;
+    hash: SharedAssetId;
 }
 
 export interface SharedConversionUpdateEvent {
-    conversions: Map<SharedAssetHash, SharedConversion>;
+    conversions: Map<SharedAssetId, SharedConversion>;
 }
