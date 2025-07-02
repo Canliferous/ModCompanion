@@ -1,23 +1,27 @@
 <template>
-    <UContextMenu :items="items">
-        <button
-            class="grid col-span-full grid-cols-subgrid p-1 items-center justify-center border-b-1 border-accented hover:bg-accented cursor-pointer text-left text-neutral-300 focus-visible:outline-none"
-            :class="{ 'bg-primary/10 text-primary hover:bg-primary/30': isSelected }"
-            @click="listStore.selectAsset(asset.def.id)"
-            @keydown.down="navigateDown()"
-            @keydown.up="navigateUp()"
-            ref="btn"
-        >
-            <div class="grid col-span-full grid-cols-subgrid gap-y-1">
-                <div class="flex items-center"><AssetTypeIcon :type="asset.def.type" /></div>
-                <div class="text-sm font-mono">
-                    {{ asset.def.displayName }}
+    <button
+        class="grid col-span-full grid-cols-subgrid items-center justify-center border-b-1 border-accented cursor-pointer text-left text-neutral-300 focus-visible:outline-none"
+        :class="{ 'bg-primary/10 text-primary': isSelected }"
+        @click="listStore.selectAsset(asset.def.id)"
+        @keydown.down="navigateDown()"
+        @keydown.up="navigateUp()"
+        ref="btn"
+    >
+        <div class="grid col-span-full grid-cols-subgrid gap-y-1">
+            <UContextMenu :items="items">
+                <div class="grid col-span-full grid-cols-subgrid hover:bg-primary/30 p-1">
+                    <div class="flex items-center"><AssetTypeIcon :type="asset.def.type" /></div>
+                    <div class="text-sm font-mono">
+                        {{ asset.def.displayName }}
+                    </div>
+                    <AssetsListRowConverted :state="conversionStore.getState(asset.def.id)" />
                 </div>
-                <AssetsListRowConverted :state="conversionStore.getState(asset.def.id)" />
-                <AssetsListRowFiles v-if="isSelected" :asset="asset" />
+            </UContextMenu>
+            <div class="grid col-span-full grid-cols-subgrid p-1" v-if="isSelected">
+                <AssetsListRowFiles :asset="asset" />
             </div>
-        </button>
-    </UContextMenu>
+        </div>
+    </button>
 </template>
 
 <script setup lang="ts">
@@ -80,18 +84,14 @@ const items: Ref<ContextMenuItem[]> = ref<ContextMenuItem[]>([
     {
         label: "Open MCA",
         onSelect(e: Event) {
-            window.electronAPI.app.openFile(
-                pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.asset.defFilePath ?? ""),
-            );
+            window.electronAPI.app.openFile(pathe.join(getAppConfig().contentPath, props.asset.defFilePath ?? ""));
         },
         disabled: props.asset.defFilePath === undefined,
     },
     {
         label: "Browse to MCA",
         onSelect(e) {
-            window.electronAPI.app.browseToFile(
-                pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.asset.defFilePath ?? ""),
-            );
+            window.electronAPI.app.browseToFile(pathe.join(getAppConfig().contentPath, props.asset.defFilePath ?? ""));
         },
         disabled: props.asset.defFilePath === undefined,
     },

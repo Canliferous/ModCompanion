@@ -16,6 +16,13 @@ export interface SharedAssetDefinition {
     readonly displayName?: string;
     readonly contentFiles?: string[];
     readonly gameFiles?: string[];
+
+    readonly associatedFiles?: SharedAssetDefinitionAssociatedFiles;
+}
+
+export interface SharedAssetDefinitionAssociatedFiles {
+    substanceDesigner?: string;
+    blender?: string;
 }
 
 export interface SharedAsset {

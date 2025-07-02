@@ -40,8 +40,8 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
     return {
         gameName: c.searchPath,
         rootPath: root,
-        contentPath: path.join(root, "content"),
-        gamePath: path.join(root, "game"),
+        contentPath: path.join(root, "content", c.searchPath),
+        gamePath: path.join(root, "game", c.searchPath),
 
         textureSourcePath: path.join(root, "content", c.searchPath, "materialsrc"),
         textureOutputPath: path.join(root, "game", c.searchPath, "materials"),

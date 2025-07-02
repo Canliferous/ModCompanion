@@ -15,9 +15,9 @@
                 <template #files>
                     <AssetsTabFiles :asset="listStore.selectedAsset" />
                 </template>
-                <template #texture
-                    ><AssetsTabTexture :asset="listStore.selectedAsset as SharedTextureAsset"
-                /></template>
+                <template #texture>
+                    <AssetsTabTexture :asset="listStore.selectedAsset as SharedTextureAsset" />
+                </template>
             </UTabs>
         </div>
     </div>

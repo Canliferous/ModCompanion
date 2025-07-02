@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import pathe from "pathe";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
-import { getAppConfig } from "~/renderer-config.js";
 
 const props = defineProps<{ file: string; filesRoot: string }>();
 const items = ref<ContextMenuItem[]>([
@@ -16,11 +15,11 @@ const items = ref<ContextMenuItem[]>([
 ]);
 
 function onOpen() {
-    const filePath = pathe.join(props.filesRoot, getAppConfig().gameName, props.file);
+    const filePath = pathe.join(props.filesRoot, props.file);
     window.electronAPI.app.openFile(filePath);
 }
 function onBrowse() {
-    const filePath = pathe.join(props.filesRoot, getAppConfig().gameName, props.file);
+    const filePath = pathe.join(props.filesRoot, props.file);
     window.electronAPI.app.browseToFile(filePath);
 }
 </script>

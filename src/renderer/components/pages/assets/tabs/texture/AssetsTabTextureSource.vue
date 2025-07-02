@@ -14,7 +14,7 @@ const props = defineProps<{ sourceFile: string }>();
 const optionsStore = useTextureViewOptionsStore();
 const imageCacheStore = useImageCacheStore();
 
-const fullPath = computed(() => pathe.join(getAppConfig().contentPath, getAppConfig().gameName, props.sourceFile));
+const fullPath = computed(() => pathe.join(getAppConfig().contentPath, props.sourceFile));
 
 const imageMeta = ref<SharedImageMetaReport | undefined>();
 

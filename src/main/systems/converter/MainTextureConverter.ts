@@ -10,10 +10,10 @@ export async function _convertTextureAsset(asset: SharedTextureAssetDefinition):
 
     const srcFileRel = asset.contentFiles[0];
     const config = getConfig();
-    const srcFile = path.join(config.contentPath, config.gameName, srcFileRel);
+    const srcFile = path.join(config.contentPath, srcFileRel);
 
     const outFileRel = asset.gameFiles[0];
-    const outFile = path.join(config.gamePath, config.gameName, outFileRel);
+    const outFile = path.join(config.gamePath, outFileRel);
 
     console.log(`Converting texture ${srcFile} -> ${outFile}`, asset.vtfOptions);
     return createVtf(srcFile, outFile, asset.vtfOptions);

@@ -8,18 +8,25 @@ defineProps<{ asset: SharedAsset }>();
 
 <template>
     <AssetsTabFilesList
+        v-if="asset.def.associatedFiles !== undefined"
+        :files="asset.def.associatedFiles"
+        header="Associated Files"
+        :files-root="getAppConfig().rootPath"
+        header-class="bg-pink-500 text-pink-950"
+    />
+    <AssetsTabFilesList
         v-if="asset.def.contentFiles !== undefined"
-        color="amber"
         :files="asset.def.contentFiles"
         header="Content Files"
         :files-root="getAppConfig().contentPath"
+        header-class="bg-amber-500 text-amber-950"
     />
     <AssetsTabFilesList
         v-if="asset.def.gameFiles !== undefined"
-        color="lime"
         :files="asset.def.gameFiles"
         header="Game Files"
         :files-root="getAppConfig().gamePath"
+        header-class="bg-lime-500 text-lime-950"
     />
 </template>
 

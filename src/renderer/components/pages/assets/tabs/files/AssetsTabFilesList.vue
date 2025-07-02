@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import AssetsTabFilesListItem from "~/components/pages/assets/tabs/files/AssetsTabFilesListItem.vue";
 
-const props = defineProps<{ color: string; files: string[]; header: string; filesRoot: string }>();
+defineProps<{ headerClass: string; files: string[]; header: string; filesRoot: string }>();
 </script>
 
 <template>
     <div>
-        <p :class="`bg-${color}-500 text-${color}-950 p-1 text-xs font-bold uppercase`">{{ header }}</p>
+        <p :class="`${headerClass} p-1 text-xs font-bold uppercase`">{{ header }}</p>
         <div class="py-1">
             <span v-if="files.length === 0" class="text-center text-sm text-neutral-400">None</span>
 

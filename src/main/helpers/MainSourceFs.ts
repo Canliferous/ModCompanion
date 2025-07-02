@@ -3,9 +3,8 @@ import path from "path";
 
 export function getContentRelativePath(filePath: string): string {
     const config = getConfig();
-    const contentPath = path.join(config.contentPath, config.gameName);
-    if (filePath.toLowerCase().startsWith(contentPath.toLowerCase())) {
-        return filePath.substring(contentPath.length + 1);
+    if (filePath.toLowerCase().startsWith(config.contentPath.toLowerCase())) {
+        return filePath.substring(config.contentPath.length + 1);
     }
 
     return filePath;
@@ -23,14 +22,12 @@ export function getGameRelativePath(filePath: string): string {
 
 export function isContentFile(filePath: string): boolean {
     const config = getConfig();
-    const contentPath = path.join(config.contentPath, config.gameName);
-    return filePath.toLowerCase().startsWith(contentPath.toLowerCase());
+    return filePath.toLowerCase().startsWith(config.contentPath.toLowerCase());
 }
 
 export function isGameFile(filePath: string): boolean {
     const config = getConfig();
-    const gamePath = path.join(config.gamePath, config.gameName);
-    return filePath.toLowerCase().startsWith(gamePath.toLowerCase());
+    return filePath.toLowerCase().startsWith(config.gamePath.toLowerCase());
 }
 
 export default {

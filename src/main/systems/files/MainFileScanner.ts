@@ -5,14 +5,13 @@ import fs from "fs/promises";
 
 export async function scanContentTree(): Promise<{ contentTree: string[]; contentBasePath: string }> {
     const config = getConfig();
-    const contentBasePath = path.join(config.contentPath, config.gameName);
 
     console.log("Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>
-        _listFilesRecursive(contentBasePath.length + 1, contentBasePath),
+        _listFilesRecursive(config.contentPath.length + 1, config.contentPath),
     );
     console.log(`Scanned content directory in ${millisContent}ms`);
-    return { contentTree, contentBasePath };
+    return { contentTree, contentBasePath: config.contentPath };
 }
 
 const alwaysIgnoreFolderNames = ["node_modules", ".idea"];
