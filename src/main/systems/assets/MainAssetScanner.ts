@@ -1,4 +1,10 @@
-import { isValidAssetType, SharedAsset, SharedAssetId, SharedAssetMap } from "Shared/SharedAsset.js";
+import {
+    isValidAssetType,
+    SharedAsset,
+    SharedAssetDefinition,
+    SharedAssetId,
+    SharedAssetMap,
+} from "Shared/SharedAssetDefinition.js";
 import path from "path";
 import fs from "fs/promises";
 
@@ -10,20 +16,25 @@ export async function buildAssets(contentTree: string[], contentRootPath: string
     for (let filePath of contentTree) {
         if (!_isAssetDefinitionFile(filePath)) continue;
 
-        const asset = await _readAssetDefinitionFile(filePath, contentRootPath);
-        if (asset === undefined) {
+        const definition = await _readAssetDefinitionFile(filePath, contentRootPath);
+        if (definition === undefined) {
             console.warn(`Asset definition file ${filePath} is invalid and will be ignored`);
             continue;
         }
 
-        const duplicateOther = assets.get(asset.id);
+        const duplicateOther = assets.get(definition.id);
         if (duplicateOther !== undefined) {
             console.warn(
-                `Asset definition file ${filePath} has the same id as ${duplicateOther.id} (${asset.id}) and will be ignored`,
+                `Asset definition file ${filePath} has the same id as ${duplicateOther.def.id} (${definition.id}) and will be ignored`,
             );
             continue;
         }
-        assets.set(asset.id, asset);
+
+        const asset: SharedAsset = {
+            def: definition,
+            defFilePath: filePath,
+        };
+        assets.set(definition.id, asset);
     }
 
     return assets;
@@ -33,7 +44,10 @@ function _isAssetDefinitionFile(filePath: string): boolean {
     return path.extname(filePath).toLowerCase() === AssetDefinitionFileExtension;
 }
 
-async function _readAssetDefinitionFile(filePath: string, fileRootPath: string): Promise<SharedAsset | undefined> {
+async function _readAssetDefinitionFile(
+    filePath: string,
+    fileRootPath: string,
+): Promise<SharedAssetDefinition | undefined> {
     const fullPath = path.join(fileRootPath, filePath);
     const text = await fs.readFile(fullPath, "utf-8");
     const unk = JSON.parse(text);

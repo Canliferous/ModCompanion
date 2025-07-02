@@ -1,4 +1,4 @@
-import { SharedAssetType } from "Shared/SharedAsset.js";
+import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
 
 export const icons = {
     asset: "tdesign:traffic-events-filled",

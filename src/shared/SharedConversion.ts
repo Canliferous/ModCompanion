@@ -1,11 +1,12 @@
-import { SharedAssetId } from "./SharedAsset.js";
+import { SharedAssetId } from "./SharedAssetDefinition.js";
 
 export enum SharedConversionState {
-    Unknown,
-    Pending,
-    InProgress,
-    FinishedJob,
-    FinishedConfirmed,
+    Unknown = "",
+    Pending = "pending",
+    PendingForced = "pending_forced",
+    InProgress = "in_progress",
+    FinishedJob = "finished_job",
+    FinishedConfirmed = "finished_confirmed",
 }
 
 export interface SharedConversion {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useClipboard } from "@vueuse/core";
 import { watch } from "vue";
-import { SharedAssetType } from "Shared/SharedAsset.js";
+import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 
 const props = defineProps<{ name: string; type?: SharedAssetType }>();

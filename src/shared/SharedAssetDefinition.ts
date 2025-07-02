@@ -1,3 +1,5 @@
+import { SharedVtfCreateOptions } from "./SharedMareTf.js";
+
 export enum SharedAssetType {
     Unknown = "",
     Texture = "texture",
@@ -8,12 +10,25 @@ export function isValidAssetType(str: string): str is SharedAssetType {
     return (Object.values(SharedAssetType) as string[]).includes(str);
 }
 
-export interface SharedAsset {
+export interface SharedAssetDefinition {
     readonly id: string;
     readonly type: SharedAssetType;
     readonly displayName?: string;
     readonly contentFiles?: string[];
     readonly gameFiles?: string[];
+}
+
+export interface SharedAsset {
+    /** Asset definition data read from the mca file */
+    readonly def: SharedAssetDefinition;
+
+    /** Path to the mca file */
+    readonly defFilePath?: string;
+}
+
+export interface SharedTextureAsset extends SharedAsset {
+    /** @inheritDoc */
+    readonly def: SharedTextureAssetDefinition;
 }
 
 export type SharedAssetId = string;
@@ -33,10 +48,11 @@ export interface SharedAssetUpdatedEvent {
 
 export type SharedAssetMap = Map<SharedAssetId, SharedAsset>;
 
-export interface SharedTextureAsset extends SharedAsset {
+export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
     type: SharedAssetType.Texture;
+    vtfOptions?: SharedVtfCreateOptions;
 }
 
-export function isTextureAsset(asset: SharedAsset): asset is SharedTextureAsset {
+export function isTextureAsset(asset: SharedAssetDefinition): asset is SharedTextureAssetDefinition {
     return asset.type === SharedAssetType.Texture;
 }

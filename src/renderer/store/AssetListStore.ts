@@ -1,17 +1,17 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
-import { SharedAsset, SharedAssetId } from "Shared/SharedAsset.js";
+import { SharedAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { useRouter } from "vue-router";
 
 export const useAssetListStore = defineStore("asset-list", () => {
-    const assets = ref(new Map<SharedAssetId, SharedAsset>());
+    const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
     const refreshing = ref(false);
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
-    const selectedAssetHash = ref("");
-    const selectedAsset = computed(() => assets.value.get(selectedAssetHash.value));
+    const selectedAssetId = ref("");
+    const selectedAsset = computed(() => assets.value.get(selectedAssetId.value));
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -42,11 +42,11 @@ export const useAssetListStore = defineStore("asset-list", () => {
         if (newAssets.length === 0) return;
 
         for (const newAsset of newAssets) {
-            assets.value.set(newAsset.id, newAsset);
+            assets.value.set(newAsset.def.id, newAsset);
         }
 
         const toast = useToast();
-        const assetList = newAssets.map((a) => `+ ${a.displayName}`).join("\n");
+        const assetList = newAssets.map((a) => `+ ${a.def.displayName}`).join("\n");
         toast.add({
             title: "Assets added",
             description: assetList,
@@ -58,11 +58,11 @@ export const useAssetListStore = defineStore("asset-list", () => {
     window.electronAPI.asset.subscribeUpdated((event) => {
         const newAssets = event.assets;
         for (let asset of newAssets) {
-            assets.value.set(asset.id, asset);
+            assets.value.set(asset.def.id, asset);
         }
 
         const toast = useToast();
-        const assetList = newAssets.map((a) => `~ ${a.displayName}`).join("\n");
+        const assetList = newAssets.map((a) => `~ ${a.def.displayName}`).join("\n");
         toast.add({
             title: "Assets updated",
             description: assetList,
@@ -72,7 +72,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     });
 
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
-        selectedAssetHash.value = assetHash;
+        selectedAssetId.value = assetHash;
         const router = useRouter();
         router.push("/assets");
     });
@@ -83,7 +83,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     }
 
     function selectAsset(assetHash: string): void {
-        selectedAssetHash.value = assetHash;
+        selectedAssetId.value = assetHash;
     }
 
     return {
@@ -92,7 +92,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         forceRefresh,
         searchTerm,
         filteredAssets,
-        selectedAssetHash,
+        selectedAssetHash: selectedAssetId, // TODO: Rename this elsewhere to id
         selectAsset,
         selectedAsset,
     };

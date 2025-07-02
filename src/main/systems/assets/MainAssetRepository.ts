@@ -1,7 +1,6 @@
-import { SharedAsset, SharedAssetId, SharedAssetMap } from "Shared/SharedAsset.js";
+import { SharedAssetDefinition, SharedAssetId, SharedAssetMap, SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
 import { buildAssets } from "./MainAssetScanner.js";
-import { v4 as uuidV4 } from "uuid";
 import { scanContentTree } from "../files/MainFileScanner.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
@@ -22,21 +21,13 @@ export async function rescan() {
     notifyAssetsRescanned({ assets: assetMap, totalTimeMillis: endMillis - startMillis });
 }
 
-export function createAssetId(): SharedAssetId {
-    return uuidV4();
-}
-
-export function createAssetName(fileName: string): string {
-    return fileName;
-}
-
 export interface FileAddResult {
-    asset: SharedAsset;
+    asset: SharedAssetDefinition;
     created: boolean;
 }
 
 export interface FileRemoveResult {
-    asset: SharedAsset;
+    asset: SharedAssetDefinition;
 }
 
 // export function addFile(filePath: string, type: SharedAssetType, isContentFile?: boolean): FileAddResult {
@@ -105,8 +96,8 @@ export interface FileRemoveResult {
 
 export function getAssetFromFile(filePath: string): SharedAssetId | undefined {
     for (let asset of assetMap.values()) {
-        if (asset.gameFiles?.includes(filePath)) return asset.id;
-        if (asset.contentFiles?.includes(filePath)) return asset.id;
+        if (asset.def.gameFiles?.includes(filePath)) return asset.def.id;
+        if (asset.def.contentFiles?.includes(filePath)) return asset.def.id;
     }
 
     return undefined;
@@ -117,10 +108,7 @@ export function getAssetFromId(hash: SharedAssetId): SharedAsset | undefined {
 }
 
 export default {
-    createAssetId,
-    createAssetName,
     rescan,
-    getAssetMap,
     getAssetFromFile,
     getAssetFromHash: getAssetFromId,
 };

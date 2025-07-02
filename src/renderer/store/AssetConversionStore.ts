@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
-import { SharedAssetId } from "Shared/SharedAsset.js";
+import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());

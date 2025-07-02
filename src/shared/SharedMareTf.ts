@@ -1,7 +1,9 @@
-import child_process from "node:child_process";
-
-export type VtfVersion = "7.4" | "7.5" | "7.6";
-export type VtfFilter =
+export enum SharedVtfVersion {
+    v74 = "7.4",
+    v75 = "7.5",
+    v76 = "7.6",
+}
+export type SharedVtfFilter =
     | "DEFAULT"
     | "BOX"
     | "BILINEAR"
@@ -11,7 +13,7 @@ export type VtfFilter =
     | "POINT_SAMPLE"
     | "KAISER"
     | "NICE";
-export type VtfFlag =
+export type SharedVtfFlag =
     | "POINT_SAMPLE"
     | "TRILINEAR"
     | "CLAMP_S"
@@ -50,8 +52,8 @@ export type VtfFlag =
     | "V5_CSGO_SKIP_INITIAL_DOWNLOAD"
     | "V5_CSGO_YCOCG"
     | "V5_CSGO_ASYNC_SKIP_INITIAL_LOW_RES";
-export type VtfCompressionMethod = "DEFLATE" | "ZSTD" | "CONSOLE_LZMA";
-export type VtfImageFormat =
+export type SharedVtfCompressionMethod = "DEFLATE" | "ZSTD" | "CONSOLE_LZMA";
+export type SharedVtfImageFormat =
     | "UNCHANGED"
     | "DEFAULT"
     | "RGBA8888"
@@ -109,15 +111,15 @@ export type VtfImageFormat =
     | "BC7"
     | "BC6H";
 
-export interface VtfCreateOptions {
-    version?: VtfVersion;
-    format?: VtfImageFormat;
-    filter?: VtfFilter;
-    flags?: VtfFlag[];
+export interface SharedVtfCreateOptions {
+    version?: SharedVtfVersion;
+    format?: SharedVtfImageFormat;
+    filter?: SharedVtfFilter;
+    flags?: SharedVtfFlag[];
     noMips?: boolean;
     noAnimation?: boolean;
     noThumbnail?: boolean;
-    compressionMethod?: VtfCompressionMethod;
+    compressionMethod?: SharedVtfCompressionMethod;
     compressionLevel?: number;
     bumpScale?: number;
     gammaCorrect?: boolean;
@@ -128,7 +130,7 @@ export interface VtfCreateOptions {
     gammaCorrectAmount?: string;
 }
 
-export function buildMareTfCreateArgs(options: VtfCreateOptions): string {
+export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     let a = "";
 
     if (options.version) {

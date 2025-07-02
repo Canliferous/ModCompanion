@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SharedAssetType } from "Shared/SharedAsset.js";
+import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import { getIconForAssetType } from "~/design/AppDesign.js";
 import { computed } from "vue";
 

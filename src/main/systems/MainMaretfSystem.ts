@@ -2,7 +2,7 @@ import os from "node:os";
 import path from "node:path";
 import * as child_process from "node:child_process";
 import { getMainAssetsDir } from "../helpers/MainFilesystem.js";
-import { buildMareTfCreateArgs, VtfCreateOptions } from "../helpers/MainMareTf.js";
+import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
 
 let binary = "";
 
@@ -23,20 +23,31 @@ export function initMateTfSystem(): boolean {
 export async function createVtf(
     inputPath: string,
     outputPath: string,
-    options: VtfCreateOptions = {},
+    options: SharedVtfCreateOptions = {},
 ): Promise<boolean> {
     const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
+    console.log("Creating vtf. cmd:", cmd);
 
     return new Promise((resolve, reject) => {
-        const proc = child_process.exec(cmd);
+        const proc = child_process.exec(cmd, {}, (error, stdout, stderr) => {
+            if (error) {
+                console.warn(error);
+            }
+            if (stderr) {
+                console.debug(`Maretf ERR: ${stderr}`);
+            }
+            if (stdout) {
+                console.debug(`Maretf: ${stdout}`);
+            }
+        });
         proc.on("exit", (code) => {
             resolve(code === 1);
         });
     });
 }
 
-function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: VtfCreateOptions): string {
+function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: SharedVtfCreateOptions): string {
     const args = buildMareTfCreateArgs(options);
-    const cmd = `${binary} create ${inputPath} -o ${outputPath} ${args}`;
+    const cmd = `${binary} create ${inputPath} --yes -o ${outputPath} ${args}`;
     return cmd;
 }

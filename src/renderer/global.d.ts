@@ -8,11 +8,12 @@ import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
 import { SharedMapPath } from "../shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
 import {
-    SharedAsset,
+    SharedAssetDefinition,
     SharedAssetAddedEvent,
+    SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
-} from "../shared/SharedAsset.js";
+} from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
@@ -50,6 +51,7 @@ declare global {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;
             };
             conversion: {
+                enqueue: (assetId: SharedAssetId) => void;
                 startAgent: () => void;
                 stopAgent: () => void;
                 subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) => IpcRenderer;

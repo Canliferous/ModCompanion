@@ -1,4 +1,4 @@
-import { SharedAsset, SharedAssetId, SharedAssetType } from "../../../shared/SharedAsset.js";
+import { SharedAssetDefinition, SharedAssetId, SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import path from "path";
 import MainAssetRepository from "./MainAssetRepository.js";
 

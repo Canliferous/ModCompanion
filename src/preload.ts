@@ -10,11 +10,12 @@ import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgress
 import { SharedMapPath } from "./shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "./shared/SharedMapTimeReport.js";
 import {
-    SharedAsset,
+    SharedAssetDefinition,
     SharedAssetAddedEvent,
+    SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
-} from "./shared/SharedAsset.js";
+} from "./shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
 
@@ -74,6 +75,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     conversion: {
+        enqueue: (assetId: SharedAssetId) => ipcRenderer.send(SharedIpcChannels.ConversionEnqueue, assetId),
         startAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStart),
         stopAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStop),
         subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) =>

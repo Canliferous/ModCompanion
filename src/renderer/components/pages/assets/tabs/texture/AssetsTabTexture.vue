@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { SharedAsset } from "Shared/SharedAsset.js";
+import { SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 
-const props = defineProps<{ asset: SharedAsset }>();
+defineProps<{ asset: SharedTextureAsset }>();
 </script>
 
 <template>
-    <div v-if="asset.contentFiles !== undefined && asset.contentFiles.length > 0">
-        <AssetsTabTextureSource :source-file="asset.contentFiles[0]" />
+    <div>{{ asset.def.vtfOptions }}</div>
+
+    <div v-if="asset.def.contentFiles !== undefined && asset.def.contentFiles.length > 0">
+        <AssetsTabTextureSource :source-file="asset.def.contentFiles[0]" />
     </div>
 </template>
 

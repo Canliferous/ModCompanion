@@ -1,5 +1,11 @@
 import { getAssetFromId, getAssetMap } from "./assets/MainAssetRepository.js";
-import { SharedAsset, SharedAssetId, SharedAssetType, SharedTextureAsset } from "Shared/SharedAsset.js";
+import {
+    SharedAsset,
+    SharedAssetDefinition,
+    SharedAssetId,
+    SharedAssetType,
+    SharedTextureAssetDefinition,
+} from "Shared/SharedAssetDefinition.js";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { _convertTextureAsset } from "./converter/MainTextureConverter.js";
@@ -28,6 +34,11 @@ export function stopConversionAgent(): void {
     }
 }
 
+export function enqueue(assetId: string): void {
+    console.log(`Enqueuing ${assetId} for forced conversion`);
+    _setState(assetId, SharedConversionState.PendingForced);
+}
+
 function _runAgent(): void {
     const assetsIter = getAssetMap().values();
     let updated = _updateStaleStates(assetsIter);
@@ -52,7 +63,9 @@ function _getAssetsToConvert(): SharedAssetId[] {
         if (newJobsCount === 0) break;
 
         const alreadyAdded = conversionJobs.has(conv.hash);
-        if (conv.state === SharedConversionState.Pending && !alreadyAdded) {
+        const isPending =
+            conv.state === SharedConversionState.Pending || conv.state === SharedConversionState.PendingForced;
+        if (isPending && !alreadyAdded) {
             result.push(conv.hash);
             newJobsCount--;
         }
@@ -70,23 +83,24 @@ function _startConversions(hashes: SharedAssetId[]): void {
         }
         _setState(hash, SharedConversionState.InProgress);
 
-        const timeoutPromise = _convertAsset(asset);
+        const timeoutPromise = _convertAsset(asset.def);
 
         timeoutPromise.finally(() => _onJobPromiseFinished(hash));
         conversionJobs.set(hash, timeoutPromise);
     }
 }
 
-async function _convertAsset(asset: SharedAsset): Promise<boolean> {
+async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
     switch (asset.type) {
         case SharedAssetType.Texture:
-            return _convertTextureAsset(asset as SharedTextureAsset);
+            return _convertTextureAsset(asset as SharedTextureAssetDefinition);
         default:
             return false;
     }
 }
 
 function _onJobPromiseFinished(hash: SharedAssetId) {
+    console.log("Conversion Job finished", hash);
     conversionJobs.delete(hash);
     _setState(hash, SharedConversionState.FinishedJob);
 }
@@ -94,15 +108,19 @@ function _onJobPromiseFinished(hash: SharedAssetId) {
 function _updateStaleStates(assets: MapIterator<SharedAsset>): boolean {
     let updated = false;
     for (let asset of assets) {
-        if (_updateStaleState(asset)) {
+        if (_updateStaleState(asset.def)) {
             updated = true;
         }
     }
     return updated;
 }
 
-function _updateStaleState(asset: SharedAsset): boolean {
+function _updateStaleState(asset: SharedAssetDefinition): boolean {
     const state = conversions.get(asset.id)?.state ?? SharedConversionState.Unknown;
+    if (state === SharedConversionState.PendingForced) {
+        return false;
+    }
+
     const isConverted = _isConverted(asset);
 
     if (!isConverted && state === SharedConversionState.Unknown) {
@@ -118,10 +136,10 @@ function _updateStaleState(asset: SharedAsset): boolean {
     return false;
 }
 
-export function _isConverted(asset: SharedAsset): boolean {
+export function _isConverted(asset: SharedAssetDefinition): boolean {
     switch (asset.type) {
         case SharedAssetType.Texture: {
-            return _isTextureConverted(asset as SharedTextureAsset);
+            return _isTextureConverted(asset as SharedTextureAssetDefinition);
         }
         // There's no way to convert an invalid asset so we just say it is converted
         case SharedAssetType.Unknown:
@@ -130,7 +148,7 @@ export function _isConverted(asset: SharedAsset): boolean {
     }
 }
 
-export function _isTextureConverted(asset: SharedTextureAsset): boolean {
+export function _isTextureConverted(asset: SharedTextureAssetDefinition): boolean {
     return asset.gameFiles !== undefined && asset.gameFiles.length > 0;
 }
 

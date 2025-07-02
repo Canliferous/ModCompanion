@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref } from "vue";
-import { SharedAsset } from "Shared/SharedAsset.js";
+import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
     return computed(() => {
@@ -44,7 +44,7 @@ export function useAssetsFilter(assets: ComputedRef<SharedAsset[]>, filter: Ref<
             for (const split of splits) {
                 if (split === "") continue;
 
-                if (!asset.displayName.toLowerCase().includes(split)) {
+                if (!asset.def.displayName?.toLowerCase()?.includes(split)) {
                     match = false;
                 }
             }
