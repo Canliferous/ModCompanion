@@ -14,8 +14,6 @@ export const colors = {
 
 export function getIconForAssetType(type: SharedAssetType): string {
     switch (type) {
-        case SharedAssetType.Material:
-            return icons.material;
         case SharedAssetType.Texture:
             return icons.texture;
         case SharedAssetType.Model:
