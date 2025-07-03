@@ -24,6 +24,7 @@
     "build:renderer": "vite build",
     "build:assets": "copyfiles ./main_assets/**/* ./build_dist/",
     "build:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./build_dist/preload.js",
+    "build:docs": "typedoc --tsconfig src/main/tsconfig.json --entryPointStrategy Expand src/main src/shared",
     "deploy": "npm run build & node scripts/deploy.cjs"
   },
   "devDependencies": {
@@ -45,6 +46,7 @@
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
+    "typedoc": "^0.28.7",
     "typescript": "^5.8.3",
     "vite": "^5.4.19"
   },
