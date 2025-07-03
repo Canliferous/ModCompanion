@@ -1,11 +1,16 @@
 import path from "path";
 import fs from "fs/promises";
-import { SharedAppConfig } from "../../shared/SharedAppConfig.js";
+import { SharedAppConfig } from "Shared/SharedAppConfig.js";
+import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
 
 interface ConfigFile {
     root?: string;
     searchPath?: string;
     mapSourceDirs?: string[];
+
+    assetDefaults?: {
+        vtfOptions?: SharedVtfCreateOptions;
+    };
 }
 
 let config: SharedAppConfig = null!;
@@ -69,6 +74,7 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
         mapSourceDirs: c.mapSourceDirs,
+        assetDefaults: c.assetDefaults,
     };
 }
 

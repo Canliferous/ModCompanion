@@ -1,3 +1,5 @@
+import { SharedVtfCreateOptions } from "./SharedMareTf.js";
+
 export interface SharedAppConfig {
     rootPath: string;
     contentPath: string;
@@ -33,4 +35,7 @@ export interface SharedAppConfig {
     gameName: string;
 
     mapSourceDirs?: string[];
+    assetDefaults?: {
+        vtfOptions?: SharedVtfCreateOptions;
+    };
 }
