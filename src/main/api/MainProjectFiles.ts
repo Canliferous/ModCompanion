@@ -51,14 +51,14 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
         if (s.isFile()) {
             infos.push({
                 name: p,
-                path: path.join(dirPath, p),
+                path: path.join(dirPath, p).replaceAll("\\", "/"),
                 isFile: true,
                 fileSize: s.size,
             });
         } else {
             infos.push({
                 name: p,
-                path: path.join(dirPath, p),
+                path: path.join(dirPath, p).replaceAll("\\", "/"),
                 isFile: false,
             });
         }
