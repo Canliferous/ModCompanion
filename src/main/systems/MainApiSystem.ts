@@ -8,6 +8,7 @@ import { registerFileBrowserApi } from "../api/MainFileBrowserApi.js";
 import { registerAssetApi } from "../api/MainAssetApi.js";
 import { registerImageMetaApi } from "../api/MainImageMetaApi.js";
 import { registerConversionApi } from "../api/MainConversionApi.js";
+import { registerProjectFilesApi } from "../api/MainProjectFiles.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -20,6 +21,7 @@ const apis: (() => boolean)[] = [
     registerAssetApi,
     registerImageMetaApi,
     registerConversionApi,
+    registerProjectFilesApi,
 ];
 
 export function initApiSystem(): boolean {

@@ -18,6 +18,7 @@ import {
 } from "./shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
+import { SharedFsEntry } from "./shared/SharedFileListing";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -26,6 +27,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.send(SharedIpcChannels.AppLaunch, launcherType, launcherArgs),
         browseToFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.AppBrowseToFile, filePath),
         openFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.AppOpenFile, filePath),
+    },
+
+    project: {
+        listFiles: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectListFiles, dirPath),
+        correctPath: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectCorrectPath, dirPath),
     },
 
     config: {

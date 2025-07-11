@@ -3,6 +3,8 @@ export const SharedIpcChannels = {
     AppExit: "app_exit",
     AppBrowseToFile: "app_browse_to_file",
     AppOpenFile: "app_open_file",
+    ProjectListFiles: "project_list_files",
+    ProjectCorrectPath: "project_correct_path",
     ConfigGet: "config_get",
     MapListSourceDirs: "map_list_source_dirs",
     MapEnqueue: "map_enqueue",

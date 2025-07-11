@@ -17,6 +17,7 @@ import {
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
+import { SharedFsEntry } from "Shared/SharedFileListing.js";
 
 export {};
 
@@ -28,6 +29,10 @@ declare global {
                 exit: () => void;
                 browseToFile: (filePath: string) => void;
                 openFile: (filePath: string) => void;
+            };
+            project: {
+                listFiles: (dirPath: string) => Promise<SharedFsEntry[]>;
+                correctPath: (dirPath: string) => Promise<string | undefined>;
             };
             config: {
                 get: () => Promise<SharedAppConfig>;

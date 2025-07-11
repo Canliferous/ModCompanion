@@ -1,12 +1,13 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createMemoryHistory, createRouter, Router } from "vue-router";
+import { useAssetListStore } from "~/store/AssetListStore.js";
 import ui from "@nuxt/ui/vue-plugin";
 import App from "~/components/App.vue";
 import HomePage from "~/components/pages/HomePage.vue";
 import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
 import MapsPage from "~/components/pages/maps/MapsPage.vue";
-import { useAssetListStore } from "~/store/AssetListStore.js";
+import LoosePage from "~/components/pages/loose/LoosePage.vue";
 
 export function initVue() {
     const pinia = createPinia();
@@ -35,9 +36,12 @@ function _initRouter(): Router {
                 component: AssetsPage,
                 beforeEnter: (to, from) => {
                     const assetListStore = useAssetListStore();
-                    assetListStore.forceRefresh();
+                    if (assetListStore.assets.size === 0) {
+                        assetListStore.forceRefresh();
+                    }
                 },
             },
+            { path: "/loose", component: LoosePage },
             { path: "/maps", component: MapsPage },
         ],
         history: createMemoryHistory(),

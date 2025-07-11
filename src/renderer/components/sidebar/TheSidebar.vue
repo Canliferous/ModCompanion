@@ -65,6 +65,11 @@ const pageButtons: PageButton[] = [
         route: "/assets",
     },
     {
+        name: "Loose Files",
+        icon: "tdesign:file-filled",
+        route: "/loose",
+    },
+    {
         name: "Maps",
         icon: "tdesign:map-3d-filled",
         route: "/maps",

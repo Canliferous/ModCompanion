@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { browseToFile, openFile } from "../helpers/MainFileBrowseHelper.js";
 
 export function registerFileBrowserApi(): boolean {
