@@ -1,5 +1,7 @@
 # Mod companion
 
+Modder's best friend <3
+
 ## Prerequisites
 
 You need
