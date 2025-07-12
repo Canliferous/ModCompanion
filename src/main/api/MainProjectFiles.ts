@@ -4,6 +4,7 @@ import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import fs from "fs/promises";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
+import * as child_process from "node:child_process";
 
 export function registerProjectFilesApi(): boolean {
     ipcMain.handle(SharedIpcChannels.ProjectListFiles, async (event, dirPath: string): Promise<SharedFsEntry[]> => {
@@ -13,18 +14,37 @@ export function registerProjectFilesApi(): boolean {
     ipcMain.handle(
         SharedIpcChannels.ProjectCorrectPath,
         async (event, somePath: string): Promise<string | undefined> => {
-            const config = getConfig();
-            if (!path.isAbsolute(somePath)) {
-                return somePath;
-            }
-            const ind = somePath.indexOf(config.rootPath);
-            if (ind !== 0) return undefined;
-
-            console.log(somePath, config.rootPath, ind);
-
-            return somePath.replace(config.rootPath, "");
+            return _correctProjectPath(somePath);
         },
     );
+
+    ipcMain.on(SharedIpcChannels.ProjectLaunchFile, (event, filePath: string) => {
+        let p = "";
+        if (path.isAbsolute(filePath)) {
+            p = filePath;
+        } else {
+            const config = getConfig();
+            p = path.join(config.rootPath, filePath);
+        }
+
+        console.log("Launching project file", p);
+
+        try {
+            child_process.execFile(p, { shell: true }, (error, stdout, stderr) => {
+                if (error) {
+                    console.warn(error);
+                }
+                if (stdout) {
+                    console.debug(stdout);
+                }
+                if (stderr) {
+                    console.warn(stderr);
+                }
+            });
+        } catch (e) {
+            console.warn(e);
+        }
+    });
 
     return true;
 }
@@ -32,6 +52,19 @@ export function registerProjectFilesApi(): boolean {
 function _isProjectPath(p: string): boolean {
     const config = getConfig();
     return path.resolve(p).startsWith(config.rootPath);
+}
+
+function _correctProjectPath(somePath: string) {
+    const config = getConfig();
+    if (!path.isAbsolute(somePath)) {
+        return somePath;
+    }
+    const ind = somePath.indexOf(config.rootPath);
+    if (ind !== 0) return undefined;
+
+    console.log(somePath, config.rootPath, ind);
+
+    return somePath.replace(config.rootPath, "");
 }
 
 async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
@@ -63,6 +96,9 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
             });
         }
     }
+
+    infos.sort((x, y) => (x.isFile === y.isFile ? 0 : x.isFile ? 1 : -1));
+    // infos.sort((x, y) => (x.isFile === y.isFile ? 0 : x.isFile ? -1 : 1));
 
     return infos;
 }

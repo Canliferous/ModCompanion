@@ -32,6 +32,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     project: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectListFiles, dirPath),
         correctPath: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectCorrectPath, dirPath),
+        launchFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.ProjectLaunchFile, filePath),
     },
 
     config: {

@@ -1,16 +1,16 @@
 <template>
     <div class="flex items-center select-none">
-        <UButton size="sm" color="neutral" variant="ghost" icon="tdesign:home-filled" @click="handleHomeClick()" />
+        <UButton size="sm" color="neutral" variant="ghost" icon="tdesign:home-filled" @click="handleHomeClick" />
         <template v-for="(split, index) in pathSplits">
+            <span class="text-xs">/</span>
             <UButton
                 :label="split"
                 size="sm"
                 color="neutral"
                 variant="ghost"
                 class="px-1"
-                @click="handleClick(index + 1)"
+                @click="(event: MouseEvent) => handleClick(event, index + 1)"
             />
-            <span class="text-xs" v-if="index !== pathSplits.length - 1">/</span>
         </template>
     </div>
 </template>
@@ -21,7 +21,8 @@ import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
 const looseFilesStore = useLooseFilesStore();
 const pathSplits = computed(() => looseFilesStore.currentDir.split("/"));
 
-function handleClick(index: number): void {
+function handleClick(event: MouseEvent, index: number): void {
+    event.stopPropagation();
     let fullPath = "";
     for (let i = 0; i < index; i++) {
         if (i > 0) fullPath += "/";
@@ -31,7 +32,8 @@ function handleClick(index: number): void {
     looseFilesStore.currentDir = fullPath;
 }
 
-function handleHomeClick(): void {
+function handleHomeClick(event: MouseEvent): void {
+    event.stopPropagation();
     looseFilesStore.currentDir = "";
 }
 </script>

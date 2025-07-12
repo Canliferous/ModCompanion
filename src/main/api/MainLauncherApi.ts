@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
-import { SharedLaunchers } from "../../shared/SharedLaunchers.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 import * as child_process from "node:child_process";
 import { getConfig } from "../systems/MainConfigSystem.js";
 
