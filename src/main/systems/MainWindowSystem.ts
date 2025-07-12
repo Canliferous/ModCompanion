@@ -1,11 +1,14 @@
 import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import settings from "electron-settings";
 import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
 
+const SETTING_WINDOW_BOUNDS = "window.bounds";
+const SETTING_WINDOW_MAXIMIZED = "window.maximized";
+
 let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;
+let preventClose = true;
 
 export function getMainWindow(): BrowserWindow | undefined {
     return mainWindow;
@@ -16,19 +19,23 @@ export function initWindowSystem(): boolean {
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
+            _createWindow();
         }
     });
 
-    app.whenReady().then(handleReady);
+    app.whenReady().then(_handleReady);
 
     return true;
 }
 
-function handleReady(): void {
-    createTray();
-    createWindow();
-    createGlobalShortcuts();
+export function disablePreventClose(): void {
+    preventClose = false;
+}
+
+function _handleReady(): void {
+    _createTray();
+    _createWindow();
+    _createGlobalShortcuts();
 }
 
 interface WindowRect {
@@ -37,9 +44,9 @@ interface WindowRect {
     width: number;
     height: number;
 }
-function getSettingsBounds(): WindowRect {
+function _getSettingsBounds(): WindowRect {
     const defaultBounds: WindowRect = { width: 1400, height: 800 };
-    const bounds = (settings.getSync("settings.bounds") as Partial<Rectangle>) ?? defaultBounds;
+    const bounds = (settings.getSync(SETTING_WINDOW_BOUNDS) as Partial<Rectangle>) ?? defaultBounds;
 
     bounds.width ??= defaultBounds.width;
     bounds.height ??= defaultBounds.height;
@@ -47,8 +54,8 @@ function getSettingsBounds(): WindowRect {
     return bounds as WindowRect;
 }
 
-function createWindow(): void {
-    const bounds = getSettingsBounds();
+function _createWindow(): void {
+    const bounds = _getSettingsBounds();
     mainWindow = new BrowserWindow({
         width: bounds.width,
         height: bounds.height,
@@ -63,10 +70,26 @@ function createWindow(): void {
         icon: path.join(getMainAssetsDir(), "mod_companion_192.png"),
     });
 
+    // Event listeners
+
     mainWindow.on("close", (event) => {
-        event.preventDefault();
-        mainWindow?.hide();
+        if (preventClose) {
+            event.preventDefault();
+            mainWindow?.hide();
+        }
     });
+
+    app.on("before-quit", (event) => {
+        const bounds = mainWindow?.getBounds();
+        if (bounds) {
+            settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
+        }
+    });
+
+    mainWindow.on("maximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, true));
+    mainWindow.on("unmaximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, false));
+
+    // Open the window
 
     if (process.env.NODE_ENV === "development") {
         mainWindow.loadURL("http://localhost:5173");
@@ -77,23 +100,12 @@ function createWindow(): void {
 
     mainWindow.removeMenu();
 
-    if (settings.getSync("window.maximized")) {
+    if (settings.getSync(SETTING_WINDOW_MAXIMIZED)) {
         mainWindow.maximize();
     }
-
-    mainWindow.on("maximize", () => settings.set("window.maximized", true));
-    mainWindow.on("unmaximize", () => settings.set("window.maximized", false));
-
-    // TODO: This doesnt work
-    mainWindow.on("close", (event) => {
-        const bounds = mainWindow?.getBounds();
-        if (bounds) {
-            settings.setSync("window.bounds", bounds as any);
-        }
-    });
 }
 
-function createTray(): void {
+function _createTray(): void {
     tray = new Tray(path.join(getMainAssetsDir(), "mod_companion_192.png"));
 
     tray.setToolTip("Mod Companion");
@@ -110,31 +122,29 @@ function createTray(): void {
 }
 
 let zoomFactor = 1;
-function createGlobalShortcuts() {
-    globalShortcut.register("Control+=", () => changeZoom(0.1));
-    globalShortcut.register("Control+-", () => changeZoom(-0.1));
-    globalShortcut.register("Control+0", () => resetZoom());
-    globalShortcut.register("Control+num0", () => resetZoom());
-    globalShortcut.register("Control+numadd", () => changeZoom(0.1));
-    globalShortcut.register("Control+numsub", () => changeZoom(-0.1));
+function _createGlobalShortcuts() {
+    globalShortcut.register("Control+=", () => _changeZoom(0.1));
+    globalShortcut.register("Control+-", () => _changeZoom(-0.1));
+    globalShortcut.register("Control+0", () => _resetZoom());
+    globalShortcut.register("Control+num0", () => _resetZoom());
+    globalShortcut.register("Control+numadd", () => _changeZoom(0.1));
+    globalShortcut.register("Control+numsub", () => _changeZoom(-0.1));
 
-    // if (process.env.NODE_ENV !== "development") {
     mainWindow?.webContents.on("before-input-event", (event, input) => {
         if (input.key.toLowerCase() === "f12") {
             event.preventDefault();
             mainWindow?.webContents.toggleDevTools();
         }
     });
-    // }
 }
 
-function changeZoom(delta: number) {
+function _changeZoom(delta: number) {
     console.log("Change zoom", delta);
     zoomFactor = Math.max(0.1, zoomFactor + delta);
     mainWindow?.webContents.setZoomFactor(zoomFactor);
 }
 
-function resetZoom() {
+function _resetZoom() {
     zoomFactor = 1.0;
     mainWindow?.webContents.setZoomFactor(zoomFactor);
 }
