@@ -1,8 +1,10 @@
 <template>
     <button
-        class="grid col-span-full grid-cols-subgrid items-center gap-x-2 px-2 text-left cursor-pointer text-sm hover:bg-accented"
-        @click="handleClick()"
-        @dblclick="handleDoubleClick()"
+        class="grid col-span-full grid-cols-subgrid items-center gap-x-2 px-2 text-left cursor-pointer text-sm hover:bg-accented outline-none"
+        :class="{ 'bg-primary-500/40': isPrimarySelected, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
+        @click="handleClick"
+        @contextmenu="handleClick"
+        @dblclick="handleDoubleClick"
     >
         <div>
             <FsEntryIcon :entry="entry" />
@@ -26,8 +28,25 @@ import FsEntryIcon from "~/components/pages/loose/list/FsEntryIcon.vue";
 
 const props = defineProps<{ entry: SharedFsEntry }>();
 
-function handleClick() {}
-function handleDoubleClick() {
+const isSelected = computed(() => useLooseFilesStore().selectedPaths.includes(props.entry.path));
+const isPrimarySelected = computed(() => useLooseFilesStore().primarySelectedPath === props.entry.path);
+
+function handleClick(event: MouseEvent): void {
+    const shift = event.shiftKey;
+    const control = event.ctrlKey;
+
+    if (!shift) {
+        if (control) {
+            useLooseFilesStore().toggleSelect(props.entry.path);
+        } else {
+            useLooseFilesStore().startSelect(props.entry.path);
+        }
+    } else {
+        useLooseFilesStore().endSelect(props.entry.path);
+    }
+}
+
+function handleDoubleClick(event: MouseEvent): void {
     if (!props.entry.isFile) {
         useLooseFilesStore().currentDir = props.entry.path;
     } else {
