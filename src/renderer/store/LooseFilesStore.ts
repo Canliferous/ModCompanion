@@ -23,6 +23,20 @@ export const useLooseFilesStore = defineStore("loose-files", () => {
         currentDir.value = correctedPath;
     }
 
+    function onEntryActivated(idx: number): void {
+        const entries = currentEntries.value;
+        if (!entries) return;
+
+        const entry = idx < entries?.length - 1 ? entries[idx] : undefined;
+        if (!entry) return;
+
+        if (entry.isFile) {
+            window.electronAPI.project.launchFile(entry.path);
+        } else {
+            updateCurrentDir(entry.path);
+        }
+    }
+
     refreshDir(currentDir.value);
 
     return {
@@ -31,5 +45,6 @@ export const useLooseFilesStore = defineStore("loose-files", () => {
         refreshDir,
         currentEntries,
         updateCurrentDir,
+        onEntryActivated,
     };
 });

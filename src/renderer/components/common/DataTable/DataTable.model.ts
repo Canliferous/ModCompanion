@@ -10,7 +10,14 @@ export const DataTableSelectionInjectKey = Symbol() as InjectionKey<{
     selectedIdx: Ref<number[]>;
     selectStartIdx: Ref<number | undefined>;
     deselect: () => void;
+    selectAll: () => void;
     startSelect: (startIdx: number) => void;
     endSelect: (endIdx: number) => void;
     toggleSelect: (idx: number) => void;
+    navigate: (up: boolean, shiftHeld: boolean) => void;
+}>;
+
+export const DataTableEntryActionInjectKey = Symbol() as InjectionKey<{
+    onEntryActivated: (idx: number) => void;
+    onEntryContextMenu: (idx: number) => void;
 }>;
