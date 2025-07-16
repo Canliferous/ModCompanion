@@ -7,11 +7,11 @@
                 size="sm"
                 class="w-full"
                 variant="none"
-                ref="input"
                 @blur="handleBlur()"
                 v-model="inputText"
                 autofocus
-                @keydown="handleTextChange"
+                @keydown.enter="handleEnter"
+                @keydown.down="handleDown"
             />
         </button>
     </div>
@@ -23,7 +23,10 @@ import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
 const showBreadcrumbs = ref(true);
 const inputText = ref("");
 
-const input = useTemplateRef("input");
+const emit = defineEmits<{
+    focusList: [void];
+}>();
+
 function handleBgClicked(): void {
     showBreadcrumbs.value = false;
     inputText.value = useLooseFilesStore().currentDir;
@@ -33,10 +36,14 @@ function handleBlur(): void {
     _finish();
 }
 
-function handleTextChange(event: KeyboardEvent): void {
-    if (event.key === "enter") {
-        _finish();
-    }
+function handleEnter(event: KeyboardEvent): void {
+    _finish();
+    event.stopPropagation();
+}
+
+function handleDown(event: KeyboardEvent): void {
+    emit("focusList");
+    event.stopPropagation();
 }
 
 function _finish() {

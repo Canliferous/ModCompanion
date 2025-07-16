@@ -27,7 +27,7 @@ export const useLooseFilesStore = defineStore("loose-files", () => {
         const entries = currentEntries.value;
         if (!entries) return;
 
-        const entry = idx < entries?.length - 1 ? entries[idx] : undefined;
+        const entry = idx <= entries?.length - 1 ? entries[idx] : undefined;
         if (!entry) return;
 
         if (entry.isFile) {

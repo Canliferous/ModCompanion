@@ -2,6 +2,7 @@
     <button
         class="grid col-span-full grid-cols-subgrid items-center gap-x-2 px-2 text-left cursor-pointer outline-none hover:bg-accented"
         :class="{ 'bg-primary-500/40': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
+        @focus="handleFocused"
         @click="handleClick"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
@@ -27,6 +28,10 @@ const entryAction = inject(DataTableEntryActionInjectKey);
 
 const isActive = computed(() => selection?.activeIdx.value === props.idx);
 const isSelected = computed(() => selection?.selectedIdx.value.includes(props.idx));
+
+function handleFocused(event: FocusEvent): void {
+    selection?.startSelect(props.idx);
+}
 
 function handleClick(event: MouseEvent): void {
     const shift = event.shiftKey;

@@ -1,6 +1,6 @@
 <template>
-    <div class="overflow-y-auto" @keydown="handleKeyDown">
-        <div class="grid" :style="`grid-template-columns: ${columnTemplate}`">
+    <div class="overflow-y-auto" @keydown="handleKeyDown" ref="root">
+        <div class="grid" :style="`grid-template-columns: ${columnTemplate}`" ref="grid">
             <DataTableRow v-for="(entry, i) in props.entries" :idx="i" :entry="entry" :columns="props.columns" />
         </div>
     </div>
@@ -20,6 +20,8 @@ const emit = defineEmits<{
     onActiveChanged: [idx: number | undefined];
     onSelectionChanged: [idx: number[]];
 }>();
+const rootEl = useTemplateRef("root");
+const gridEl = useTemplateRef("grid");
 
 const columnTemplate = computed(() => props.columns.map((c) => c.size ?? "auto").join(" "));
 
@@ -45,6 +47,16 @@ provide(DataTableSelectionInjectKey, {
 provide(DataTableEntryActionInjectKey, {
     onEntryActivated: (idx: number) => emit("onEntryActivated", idx),
     onEntryContextMenu: (idx: number) => emit("onEntryContextMenu", idx),
+});
+
+defineExpose({
+    focus: () => {
+        const el = gridEl?.value;
+        if (!el) return;
+        const child = el.firstElementChild;
+        if (!child) return;
+        (child as any).focus?.();
+    },
 });
 
 function deselect(): void {
