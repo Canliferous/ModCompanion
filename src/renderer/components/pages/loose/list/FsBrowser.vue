@@ -44,7 +44,12 @@ const columns: DataTableColumn<SharedFsEntry>[] = [
         id: "size",
         size: "auto",
         label: "Size",
-        cell: (entry) => h("span", entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : ""),
+        cell: (entry) =>
+            h(
+                "span",
+                { class: "text-right font-mono" },
+                entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : "",
+            ),
     },
 ];
 
