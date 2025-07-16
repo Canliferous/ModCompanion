@@ -5,7 +5,8 @@
             <UInput placeholder="Search" block v-model="listStore.searchTerm" leading-icon="tdesign:search" />
 
             <div class="mx-auto">
-                <PlayPauseStopControls />
+                <!-- https://youtrack.secondfacesoftware.com/issue/REVO2-91 -->
+                <!--                <PlayPauseStopControls />-->
             </div>
             <MapsTimeReportToggle />
             <MapsToggleConsoleButton />
@@ -22,7 +23,7 @@
 
 <script setup lang="ts">
 import PlayPauseStopControls from "../../common/PlayPauseStopControls.vue";
-import MapsDataGrid from "./MapsDataGrid.vue";
+import MapsDataGrid from "./list/MapsDataGrid.vue";
 import { useMapListStore } from "../../../store/MapListStore.js";
 import MapsToggleDrawerButton from "./MapsToggleDrawerButton.vue";
 import MapsToggleConsoleButton from "./MapsToggleConsoleButton.vue";

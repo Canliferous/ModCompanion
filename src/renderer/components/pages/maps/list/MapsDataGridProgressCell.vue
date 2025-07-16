@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import { SharedMapCompileState, SharedMapCompileStep } from "../../../../shared/SharedMapCompile.js";
-import { useMapCompileStore } from "../../../store/MapCompileStore.js";
+import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { useMapCompileStore } from "~/store/MapCompileStore.js";
 import { computed } from "vue";
 
 const props = defineProps<{ mapPath: string; step: SharedMapCompileStep }>();

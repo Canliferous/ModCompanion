@@ -1,5 +1,5 @@
 <template>
-    <div class="flex gap-2">
+    <div class="flex gap-2 bg-neutral-900">
         <UTooltip text="Open in Hammer">
             <UButton
                 icon="famicons:hammer-sharp"
@@ -43,10 +43,10 @@
 <script setup lang="ts">
 import { filename } from "pathe/utils";
 import pathe from "pathe";
-import { getAppConfig } from "../../../renderer-config.js";
+import { getAppConfig } from "../../../../renderer-config.js";
 import { computed, ref } from "vue";
-import { useMapCompileStore } from "../../../store/MapCompileStore.js";
-import { useMapListStore } from "../../../store/MapListStore.js";
+import { useMapCompileStore } from "../../../../store/MapCompileStore.js";
+import { useMapListStore } from "../../../../store/MapListStore.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 
 const compileStore = useMapCompileStore();

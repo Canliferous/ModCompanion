@@ -3,6 +3,7 @@ export interface DataTableColumn<T> {
     label?: string;
     size?: string;
     cell?: (entry: T) => VNode;
+    headerClass?: string;
 }
 
 export const DataTableSelectionInjectKey = Symbol() as InjectionKey<{
