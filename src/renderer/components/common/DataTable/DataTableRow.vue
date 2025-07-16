@@ -1,6 +1,6 @@
 <template>
     <button
-        class="grid col-span-full grid-cols-subgrid items-center gap-x-2 px-2 text-left cursor-pointer outline-none hover:bg-accented"
+        class="grid col-span-full grid-cols-subgrid items-center px-1 py-0.25 gap-x-1 text-left cursor-pointer outline-none hover:bg-accented"
         :class="{ 'bg-primary-500/40': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
         @focus="handleFocused"
         @click="handleClick"

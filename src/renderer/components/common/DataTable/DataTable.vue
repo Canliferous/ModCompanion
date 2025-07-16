@@ -1,6 +1,12 @@
 <template>
-    <div class="overflow-y-auto" @keydown="handleKeyDown" ref="root">
-        <div class="grid" :style="`grid-template-columns: ${columnTemplate}`" ref="grid">
+    <div
+        class="grid content-start p-1"
+        :style="`grid-template-columns: ${columnTemplate}`"
+        @keydown="handleKeyDown"
+        ref="root"
+    >
+        <DataTableHeader :columns="columns" />
+        <div class="grid col-span-full grid-cols-subgrid overflow-y-auto" ref="grid">
             <DataTableRow v-for="(entry, i) in props.entries" :idx="i" :entry="entry" :columns="props.columns" />
         </div>
     </div>
@@ -12,6 +18,7 @@ import {
     DataTableEntryActionInjectKey,
     DataTableSelectionInjectKey,
 } from "~/components/common/DataTable/DataTable.model.js";
+import DataTableHeader from "~/components/common/DataTable/DataTableHeader.vue";
 
 const props = defineProps<{ entries: T[]; columns: DataTableColumn<T>[] }>();
 const emit = defineEmits<{
