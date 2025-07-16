@@ -64,6 +64,8 @@ defineExpose({
         if (!child) return;
         (child as any).focus?.();
     },
+    selectAll,
+    deselect,
 });
 
 function deselect(): void {

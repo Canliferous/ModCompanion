@@ -25,6 +25,10 @@ const looseFilesStore = useLooseFilesStore();
 
 const entries = computed(() => looseFilesStore.currentEntries ?? []);
 
+watch(entries, () => {
+    dataTable.value?.deselect();
+});
+
 const dataTable = useTemplateRef("dataTable");
 
 const columns: DataTableColumn<SharedFsEntry>[] = [
@@ -58,7 +62,7 @@ function handleFocusList(): void {
 }
 
 function handleActivated(idx: number): void {
-    useLooseFilesStore().onEntryActivated(idx);
+    looseFilesStore.onEntryActivated(idx);
 }
 
 function handleContextMenu(idx: number): void {
