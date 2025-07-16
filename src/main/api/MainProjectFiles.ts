@@ -62,8 +62,6 @@ function _correctProjectPath(somePath: string) {
     const ind = somePath.indexOf(config.rootPath);
     if (ind !== 0) return undefined;
 
-    console.log(somePath, config.rootPath, ind);
-
     return somePath.replace(config.rootPath, "");
 }
 
