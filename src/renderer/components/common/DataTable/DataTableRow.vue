@@ -35,6 +35,11 @@ function handleFocused(event: FocusEvent): void {
 }
 
 function handleMouseDown(event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (event.buttons !== 1) return;
+
     const shift = event.shiftKey;
     const control = event.ctrlKey;
 
@@ -47,8 +52,6 @@ function handleMouseDown(event: MouseEvent): void {
     } else {
         selection?.endSelect(props.idx);
     }
-    event.stopPropagation();
-    event.preventDefault();
 }
 
 function handleMouseOver(event: MouseEvent): void {
