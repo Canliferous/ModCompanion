@@ -3,7 +3,8 @@
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-left cursor-pointer outline-none hover:bg-accented"
         :class="{ 'bg-primary-500/40': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
         @focus="handleFocused"
-        @click="handleClick"
+        @mousedown="handleMouseDown"
+        @mouseover="handleMouseOver"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
         @keydown.down="handleDown"
@@ -33,7 +34,7 @@ function handleFocused(event: FocusEvent): void {
     selection?.startSelect(props.idx);
 }
 
-function handleClick(event: MouseEvent): void {
+function handleMouseDown(event: MouseEvent): void {
     const shift = event.shiftKey;
     const control = event.ctrlKey;
 
@@ -47,6 +48,14 @@ function handleClick(event: MouseEvent): void {
         selection?.endSelect(props.idx);
     }
     event.stopPropagation();
+    event.preventDefault();
+}
+
+function handleMouseOver(event: MouseEvent): void {
+    // Left mouse dragged
+    if (event.buttons === 1) {
+        selection?.endSelect(props.idx);
+    }
 }
 
 function handleContextMenu(event: MouseEvent): void {
