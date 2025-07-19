@@ -36,7 +36,6 @@ function handleFocused(event: FocusEvent): void {
 
 function handleMouseDown(event: MouseEvent): void {
     event.stopPropagation();
-    event.preventDefault();
 
     if (event.buttons !== 1) return;
 
