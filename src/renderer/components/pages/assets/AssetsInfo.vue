@@ -15,6 +15,9 @@
                 <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
                     <UButton label="Open .mca" size="sm" variant="subtle" color="neutral" @click="openMca" />
                 </UTooltip>
+                <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
+                    <UButton label="Browse to .mca" size="sm" variant="subtle" color="neutral" @click="browseToMca" />
+                </UTooltip>
                 <AssetsAssociatedFilesActions
                     v-if="listStore.activeAsset.def.associatedFiles"
                     :files="listStore.activeAsset.def.associatedFiles"
@@ -74,6 +77,12 @@ function openMca(): void {
     const p = listStore.activeAsset?.defFilePath;
     if (!p) return;
     window.electronAPI.app.openFile(pathe.join(getAppConfig().contentPath, p));
+}
+
+function browseToMca(): void {
+    const p = listStore.activeAsset?.defFilePath;
+    if (!p) return;
+    window.electronAPI.app.browseToFile(pathe.join(getAppConfig().contentPath, p));
 }
 </script>
 
