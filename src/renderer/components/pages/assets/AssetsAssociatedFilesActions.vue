@@ -1,15 +1,17 @@
 <template>
-    <div class="col-span-full mt-1 flex items-center">
-        <div v-for="f in files">
-            <UButton
-                v-if="files.substanceDesigner"
-                size="sm"
-                variant="subtle"
-                label="Open Substance Source"
-                @click="open(files.substanceDesigner)"
-            />
-        </div>
-    </div>
+    <template v-for="f in files">
+        <template v-if="files.substanceDesigner">
+            <UTooltip :text="files.substanceDesigner">
+                <UButton
+                    size="sm"
+                    variant="subtle"
+                    color="neutral"
+                    label="Open Substance Source"
+                    @click="open(files.substanceDesigner)"
+                />
+            </UTooltip>
+        </template>
+    </template>
 </template>
 
 <script setup lang="ts">

@@ -11,10 +11,15 @@
                     <AssetIdDisplay :id="listStore.activeAsset.def.id" />
                 </div>
             </div>
-            <AssetsAssociatedFilesActions
-                v-if="listStore.activeAsset.def.associatedFiles"
-                :files="listStore.activeAsset.def.associatedFiles"
-            />
+            <div class="flex gap-1">
+                <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
+                    <UButton label="Open .mca" size="sm" variant="subtle" color="neutral" @click="openMca" />
+                </UTooltip>
+                <AssetsAssociatedFilesActions
+                    v-if="listStore.activeAsset.def.associatedFiles"
+                    :files="listStore.activeAsset.def.associatedFiles"
+                />
+            </div>
             <UTabs :items="tabs" variant="link" size="xs" color="neutral">
                 <template #files>
                     <AssetsTabFiles :asset="listStore.activeAsset" />
@@ -31,6 +36,8 @@
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetType, SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
+import pathe from "pathe";
+import { getAppConfig } from "~/renderer-config.js";
 
 const listStore = useAssetListStore();
 
@@ -57,10 +64,16 @@ const tabs = computed(() => {
     }
 });
 
-function convert() {
+function convert(): void {
     if (listStore.activeAssetId) {
         window.electronAPI.conversion.enqueue(listStore.activeAssetId);
     }
+}
+
+function openMca(): void {
+    const p = listStore.activeAsset?.defFilePath;
+    if (!p) return;
+    window.electronAPI.app.openFile(pathe.join(getAppConfig().contentPath, p));
 }
 </script>
 
