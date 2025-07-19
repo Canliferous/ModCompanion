@@ -1,22 +1,26 @@
 <template>
     <div>
-        <div v-if="listStore.selectedAsset" class="grid gap-1">
+        <div v-if="listStore.activeAsset" class="grid gap-1">
             <div class="bg-accented p-1 flex gap-1 items-center">
                 <AssetName
-                    :name="listStore.selectedAsset.def.displayName ?? '(Unknown)'"
-                    :type="listStore.selectedAsset.def.type"
+                    :name="listStore.activeAsset.def.displayName ?? '(Unknown)'"
+                    :type="listStore.activeAsset.def.type"
                 />
                 <div class="ml-auto">
                     <UButton size="sm" color="neutral" variant="subtle" @click="convert()">Convert</UButton>
-                    <AssetHash :hash="listStore.selectedAssetHash" />
+                    <AssetIdDisplay :id="listStore.activeAsset.def.id" />
                 </div>
             </div>
+            <AssetsAssociatedFilesActions
+                v-if="listStore.activeAsset.def.associatedFiles"
+                :files="listStore.activeAsset.def.associatedFiles"
+            />
             <UTabs :items="tabs" variant="link" size="xs" color="neutral">
                 <template #files>
-                    <AssetsTabFiles :asset="listStore.selectedAsset" />
+                    <AssetsTabFiles :asset="listStore.activeAsset" />
                 </template>
                 <template #texture>
-                    <AssetsTabTexture :asset="listStore.selectedAsset as SharedTextureAsset" />
+                    <AssetsTabTexture :asset="listStore.activeAsset as SharedTextureAsset" />
                 </template>
             </UTabs>
         </div>
@@ -35,7 +39,7 @@ const filesTab: TabsItem = {
     slot: "files",
 };
 const tabs = computed(() => {
-    switch (listStore.selectedAsset?.def.type) {
+    switch (listStore.activeAsset?.def.type) {
         case SharedAssetType.Texture: {
             return [
                 {
@@ -54,8 +58,8 @@ const tabs = computed(() => {
 });
 
 function convert() {
-    if (listStore.selectedAssetHash) {
-        window.electronAPI.conversion.enqueue(listStore.selectedAssetHash);
+    if (listStore.activeAssetId) {
+        window.electronAPI.conversion.enqueue(listStore.activeAssetId);
     }
 }
 </script>

@@ -1,9 +1,3 @@
-<script setup lang="ts">
-import { SharedConversionState } from "Shared/SharedConversion.js";
-
-defineProps<{ state: SharedConversionState }>();
-</script>
-
 <template>
     <div class="grid place-items-center">
         <UIcon v-if="state === SharedConversionState.Unknown" name="tdesign:close" class="text-error" />
@@ -16,5 +10,11 @@ defineProps<{ state: SharedConversionState }>();
         <UIcon v-if="state === SharedConversionState.FinishedConfirmed" name="tdesign:check" class="text-success" />
     </div>
 </template>
+
+<script setup lang="ts">
+import { SharedConversionState } from "Shared/SharedConversion.js";
+
+defineProps<{ state: SharedConversionState }>();
+</script>
 
 <style scoped></style>

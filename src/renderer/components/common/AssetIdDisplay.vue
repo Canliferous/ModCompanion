@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { useClipboard } from "@vueuse/core";
 import { watch } from "vue";
-const props = defineProps<{ hash: string }>();
+import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
+const props = defineProps<{ id: SharedAssetId }>();
 
-const { copy, copied } = useClipboard({ source: props.hash });
+const { copy, copied } = useClipboard({ source: props.id });
 
 watch(copied, (newVal) => {
     if (newVal) {
         useToast().add({
-            title: "Asset Hash copied to clipboard",
+            title: "Asset ID copied to clipboard",
             color: "success",
             icon: "tdesign:check",
         });
@@ -17,7 +18,7 @@ watch(copied, (newVal) => {
 </script>
 
 <template>
-    <UTooltip text="Copy Asset Hash">
+    <UTooltip text="Copy Asset ID">
         <UButton
             size="sm"
             variant="ghost"
@@ -25,7 +26,7 @@ watch(copied, (newVal) => {
             :disabled="copied"
             @click="copy()"
             class="font-mono"
-            :label="hash.substring(0, 5)"
+            :label="id.substring(0, 5)"
         />
     </UTooltip>
 </template>

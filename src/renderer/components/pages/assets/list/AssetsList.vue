@@ -1,22 +1,50 @@
 <template>
-    <div class="grid grid-cols-[auto_minmax(0,_1fr)_auto] grid-rows-[auto_1fr] gap-x-2">
-        <div
-            class="grid col-span-full grid-cols-subgrid items-center bg-elevated py-1.5 px-2 text-xs tracking-wider pr-4 select-none"
-        >
-            <div></div>
-            <div>Asset</div>
-            <UTooltip text="Whether this asset is converted"><span>Cnv.</span></UTooltip>
-        </div>
-        <div class="grid col-span-full grid-cols-subgrid content-start overflow-y-scroll">
-            <AssetsListRow v-for="asset in listStore.filteredAssets" :asset="asset" />
-        </div>
-    </div>
+    <DataTable
+        :entries="listStore.filteredAssets"
+        :columns="columns"
+        @onActiveChanged="handleActiveChanged"
+        @onSelectionChanged="handleSelectionChanged"
+    />
 </template>
 
 <script setup lang="ts">
-import AssetsListRow from "./AssetsListRow.vue";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { SharedAsset } from "Shared/SharedAssetDefinition.js";
+import AssetsListCellConverted from "~/components/pages/assets/list/AssetsListCellConverted.vue";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
+import AssetsListCellName from "~/components/pages/assets/list/AssetsListCellName.vue";
+import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
+
 const listStore = useAssetListStore();
+const conversionStore = useAssetConversionStore();
+
+const columns: DataTableColumn<SharedAsset>[] = [
+    {
+        id: "type",
+        label: "",
+        cell: (entry) => h(AssetTypeIcon, { type: entry.def.type }),
+        size: "auto",
+    },
+    {
+        id: "name",
+        label: "Name",
+        cell: (entry) => h(AssetsListCellName, { name: entry.def.displayName ?? "(unknown)" }),
+        size: "1fr",
+    },
+    {
+        id: "converted",
+        label: "Conv",
+        cell: (entry) => h(AssetsListCellConverted, { state: conversionStore.getState(entry.def.id) }),
+        size: "auto",
+    },
+];
+
+function handleSelectionChanged(idxs: number[]): void {}
+
+function handleActiveChanged(idx: number | undefined): void {
+    listStore.selectAssetByIndex(idx);
+}
 </script>
 
 <style scoped></style>

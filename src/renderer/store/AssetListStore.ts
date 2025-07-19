@@ -10,8 +10,8 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
-    const selectedAssetId = ref("");
-    const selectedAsset = computed(() => assets.value.get(selectedAssetId.value));
+    const activeAssetId = ref<SharedAssetId | undefined>();
+    const activeAsset = computed(() => (activeAssetId.value ? assets.value.get(activeAssetId.value) : undefined));
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -72,7 +72,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     });
 
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
-        selectedAssetId.value = assetHash;
+        activeAssetId.value = assetHash;
         const router = useRouter();
         router.push("/assets");
     });
@@ -82,18 +82,38 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing.value = true;
     }
 
-    function selectAsset(assetHash: string): void {
-        selectedAssetId.value = assetHash;
+    function selectAssetById(assetHash: string): void {
+        activeAssetId.value = assetHash;
+    }
+
+    function selectAssetByIndex(idx: number | undefined): void {
+        if (idx === undefined) {
+            activeAssetId.value = undefined;
+            return;
+        }
+
+        const id = getIdByIndex(idx);
+        if (id !== undefined) {
+            selectAssetById(id);
+        }
+    }
+
+    function getIdByIndex(idx: number): SharedAssetId | undefined {
+        if (idx < 0) return undefined;
+        const arr = filteredAssets.value;
+        if (idx > arr.length - 1) return undefined;
+        return arr[idx].def.id;
     }
 
     return {
         assets,
         refreshing,
-        forceRefresh,
         searchTerm,
         filteredAssets,
-        selectedAssetHash: selectedAssetId, // TODO: Rename this elsewhere to id
-        selectAsset,
-        selectedAsset,
+        activeAssetId,
+        activeAsset,
+        forceRefresh,
+        selectAssetById,
+        selectAssetByIndex,
     };
 });
