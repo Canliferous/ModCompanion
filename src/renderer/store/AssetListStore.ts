@@ -12,6 +12,11 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
     const activeAssetId = ref<SharedAssetId | undefined>();
     const activeAsset = computed(() => (activeAssetId.value ? assets.value.get(activeAssetId.value) : undefined));
+    const selectedIndices = ref<number[]>([]);
+
+    const selectedAssets = computed(() =>
+        filteredAssets.value.filter((value, index) => selectedIndices.value.includes(index)),
+    );
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -82,11 +87,11 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing.value = true;
     }
 
-    function selectAssetById(assetHash: string): void {
+    function activateAssetById(assetHash: string): void {
         activeAssetId.value = assetHash;
     }
 
-    function selectAssetByIndex(idx: number | undefined): void {
+    function activateAssetByIndex(idx: number | undefined): void {
         if (idx === undefined) {
             activeAssetId.value = undefined;
             return;
@@ -94,7 +99,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
         const id = getIdByIndex(idx);
         if (id !== undefined) {
-            selectAssetById(id);
+            activateAssetById(id);
         }
     }
 
@@ -105,6 +110,10 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return arr[idx].def.id;
     }
 
+    function selectIndices(idxs: number[]): void {
+        selectedIndices.value = idxs;
+    }
+
     return {
         assets,
         refreshing,
@@ -112,8 +121,11 @@ export const useAssetListStore = defineStore("asset-list", () => {
         filteredAssets,
         activeAssetId,
         activeAsset,
+        selectedIndices,
+        selectedAssets,
         forceRefresh,
-        selectAssetById,
-        selectAssetByIndex,
+        activateAssetById,
+        activateAssetByIndex,
+        selectIndices,
     };
 });

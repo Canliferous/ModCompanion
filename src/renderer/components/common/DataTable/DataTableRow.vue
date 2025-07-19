@@ -62,8 +62,6 @@ function handleMouseOver(event: MouseEvent): void {
 }
 
 function handleContextMenu(event: MouseEvent): void {
-    event.stopPropagation();
-
     entryAction?.onEntryContextMenu(props.idx);
 }
 

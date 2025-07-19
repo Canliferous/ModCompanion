@@ -1,10 +1,12 @@
 <template>
-    <DataTable
-        :entries="listStore.filteredAssets"
-        :columns="columns"
-        @onActiveChanged="handleActiveChanged"
-        @onSelectionChanged="handleSelectionChanged"
-    />
+    <UContextMenu :items="items">
+        <DataTable
+            :entries="listStore.filteredAssets"
+            :columns="columns"
+            @onActiveChanged="handleActiveChanged"
+            @onSelectionChanged="handleSelectionChanged"
+        />
+    </UContextMenu>
 </template>
 
 <script setup lang="ts">
@@ -15,6 +17,8 @@ import AssetsListCellConverted from "~/components/pages/assets/list/AssetsListCe
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import AssetsListCellName from "~/components/pages/assets/list/AssetsListCellName.vue";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
+import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
+import { browseToMca, openMca } from "~/helper/AssetHelper.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -40,11 +44,61 @@ const columns: DataTableColumn<SharedAsset>[] = [
     },
 ];
 
-function handleSelectionChanged(idxs: number[]): void {}
+function handleSelectionChanged(idxs: number[]): void {
+    listStore.selectIndices(idxs);
+}
 
 function handleActiveChanged(idx: number | undefined): void {
-    listStore.selectAssetByIndex(idx);
+    listStore.activateAssetByIndex(idx);
 }
+
+const items = computed(() => {
+    const selected = listStore.selectedAssets;
+    const options: ContextMenuItem[][] = [];
+    if (selected.length === 0) return;
+
+    options.push([
+        {
+            label: "Convert",
+            onSelect(e) {
+                for (const sel of selected) {
+                    conversionStore.enqueue(sel.def.id);
+                }
+            },
+            icon: "tdesign:forward-filled",
+            color: "success",
+        },
+    ]);
+
+    if (selected.length === 1) {
+        options.push([
+            {
+                label: "Open .mca",
+                onSelect(e: Event) {
+                    openMca(selected[0]);
+                },
+                icon: "tdesign:file-code-1-filled",
+            },
+            {
+                label: "Browse to .mca",
+                onSelect(e: Event) {
+                    browseToMca(selected[0]);
+                },
+                icon: "tdesign:folder-filled",
+            },
+        ]);
+    }
+
+    options.push([
+        {
+            label: `${selected.length} selected`,
+            disabled: true,
+            icon: "a", // Empty icon
+        },
+    ]);
+
+    return options;
+});
 </script>
 
 <style scoped></style>

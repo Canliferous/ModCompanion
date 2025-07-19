@@ -13,10 +13,22 @@
             </div>
             <div class="flex gap-1">
                 <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
-                    <UButton label="Open .mca" size="sm" variant="subtle" color="neutral" @click="openMca" />
+                    <UButton
+                        label="Open .mca"
+                        size="sm"
+                        variant="subtle"
+                        color="neutral"
+                        @click="openMca(listStore.activeAsset)"
+                    />
                 </UTooltip>
                 <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
-                    <UButton label="Browse to .mca" size="sm" variant="subtle" color="neutral" @click="browseToMca" />
+                    <UButton
+                        label="Browse to .mca"
+                        size="sm"
+                        variant="subtle"
+                        color="neutral"
+                        @click="browseToMca(listStore.activeAsset)"
+                    />
                 </UTooltip>
                 <AssetsAssociatedFilesActions
                     v-if="listStore.activeAsset.def.associatedFiles"
@@ -41,8 +53,11 @@ import { SharedAssetType, SharedTextureAsset } from "Shared/SharedAssetDefinitio
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
+import { browseToMca, openMca } from "~/helper/AssetHelper.js";
 
 const listStore = useAssetListStore();
+const conversionStore = useAssetConversionStore();
 
 const filesTab: TabsItem = {
     label: "Files",
@@ -69,20 +84,8 @@ const tabs = computed(() => {
 
 function convert(): void {
     if (listStore.activeAssetId) {
-        window.electronAPI.conversion.enqueue(listStore.activeAssetId);
+        conversionStore.enqueue(listStore.activeAssetId);
     }
-}
-
-function openMca(): void {
-    const p = listStore.activeAsset?.defFilePath;
-    if (!p) return;
-    window.electronAPI.app.openFile(pathe.join(getAppConfig().contentPath, p));
-}
-
-function browseToMca(): void {
-    const p = listStore.activeAsset?.defFilePath;
-    if (!p) return;
-    window.electronAPI.app.browseToFile(pathe.join(getAppConfig().contentPath, p));
 }
 </script>
 
