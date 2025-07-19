@@ -3,7 +3,7 @@ import { initWindowSystem } from "./systems/MainWindowSystem.js";
 import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
-import { initAssetScannerSystem } from "./systems/MainAssetScannerSystem.js";
+import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.js";
 import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 import { initConvertAgentSystem } from "./systems/MainConversionAgentSystem.js";

@@ -4,7 +4,7 @@ import path from "path";
 export function getContentRelativePath(filePath: string): string {
     const config = getConfig();
     if (filePath.toLowerCase().startsWith(config.contentPath.toLowerCase())) {
-        return filePath.substring(config.contentPath.length + 1);
+        return filePath.substring(config.contentPath.length + 1).replaceAll("\\", "/");
     }
 
     return filePath;
@@ -14,7 +14,7 @@ export function getGameRelativePath(filePath: string): string {
     const config = getConfig();
     const gamePath = path.join(config.gamePath, config.gameName);
     if (filePath.toLowerCase().startsWith(gamePath.toLowerCase())) {
-        return filePath.substring(gamePath.length + 1);
+        return filePath.substring(gamePath.length + 1).replaceAll("\\", "/");
     }
 
     return filePath;

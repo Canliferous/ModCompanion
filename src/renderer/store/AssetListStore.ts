@@ -50,14 +50,14 @@ export const useAssetListStore = defineStore("asset-list", () => {
             assets.value.set(newAsset.def.id, newAsset);
         }
 
-        const toast = useToast();
-        const assetList = newAssets.map((a) => `+ ${a.def.displayName}`).join("\n");
-        toast.add({
-            title: "Assets added",
-            description: assetList,
-            icon: "tdesign:task-add-1",
-            color: "success",
-        });
+        // const toast = useToast();
+        // const assetList = newAssets.map((a) => `+ ${a.def.displayName}`).join("\n");
+        // toast.add({
+        //     title: "Assets added",
+        //     description: assetList,
+        //     icon: "tdesign:task-add-1",
+        //     color: "success",
+        // });
     });
 
     window.electronAPI.asset.subscribeUpdated((event) => {
@@ -66,14 +66,14 @@ export const useAssetListStore = defineStore("asset-list", () => {
             assets.value.set(asset.def.id, asset);
         }
 
-        const toast = useToast();
-        const assetList = newAssets.map((a) => `~ ${a.def.displayName}`).join("\n");
-        toast.add({
-            title: "Assets updated",
-            description: assetList,
-            icon: "tdesign:task-add-1",
-            color: "success",
-        });
+        // const toast = useToast();
+        // const assetList = newAssets.map((a) => `~ ${a.def.displayName}`).join("\n");
+        // toast.add({
+        //     title: "Assets updated",
+        //     description: assetList,
+        //     icon: "tdesign:task-add-1",
+        //     color: "success",
+        // });
     });
 
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {

@@ -9,6 +9,7 @@ import {
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { _convertTextureAsset } from "./converter/MainTextureConverter.js";
+import { runStrataGameCommand } from "../helpers/MainGameCommand.js";
 
 const MAX_PARALLEL_JOBS = 5;
 
@@ -75,6 +76,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
 }
 
 function _startConversions(hashes: SharedAssetId[]): void {
+    const promises: Promise<boolean>[] = [];
     for (const hash of hashes) {
         const asset = getAssetFromId(hash);
         if (!asset) {
@@ -84,10 +86,16 @@ function _startConversions(hashes: SharedAssetId[]): void {
         _setState(hash, SharedConversionState.InProgress);
 
         const timeoutPromise = _convertAsset(asset.def);
-
+        promises.push(timeoutPromise);
         timeoutPromise.finally(() => _onJobPromiseFinished(hash));
         conversionJobs.set(hash, timeoutPromise);
     }
+
+    // TODO: This is just for testing, build a more intelligent hotreload system!
+    Promise.allSettled(promises).then(() => {
+        console.log("HOTRELOAD: Reloading textures");
+        runStrataGameCommand("mat_reloadallmaterials ");
+    });
 }
 
 async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
