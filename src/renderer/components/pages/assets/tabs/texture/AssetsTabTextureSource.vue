@@ -35,7 +35,7 @@ function onBrowse() {
     <div>
         <div class="bg-amber-500 px-2 py-1 text-xs w-max text-neutral-900 font-medium">Source Image</div>
         <div class="border border-amber-500 bg-amber-500/5 @container">
-            <p class="m-2 mb-0 text-xs font-mono text-neutral-300">{{ sourceFile }}</p>
+            <p class="m-2 mb-0 text-xs font-mono text-neutral-300 text-ellipsis overflow-x-hidden">{{ sourceFile }}</p>
 
             <div
                 class="grid grid-cols-1 @lg:grid-cols-[auto_auto] @2xl:grid-cols-[auto_auto_auto] justify-start gap-2 text-sm p-2"

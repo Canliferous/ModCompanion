@@ -1,15 +1,15 @@
 <template>
-    <div class="grid grid-cols-[minmax(auto,_600px)_1fr] grid-rows-1 h-full gap-2">
+    <div class="grid grid-cols-[minmax(auto,_600px)_minmax(200px,_1fr)] grid-rows-1 h-full gap-2">
         <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-[auto_minmax(0,_1fr)] gap-1 h-full">
             <div class="flex gap-1">
                 <AssetsSearchInput />
                 <AssetsRefreshButton />
             </div>
-            <AssetsList />
+            <div class="overflow-auto">
+                <AssetsList />
+            </div>
         </div>
-        <div>
-            <AssetsInfo />
-        </div>
+        <AssetsInfo />
     </div>
 </template>
 
