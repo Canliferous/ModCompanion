@@ -1,0 +1,15 @@
+<template>
+    <USwitch label="Hot Reload" color="success" size="sm" v-model="enabled" />
+</template>
+
+<script setup lang="ts">
+import { useRemember } from "~/composables/useRemember.js";
+
+const enabled = useRemember(ref(true), "hot-reload-enabled");
+
+watch(enabled, (on) => {
+    window.electronAPI.hotReload.setEnabled(on);
+});
+</script>
+
+<style scoped></style>

@@ -7,6 +7,8 @@ import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.
 import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 import { initConvertAgentSystem } from "./systems/MainConversionAgentSystem.js";
+import { initHotReloadSystem } from "./systems/MainHotReloadSystem.js";
+import { initStrataInterop } from "./systems/MainStrataInteropSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -22,6 +24,8 @@ const systems: System[] = [
     { name: "AssetScanner", initFunction: initAssetScannerSystem },
     { name: "MareTf", initFunction: initMateTfSystem },
     { name: "ConversionAgent", initFunction: initConvertAgentSystem },
+    { name: "StrataInterop", initFunction: initStrataInterop },
+    { name: "HotReload", initFunction: initHotReloadSystem },
 ];
 
 async function startSystems() {

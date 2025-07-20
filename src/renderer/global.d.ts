@@ -62,6 +62,9 @@ declare global {
                 stopAgent: () => void;
                 subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) => IpcRenderer;
             };
+            hotReload: {
+                setEnabled: (enable: boolean) => void;
+            };
         };
     }
 }

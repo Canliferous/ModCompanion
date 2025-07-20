@@ -15,6 +15,8 @@
         </div>
 
         <div class="grid gap-1 content-start">
+            <SidebarHotReloadSwitch />
+            <USeparator />
             <UButton
                 v-for="btn of launcherButtons"
                 :color="btn.color"
@@ -42,6 +44,7 @@
 import BitmapIcon from "../common/BitmapIcon.vue";
 import { launch, launcherButtons } from "../../model/LauncherButtons.js";
 import AppDesign from "../../design/AppDesign.js";
+import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 
 function quit() {
     window.electronAPI.app.exit();

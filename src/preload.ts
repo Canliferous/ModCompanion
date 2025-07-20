@@ -91,4 +91,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 (e: IpcRendererEvent, event: SharedConversionUpdateEvent) => callback(event),
             ),
     },
+
+    hotReload: {
+        setEnabled: (enable: boolean) => ipcRenderer.send(SharedIpcChannels.HotReloadSetEnabled, enable),
+    },
 });
