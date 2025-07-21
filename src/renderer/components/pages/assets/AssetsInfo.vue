@@ -1,16 +1,23 @@
 <template>
     <div v-if="listStore.activeAsset" class="grid gap-1 h-full overflow-y-auto content-start">
-        <div class="bg-accented p-1 flex gap-1 flex-wrap items-center">
+        <div class="bg-accented flex gap-1 flex-wrap items-center">
             <AssetName
                 :name="listStore.activeAsset.def.displayName ?? '(Unknown)'"
                 :type="listStore.activeAsset.def.type"
             />
             <div class="ml-auto">
-                <UButton size="sm" color="neutral" variant="subtle" @click="convert()">Convert</UButton>
                 <AssetIdDisplay :id="listStore.activeAsset.def.id" />
             </div>
         </div>
-        <div class="flex gap-1">
+        <div class="flex gap-1 flex-wrap">
+            <UButton
+                size="sm"
+                color="neutral"
+                variant="subtle"
+                @click="convert()"
+                icon="tdesign:forward-filled"
+                label="Convert"
+            />
             <UTooltip :text="listStore.activeAsset.defFilePath" v-if="listStore.activeAsset.defFilePath">
                 <UButton
                     label="Open .mca"
