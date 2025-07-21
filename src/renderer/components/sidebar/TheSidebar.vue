@@ -12,6 +12,12 @@
             >
                 {{ btn.name }}
             </UButton>
+
+            <USeparator />
+
+            <UDropdownMenu :items="items" :content="{ side: 'right', align: 'start' }">
+                <UButton :ui="{ item: 'py-0' }" variant="soft" color="neutral" label="Add Panel" icon="tdesign:plus" />
+            </UDropdownMenu>
         </div>
 
         <div class="grid gap-1 content-start">
@@ -42,9 +48,28 @@
 
 <script setup lang="ts">
 import BitmapIcon from "../common/BitmapIcon.vue";
-import { launch, launcherButtons } from "../../model/LauncherButtons.js";
+import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import AppDesign from "../../design/AppDesign.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
+import { getPanelConfig } from "~/renderer-panels.js";
+
+const panelsStore = usePanelsStore();
+
+const items = getPanelConfig().map(
+    (p) =>
+        ({
+            label: p.title,
+            onSelect(e: Event) {
+                panelsStore.api?.addPanel({
+                    id: new Date().getTime() + "",
+                    component: p.panelId,
+                    title: p.title,
+                });
+            },
+        }) satisfies DropdownMenuItem,
+);
 
 function quit() {
     window.electronAPI.app.exit();

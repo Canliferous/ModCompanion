@@ -8,6 +8,7 @@ import HomePage from "~/components/pages/HomePage.vue";
 import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
 import MapsPage from "~/components/pages/maps/MapsPage.vue";
 import LoosePage from "~/components/pages/loose/LoosePage.vue";
+import { initPanels } from "~/renderer-panels.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -18,6 +19,8 @@ export function initVue() {
     app.use(pinia);
     app.use(ui);
     app.use(router);
+
+    initPanels(app);
 
     app.mount("#app");
 

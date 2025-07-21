@@ -9,7 +9,7 @@
                 <AssetsList />
             </div>
         </div>
-        <AssetsInfo />
+        <AssetsInfo v-if="assetList.activeAsset" :asset="assetList.activeAsset" />
     </div>
 </template>
 
@@ -18,6 +18,9 @@ import AssetsList from "~/components/pages/assets/list/AssetsList.vue";
 import AssetsRefreshButton from "./AssetsRefreshButton.vue";
 import AssetsSearchInput from "./AssetsSearchInput.vue";
 import AssetsInfo from "./AssetsInfo.vue";
+import { useAssetListStore } from "~/store/AssetListStore.js";
+
+const assetList = useAssetListStore();
 </script>
 
 <style scoped></style>

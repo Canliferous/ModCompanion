@@ -4,7 +4,7 @@
             <slot name="sidebar" />
         </div>
         <USeparator orientation="vertical" />
-        <div class="p-1 h-full">
+        <div class="p-1 h-full grid grid-cols-1 grid-rows-1">
             <slot name="page" />
         </div>
     </div>
