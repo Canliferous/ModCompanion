@@ -13,7 +13,7 @@ export const useMapDrawerStore = defineStore("map-drawer", () => {
         isOpen.value = !isOpen.value;
     }
 
-    const drawerTree = ref<any[]>([]);
+    const drawerTree = ref<TreeItem[]>([]);
     async function loadDrawerTree() {
         const mapDirs = await window.electronAPI.map.listSourceDirs();
         drawerTree.value = mapDirs.map<TreeItem>((d) => ({

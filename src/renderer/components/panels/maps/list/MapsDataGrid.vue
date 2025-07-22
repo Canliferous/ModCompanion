@@ -9,12 +9,12 @@ import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.j
 import { computed } from "vue";
 import pathe from "pathe";
 import { filename } from "pathe/utils";
-import MapsDataGridProgressCell from "~/components/pages/maps/list/MapsDataGridProgressCell.vue";
+import MapsDataGridProgressCell from "~/components/panels/maps/list/MapsDataGridProgressCell.vue";
 import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
-import MapsDataGridActionsCell from "~/components/pages/maps/list/MapsDataGridActionsCell.vue";
-import MapsDataGridTimeReportTotalCell from "~/components/pages/maps/list/MapsDataGridTimeReportTotalCell.vue";
-import MapsDataGridTimeReportCell from "~/components/pages/maps/list/MapsDataGridTimeReportCell.vue";
-import MapsDataGridTimeReportBarCell from "~/components/pages/maps/list/MapsDataGridTimeReportBarCell.vue";
+import MapsDataGridActionsCell from "~/components/panels/maps/list/MapsDataGridActionsCell.vue";
+import MapsDataGridTimeReportTotalCell from "~/components/panels/maps/list/MapsDataGridTimeReportTotalCell.vue";
+import MapsDataGridTimeReportCell from "~/components/panels/maps/list/MapsDataGridTimeReportCell.vue";
+import MapsDataGridTimeReportBarCell from "~/components/panels/maps/list/MapsDataGridTimeReportBarCell.vue";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();

@@ -6,7 +6,6 @@ import ui from "@nuxt/ui/vue-plugin";
 import App from "~/components/App.vue";
 import HomePage from "~/components/pages/HomePage.vue";
 import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
-import MapsPage from "~/components/pages/maps/MapsPage.vue";
 import { initPanels } from "~/renderer-panels.js";
 
 export function initVue() {
@@ -44,7 +43,7 @@ function _initRouter(): Router {
                 },
             },
             // { path: "/loose", component: LoosePage },
-            { path: "/maps", component: MapsPage },
+            // { path: "/maps", component: MapsPage },
         ],
         history: createMemoryHistory(),
     });

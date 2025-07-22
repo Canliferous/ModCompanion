@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMapTimeReportStore } from "../../../store/MapTimeReportStore.js";
+import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
 
 const timeReportStore = useMapTimeReportStore();
 

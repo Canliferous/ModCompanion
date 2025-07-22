@@ -1,9 +1,8 @@
 import { App as VueApp, Component, DefineComponent } from "@vue/runtime-core";
 import TestPanel from "~/components/panels/TestPanel.vue";
 import HomePanel from "~/components/panels/HomePanel.vue";
-import MapsPage from "~/components/pages/maps/MapsPage.vue";
-import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
 import FileBrowser from "~/components/panels/fileBrowser/FileBrowser.vue";
+import MapsPanel from "~/components/panels/maps/MapsPanel.vue";
 
 export interface PanelConfig {
     component: Component | DefineComponent;
@@ -23,14 +22,9 @@ const panels: PanelConfig[] = [
         title: "Home",
     },
     {
-        panelId: "_MapsPage",
-        component: MapsPage,
+        panelId: "_Maps",
+        component: MapsPanel,
         title: "Maps",
-    },
-    {
-        panelId: "_AssetsPage",
-        component: AssetsPage,
-        title: "Assets",
     },
     {
         panelId: "_FileBrowser",
