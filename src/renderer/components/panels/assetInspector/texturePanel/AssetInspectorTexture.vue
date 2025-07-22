@@ -7,9 +7,9 @@ defineProps<{ asset: SharedTextureAsset }>();
 <template>
     <div class="grid grid-cols-1 gap-1">
         <div v-if="asset.def.contentFiles !== undefined && asset.def.contentFiles.length > 0">
-            <AssetsTabTextureSource :source-file="asset.def.contentFiles[0]" />
+            <AssetInspectorTextureSource :source-file="asset.def.contentFiles[0]" />
         </div>
-        <AssetsTabTextureVtfOptions :asset="asset" />
+        <AssetInspectorTextureVtfOptions :asset="asset" />
     </div>
 </template>
 

@@ -13,12 +13,12 @@
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
 import { SharedAsset } from "Shared/SharedAssetDefinition.js";
-import AssetsListCellConverted from "~/components/pages/assets/list/AssetsListCellConverted.vue";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import AssetsListCellName from "~/components/pages/assets/list/AssetsListCellName.vue";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { browseToMca, openMca } from "~/helper/AssetHelper.js";
+import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
+import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -33,13 +33,13 @@ const columns: DataTableColumn<SharedAsset>[] = [
     {
         id: "name",
         label: "Name",
-        cell: (entry) => h(AssetsListCellName, { name: entry.def.displayName ?? "(unknown)" }),
+        cell: (entry) => h(AssetBrowserCellName, { name: entry.def.displayName ?? "(unknown)" }),
         size: "1fr",
     },
     {
         id: "converted",
         label: "Conv",
-        cell: (entry) => h(AssetsListCellConverted, { state: conversionStore.getState(entry.def.id) }),
+        cell: (entry) => h(AssetBrowserCellConverted, { state: conversionStore.getState(entry.def.id) }),
         size: "auto",
     },
 ];

@@ -60,6 +60,12 @@ export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
     vtfOptions?: SharedVtfCreateOptions;
 }
 
-export function isTextureAsset(asset: SharedAssetDefinition): asset is SharedTextureAssetDefinition {
-    return asset.type === SharedAssetType.Texture;
+export function isTextureAssetDefinition(
+    asset: SharedAssetDefinition | undefined,
+): asset is SharedTextureAssetDefinition {
+    return asset?.type === SharedAssetType.Texture;
+}
+
+export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedTextureAsset {
+    return isTextureAssetDefinition(asset?.def);
 }

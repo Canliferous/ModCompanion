@@ -26,13 +26,13 @@ function onBrowse() {
 
 <template>
     <UContextMenu :items="items">
-        <UTooltip text="Click to Open">
-            <UButton class="justify-start" variant="ghost" block color="neutral" size="sm" @click="onOpen">
-                <span class="font-mono">
-                    {{ file }}
-                </span>
-            </UButton>
-        </UTooltip>
+        <!--        <UTooltip text="Click to Open">-->
+        <UButton class="justify-start" variant="ghost" block color="neutral" size="sm" @click="onOpen">
+            <span class="font-mono">
+                {{ file }}
+            </span>
+        </UButton>
+        <!--        </UTooltip>-->
     </UContextMenu>
 </template>
 

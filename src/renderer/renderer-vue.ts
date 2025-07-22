@@ -32,16 +32,16 @@ function _initRouter(): Router {
     const router = createRouter({
         routes: [
             { path: "/", component: HomePage },
-            {
-                path: "/assets",
-                component: AssetsPage,
-                beforeEnter: (to, from) => {
-                    const assetListStore = useAssetListStore();
-                    if (assetListStore.assets.size === 0) {
-                        assetListStore.forceRefresh();
-                    }
-                },
-            },
+            // {
+            //     path: "/assets",
+            //     component: AssetsPage,
+            //     beforeEnter: (to, from) => {
+            //         const assetListStore = useAssetListStore();
+            //         if (assetListStore.assets.size === 0) {
+            //             assetListStore.forceRefresh();
+            //         }
+            //     },
+            // },
             // { path: "/loose", component: LoosePage },
             // { path: "/maps", component: MapsPage },
         ],
