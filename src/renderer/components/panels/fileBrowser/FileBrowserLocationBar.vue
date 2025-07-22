@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="handleBgClicked()" class="w-full outline-none">
-            <FsBreadcrumbs v-if="showBreadcrumbs" />
+            <FileBrowserBreadcrumbs v-if="showBreadcrumbs" />
             <UInput
                 v-else
                 size="sm"

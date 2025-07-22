@@ -2,8 +2,8 @@ import { App as VueApp, Component, DefineComponent } from "@vue/runtime-core";
 import TestPanel from "~/components/panels/TestPanel.vue";
 import HomePanel from "~/components/panels/HomePanel.vue";
 import MapsPage from "~/components/pages/maps/MapsPage.vue";
-import LoosePage from "~/components/pages/loose/LoosePage.vue";
 import AssetsPage from "~/components/pages/assets/AssetsPage.vue";
+import FileBrowser from "~/components/panels/fileBrowser/FileBrowser.vue";
 
 export interface PanelConfig {
     component: Component | DefineComponent;
@@ -34,8 +34,8 @@ const panels: PanelConfig[] = [
     },
     {
         panelId: "_FileBrowser",
-        component: LoosePage,
-        title: "Files",
+        component: FileBrowser,
+        title: "File Browser",
     },
 ];
 

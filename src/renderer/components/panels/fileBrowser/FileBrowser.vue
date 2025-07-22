@@ -1,6 +1,6 @@
 <template>
-    <div class="grid grid-rows-[auto_auto_1fr] h-full w-130">
-        <div><FsPathField @focus-list="handleFocusList" /></div>
+    <div class="grid grid-rows-[auto_auto_1fr] h-full w-full">
+        <div><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
         <USeparator />
         <DataTable
             :columns="columns"
@@ -13,12 +13,12 @@
 </template>
 
 <script setup lang="ts">
-import FsPathField from "~/components/pages/loose/list/FsPathField.vue";
+import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
 import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
 import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
-import FsEntryIcon from "~/components/pages/loose/list/FsEntryIcon.vue";
+import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEntryIcon.vue";
 import DataTable from "~/components/common/DataTable/DataTable.vue";
 
 const looseFilesStore = useLooseFilesStore();
@@ -36,7 +36,7 @@ const columns: DataTableColumn<SharedFsEntry>[] = [
         id: "icon",
         size: "auto",
         label: "",
-        cell: (entry) => h(FsEntryIcon, { entry: entry }),
+        cell: (entry) => h(FileBrowserEntryIcon, { entry: entry }),
     },
     {
         id: "name",
