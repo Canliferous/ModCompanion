@@ -1,5 +1,5 @@
 <template>
-    <aside class="bg-default h-full flex flex-col">
+    <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start">
             <UButton
                 v-for="btn of pageButtons"

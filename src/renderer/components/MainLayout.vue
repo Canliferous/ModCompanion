@@ -1,10 +1,9 @@
 <template>
-    <div class="grid main-layout h-screen">
-        <div class="p-1">
+    <div class="p-1 grid main-layout gap-1 h-screen">
+        <div class="">
             <slot name="sidebar" />
         </div>
-        <USeparator orientation="vertical" />
-        <div class="p-1 h-full grid grid-cols-1 grid-rows-1">
+        <div class="h-full grid grid-cols-1 grid-rows-1">
             <slot name="page" />
         </div>
     </div>
@@ -14,7 +13,7 @@
 
 <style scoped>
 .main-layout {
-    grid-template-columns: 10rem 0.25rem minmax(0, 1fr);
+    grid-template-columns: 10rem minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
 }
 </style>

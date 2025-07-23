@@ -1,12 +1,11 @@
 <template>
-    <AssetInspectorFiles v-if="assetStore.activeAsset" :asset="assetStore.activeAsset" />
-    <div v-else class="grid place-items-center">Nothing Selected</div>
+    <AssetInspectorWrapper v-slot="{ activeAsset }">
+        <AssetInspectorFiles :asset="activeAsset" />
+    </AssetInspectorWrapper>
 </template>
 
 <script setup lang="ts">
-import { useAssetListStore } from "~/store/AssetListStore.js";
-
-const assetStore = useAssetListStore();
+import AssetInspectorWrapper from "~/components/panels/assetInspector/AssetInspectorWrapper.vue";
 </script>
 
 <style scoped></style>

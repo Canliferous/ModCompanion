@@ -1,6 +1,6 @@
 <template>
     <AssetInspectorTexture v-if="isTextureAsset(assetStore.activeAsset)" :asset="assetStore.activeAsset" />
-    <div v-else class="grid place-items-center">No Texture Selected</div>
+    <div v-else class="grid place-items-center h-full">No Texture Selected</div>
 </template>
 
 <script setup lang="ts">

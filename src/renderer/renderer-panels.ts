@@ -1,9 +1,7 @@
 import { App as VueApp, Component, DefineComponent } from "@vue/runtime-core";
 import TestPanel from "~/components/panels/TestPanel.vue";
 import HomePanel from "~/components/panels/HomePanel.vue";
-import FileBrowser from "~/components/panels/fileBrowser/FileBrowser.vue";
 import MapsPanel from "~/components/panels/maps/MapsPanel.vue";
-import AssetBrowser from "~/components/panels/assetBrowser/AssetBrowser.vue";
 import AssetBrowserPanel from "~/components/panels/assetBrowser/AssetBrowserPanel.vue";
 import FileBrowserPanel from "~/components/panels/fileBrowser/FileBrowserPanel.vue";
 import AssetInspectorPanel from "~/components/panels/assetInspector/AssetInspectorPanel.vue";
