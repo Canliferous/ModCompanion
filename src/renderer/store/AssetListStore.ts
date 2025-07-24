@@ -21,25 +21,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
         refreshing.value = false;
-
-        const toast = useToast();
-        const assetCount = event.assets.size;
-        if (event.totalTimeMillis) {
-            const seconds = (event.totalTimeMillis * 0.001).toFixed(2);
-            toast.add({
-                title: "Asset scan complete",
-                description: `Scanned ${assetCount} assets in ${seconds}s`,
-                icon: "tdesign:task-checked-1",
-                color: "success",
-            });
-        } else {
-            toast.add({
-                title: "Scan complete",
-                description: `Scanned ${assetCount} assets`,
-                icon: "tdesign:task-checked-1",
-                color: "success",
-            });
-        }
     });
 
     window.electronAPI.asset.subscribeAdded((event) => {
@@ -49,15 +30,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         for (const newAsset of newAssets) {
             assets.value.set(newAsset.def.id, newAsset);
         }
-
-        // const toast = useToast();
-        // const assetList = newAssets.map((a) => `+ ${a.def.displayName}`).join("\n");
-        // toast.add({
-        //     title: "Assets added",
-        //     description: assetList,
-        //     icon: "tdesign:task-add-1",
-        //     color: "success",
-        // });
     });
 
     window.electronAPI.asset.subscribeUpdated((event) => {
@@ -65,15 +37,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         for (let asset of newAssets) {
             assets.value.set(asset.def.id, asset);
         }
-
-        // const toast = useToast();
-        // const assetList = newAssets.map((a) => `~ ${a.def.displayName}`).join("\n");
-        // toast.add({
-        //     title: "Assets updated",
-        //     description: assetList,
-        //     icon: "tdesign:task-add-1",
-        //     color: "success",
-        // });
     });
 
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
@@ -114,6 +77,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectedIndices.value = idxs;
     }
 
+    function getAssetByIndex(idx: number): SharedAsset | undefined {
+        if (idx < 0) return undefined;
+        const arr = filteredAssets.value;
+        if (idx > arr.length - 1) return undefined;
+        return arr[idx];
+    }
+
     return {
         assets,
         refreshing,
@@ -123,6 +93,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeAsset,
         selectedIndices,
         selectedAssets,
+        getAssetByIndex,
         forceRefresh,
         activateAssetById,
         activateAssetByIndex,

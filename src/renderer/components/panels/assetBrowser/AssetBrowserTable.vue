@@ -19,9 +19,11 @@ import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { browseToMca, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
+import { usePanelsStore } from "~/store/PanelsStore.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
+const panelsStore = usePanelsStore();
 
 const columns: DataTableColumn<SharedAsset>[] = [
     {

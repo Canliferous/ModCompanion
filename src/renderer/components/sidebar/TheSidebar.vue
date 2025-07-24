@@ -15,9 +15,7 @@
 
             <USeparator />
 
-            <UDropdownMenu :items="items" :content="{ side: 'right', align: 'start' }">
-                <UButton :ui="{ item: 'py-0' }" variant="soft" color="neutral" label="Add Panel" icon="tdesign:plus" />
-            </UDropdownMenu>
+            <PanelsDropdown />
         </div>
 
         <div class="grid gap-1 content-start">
@@ -53,23 +51,8 @@ import AppDesign from "../../design/AppDesign.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
-import { getPanelConfig } from "~/renderer-panels.js";
-
-const panelsStore = usePanelsStore();
-
-const items = getPanelConfig().map(
-    (p) =>
-        ({
-            label: p.title,
-            onSelect(e: Event) {
-                panelsStore.api?.addPanel({
-                    id: new Date().getTime() + "",
-                    component: p.panelId,
-                    title: p.title,
-                });
-            },
-        }) satisfies DropdownMenuItem,
-);
+import { getPanelArray } from "~/renderer-panels.js";
+import PanelsDropdown from "~/components/sidebar/PanelsDropdown.vue";
 
 function quit() {
     window.electronAPI.app.exit();
