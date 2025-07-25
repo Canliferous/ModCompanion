@@ -1,6 +1,8 @@
 <template>
-    <slot v-if="assetStore.activeAsset" :activeAsset="assetStore.activeAsset" />
-    <div v-else class="grid place-items-center h-full">Nothing Selected</div>
+    <div class="h-full grid">
+        <slot v-if="assetStore.activeAsset" :activeAsset="assetStore.activeAsset" />
+        <div v-else class="grid place-items-center">Nothing Selected</div>
+    </div>
 </template>
 
 <script setup lang="ts">

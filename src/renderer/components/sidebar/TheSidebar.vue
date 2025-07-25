@@ -1,20 +1,6 @@
 <template>
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start">
-            <UButton
-                v-for="btn of pageButtons"
-                variant="soft"
-                color="neutral"
-                active-color="primary"
-                class="border-l-4 active:border-l-primary"
-                :to="btn.route"
-                :leading-icon="btn.icon"
-            >
-                {{ btn.name }}
-            </UButton>
-
-            <USeparator />
-
             <PanelsDropdown />
         </div>
 
@@ -47,45 +33,12 @@
 <script setup lang="ts">
 import BitmapIcon from "../common/BitmapIcon.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
-import AppDesign from "../../design/AppDesign.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
-import { usePanelsStore } from "~/store/PanelsStore.js";
-import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
-import { getPanelArray } from "~/renderer-panels.js";
 import PanelsDropdown from "~/components/sidebar/PanelsDropdown.vue";
 
 function quit() {
     window.electronAPI.app.exit();
 }
-
-interface PageButton {
-    name: string;
-    icon: string;
-    route: string;
-}
-
-const pageButtons: PageButton[] = [
-    {
-        name: "Home",
-        icon: "tdesign:home-filled",
-        route: "/",
-    },
-    {
-        name: "Assets",
-        icon: AppDesign.icons.asset,
-        route: "/assets",
-    },
-    {
-        name: "Loose Files",
-        icon: "tdesign:file-filled",
-        route: "/loose",
-    },
-    {
-        name: "Maps",
-        icon: "tdesign:map-3d-filled",
-        route: "/maps",
-    },
-];
 </script>
 
 <style scoped></style>

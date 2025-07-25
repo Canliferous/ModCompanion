@@ -5,7 +5,6 @@
                 <DockviewVue @ready="panelsStore.handleReady" :theme="themeDark" />
             </template>
             <template #sidebar><TheSidebar /></template>
-            <template #topbar><TheTopBar /></template>
         </MainLayout>
     </UApp>
 </template>
