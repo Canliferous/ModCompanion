@@ -1,7 +1,7 @@
 <template>
     <button
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-left cursor-pointer outline-none hover:bg-accented"
-        :class="{ 'bg-primary-500/40': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
+        :class="{ 'bg-primary-500/60': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
         @mousedown="handleMouseDown"
         @mouseover="handleMouseOver"
         @contextmenu="handleContextMenu"

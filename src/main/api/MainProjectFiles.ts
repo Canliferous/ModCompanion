@@ -18,31 +18,34 @@ export function registerProjectFilesApi(): boolean {
         },
     );
 
-    ipcMain.on(SharedIpcChannels.ProjectLaunchFile, (event, filePath: string) => {
-        let p = "";
-        if (path.isAbsolute(filePath)) {
-            p = filePath;
-        } else {
-            const config = getConfig();
-            p = path.join(config.rootPath, filePath);
-        }
+    ipcMain.on(SharedIpcChannels.ProjectLaunchFile, (event, filePath: string | string[]) => {
+        const files = Array.isArray(filePath) ? filePath : [filePath];
+        for (const file of files) {
+            let p = "";
+            if (path.isAbsolute(file)) {
+                p = file;
+            } else {
+                const config = getConfig();
+                p = path.join(config.rootPath, file);
+            }
 
-        console.log("Launching project file", p);
+            console.log("Launching project file", p);
 
-        try {
-            child_process.execFile(p, { shell: true }, (error, stdout, stderr) => {
-                if (error) {
-                    console.warn(error);
-                }
-                if (stdout) {
-                    console.debug(stdout);
-                }
-                if (stderr) {
-                    console.warn(stderr);
-                }
-            });
-        } catch (e) {
-            console.warn(e);
+            try {
+                child_process.execFile(p, { shell: true }, (error, stdout, stderr) => {
+                    if (error) {
+                        console.warn(error);
+                    }
+                    if (stdout) {
+                        console.debug(stdout);
+                    }
+                    if (stderr) {
+                        console.warn(stderr);
+                    }
+                });
+            } catch (e) {
+                console.warn(e);
+            }
         }
     });
 

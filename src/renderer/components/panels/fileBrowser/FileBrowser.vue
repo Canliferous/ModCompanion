@@ -1,12 +1,12 @@
 <template>
-    <div class="grid grid-rows-[auto_auto_1fr] h-full w-full">
+    <div class="grid grid-rows-[auto_auto_minmax(0,_1fr)] h-full w-full">
         <div><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
         <USeparator />
         <UContextMenu :items="items">
             <DataTable
                 :columns="columns"
                 :entries="entries"
-                @on-entry-activated="handleActivated"
+                @onEntryActivated="handleActivated"
                 @onSelectionChanged="handleSelectionChanged"
                 @onActiveChanged="handleActiveChanged"
                 ref="dataTable"
@@ -68,32 +68,54 @@ const columns: DataTableColumn<SharedFsEntry>[] = [
 
 const activeEntry = computed(() => {
     const index = activeIndex.value;
-    if (!index) return undefined;
+    if (index === undefined || index < 0) return undefined;
     const etr = entries.value;
     if (index > etr.length - 1) return undefined;
     return etr[index];
 });
 
-const items = computed<ContextMenuItem[][]>(() => {
-    const active = activeEntry.value;
-    if (!active) return [];
-
-    if (active.isFile) {
-        return [
-            [
-                {
-                    label: "Create Asset",
-                    icon: "tdesign:plus",
-                    onSelect(e) {
-                        // TODO: Create asset for the whole selection
-                        assetListStore.createAsset([active.path]);
-                    },
-                },
-            ],
-        ] satisfies ContextMenuItem[][];
-    } else {
-        return [];
+const selectedEntries = computed(() => {
+    const idxs = selectedIndexes.value;
+    const result: SharedFsEntry[] = [];
+    const entries1 = entries.value;
+    for (let i = 0; i < entries1.length; i++) {
+        if (idxs.includes(i)) {
+            result.push(entries1[i]);
+        }
     }
+
+    return result;
+});
+
+const items = computed<ContextMenuItem[][]>(() => {
+    const entries = selectedEntries.value;
+    if (entries.length === 0) return [];
+
+    const allFiles = !entries.some((e) => !e.isFile);
+    const pathsArray = entries.map((e) => e.path);
+
+    return [
+        [
+            {
+                label: "Open / Run",
+                icon: "tdesign:arrow-right",
+                disabled: !allFiles,
+                onSelect(e: Event) {
+                    window.electronAPI.project.launchFile(pathsArray);
+                },
+            },
+        ],
+        [
+            {
+                label: "Create Asset",
+                icon: "tdesign:plus",
+                disabled: !allFiles,
+                onSelect(e) {
+                    assetListStore.createAsset(pathsArray);
+                },
+            },
+        ],
+    ] satisfies ContextMenuItem[][];
 });
 
 function handleFocusList(): void {

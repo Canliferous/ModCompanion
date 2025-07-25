@@ -35,7 +35,7 @@ declare global {
             project: {
                 listFiles: (dirPath: string) => Promise<SharedFsEntry[]>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
-                launchFile: (filePath: string) => void;
+                launchFile: (filePath: string | string[]) => void;
             };
             config: {
                 get: () => Promise<SharedAppConfig>;

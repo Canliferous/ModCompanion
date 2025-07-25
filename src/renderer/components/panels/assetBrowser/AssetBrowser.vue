@@ -4,7 +4,7 @@
             <AssetBrowserSearchInput />
             <AssetBrowserRefreshButton />
         </div>
-        <div class="overflow-auto">
+        <div>
             <AssetBrowserTable />
         </div>
     </div>
