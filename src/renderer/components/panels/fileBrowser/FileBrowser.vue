@@ -2,13 +2,16 @@
     <div class="grid grid-rows-[auto_auto_1fr] h-full w-full">
         <div><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
         <USeparator />
-        <DataTable
-            :columns="columns"
-            :entries="entries"
-            @on-entry-activated="handleActivated"
-            @on-entry-context-menu="handleContextMenu"
-            ref="dataTable"
-        />
+        <UContextMenu :items="items">
+            <DataTable
+                :columns="columns"
+                :entries="entries"
+                @on-entry-activated="handleActivated"
+                @onSelectionChanged="handleSelectionChanged"
+                @onActiveChanged="handleActiveChanged"
+                ref="dataTable"
+            />
+        </UContextMenu>
     </div>
 </template>
 
@@ -20,10 +23,16 @@ import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
 import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEntryIcon.vue";
 import DataTable from "~/components/common/DataTable/DataTable.vue";
+import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
 
 const looseFilesStore = useLooseFilesStore();
+const assetListStore = useAssetListStore();
 
 const entries = computed(() => looseFilesStore.currentEntries ?? []);
+
+const selectedIndexes = ref<number[]>([]);
+const activeIndex = ref<number>();
 
 watch(entries, () => {
     dataTable.value?.deselect();
@@ -57,6 +66,36 @@ const columns: DataTableColumn<SharedFsEntry>[] = [
     },
 ];
 
+const activeEntry = computed(() => {
+    const index = activeIndex.value;
+    if (!index) return undefined;
+    const etr = entries.value;
+    if (index > etr.length - 1) return undefined;
+    return etr[index];
+});
+
+const items = computed<ContextMenuItem[][]>(() => {
+    const active = activeEntry.value;
+    if (!active) return [];
+
+    if (active.isFile) {
+        return [
+            [
+                {
+                    label: "Create Asset",
+                    icon: "tdesign:plus",
+                    onSelect(e) {
+                        // TODO: Create asset for the whole selection
+                        assetListStore.createAsset([active.path]);
+                    },
+                },
+            ],
+        ] satisfies ContextMenuItem[][];
+    } else {
+        return [];
+    }
+});
+
 function handleFocusList(): void {
     dataTable.value?.focus();
 }
@@ -65,8 +104,12 @@ function handleActivated(idx: number): void {
     looseFilesStore.onEntryActivated(idx);
 }
 
-function handleContextMenu(idx: number): void {
-    console.log("Context Menu", idx);
+function handleSelectionChanged(idxs: number[]): void {
+    selectedIndexes.value = idxs;
+}
+
+function handleActiveChanged(idx: number | undefined): void {
+    activeIndex.value = idx;
 }
 </script>
 

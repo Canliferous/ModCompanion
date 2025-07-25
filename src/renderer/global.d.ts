@@ -18,6 +18,8 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
+import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
 
 export {};
 
@@ -52,6 +54,7 @@ declare global {
                 subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) => IpcRenderer;
                 subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
+                createAsset: (files: string[]) => Promise<SharedCreateAssetReport>;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
 import { SharedAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { useRouter } from "vue-router";
+import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
@@ -44,6 +45,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
         const router = useRouter();
         router.push("/assets");
     });
+
+    async function createAsset(files: string[]): Promise<void> {
+        const result = await window.electronAPI.asset.createAsset(files);
+        if (result.type === SharedCreateAssetReportType.Success) {
+            assets.value.set(result.asset.def.id, result.asset);
+        }
+    }
 
     function forceRefresh(): void {
         window.electronAPI.asset.forceRescan();
@@ -93,6 +101,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeAsset,
         selectedIndices,
         selectedAssets,
+        createAsset,
         getAssetByIndex,
         forceRefresh,
         activateAssetById,

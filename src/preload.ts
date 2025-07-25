@@ -75,6 +75,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.on(SharedIpcChannels.AssetNavigateToHash, (e: IpcRendererEvent, assetHash: string) =>
                 callback(assetHash),
             ),
+        createAsset: (files: string[]) => ipcRenderer.invoke(SharedIpcChannels.AssetCreate, files),
     },
 
     image: {

@@ -1,7 +1,18 @@
-import { SharedAssetDefinition, SharedAssetId, SharedAssetMap, SharedAsset } from "Shared/SharedAssetDefinition.js";
+import {
+    SharedAsset,
+    SharedAssetDefinition,
+    SharedAssetId,
+    SharedAssetMap,
+    SharedAssetType,
+} from "Shared/SharedAssetDefinition.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
-import { buildAssets } from "./MainAssetScanner.js";
+import { AssetDefinitionFileExtension, buildAssets } from "./MainAssetScanner.js";
 import { scanContentTree } from "../files/MainFileScanner.js";
+import { v4 } from "uuid";
+import { isContentFile } from "../../helpers/MainSourceFs.js";
+import path from "path";
+import fs from "fs/promises";
+import { getConfig } from "../MainConfigSystem.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
 
@@ -94,10 +105,51 @@ export interface FileRemoveResult {
 //     return addFile(filePath, type, false);
 // }
 
+// TODO: Collision check?
+export function generateAssetId(): string {
+    return v4();
+}
+
+export async function createAsset(files: string[]): Promise<SharedAsset | undefined> {
+    if (files.length === 0) return undefined;
+
+    if (files.length === 1) {
+        const file = files[0];
+        const isContent = isContentFile(file);
+        const assetDef: SharedAssetDefinition = {
+            type: SharedAssetType.Unknown, // TODO: Determine type
+            id: generateAssetId(),
+            contentFiles: isContent ? [file] : undefined,
+            gameFiles: !isContent ? [file] : undefined,
+            associatedFiles: undefined,
+            displayName: file,
+        };
+
+        const mcaPath = file + AssetDefinitionFileExtension;
+        const absoluteMcaPath = path.join(getConfig().rootPath, mcaPath);
+        const payload = JSON.stringify(assetDef, undefined, 2);
+        await fs.writeFile(absoluteMcaPath, payload);
+        return { defFilePath: mcaPath, def: assetDef };
+    }
+
+    return undefined;
+}
+
 export function getAssetFromFile(filePath: string): SharedAsset | undefined {
     for (let asset of assetMap.values()) {
         if (asset.def.gameFiles?.includes(filePath)) return asset;
         if (asset.def.contentFiles?.includes(filePath)) return asset;
+    }
+
+    return undefined;
+}
+
+export function getAssetFromFiles(filePaths: string[]): SharedAsset | undefined {
+    for (let asset of assetMap.values()) {
+        for (const filePath of filePaths) {
+            if (asset.def.gameFiles?.includes(filePath)) return asset;
+            if (asset.def.contentFiles?.includes(filePath)) return asset;
+        }
     }
 
     return undefined;
@@ -110,5 +162,7 @@ export function getAssetFromId(hash: SharedAssetId): SharedAsset | undefined {
 export default {
     rescan,
     getAssetFromFile,
+    getAssetFromFiles,
+    createAsset,
     getAssetFromHash: getAssetFromId,
 };
