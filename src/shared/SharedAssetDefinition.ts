@@ -1,5 +1,7 @@
 import { SharedVtfCreateOptions } from "./SharedMareTf.js";
 
+export const SharedAssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
+
 export enum SharedAssetType {
     Unknown = "",
     Texture = "texture",

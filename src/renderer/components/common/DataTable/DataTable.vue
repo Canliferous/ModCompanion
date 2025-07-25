@@ -72,6 +72,7 @@ defineExpose({
     },
     selectAll,
     deselect,
+    select,
 });
 
 function deselect(): void {
@@ -114,6 +115,11 @@ function endSelect(endIdx: number): void {
 
     selectedIdx.value = selectedIdxs;
     activeIdx.value = endIdx;
+}
+
+function select(idxs: number[]): void {
+    selectedIdx.value = idxs;
+    activeIdx.value = undefined;
 }
 
 function toggleSelect(idx: number): void {

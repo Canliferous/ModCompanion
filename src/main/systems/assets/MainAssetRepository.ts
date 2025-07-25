@@ -1,12 +1,13 @@
 import {
     SharedAsset,
     SharedAssetDefinition,
+    SharedAssetDefinitionFileExtension,
     SharedAssetId,
     SharedAssetMap,
     SharedAssetType,
 } from "Shared/SharedAssetDefinition.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
-import { AssetDefinitionFileExtension, buildAssets } from "./MainAssetScanner.js";
+import { buildAssets } from "./MainAssetScanner.js";
 import { scanContentTree } from "../files/MainFileScanner.js";
 import { v4 } from "uuid";
 import { isContentFile } from "../../helpers/MainSourceFs.js";
@@ -125,7 +126,7 @@ export async function createAsset(files: string[]): Promise<SharedAsset | undefi
             displayName: file,
         };
 
-        const mcaPath = file + AssetDefinitionFileExtension;
+        const mcaPath = file + SharedAssetDefinitionFileExtension;
         const absoluteMcaPath = path.join(getConfig().rootPath, mcaPath);
         const payload = JSON.stringify(assetDef, undefined, 2);
         await fs.writeFile(absoluteMcaPath, payload);

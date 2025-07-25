@@ -4,6 +4,7 @@ import { useAssetsFilter } from "~/composables/useFilter.js";
 import { SharedAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { useRouter } from "vue-router";
 import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
+import { getContentRelativePath } from "~/helper/SourceFs.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
@@ -11,13 +12,24 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
-    const activeAssetId = ref<SharedAssetId | undefined>();
-    const activeAsset = computed(() => (activeAssetId.value ? assets.value.get(activeAssetId.value) : undefined));
-    const selectedIndices = ref<number[]>([]);
+    const activeId = ref<SharedAssetId | undefined>();
+    const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
+    const selectedIds = ref<SharedAssetId[]>([]);
 
     const selectedAssets = computed(() =>
-        filteredAssets.value.filter((value, index) => selectedIndices.value.includes(index)),
+        filteredAssets.value.filter((value, index) => selectedIds.value.includes(value.def.id)),
     );
+
+    type SelectionUpdatedFunc = () => void;
+    const selectionUpdatedSubscribers: SelectionUpdatedFunc[] = [];
+    function subscribeSelectionUpdated(func: SelectionUpdatedFunc) {
+        selectionUpdatedSubscribers.push(func);
+    }
+    function notifySelectionUpdated() {
+        for (let sub of selectionUpdatedSubscribers) {
+            sub();
+        }
+    }
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -41,7 +53,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     });
 
     window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
-        activeAssetId.value = assetHash;
+        activeId.value = assetHash;
         const router = useRouter();
         router.push("/assets");
     });
@@ -59,12 +71,12 @@ export const useAssetListStore = defineStore("asset-list", () => {
     }
 
     function activateAssetById(assetHash: string): void {
-        activeAssetId.value = assetHash;
+        activeId.value = assetHash;
     }
 
     function activateAssetByIndex(idx: number | undefined): void {
         if (idx === undefined) {
-            activeAssetId.value = undefined;
+            activeId.value = undefined;
             return;
         }
 
@@ -82,7 +94,24 @@ export const useAssetListStore = defineStore("asset-list", () => {
     }
 
     function selectIndices(idxs: number[]): void {
-        selectedIndices.value = idxs;
+        selectedIds.value = idxs.map((i) => getIdByIndex(i)).filter((i) => i !== undefined);
+    }
+
+    function selectAssetsByMca(mcaPaths: string[]): void {
+        const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
+        const sel: SharedAssetId[] = [];
+        for (let asset of assets.value.values()) {
+            if (asset.defFilePath === undefined) continue;
+            if (mcaPathsRel.includes(asset.defFilePath)) {
+                sel.push(asset.def.id);
+            }
+        }
+
+        console.log("Selecting mca", mcaPathsRel, sel);
+
+        activeId.value = undefined;
+        selectedIds.value = sel;
+        notifySelectionUpdated();
     }
 
     function getAssetByIndex(idx: number): SharedAsset | undefined {
@@ -97,9 +126,9 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing,
         searchTerm,
         filteredAssets,
-        activeAssetId,
+        activeId,
         activeAsset,
-        selectedIndices,
+        selectedIds,
         selectedAssets,
         createAsset,
         getAssetByIndex,
@@ -107,5 +136,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activateAssetById,
         activateAssetByIndex,
         selectIndices,
+        selectAssetsByMca,
+        subscribeSelectionUpdated,
     };
 });

@@ -25,6 +25,9 @@ import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEnt
 import DataTable from "~/components/common/DataTable/DataTable.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import pathe from "pathe";
+import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
+import AppDesign from "~/design/AppDesign.js";
 
 const looseFilesStore = useLooseFilesStore();
 const assetListStore = useAssetListStore();
@@ -94,6 +97,8 @@ const items = computed<ContextMenuItem[][]>(() => {
     const allFiles = !entries.some((e) => !e.isFile);
     const pathsArray = entries.map((e) => e.path);
 
+    const mcaFiles = entries.filter((e) => e.isFile && pathe.extname(e.path) === SharedAssetDefinitionFileExtension);
+
     return [
         [
             {
@@ -112,6 +117,14 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: !allFiles,
                 onSelect(e) {
                     assetListStore.createAsset(pathsArray);
+                },
+            },
+            {
+                label: "Select Asset in Browser",
+                icon: AppDesign.icons.asset,
+                disabled: mcaFiles.length === 0,
+                onSelect(e: Event) {
+                    assetListStore.selectAssetsByMca(mcaFiles.map((m) => m.path));
                 },
             },
         ],

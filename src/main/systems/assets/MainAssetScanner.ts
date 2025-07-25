@@ -2,13 +2,12 @@ import {
     isValidAssetType,
     SharedAsset,
     SharedAssetDefinition,
+    SharedAssetDefinitionFileExtension,
     SharedAssetId,
     SharedAssetMap,
 } from "Shared/SharedAssetDefinition.js";
 import path from "path";
 import fs from "fs/promises";
-
-export const AssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
 
 export async function buildAssets(contentTree: string[], contentRootPath: string): Promise<SharedAssetMap> {
     const assets: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
@@ -41,7 +40,7 @@ export async function buildAssets(contentTree: string[], contentRootPath: string
 }
 
 function _isAssetDefinitionFile(filePath: string): boolean {
-    return path.extname(filePath).toLowerCase() === AssetDefinitionFileExtension;
+    return path.extname(filePath).toLowerCase() === SharedAssetDefinitionFileExtension;
 }
 
 async function _readAssetDefinitionFile(

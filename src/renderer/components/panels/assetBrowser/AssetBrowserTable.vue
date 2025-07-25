@@ -1,6 +1,7 @@
 <template>
     <UContextMenu :items="items">
         <DataTable
+            ref="table"
             :entries="listStore.filteredAssets"
             :columns="columns"
             @onActiveChanged="handleActiveChanged"
@@ -23,7 +24,18 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
-const panelsStore = usePanelsStore();
+
+const table = useTemplateRef("table");
+
+// TODO: Also update active
+listStore.subscribeSelectionUpdated(() => {
+    const selIds = listStore.selectedIds;
+
+    const assets = listStore.filteredAssets;
+    const selIdxs = selIds.map((s) => assets.findIndex((v) => v.def.id === s));
+    console.log("Sel updated", selIds, selIdxs);
+    table.value?.select(selIdxs);
+});
 
 const columns: DataTableColumn<SharedAsset>[] = [
     {
