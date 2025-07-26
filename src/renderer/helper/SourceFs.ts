@@ -1,21 +1,16 @@
 import { getAppConfig } from "~/renderer-config.js";
-import pathe from "pathe";
+import SharedSourceFs from "Shared/SharedSourceFs.js";
 
 export function getContentRelativePath(filePath: string): string {
     const config = getAppConfig();
-    const file = filePath.toLowerCase();
-    const content = config.contentPath.toLowerCase();
+    return SharedSourceFs.getRelativePath(filePath, config.contentPath, "content", config.gameName);
+}
 
-    const isAbsolute = file.startsWith(content);
-    if (isAbsolute) {
-        return filePath.substring(config.contentPath.length + 1).replaceAll("\\", "/");
-    }
+export function getGameRelativePath(filePath: string): string {
+    const config = getAppConfig();
+    return SharedSourceFs.getRelativePath(filePath, config.gamePath, "game", config.gameName);
+}
 
-    const relativePrefix = pathe.join("content", config.gameName);
-    const isRelativeToGameRoot = file.startsWith(relativePrefix);
-    if (isRelativeToGameRoot) {
-        return filePath.substring(relativePrefix.length + 1).replaceAll("\\", "/");
-    }
-
-    return filePath;
+export function getRootRelativePath(filePath: string): string {
+    return SharedSourceFs.getRootRelativePath(filePath, getAppConfig().rootPath);
 }

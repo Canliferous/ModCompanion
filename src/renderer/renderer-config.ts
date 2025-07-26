@@ -7,7 +7,7 @@ export function getAppConfig(): SharedAppConfig {
 }
 
 export function initConfig() {
-    window.electronAPI.config.get().then((cfg) => {
+    window.electronAPI.config.get().then((cfg: SharedAppConfig) => {
         console.log("Config loaded from main");
         config = cfg;
     });

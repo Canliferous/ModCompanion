@@ -1,44 +1,35 @@
 import { getConfig } from "../systems/MainConfigSystem.js";
-import path from "path";
+import SharedSourceFs from "Shared/SharedSourceFs.js";
 
 export function getContentRelativePath(filePath: string): string {
     const config = getConfig();
-    if (filePath.toLowerCase().startsWith(config.contentPath.toLowerCase())) {
-        return filePath.substring(config.contentPath.length + 1).replaceAll("\\", "/");
-    }
-
-    return filePath;
+    return SharedSourceFs.getRelativePath(filePath, config.contentPath, "content", config.gameName);
 }
 
 export function getGameRelativePath(filePath: string): string {
     const config = getConfig();
-    const gamePath = path.join(config.gamePath, config.gameName);
-    if (filePath.toLowerCase().startsWith(gamePath.toLowerCase())) {
-        return filePath.substring(gamePath.length + 1).replaceAll("\\", "/");
-    }
+    return SharedSourceFs.getRelativePath(filePath, config.gamePath, "game", config.gameName);
+}
 
-    return filePath;
+export function getGameOrContentRelativePath(filePath: string): string {
+    const config = getConfig();
+    return SharedSourceFs.getGameOrContentRelativePath(filePath, config.gameName, config.rootPath);
+}
+
+export function isRelativeToRoot(filePath: string): boolean {
+    return SharedSourceFs.isRelativeToRoot(filePath, getConfig().gameName);
 }
 
 export function getRootRelativePath(filePath: string): string {
-    const config = getConfig();
-
-    const isRootRelative =
-        filePath.startsWith(path.join("content", config.gameName)) ||
-        filePath.startsWith(path.join("game", config.gameName));
-    if (isRootRelative) {
-        return path.join(config.rootPath, filePath);
-    }
-
-    return "";
+    return SharedSourceFs.getRootRelativePath(filePath, getConfig().rootPath);
 }
 
-export function isContentFile(filePath: string): boolean {
+export function isAbsoluteContentFile(filePath: string): boolean {
     const config = getConfig();
     return filePath.toLowerCase().startsWith(config.contentPath.toLowerCase());
 }
 
-export function isGameFile(filePath: string): boolean {
+export function isAbsoluteGameFile(filePath: string): boolean {
     const config = getConfig();
     return filePath.toLowerCase().startsWith(config.gamePath.toLowerCase());
 }
@@ -46,6 +37,6 @@ export function isGameFile(filePath: string): boolean {
 export default {
     getContentRelativePath,
     getGameRelativePath,
-    isContentFile,
-    isGameFile,
+    isContentFile: isAbsoluteContentFile,
+    isGameFile: isAbsoluteGameFile,
 };

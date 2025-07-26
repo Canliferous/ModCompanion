@@ -10,7 +10,7 @@ import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
 import { buildAssets } from "./MainAssetScanner.js";
 import { scanContentTree } from "../files/MainFileScanner.js";
 import { v4 } from "uuid";
-import { isContentFile } from "../../helpers/MainSourceFs.js";
+import { getGameOrContentRelativePath } from "../../helpers/MainSourceFs.js";
 import path from "path";
 import fs from "fs/promises";
 import { getConfig } from "../MainConfigSystem.js";
@@ -22,7 +22,7 @@ export function getAssetMap(): Readonly<SharedAssetMap> {
 }
 
 export async function rescan() {
-    console.log("Rescanning...");
+    console.log("Rescanning assets...");
 
     const startMillis = new Date().getTime();
     const contentTree = await scanContentTree();
@@ -44,12 +44,14 @@ export async function createAsset(files: string[]): Promise<SharedAsset | undefi
     if (files.length === 1) {
         const file = files[0];
         const isContent = file.startsWith("content");
+        const relativeFile = getGameOrContentRelativePath(file);
+        console.log(file, relativeFile);
         const id = generateAssetId();
         const assetDef: SharedAssetDefinition = {
             type: SharedAssetType.Unknown, // TODO: Determine type
             id: id,
-            contentFiles: isContent ? [file] : undefined,
-            gameFiles: !isContent ? [file] : undefined,
+            contentFiles: isContent ? [relativeFile] : undefined,
+            gameFiles: !isContent ? [relativeFile] : undefined,
             associatedFiles: undefined,
             displayName: file,
         };

@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
+import { forwardSlashed } from "Shared/SharedSourceFs.js";
 
 const showBreadcrumbs = ref(true);
 const inputText = ref("");
@@ -48,7 +49,7 @@ function handleDown(event: KeyboardEvent): void {
 
 function _finish() {
     showBreadcrumbs.value = true;
-    useLooseFilesStore().updateCurrentDir(inputText.value);
+    useLooseFilesStore().updateCurrentDir(forwardSlashed(inputText.value));
 }
 </script>
 

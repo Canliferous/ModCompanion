@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
 import * as child_process from "node:child_process";
+import SharedSourceFs from "Shared/SharedSourceFs.js";
 
 export function registerProjectFilesApi(): boolean {
     ipcMain.handle(SharedIpcChannels.ProjectListFiles, async (event, dirPath: string): Promise<SharedFsEntry[]> => {
@@ -65,7 +66,7 @@ function _correctProjectPath(somePath: string) {
     const ind = somePath.indexOf(config.rootPath);
     if (ind !== 0) return undefined;
 
-    return somePath.replace(config.rootPath, "");
+    return SharedSourceFs.forwardSlashed(somePath.replace(config.rootPath, ""));
 }
 
 async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {

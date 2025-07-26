@@ -25,7 +25,8 @@
     "build:assets": "copyfiles ./main_assets/**/* ./build_dist/",
     "build:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./build_dist/preload.js",
     "build:docs": "typedoc --tsconfig src/main/tsconfig.json --entryPointStrategy Expand src/main src/shared",
-    "deploy": "npm run build & node scripts/deploy.cjs"
+    "deploy": "npm run build & node scripts/deploy.cjs",
+    "test": "vitest"
   },
   "devDependencies": {
     "@electron/fuses": "^1.8.0",
@@ -48,7 +49,8 @@
     "tsc-alias": "^1.8.16",
     "typedoc": "^0.28.7",
     "typescript": "^5.8.3",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
