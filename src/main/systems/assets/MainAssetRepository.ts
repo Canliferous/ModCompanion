@@ -43,7 +43,7 @@ export async function createAsset(files: string[]): Promise<SharedAsset | undefi
 
     if (files.length === 1) {
         const file = files[0];
-        const isContent = isContentFile(file);
+        const isContent = file.startsWith("content");
         const id = generateAssetId();
         const assetDef: SharedAssetDefinition = {
             type: SharedAssetType.Unknown, // TODO: Determine type
