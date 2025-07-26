@@ -13,6 +13,7 @@ import {
     SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
+    SharedAsset,
 } from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
@@ -55,6 +56,7 @@ declare global {
                 subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (files: string[]) => Promise<SharedCreateAssetReport>;
+                updateDisplayName: (assetId: SharedAssetId, displayName: string) => Promise<SharedAsset | undefined>;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

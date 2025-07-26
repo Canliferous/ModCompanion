@@ -121,6 +121,14 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return arr[idx];
     }
 
+    function updateAssets(as: SharedAsset[]): void {
+        const mapCopy = new Map(assets.value);
+        for (const a of as) {
+            mapCopy.set(a.def.id, a);
+        }
+        assets.value = mapCopy;
+    }
+
     return {
         assets,
         refreshing,
@@ -131,6 +139,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectedIds,
         selectedAssets,
         createAsset,
+        updateAssets,
         getAssetByIndex,
         forceRefresh,
         activateAssetById,

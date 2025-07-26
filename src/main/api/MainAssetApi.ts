@@ -3,7 +3,10 @@ import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { ipcMain } from "electron";
 import MainAssetRepository from "../systems/assets/MainAssetRepository.js";
 import {
+    SharedAsset,
     SharedAssetAddedEvent,
+    SharedAssetDefinition,
+    SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
 } from "Shared/SharedAssetDefinition.js";
@@ -45,6 +48,17 @@ export function registerAssetApi(): boolean {
             };
         }
     });
+
+    ipcMain.handle(
+        SharedIpcChannels.AssetUpdateDisplayName,
+        async (event, assetId: SharedAssetId, displayName: string): Promise<SharedAsset | undefined> => {
+            const asset = MainAssetRepository.getAssetFromId(assetId);
+            if (!asset || !asset.defFilePath) return;
+
+            const newAssetDef: SharedAssetDefinition = { ...asset.def, displayName };
+            return await MainAssetRepository.writeAssetDef(newAssetDef, asset.defFilePath);
+        },
+    );
 
     return true;
 }

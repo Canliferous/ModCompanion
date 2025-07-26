@@ -48,7 +48,7 @@ const columns: DataTableColumn<SharedAsset>[] = [
         id: "name",
         label: "Name",
         cell: (entry) => h(AssetBrowserCellName, { name: entry.def.displayName ?? "(unknown)" }),
-        size: "1fr",
+        size: "minmax(0, 1fr)",
     },
     {
         id: "converted",

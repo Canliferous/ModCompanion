@@ -10,7 +10,7 @@ import AssetInspectorPanel from "~/components/panels/assetInspector/AssetInspect
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetInspectorTexturePanel from "~/components/panels/assetInspector/texturePanel/AssetInspectorTexturePanel.vue";
-import AssetInspectorFilesPanel from "~/components/panels/assetInspector/filesPanel/AssetInspectorFilesPanel.vue";
+import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
 
 export interface Panel {
     componentId: string;
@@ -26,7 +26,7 @@ const additionalPanels = {
     },
     assetInspectorGeneral: {
         componentId: "_AssetInspector_General",
-        component: AssetInspectorFilesPanel,
+        component: AssetInspectorGeneralPanel,
         title: "General",
     },
 };

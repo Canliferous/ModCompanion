@@ -76,6 +76,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 callback(assetHash),
             ),
         createAsset: (files: string[]) => ipcRenderer.invoke(SharedIpcChannels.AssetCreate, files),
+        updateDisplayName: (assetId: SharedAssetId, displayName: string) =>
+            ipcRenderer.invoke(SharedIpcChannels.AssetUpdateDisplayName, assetId, displayName),
     },
 
     image: {

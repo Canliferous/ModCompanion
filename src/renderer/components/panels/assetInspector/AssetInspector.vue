@@ -1,5 +1,5 @@
 <template>
-    <div class="grid w-full h-full">
+    <div class="grid h-full">
         <DockviewVue @ready="handleReady" :theme="themeDark" />
     </div>
 </template>

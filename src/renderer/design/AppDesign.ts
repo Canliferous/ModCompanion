@@ -12,7 +12,7 @@ export const colors = {
     contentAsset: "lime",
 } as const;
 
-export function getIconForAssetType(type: SharedAssetType): string {
+export function getAssetTypeIcon(type: SharedAssetType): string {
     switch (type) {
         case SharedAssetType.Texture:
             return icons.texture;
@@ -21,6 +21,21 @@ export function getIconForAssetType(type: SharedAssetType): string {
         case SharedAssetType.Unknown:
         default:
             return icons.asset;
+    }
+}
+
+export function getAssetTypeName(type: SharedAssetType) {
+    switch (type) {
+        case SharedAssetType.Model: {
+            return "Model";
+        }
+        case SharedAssetType.Texture: {
+            return "Texture";
+        }
+        default:
+        case SharedAssetType.Unknown: {
+            return "Unknown";
+        }
     }
 }
 

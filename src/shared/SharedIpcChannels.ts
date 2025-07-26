@@ -19,6 +19,7 @@ export const SharedIpcChannels = {
     AssetForceRescan: "asset_force_rescan",
     AssetNavigateToHash: "asset_navigate_to_hash",
     AssetCreate: "asset_create",
+    AssetUpdateDisplayName: "asset_update_display_name",
     ImageGetMeta: "image_get_meta",
     ConversionEnqueue: "conversion_enqueue",
     ConversionAgentStart: "conversion_agent_start",

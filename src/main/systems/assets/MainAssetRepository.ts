@@ -127,13 +127,17 @@ export async function createAsset(files: string[]): Promise<SharedAsset | undefi
         };
 
         const mcaPath = file + SharedAssetDefinitionFileExtension;
-        const absoluteMcaPath = path.join(getConfig().rootPath, mcaPath);
-        const payload = JSON.stringify(assetDef, undefined, 2);
-        await fs.writeFile(absoluteMcaPath, payload);
-        return { defFilePath: mcaPath, def: assetDef };
+        return await writeAssetDef(assetDef, mcaPath);
     }
 
     return undefined;
+}
+
+export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: string): Promise<SharedAsset> {
+    const absoluteMcaPath = path.join(getConfig().contentPath, mcaPath);
+    const payload = JSON.stringify(assetDef, undefined, 2);
+    await fs.writeFile(absoluteMcaPath, payload);
+    return { defFilePath: mcaPath, def: assetDef };
 }
 
 export function getAssetFromFile(filePath: string): SharedAsset | undefined {
@@ -165,5 +169,6 @@ export default {
     getAssetFromFile,
     getAssetFromFiles,
     createAsset,
-    getAssetFromHash: getAssetFromId,
+    getAssetFromId,
+    writeAssetDef,
 };
