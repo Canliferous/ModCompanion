@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "nodenext",
-    "lib": ["DOM", "ES2021"],
+    "lib": ["DOM", "ESNext"],
     "strict": true,
     "allowJs": true,
     "skipLibCheck": true,

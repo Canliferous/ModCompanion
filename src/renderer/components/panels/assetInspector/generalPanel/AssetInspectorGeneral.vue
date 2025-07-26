@@ -10,6 +10,12 @@
         <UFormField label="Display Name" class="col-span-2">
             <EditControlAssetDisplayName :asset="asset" />
         </UFormField>
+        <UFormField label="Content Files" class="col-span-2">
+            <EditControlAssetFileList :asset="asset" field="contentFiles" />
+        </UFormField>
+        <UFormField label="Game Files" class="col-span-2">
+            <EditControlAssetFileList :asset="asset" field="gameFiles" />
+        </UFormField>
     </div>
 </template>
 

@@ -12,12 +12,15 @@ export function isValidAssetType(str: string): str is SharedAssetType {
     return (Object.values(SharedAssetType) as string[]).includes(str);
 }
 
-export interface SharedAssetDefinition {
+export interface SharedAssetDefinitionFileArrays {
+    readonly contentFiles?: string[];
+    readonly gameFiles?: string[];
+}
+
+export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
     readonly id: string;
     readonly type: SharedAssetType;
     readonly displayName?: string;
-    readonly contentFiles?: string[];
-    readonly gameFiles?: string[];
 
     readonly associatedFiles?: SharedAssetDefinitionAssociatedFiles;
 }
