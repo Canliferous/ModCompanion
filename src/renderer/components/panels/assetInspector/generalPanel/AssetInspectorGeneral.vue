@@ -16,6 +16,12 @@
         <UFormField label="Game Files" class="col-span-2">
             <EditControlAssetFileList :asset="asset" field="gameFiles" />
         </UFormField>
+
+        <USeparator class="my-2" />
+
+        <UFormField label="Associated Files" class="col-span-2">
+            <EditControlAssetAssociated :asset="asset" />
+        </UFormField>
     </div>
 </template>
 
@@ -26,6 +32,7 @@ import EditControlAssetDisplayName from "~/components/panels/assetInspector/gene
 import EditControlAssetType from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetType.vue";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import EditControlAssetDef from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetDef.vue";
+import EditControlAssetAssociated from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetAssociated.vue";
 
 const props = defineProps<{ asset: SharedAsset }>();
 const waiting = ref(false);
