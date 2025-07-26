@@ -17,7 +17,7 @@ import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
-import { browseToMca, openMca } from "~/helper/AssetHelper.js";
+import { exploreToMca, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
 import { usePanelsStore } from "~/store/PanelsStore.js";
@@ -33,7 +33,6 @@ listStore.subscribeSelectionUpdated(() => {
 
     const assets = listStore.filteredAssets;
     const selIdxs = selIds.map((s) => assets.findIndex((v) => v.def.id === s));
-    console.log("Sel updated", selIds, selIdxs);
     table.value?.select(selIdxs);
 });
 
@@ -94,11 +93,11 @@ const items = computed(() => {
                 icon: "tdesign:file-code-1-filled",
             },
             {
-                label: "Browse to .mca",
+                label: "Explore to .mca",
                 onSelect(e: Event) {
-                    browseToMca(selected[0]);
+                    exploreToMca(selected[0]);
                 },
-                icon: "tdesign:folder-filled",
+                icon: "tdesign:folder-1-filled",
             },
         ]);
     }

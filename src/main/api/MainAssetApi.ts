@@ -50,13 +50,12 @@ export function registerAssetApi(): boolean {
     });
 
     ipcMain.handle(
-        SharedIpcChannels.AssetUpdateDisplayName,
-        async (event, assetId: SharedAssetId, displayName: string): Promise<SharedAsset | undefined> => {
+        SharedIpcChannels.AssetUpdate,
+        async (event, assetId: SharedAssetId, assetDef: SharedAssetDefinition): Promise<SharedAsset | undefined> => {
             const asset = MainAssetRepository.getAssetFromId(assetId);
             if (!asset || !asset.defFilePath) return;
 
-            const newAssetDef: SharedAssetDefinition = { ...asset.def, displayName };
-            return await MainAssetRepository.writeAssetDef(newAssetDef, asset.defFilePath);
+            return await MainAssetRepository.writeAssetDef(assetDef, asset.defFilePath);
         },
     );
 

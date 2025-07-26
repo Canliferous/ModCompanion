@@ -56,7 +56,7 @@ declare global {
                 subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (files: string[]) => Promise<SharedCreateAssetReport>;
-                updateDisplayName: (assetId: SharedAssetId, displayName: string) => Promise<SharedAsset | undefined>;
+                update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) => Promise<SharedAsset | undefined>;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

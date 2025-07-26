@@ -15,6 +15,7 @@ import {
     SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
+    SharedAsset,
 } from "./shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
@@ -76,8 +77,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 callback(assetHash),
             ),
         createAsset: (files: string[]) => ipcRenderer.invoke(SharedIpcChannels.AssetCreate, files),
-        updateDisplayName: (assetId: SharedAssetId, displayName: string) =>
-            ipcRenderer.invoke(SharedIpcChannels.AssetUpdateDisplayName, assetId, displayName),
+        update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) =>
+            ipcRenderer.invoke(SharedIpcChannels.AssetUpdate, assetId, assetDef),
     },
 
     image: {

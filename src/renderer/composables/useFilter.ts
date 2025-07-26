@@ -54,6 +54,18 @@ export function useAssetsFilter(assets: ComputedRef<SharedAsset[]>, filter: Ref<
             }
         }
 
+        filteredAssets.sort((a, b) => {
+            if (a.def.displayName !== undefined && b.def.displayName !== undefined) {
+                return a.def.displayName.localeCompare(b.def.displayName);
+            }
+
+            if (a.defFilePath !== undefined && b.defFilePath !== undefined) {
+                return a.defFilePath.localeCompare(b.defFilePath);
+            }
+
+            return a.def.id.localeCompare(b.def.id);
+        });
+
         return filteredAssets;
     });
 }

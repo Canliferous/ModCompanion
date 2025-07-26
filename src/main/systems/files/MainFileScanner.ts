@@ -3,15 +3,15 @@ import path from "path";
 import { timeMillisAsync } from "../../helpers/MainTiming.js";
 import fs from "fs/promises";
 
-export async function scanContentTree(): Promise<{ contentTree: string[]; contentBasePath: string }> {
+export async function scanContentTree(): Promise<string[]> {
     const config = getConfig();
 
     console.log("Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>
-        _listFilesRecursive(config.contentPath.length + 1, config.contentPath),
+        _listFilesRecursive(config.rootPath.length + 1, config.contentPath),
     );
     console.log(`Scanned content directory in ${millisContent}ms`);
-    return { contentTree, contentBasePath: config.contentPath };
+    return contentTree;
 }
 
 const alwaysIgnoreFolderNames = ["node_modules", ".idea"];

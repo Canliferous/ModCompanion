@@ -8,14 +8,16 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import path from "path";
 import fs from "fs/promises";
+import { getConfig } from "../MainConfigSystem.js";
 
-export async function buildAssets(contentTree: string[], contentRootPath: string): Promise<SharedAssetMap> {
+export async function buildAssets(contentTree: string[]): Promise<SharedAssetMap> {
     const assets: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
+    const rootPath = getConfig().rootPath;
 
     for (let filePath of contentTree) {
         if (!_isAssetDefinitionFile(filePath)) continue;
 
-        const definition = await _readAssetDefinitionFile(filePath, contentRootPath);
+        const definition = await _readAssetDefinitionFile(filePath, rootPath);
         if (definition === undefined) {
             console.warn(`Asset definition file ${filePath} is invalid and will be ignored`);
             continue;

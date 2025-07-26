@@ -5,11 +5,11 @@ import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 export function openMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    window.electronAPI.app.openFile(pathe.join(getAppConfig().contentPath, p));
+    window.electronAPI.app.openFile(pathe.join(getAppConfig().rootPath, p));
 }
 
-export function browseToMca(asset: SharedAsset): void {
+export function exploreToMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    window.electronAPI.app.browseToFile(pathe.join(getAppConfig().contentPath, p));
+    window.electronAPI.app.browseToFile(pathe.join(getAppConfig().rootPath, p));
 }

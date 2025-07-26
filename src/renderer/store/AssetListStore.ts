@@ -107,8 +107,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
             }
         }
 
-        console.log("Selecting mca", mcaPathsRel, sel);
-
         activeId.value = undefined;
         selectedIds.value = sel;
         notifySelectionUpdated();

@@ -12,14 +12,14 @@
             <UButton label="Open .mca" size="sm" variant="subtle" color="neutral" @click="openMca(asset)" />
         </UTooltip>
         <UTooltip :text="asset.defFilePath" v-if="asset.defFilePath">
-            <UButton label="Browse to .mca" size="sm" variant="subtle" color="neutral" @click="browseToMca(asset)" />
+            <UButton label="Browse to .mca" size="sm" variant="subtle" color="neutral" @click="exploreToMca(asset)" />
         </UTooltip>
         <AssetsAssociatedFilesActions v-if="asset.def.associatedFiles" :files="asset.def.associatedFiles" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { browseToMca, openMca } from "~/helper/AssetHelper.js";
+import { exploreToMca, openMca } from "~/helper/AssetHelper.js";
 import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 

@@ -20,6 +20,19 @@ export function getGameRelativePath(filePath: string): string {
     return filePath;
 }
 
+export function getRootRelativePath(filePath: string): string {
+    const config = getConfig();
+
+    const isRootRelative =
+        filePath.startsWith(path.join("content", config.gameName)) ||
+        filePath.startsWith(path.join("game", config.gameName));
+    if (isRootRelative) {
+        return path.join(config.rootPath, filePath);
+    }
+
+    return "";
+}
+
 export function isContentFile(filePath: string): boolean {
     const config = getConfig();
     return filePath.toLowerCase().startsWith(config.contentPath.toLowerCase());
