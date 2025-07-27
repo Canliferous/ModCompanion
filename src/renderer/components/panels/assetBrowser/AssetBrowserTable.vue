@@ -13,11 +13,16 @@
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
+import {
+    getAssociatedEntryName,
+    SharedAsset,
+    SharedAssetDefinitionAssociatedFiles,
+    SharedAssetDefinitionAssociatedFilesEntries,
+} from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
-import { exploreToMca, openMca } from "~/helper/AssetHelper.js";
+import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
 import { usePanelsStore } from "~/store/PanelsStore.js";
@@ -84,22 +89,43 @@ const items = computed(() => {
     ]);
 
     if (selected.length === 1) {
+        const sel = selected[0];
         options.push([
             {
                 label: "Open .mca",
                 onSelect(e: Event) {
-                    openMca(selected[0]);
+                    openMca(sel);
                 },
                 icon: "tdesign:file-code-1-filled",
             },
             {
                 label: "Explore to .mca",
                 onSelect(e: Event) {
-                    exploreToMca(selected[0]);
+                    exploreToMca(sel);
                 },
                 icon: "tdesign:folder-1-filled",
             },
         ]);
+
+        if (sel.def.associatedFiles) {
+            const ass = sel.def.associatedFiles;
+            for (const assKey in ass) {
+                const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
+                const v = ass[key];
+                if (v) {
+                    const entry = getAssociatedEntryName(key)!;
+                    options.push([
+                        {
+                            label: `Open ${entry.name}`,
+                            onSelect(e: Event) {
+                                openAssociatedFile(v);
+                            },
+                            icon: entry.icon,
+                        },
+                    ]);
+                }
+            }
+        }
     }
 
     options.push([

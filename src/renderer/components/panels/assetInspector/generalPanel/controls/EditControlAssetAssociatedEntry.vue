@@ -1,5 +1,8 @@
 <template>
-    <span>{{ name }}</span>
+    <div class="flex gap-2 items-center">
+        <UIcon :name="entry.icon" />
+        <span>{{ entry.name }}</span>
+    </div>
     <UButtonGroup>
         <UInput v-model="file" placeholder="Enter path" @blur="emit('updated', file)" class="grow" />
         <UButton icon="tdesign:play" @click="handleRun" variant="subtle" />
@@ -9,8 +12,9 @@
 <script setup lang="ts">
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import { SharedAssetDefinitionAssociatedFilesEntry } from "Shared/SharedAssetDefinition.js";
 
-const props = defineProps<{ file: string; name: string }>();
+const props = defineProps<{ file: string; entry: SharedAssetDefinitionAssociatedFilesEntry }>();
 const file = ref(props.file);
 watch(
     () => props.file,

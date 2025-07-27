@@ -3,7 +3,7 @@
         <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries">
             <EditControlAssetAssociatedEntry
                 :file="associated[entry.field] ?? ''"
-                :name="entry.name"
+                :entry="entry"
                 @updated="(newText: string) => handleUpdated(newText, entry.field)"
             />
         </template>

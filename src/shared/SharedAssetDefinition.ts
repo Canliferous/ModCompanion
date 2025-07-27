@@ -31,25 +31,33 @@ export interface SharedAssetDefinitionAssociatedFiles {
     blender?: string;
 }
 
-interface SharedAssetDefinitionAssociatedFilesEntry {
+export interface SharedAssetDefinitionAssociatedFilesEntry {
     field: keyof SharedAssetDefinitionAssociatedFiles;
     name: string;
+    icon: string;
 }
 
 export const SharedAssetDefinitionAssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[] = [
     {
         field: "substanceDesigner",
         name: "Substance Designer",
+        icon: "nothing",
     },
     {
         field: "substancePainter",
         name: "Substance Painter",
+        icon: "nothing",
     },
     {
         field: "blender",
         name: "Blender",
+        icon: "file-icons:blender",
     },
 ];
+
+export function getAssociatedEntryName(field: keyof SharedAssetDefinitionAssociatedFiles) {
+    return SharedAssetDefinitionAssociatedFilesEntries.find((value) => value.field === field);
+}
 
 export interface SharedAsset {
     /** Asset definition data read from the mca file */

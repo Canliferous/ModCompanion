@@ -13,3 +13,7 @@ export function exploreToMca(asset: SharedAsset): void {
     if (!p) return;
     window.electronAPI.app.browseToFile(pathe.join(getAppConfig().rootPath, p));
 }
+
+export function openAssociatedFile(associatedFile: string): void {
+    window.electronAPI.app.openFile(pathe.join(getAppConfig().rootPath, associatedFile));
+}
