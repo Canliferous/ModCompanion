@@ -25,6 +25,7 @@ export const SharedIpcChannels = {
     ConversionAgentStart: "conversion_agent_start",
     ConversionAgentStop: "conversion_agent_stop",
     ConversionUpdated: "conversion_updated",
+    ConversionGetState: "conversion_get_state",
     HotReloadSetEnabled: "hotreload_set_enabled",
     HotReloadTriggered: "hotreload_triggered",
 } as const;

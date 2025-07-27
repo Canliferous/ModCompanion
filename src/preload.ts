@@ -94,6 +94,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 SharedIpcChannels.ConversionUpdated,
                 (e: IpcRendererEvent, event: SharedConversionUpdateEvent) => callback(event),
             ),
+        getState: () => ipcRenderer.invoke(SharedIpcChannels.ConversionGetState),
     },
 
     hotReload: {

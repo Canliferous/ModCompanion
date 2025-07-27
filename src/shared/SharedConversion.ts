@@ -17,3 +17,7 @@ export interface SharedConversion {
 export interface SharedConversionUpdateEvent {
     conversions: Map<SharedAssetId, SharedConversion>;
 }
+
+export interface SharedConversionGetStateReport {
+    conversions: Map<SharedAssetId, SharedConversion>;
+}

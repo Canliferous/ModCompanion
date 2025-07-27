@@ -1,8 +1,13 @@
 import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
+import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
-import { enqueue, startConversionAgent, stopConversionAgent } from "../systems/MainConversionAgentSystem.js";
+import {
+    enqueueConversion,
+    getConversionState,
+    startConversionAgent,
+    stopConversionAgent,
+} from "../systems/MainConversionAgentSystem.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export function registerConversionApi(): boolean {
@@ -13,7 +18,10 @@ export function registerConversionApi(): boolean {
         stopConversionAgent();
     });
     ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
-        enqueue(assetId);
+        enqueueConversion(assetId);
+    });
+    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateReport> => {
+        return { conversions: getConversionState() };
     });
     return true;
 }

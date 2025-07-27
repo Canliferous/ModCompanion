@@ -17,7 +17,7 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { getImageMeta } from "../main/api/MainImageMetaApi.js";
-import { SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
+import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
@@ -66,6 +66,7 @@ declare global {
                 startAgent: () => void;
                 stopAgent: () => void;
                 subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) => IpcRenderer;
+                getState: () => Promise<SharedConversionGetStateReport>;
             };
             hotReload: {
                 setEnabled: (enable: boolean) => void;

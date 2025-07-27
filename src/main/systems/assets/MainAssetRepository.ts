@@ -76,6 +76,7 @@ export function getAssetFromFile(filePath: string): SharedAsset | undefined {
     for (let asset of assetMap.values()) {
         if (asset.def.gameFiles?.includes(filePath)) return asset;
         if (asset.def.contentFiles?.includes(filePath)) return asset;
+        if (asset.defFilePath === filePath) return asset;
     }
 
     return undefined;

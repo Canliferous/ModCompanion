@@ -9,7 +9,6 @@ import {
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { _convertTextureAsset } from "./converter/MainTextureConverter.js";
-import { runStrataGameCommand } from "./MainStrataInteropSystem.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 
 const MAX_PARALLEL_JOBS = 5;
@@ -36,7 +35,11 @@ export function stopConversionAgent(): void {
     }
 }
 
-export function enqueue(assetId: string): void {
+export function getConversionState(): Map<string, SharedConversion> {
+    return conversions;
+}
+
+export function enqueueConversion(assetId: string): void {
     console.log(`Enqueuing ${assetId} for forced conversion`);
     _setState(assetId, SharedConversionState.PendingForced);
 }

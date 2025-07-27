@@ -5,6 +5,7 @@
                 :entry="file"
                 @remove="() => handleRemove(i)"
                 @changed="(newText) => handleChanged(i, newText)"
+                :dir
             />
         </div>
 
@@ -17,7 +18,7 @@ import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAsset
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 
-const props = defineProps<{ asset: SharedAsset; field: keyof SharedAssetDefinitionFileArrays }>();
+const props = defineProps<{ asset: SharedAsset; field: keyof SharedAssetDefinitionFileArrays; dir: string }>();
 
 const inj = inject(AssetInspectorGeneralInjectKey);
 

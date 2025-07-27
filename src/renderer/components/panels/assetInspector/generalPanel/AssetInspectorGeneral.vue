@@ -11,10 +11,10 @@
             <EditControlAssetDisplayName :asset="asset" />
         </UFormField>
         <UFormField label="Content Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="contentFiles" />
+            <EditControlAssetFileList :asset="asset" field="contentFiles" dir="content" />
         </UFormField>
         <UFormField label="Game Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="gameFiles" />
+            <EditControlAssetFileList :asset="asset" field="gameFiles" dir="game" />
         </UFormField>
 
         <USeparator class="my-2" />

@@ -9,8 +9,6 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         conversions.value = event.conversions;
     });
 
-    window.electronAPI.conversion.startAgent();
-
     function getState(id: SharedAssetId): SharedConversionState {
         return conversions.value.get(id)?.state ?? SharedConversionState.Unknown;
     }
@@ -18,6 +16,14 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     function enqueue(id: SharedAssetId): void {
         window.electronAPI.conversion.enqueue(id);
     }
+
+    async function _fetchState() {
+        const state = await window.electronAPI.conversion.getState();
+        conversions.value = state.conversions;
+    }
+
+    _fetchState();
+    window.electronAPI.conversion.startAgent();
 
     return { getState, enqueue };
 });
