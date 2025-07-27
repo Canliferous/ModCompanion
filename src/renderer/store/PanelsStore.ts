@@ -13,6 +13,7 @@ import AssetInspectorTexturePreviewPanel from "~/components/panels/assetInspecto
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
 import AssetInspectorTextureChannelsPanel from "~/components/panels/assetInspector/textureChannelsPanel/AssetInspectorTextureChannelsPanel.vue";
 import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspector/textureMetadataPanel/AssetInspectorTextureMetadataPanel.vue";
+import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertPanel.vue";
 
 export interface Panel {
     componentId: string;
@@ -35,6 +36,11 @@ const additionalPanels = {
         componentId: "_AssetInspector_TextureMetadata",
         component: AssetInspectorTextureMetadataPanel,
         title: "Metadata",
+    },
+    assetInspectorTextureConvert: {
+        componentId: "_AssetInspector_TextureConvert",
+        component: AssetInspectorTextureConvertPanel,
+        title: "VTF Options",
     },
     assetInspectorGeneral: {
         componentId: "_AssetInspector_General",

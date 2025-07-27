@@ -5,13 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-    isTextureAsset,
-    SharedAsset,
-    SharedAssetDefinition,
-    SharedAssetType,
-    SharedTextureAsset,
-} from "Shared/SharedAssetDefinition.js";
+import { isTextureAsset, SharedAsset, SharedAssetType, SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { DockviewApi, DockviewReadyEvent, DockviewVue, themeDark } from "dockview-vue";
 import { getAdditionalPanels, Panel } from "~/store/PanelsStore.js";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
@@ -82,6 +76,7 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
             whichPanelsShouldExist.push(additionalPanels.assetInspectorTexturePreview);
             whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
             whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
+            whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
         }
     }
 

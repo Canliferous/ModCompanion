@@ -127,6 +127,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
         assets.value = mapCopy;
     }
 
+    async function writeAssets(as: SharedAsset[]): Promise<void> {
+        const results = as.map((a) => window.electronAPI.asset.update(a.def.id, a.def));
+        let newAssets = await Promise.all(results);
+        const filtered = newAssets.filter((n) => n !== undefined);
+        updateAssets(filtered);
+    }
+
     return {
         assets,
         refreshing,
@@ -137,7 +144,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectedIds,
         selectedAssets,
         createAsset,
-        updateAssets,
+        writeAssets,
         getAssetByIndex,
         forceRefresh,
         activateAssetById,

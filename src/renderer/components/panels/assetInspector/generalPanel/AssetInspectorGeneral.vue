@@ -46,10 +46,9 @@ async function updateAsset(def: Partial<SharedAssetDefinition>) {
     try {
         const rawAsset = toRaw(props.asset);
         const assetDef: SharedAssetDefinition = { ...rawAsset.def, ...def };
-        const result = await window.electronAPI.asset.update(rawAsset.def.id, assetDef);
-        if (result) {
-            assetStore.updateAssets([result]);
-        }
+        const newAsset: SharedAsset = { ...rawAsset, def: assetDef };
+        const _ = assetStore.writeAssets([newAsset]);
+
         // Toast on failure?
     } finally {
         waiting.value = false;
