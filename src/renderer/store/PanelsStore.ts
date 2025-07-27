@@ -9,8 +9,10 @@ import AssetBrowserPanel from "~/components/panels/assetBrowser/AssetBrowserPane
 import AssetInspectorPanel from "~/components/panels/assetInspector/AssetInspectorPanel.vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import AssetInspectorTexturePanel from "~/components/panels/assetInspector/texturePanel/AssetInspectorTexturePanel.vue";
+import AssetInspectorTexturePreviewPanel from "~/components/panels/assetInspector/texturePreviewPanel/AssetInspectorTexturePreviewPanel.vue";
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
+import AssetInspectorTextureChannelsPanel from "~/components/panels/assetInspector/textureChannelsPanel/AssetInspectorTextureChannelsPanel.vue";
+import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspector/textureMetadataPanel/AssetInspectorTextureMetadataPanel.vue";
 
 export interface Panel {
     componentId: string;
@@ -19,10 +21,20 @@ export interface Panel {
 }
 
 const additionalPanels = {
-    assetInspectorTexture: {
-        componentId: "_AssetInspector_Texture",
-        component: AssetInspectorTexturePanel,
-        title: "Texture",
+    assetInspectorTexturePreview: {
+        componentId: "_AssetInspector_TexturePreview",
+        component: AssetInspectorTexturePreviewPanel,
+        title: "Preview",
+    },
+    assetInspectorTextureChannels: {
+        componentId: "_AssetInspector_TextureChannels",
+        component: AssetInspectorTextureChannelsPanel,
+        title: "Channels",
+    },
+    assetInspectorTextureMetadata: {
+        componentId: "_AssetInspector_TextureMetadata",
+        component: AssetInspectorTextureMetadataPanel,
+        title: "Metadata",
     },
     assetInspectorGeneral: {
         componentId: "_AssetInspector_General",

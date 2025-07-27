@@ -1,6 +1,6 @@
 <template>
     <AssetInspector v-if="assetStore.activeAsset" :asset="assetStore.activeAsset" />
-    <div v-else class="grid place-items-center">Nothing Selected</div>
+    <div v-else class="grid h-full place-items-center">Nothing Selected</div>
 </template>
 
 <script setup lang="ts">
