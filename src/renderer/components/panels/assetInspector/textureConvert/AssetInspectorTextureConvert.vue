@@ -34,16 +34,16 @@
                 :default="SharedVtfDefaultCompression"
             />
         </UFormField>
+        <UFormField label="Toggles" class="col-span-full">
+            <div class="grid grid-cols-2 gap-2">
+                <AssetInspectorTextureConvertToggles :options="options" />
+            </div>
+        </UFormField>
     </div>
 </template>
 
 <script setup lang="ts">
-import {
-    SharedAsset,
-    SharedAssetDefinition,
-    SharedTextureAsset,
-    SharedTextureAssetDefinition,
-} from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedTextureAsset, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import {
     getVtfVersionName,
     SharedVtfCompressionMethods,
@@ -56,10 +56,10 @@ import {
     SharedVtfImageFormats,
     SharedVtfVersions,
 } from "Shared/SharedMareTf.js";
-import EnumSelect from "~/components/panels/assetInspector/textureConvert/EnumSelect.vue";
 import { getAppConfig } from "~/renderer-config.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertToggles.vue";
 
 const props = defineProps<{ asset: SharedTextureAsset }>();
 
@@ -83,7 +83,19 @@ provide(AssetInspectorTextureConvertInjectKey, {
     updateOptions(op) {
         const rawAsset = toRaw(props.asset);
         const rawOptions = toRaw(options.value);
-        const assetDef: SharedTextureAssetDefinition = { ...rawAsset.def, vtfOptions: { ...rawOptions, ...op } };
+        const opt: SharedVtfCreateOptions = toRaw({ ...rawOptions, ...op });
+
+        for (let [key, val] of Object.entries(getAppConfig().assetDefaults?.vtfOptions ?? {})) {
+            if ((opt as any)[key] === val) {
+                (opt as any)[key] = undefined;
+            }
+        }
+
+        if (opt.noMips === false) opt.noMips = undefined;
+        if (opt.noThumbnail === false) opt.noThumbnail = undefined;
+        if (opt.noAnimation === false) opt.noAnimation = undefined;
+
+        const assetDef: SharedTextureAssetDefinition = { ...rawAsset.def, vtfOptions: opt };
         const newAsset: SharedAsset = { ...rawAsset, def: assetDef };
         const _ = assetStore.writeAssets([newAsset]);
     },

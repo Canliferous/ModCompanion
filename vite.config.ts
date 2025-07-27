@@ -34,7 +34,19 @@ export default defineConfig({
                         content: "z-100",
                     },
                 },
-                checkbox: { slots: { base: "cursor-pointer" } },
+                checkbox: {
+                    slots: { root: "cursor-pointer select-none" },
+                    variants: { variant: { card: { root: "hover:bg-elevated" } } },
+                    compoundVariants: [
+                        {
+                            size: "md",
+                            variant: "card",
+                            class: {
+                                root: "p-2",
+                            },
+                        },
+                    ],
+                },
                 icons: {
                     arrowLeft: "tdesign:arrow-left",
                     arrowRight: "tdesign:arrow-right",
