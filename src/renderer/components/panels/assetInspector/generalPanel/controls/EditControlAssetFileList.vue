@@ -1,17 +1,14 @@
 <template>
     <div class="border border-accented bg-neutral-900">
-        <div>
+        <div v-for="(file, i) in files" class="border-b border-accented">
             <EditControlAssetFileListEntry
-                v-for="(file, i) in files"
                 :entry="file"
                 @remove="() => handleRemove(i)"
                 @changed="(newText) => handleChanged(i, newText)"
             />
         </div>
 
-        <div class="border-t border-accented">
-            <UButton block icon="tdesign:plus" label="Add" color="success" variant="ghost" @click="handleAdd" />
-        </div>
+        <UButton block icon="tdesign:plus" label="Add" color="success" variant="ghost" @click="handleAdd" />
     </div>
 </template>
 
