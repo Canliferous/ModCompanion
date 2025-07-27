@@ -27,8 +27,29 @@ export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
 
 export interface SharedAssetDefinitionAssociatedFiles {
     substanceDesigner?: string;
+    substancePainter?: string;
     blender?: string;
 }
+
+interface SharedAssetDefinitionAssociatedFilesEntry {
+    field: keyof SharedAssetDefinitionAssociatedFiles;
+    name: string;
+}
+
+export const SharedAssetDefinitionAssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[] = [
+    {
+        field: "substanceDesigner",
+        name: "Substance Designer",
+    },
+    {
+        field: "substancePainter",
+        name: "Substance Painter",
+    },
+    {
+        field: "blender",
+        name: "Blender",
+    },
+];
 
 export interface SharedAsset {
     /** Asset definition data read from the mca file */

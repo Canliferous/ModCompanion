@@ -1,15 +1,23 @@
 <template>
     <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 items-center">
-        <span>Substance Designer</span>
-        <UInput v-model="associated.substanceDesigner" placeholder="Enter path" @blur="handleBlur" />
-        <span>Blender</span>
-        <UInput v-model="associated.blender" placeholder="Enter path" @blur="handleBlur" />
+        <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries">
+            <EditControlAssetAssociatedEntry
+                :file="associated[entry.field] ?? ''"
+                :name="entry.name"
+                @updated="(newText: string) => handleUpdated(newText, entry.field)"
+            />
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
+import {
+    SharedAsset,
+    SharedAssetDefinitionAssociatedFiles,
+    SharedAssetDefinitionAssociatedFilesEntries,
+} from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
+import EditControlAssetAssociatedEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetAssociatedEntry.vue";
 
 const props = defineProps<{ asset: SharedAsset }>();
 
@@ -23,7 +31,12 @@ watch(
 
 const inj = inject(AssetInspectorGeneralInjectKey);
 
-function handleBlur() {
+function handleUpdated(newText: string, field: keyof SharedAssetDefinitionAssociatedFiles): void {
+    associated.value[field] = newText;
+    save();
+}
+
+function save() {
     const a = toRaw(associated.value);
     const hasSomeValue = Object.values(a).some((v) => v !== undefined && v !== "");
     if (!hasSomeValue) {
