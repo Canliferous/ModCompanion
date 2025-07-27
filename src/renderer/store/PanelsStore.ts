@@ -45,7 +45,7 @@ const additionalPanels = {
     assetInspectorGeneral: {
         componentId: "_AssetInspector_General",
         component: AssetInspectorGeneralPanel,
-        title: "General",
+        title: "General Options",
     },
 };
 

@@ -1,18 +1,37 @@
-export enum SharedVtfVersion {
-    v74 = "7.4",
-    v75 = "7.5",
-    v76 = "7.6",
+export const SharedVtfVersions = {
+    v74: "7.4",
+    v75: "7.5",
+    v76: "7.6",
+} as const;
+export type SharedVtfVersion = (typeof SharedVtfVersions)[keyof typeof SharedVtfVersions];
+export const SharedVtfDefaultVersion = SharedVtfVersions.v76;
+export function getVtfVersionName(version: SharedVtfVersion): string {
+    switch (version) {
+        case SharedVtfVersions.v74:
+            return "7.4 (Orange Box)";
+        case SharedVtfVersions.v75:
+            return "7.5 (Alien Swarm)";
+        case SharedVtfVersions.v76:
+            return "7.6 (Strata)";
+        default:
+            return version;
+    }
 }
-export type SharedVtfFilter =
-    | "DEFAULT"
-    | "BOX"
-    | "BILINEAR"
-    | "CUBIC_BSPLINE"
-    | "CATMULL_ROM"
-    | "MITCHELL"
-    | "POINT_SAMPLE"
-    | "KAISER"
-    | "NICE";
+
+export const SharedVtfFilters = {
+    Default: "DEFAULT",
+    Box: "BOX",
+    Bilinear: "BILINEAR",
+    CubicBSpline: "CUBIC_BSPLINE",
+    CatmullRom: "CATMULL_ROM",
+    Mitchell: "MITCHELL",
+    PointSample: "POINT_SAMPLE",
+    Kaiser: "KAISER",
+    Nice: "NICE",
+} as const;
+export type SharedVtfFilter = (typeof SharedVtfFilters)[keyof typeof SharedVtfFilters];
+export const SharedVtfDefaultFilter = SharedVtfFilters.Default;
+
 export type SharedVtfFlag =
     | "POINT_SAMPLE"
     | "TRILINEAR"
@@ -52,64 +71,75 @@ export type SharedVtfFlag =
     | "V5_CSGO_SKIP_INITIAL_DOWNLOAD"
     | "V5_CSGO_YCOCG"
     | "V5_CSGO_ASYNC_SKIP_INITIAL_LOW_RES";
-export type SharedVtfCompressionMethod = "DEFLATE" | "ZSTD" | "CONSOLE_LZMA";
-export type SharedVtfImageFormat =
-    | "UNCHANGED"
-    | "DEFAULT"
-    | "RGBA8888"
-    | "ABGR8888"
-    | "RGB888"
-    | "BGR888"
-    | "RGB565"
-    | "I8"
-    | "IA88"
-    | "P8"
-    | "A8"
-    | "RGB888_BLUESCREEN"
-    | "BGR888_BLUESCREEN"
-    | "ARGB8888"
-    | "BGRA8888"
-    | "DXT1"
-    | "DXT3"
-    | "DXT5"
-    | "BGRX8888"
-    | "BGR565"
-    | "BGRX5551"
-    | "BGRA4444"
-    | "DXT1_ONE_BIT_ALPHA"
-    | "BGRA5551"
-    | "UV88"
-    | "UVWQ8888"
-    | "RGBA16161616F"
-    | "RGBA16161616"
-    | "UVLX8888"
-    | "R32F"
-    | "RGB323232F"
-    | "RGBA32323232F"
-    | "RG1616F"
-    | "RG3232F"
-    | "RGBX8888"
-    | "EMPTY"
-    | "ATI2N"
-    | "ATI1N"
-    | "RGBA1010102"
-    | "BGRA1010102"
-    | "R16F"
-    | "CONSOLE_BGRX8888_LINEAR"
-    | "CONSOLE_RGBA8888_LINEAR"
-    | "CONSOLE_ABGR8888_LINEAR"
-    | "CONSOLE_ARGB8888_LINEAR"
-    | "CONSOLE_BGRA8888_LINEAR"
-    | "CONSOLE_RGB888_LINEAR"
-    | "CONSOLE_BGR888_LINEAR"
-    | "CONSOLE_BGRX5551_LINEAR"
-    | "CONSOLE_I8_LINEAR"
-    | "CONSOLE_RGBA16161616_LINEAR"
-    | "CONSOLE_BGRX8888_LE"
-    | "CONSOLE_BGRA8888_LE"
-    | "R8"
-    | "BC7"
-    | "BC6H";
+
+export const SharedVtfCompressionMethods = {
+    Deflate: "DEFLATE",
+    Zstd: "ZSTD",
+    ConsoleLzma: "CONSOLE_LZMA",
+} as const;
+export type SharedVtfCompressionMethod = (typeof SharedVtfCompressionMethods)[keyof typeof SharedVtfCompressionMethods];
+export const SharedVtfDefaultCompression = SharedVtfCompressionMethods.Deflate;
+
+export const SharedVtfImageFormats = {
+    Unchanged: "UNCHANGED",
+    Default: "DEFAULT",
+    RGBA8888: "RGBA8888",
+    ABGR8888: "ABGR8888",
+    RGB888: "RGB888",
+    BGR888: "BGR888",
+    RGB565: "RGB565",
+    I8: "I8",
+    IA88: "IA88",
+    P8: "P8",
+    A8: "A8",
+    RGB888Bluescreen: "RGB888_BLUESCREEN",
+    BGR888Bluescreen: "BGR888_BLUESCREEN",
+    ARGB8888: "ARGB8888",
+    BGRA8888: "BGRA8888",
+    DXT1: "DXT1",
+    DXT3: "DXT3",
+    DXT5: "DXT5",
+    bgrx8888: "BGRX8888",
+    bgr565: "BGR565",
+    bgrx5551: "BGRX5551",
+    bgra4444: "BGRA4444",
+    dxt1ONEBITALPHA: "DXT1_ONE_BIT_ALPHA",
+    bgra5551: "BGRA5551",
+    uv88: "UV88",
+    uvwq8888: "UVWQ8888",
+    rgba16161616F: "RGBA16161616F",
+    rgba16161616: "RGBA16161616",
+    uvlx8888: "UVLX8888",
+    r32F: "R32F",
+    rgb323232F: "RGB323232F",
+    rgba32323232F: "RGBA32323232F",
+    rg1616F: "RG1616F",
+    rg3232F: "RG3232F",
+    rgbx8888: "RGBX8888",
+    empty: "EMPTY",
+    ati2N: "ATI2N",
+    ati1N: "ATI1N",
+    rgba1010102: "RGBA1010102",
+    bgra1010102: "BGRA1010102",
+    r16F: "R16F",
+    consolebgrx8888LINEAR: "CONSOLE_BGRX8888_LINEAR",
+    consolergba8888LINEAR: "CONSOLE_RGBA8888_LINEAR",
+    consoleabgr8888LINEAR: "CONSOLE_ABGR8888_LINEAR",
+    consoleargb8888LINEAR: "CONSOLE_ARGB8888_LINEAR",
+    consolebgra8888LINEAR: "CONSOLE_BGRA8888_LINEAR",
+    consolergb888LINEAR: "CONSOLE_RGB888_LINEAR",
+    consolebgr888LINEAR: "CONSOLE_BGR888_LINEAR",
+    consolebgrx5551LINEAR: "CONSOLE_BGRX5551_LINEAR",
+    consolei8LINEAR: "CONSOLE_I8_LINEAR",
+    consolergba16161616LINEAR: "CONSOLE_RGBA16161616_LINEAR",
+    consolebgrx8888LE: "CONSOLE_BGRX8888_LE",
+    consolebgra8888LE: "CONSOLE_BGRA8888_LE",
+    R8: "R8",
+    BC7: "BC7",
+    BC6H: "BC6H",
+} as const;
+export type SharedVtfImageFormat = (typeof SharedVtfImageFormats)[keyof typeof SharedVtfImageFormats];
+export const SharedVtfDefaultImageFormat = SharedVtfImageFormats.BC7;
 
 export interface SharedVtfCreateOptions {
     version?: SharedVtfVersion;
@@ -129,6 +159,12 @@ export interface SharedVtfCreateOptions {
      */
     gammaCorrectAmount?: string;
 }
+
+export type SharedVtfCreateEnumOptions =
+    | typeof SharedVtfVersions
+    | typeof SharedVtfImageFormats
+    | typeof SharedVtfFilters
+    | typeof SharedVtfCompressionMethods;
 
 export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     let a = "";

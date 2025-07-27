@@ -24,6 +24,16 @@ export default defineConfig({
                     primary: "fuchsia",
                 },
                 button: { slots: { base: "cursor-pointer duration-0" } },
+                select: {
+                    slots: { base: "cursor-pointer duration-0" },
+                    variants: { variant: { outline: "hover:bg-elevated active:bg-elevated" } },
+                },
+                popover: {
+                    slots: {
+                        // Above dockview divier lines which are at 99
+                        content: "z-100",
+                    },
+                },
                 checkbox: { slots: { base: "cursor-pointer" } },
                 icons: {
                     arrowLeft: "tdesign:arrow-left",
