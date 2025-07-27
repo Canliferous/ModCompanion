@@ -1,5 +1,5 @@
 <template>
-    <div class="grid h-full">
+    <div class="grid grid-cols-[minmax(0,_1fr)] h-full">
         <DockviewVue @ready="handleReady" :theme="themeDark" />
     </div>
 </template>
