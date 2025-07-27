@@ -12,6 +12,12 @@ import { getAppConfig } from "~/renderer-config.js";
 
 const props = defineProps<{ entry: string; dir: string }>();
 const text = ref(props.entry);
+watch(
+    () => props.entry,
+    (val) => {
+        text.value = val;
+    },
+);
 
 const emit = defineEmits<{
     remove: [void];
