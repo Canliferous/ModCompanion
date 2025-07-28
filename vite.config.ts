@@ -34,6 +34,12 @@ export default defineConfig({
                         content: "z-100",
                     },
                 },
+                contextMenu: {
+                    slots: {
+                        // Above dockview divier lines which are at 99
+                        content: "z-100",
+                    },
+                },
                 checkbox: {
                     slots: { root: "cursor-pointer select-none" },
                     variants: { variant: { card: { root: "hover:bg-elevated" } } },
