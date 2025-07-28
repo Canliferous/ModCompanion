@@ -32,45 +32,47 @@ export const SharedVtfFilters = {
 export type SharedVtfFilter = (typeof SharedVtfFilters)[keyof typeof SharedVtfFilters];
 export const SharedVtfDefaultFilter = SharedVtfFilters.Default;
 
-export type SharedVtfFlag =
-    | "POINT_SAMPLE"
-    | "TRILINEAR"
-    | "CLAMP_S"
-    | "CLAMP_T"
-    | "ANISOTROPIC"
-    | "HINT_DXT5"
-    | "NORMAL"
-    | "NO_MIP"
-    | "NO_LOD"
-    | "PROCEDURAL"
-    | "ONE_BIT_ALPHA"
-    | "MULTI_BIT_ALPHA"
-    | "ENVMAP"
-    | "RENDERTARGET"
-    | "DEPTH_RENDERTARGET"
-    | "NO_DEBUG_OVERRIDE"
-    | "SINGLE_COPY"
-    | "V2_NO_DEPTH_BUFFER"
-    | "V2_CLAMP_U"
-    | "V3_LOAD_ALL_MIPS"
-    | "V3_VERTEX_TEXTURE"
-    | "V3_SSBUMP"
-    | "V3_BORDER"
-    | "V4_SRGB"
-    | "V4_TF2_STAGING_MEMORY"
-    | "V4_TF2_IMMEDIATE_CLEANUP"
-    | "V4_TF2_IGNORE_PICMIP"
-    | "V4_TF2_STREAMABLE_COARSE"
-    | "V4_TF2_STREAMABLE_FINE"
-    | "V5_PWL_CORRECTED"
-    | "V5_SRGB"
-    | "V5_DEFAULT_POOL"
-    | "V5_LOAD_MOST_MIPS"
-    | "V5_CSGO_COMBINED"
-    | "V5_CSGO_ASYNC_DOWNLOAD"
-    | "V5_CSGO_SKIP_INITIAL_DOWNLOAD"
-    | "V5_CSGO_YCOCG"
-    | "V5_CSGO_ASYNC_SKIP_INITIAL_LOW_RES";
+export const SharedVtfFlags = {
+    PointSample: "POINT_SAMPLE",
+    Trilinear: "TRILINEAR",
+    ClampS: "CLAMP_S",
+    ClampT: "CLAMP_T",
+    Anisotropic: "ANISOTROPIC",
+    HintDXT5: "HINT_DXT5",
+    Normal: "NORMAL",
+    NoMip: "NO_MIP",
+    NoLod: "NO_LOD",
+    Procedural: "PROCEDURAL",
+    OneBitAlpha: "ONE_BIT_ALPHA",
+    MultiBitAlpha: "MULTI_BIT_ALPHA",
+    Envmap: "ENVMAP",
+    RenderTarget: "RENDERTARGET",
+    DepthRenderTarget: "DEPTH_RENDERTARGET",
+    NodeBugOverride: "NO_DEBUG_OVERRIDE",
+    SingleCopy: "SINGLE_COPY",
+    V2NoDepthBuffer: "V2_NO_DEPTH_BUFFER",
+    V2ClampU: "V2_CLAMP_U",
+    V3LoadAllMips: "V3_LOAD_ALL_MIPS",
+    V3VertexTexture: "V3_VERTEX_TEXTURE",
+    V3SSBump: "V3_SSBUMP",
+    V3Border: "V3_BORDER",
+    V4SRGB: "V4_SRGB",
+    V4TF2StagingMemory: "V4_TF2_STAGING_MEMORY",
+    V4TF2ImmediateCleanup: "V4_TF2_IMMEDIATE_CLEANUP",
+    V4TF2IgnorePicMip: "V4_TF2_IGNORE_PICMIP",
+    V4TF2StreamableCoarse: "V4_TF2_STREAMABLE_COARSE",
+    V4TF2StreamableFine: "V4_TF2_STREAMABLE_FINE",
+    V5PwlCorrected: "V5_PWL_CORRECTED",
+    V5SRGB: "V5_SRGB",
+    V5DefaultPool: "V5_DEFAULT_POOL",
+    V5LoadMostMips: "V5_LOAD_MOST_MIPS",
+    V5CsgoCombined: "V5_CSGO_COMBINED",
+    V5CsgoAsyncDownload: "V5_CSGO_ASYNC_DOWNLOAD",
+    V5CsgoSkipInitialDownload: "V5_CSGO_SKIP_INITIAL_DOWNLOAD",
+    V5CsgoYCOCG: "V5_CSGO_YCOCG",
+    V5CsgoAsyncSkipInitialLowRes: "V5_CSGO_ASYNC_SKIP_INITIAL_LOW_RES",
+} as const;
+export type SharedVtfFlag = (typeof SharedVtfFlags)[keyof typeof SharedVtfFlags];
 
 export const SharedVtfCompressionMethods = {
     Deflate: "DEFLATE",
