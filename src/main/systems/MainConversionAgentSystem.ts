@@ -91,6 +91,7 @@ function _startConversions(ids: SharedAssetId[]): void {
 
         const timeoutPromise = _convertAsset(asset.def);
         promises.push(timeoutPromise);
+        timeoutPromise.catch((a) => console.warn("Conversion failed", a));
         timeoutPromise.finally(() => _onJobPromiseFinished(hash));
         conversionJobs.set(hash, timeoutPromise);
     }
