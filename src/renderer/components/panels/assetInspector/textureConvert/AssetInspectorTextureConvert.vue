@@ -86,6 +86,8 @@ provide(AssetInspectorTextureConvertInjectKey, {
             }
         }
 
+        opt.flags = toRaw(opt.flags);
+
         if (opt.noMips === false) opt.noMips = undefined;
         if (opt.noThumbnail === false) opt.noThumbnail = undefined;
         if (opt.noAnimation === false) opt.noAnimation = undefined;
