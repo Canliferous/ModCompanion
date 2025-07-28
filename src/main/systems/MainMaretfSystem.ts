@@ -2,7 +2,7 @@ import os from "node:os";
 import path from "node:path";
 import * as child_process from "node:child_process";
 import { getMainAssetsDir } from "../helpers/MainFilesystem.js";
-import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
+import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 
 let binary = "";
 

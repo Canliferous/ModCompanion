@@ -1,4 +1,4 @@
-import { SharedVtfCreateOptions } from "./SharedMareTf.js";
+import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
 
 export const SharedAssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
 

@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts" generic="E extends Object, T = E[keyof E]">
-import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
+import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 
 const props = defineProps<{

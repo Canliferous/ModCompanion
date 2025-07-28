@@ -44,22 +44,15 @@
 
 <script setup lang="ts">
 import { SharedAsset, SharedTextureAsset, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import {
-    getVtfVersionName,
-    SharedVtfCompressionMethods,
-    SharedVtfCreateOptions,
-    SharedVtfDefaultCompression,
-    SharedVtfDefaultFilter,
-    SharedVtfDefaultImageFormat,
-    SharedVtfDefaultVersion,
-    SharedVtfFilters,
-    SharedVtfImageFormats,
-    SharedVtfVersions,
-} from "Shared/SharedMareTf.js";
+import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import { getAppConfig } from "~/renderer-config.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertToggles.vue";
+import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
+import { SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
+import { SharedVtfCompressionMethods, SharedVtfDefaultCompression } from "Shared/vtf/SharedVtfCompression.js";
+import { SharedVtfDefaultImageFormat, SharedVtfImageFormats } from "Shared/vtf/SharedVtfFormat.js";
 
 const props = defineProps<{ asset: SharedTextureAsset }>();
 

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { SharedAppConfig } from "Shared/SharedAppConfig.js";
-import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
+import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 
 interface ConfigFile {
     root?: string;

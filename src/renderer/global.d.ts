@@ -1,25 +1,22 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { ipcRenderer, IpcRenderer, IpcRendererEvent } from "electron";
+import { IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
-import { SharedIpcChannels } from "../shared/SharedIpcChannels.js";
 import { SharedMapPath } from "../shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "../shared/SharedMapTimeReport.js";
 import {
-    SharedAssetDefinition,
+    SharedAsset,
     SharedAssetAddedEvent,
+    SharedAssetDefinition,
     SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
-    SharedAsset,
 } from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
-import { getImageMeta } from "../main/api/MainImageMetaApi.js";
 import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
-import { SharedVtfCreateOptions } from "Shared/SharedMareTf.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
 
 export {};
