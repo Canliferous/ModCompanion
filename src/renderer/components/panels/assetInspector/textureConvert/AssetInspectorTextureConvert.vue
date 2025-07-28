@@ -39,6 +39,7 @@
                 <AssetInspectorTextureConvertToggles :options="options" />
             </div>
         </UFormField>
+        <AssetInspectorTextureConvertFlags :options="options" />
     </div>
 </template>
 
@@ -53,6 +54,7 @@ import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "S
 import { SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
 import { SharedVtfCompressionMethods, SharedVtfDefaultCompression } from "Shared/vtf/SharedVtfCompression.js";
 import { SharedVtfDefaultImageFormat, SharedVtfImageFormats } from "Shared/vtf/SharedVtfFormat.js";
+import AssetInspectorTextureConvertFlags from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlags.vue";
 
 const props = defineProps<{ asset: SharedTextureAsset }>();
 

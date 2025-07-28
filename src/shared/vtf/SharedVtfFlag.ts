@@ -1,3 +1,5 @@
+import { SharedVtfVersion, SharedVtfVersions } from "./SharedVtfVersion.js";
+
 export const SharedVtfFlags = {
     PointSample: "POINT_SAMPLE",
     Trilinear: "TRILINEAR",
@@ -39,3 +41,81 @@ export const SharedVtfFlags = {
     V5CsgoAsyncSkipInitialLowRes: "V5_CSGO_ASYNC_SKIP_INITIAL_LOW_RES",
 } as const;
 export type SharedVtfFlag = (typeof SharedVtfFlags)[keyof typeof SharedVtfFlags];
+
+export const SharedVtfFlagVersionMap = new Map<SharedVtfFlag, SharedVtfVersion>([
+    [SharedVtfFlags.PointSample, SharedVtfVersions.v74],
+    [SharedVtfFlags.Trilinear, SharedVtfVersions.v74],
+    [SharedVtfFlags.ClampS, SharedVtfVersions.v74],
+    [SharedVtfFlags.ClampT, SharedVtfVersions.v74],
+    [SharedVtfFlags.Anisotropic, SharedVtfVersions.v74],
+    [SharedVtfFlags.HintDXT5, SharedVtfVersions.v74],
+    [SharedVtfFlags.Normal, SharedVtfVersions.v74],
+    [SharedVtfFlags.NoMip, SharedVtfVersions.v74],
+    [SharedVtfFlags.NoLod, SharedVtfVersions.v74],
+    [SharedVtfFlags.Procedural, SharedVtfVersions.v74],
+    [SharedVtfFlags.OneBitAlpha, SharedVtfVersions.v74],
+    [SharedVtfFlags.MultiBitAlpha, SharedVtfVersions.v74],
+    [SharedVtfFlags.Envmap, SharedVtfVersions.v74],
+    [SharedVtfFlags.RenderTarget, SharedVtfVersions.v74],
+    [SharedVtfFlags.DepthRenderTarget, SharedVtfVersions.v74],
+    [SharedVtfFlags.NodeBugOverride, SharedVtfVersions.v74],
+    [SharedVtfFlags.SingleCopy, SharedVtfVersions.v74],
+    [SharedVtfFlags.V2NoDepthBuffer, SharedVtfVersions.v74],
+    [SharedVtfFlags.V2ClampU, SharedVtfVersions.v74],
+    [SharedVtfFlags.V3LoadAllMips, SharedVtfVersions.v74],
+    [SharedVtfFlags.V3VertexTexture, SharedVtfVersions.v74],
+    [SharedVtfFlags.V3SSBump, SharedVtfVersions.v74],
+    [SharedVtfFlags.V3Border, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4SRGB, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4TF2StagingMemory, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4TF2ImmediateCleanup, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4TF2IgnorePicMip, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4TF2StreamableCoarse, SharedVtfVersions.v74],
+    [SharedVtfFlags.V4TF2StreamableFine, SharedVtfVersions.v74],
+    [SharedVtfFlags.V5PwlCorrected, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5SRGB, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5DefaultPool, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5LoadMostMips, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5CsgoCombined, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5CsgoAsyncDownload, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5CsgoSkipInitialDownload, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5CsgoYCOCG, SharedVtfVersions.v75],
+    [SharedVtfFlags.V5CsgoAsyncSkipInitialLowRes, SharedVtfVersions.v75],
+]);
+
+export const SharedVtfFlagDeprecated: SharedVtfFlag[] = [
+    SharedVtfFlags.Trilinear,
+    SharedVtfFlags.Anisotropic,
+    SharedVtfFlags.PointSample,
+];
+
+export interface SharedVtfFlagGroup {
+    label: string;
+    flags: SharedVtfFlag[];
+}
+export const SharedVtfFlagGroups: SharedVtfFlagGroup[] = [
+    {
+        label: "Common Flags",
+        flags: [
+            SharedVtfFlags.Normal,
+            SharedVtfFlags.PointSample,
+            SharedVtfFlags.Anisotropic,
+            SharedVtfFlags.Trilinear,
+            SharedVtfFlags.ClampS,
+            SharedVtfFlags.ClampT,
+        ],
+    },
+];
+// Wish this could be done at build time :/
+export function getVtfFlagsUngrouped(): SharedVtfFlag[] {
+    const ungrouped = Object.values(SharedVtfFlags);
+
+    for (const group of SharedVtfFlagGroups) {
+        for (const flag of group.flags) {
+            const idx = ungrouped.indexOf(flag);
+            ungrouped.splice(idx, 1);
+        }
+    }
+
+    return ungrouped;
+}
