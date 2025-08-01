@@ -19,7 +19,7 @@ const props = defineProps<{ asset: SharedAsset }>();
 const imageCacheStore = useImageCacheStore();
 
 const api = ref<DockviewApi>();
-const lastType = ref<SharedAssetType>(SharedAssetType.Unknown);
+const lastType = ref<SharedAssetType | undefined>();
 
 const textureMeta = ref<SharedImageMetaReport | undefined>(undefined);
 
