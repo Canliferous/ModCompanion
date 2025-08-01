@@ -1,12 +1,9 @@
 import { App as VueApp } from "@vue/runtime-core";
-import { getAdditionalPanelsArray, getPanelArray } from "~/store/PanelsStore.js";
+
+import { getPanelComponentsArray } from "~/helper/PanelComponents.js";
 
 export function initPanels(app: VueApp<Element>): void {
-    for (let panel of getPanelArray()) {
-        app.component(panel.componentId, panel.component);
-    }
-
-    for (let panel of getAdditionalPanelsArray()) {
+    for (let panel of getPanelComponentsArray()) {
         app.component(panel.componentId, panel.component);
     }
 }

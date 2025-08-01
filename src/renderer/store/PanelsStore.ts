@@ -1,108 +1,8 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
-import { Component, DefineComponent } from "@vue/runtime-core";
-import TestPanel from "~/components/panels/TestPanel.vue";
-import HomePanel from "~/components/panels/HomePanel.vue";
-import MapsPanel from "~/components/panels/maps/MapsPanel.vue";
-import FileBrowserPanel from "~/components/panels/fileBrowser/FileBrowserPanel.vue";
-import AssetBrowserPanel from "~/components/panels/assetBrowser/AssetBrowserPanel.vue";
-import AssetInspectorPanel from "~/components/panels/assetInspector/AssetInspectorPanel.vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import AssetInspectorTexturePreviewPanel from "~/components/panels/assetInspector/texturePreviewPanel/AssetInspectorTexturePreviewPanel.vue";
-import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
-import AssetInspectorTextureChannelsPanel from "~/components/panels/assetInspector/textureChannelsPanel/AssetInspectorTextureChannelsPanel.vue";
-import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspector/textureMetadataPanel/AssetInspectorTextureMetadataPanel.vue";
-import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertPanel.vue";
-
-export interface Panel {
-    componentId: string;
-    component: Component | DefineComponent;
-    title: string;
-}
-
-const additionalPanels = {
-    assetInspectorTexturePreview: {
-        componentId: "_AssetInspector_TexturePreview",
-        component: AssetInspectorTexturePreviewPanel,
-        title: "Preview",
-    },
-    assetInspectorTextureChannels: {
-        componentId: "_AssetInspector_TextureChannels",
-        component: AssetInspectorTextureChannelsPanel,
-        title: "Channels",
-    },
-    assetInspectorTextureMetadata: {
-        componentId: "_AssetInspector_TextureMetadata",
-        component: AssetInspectorTextureMetadataPanel,
-        title: "Metadata",
-    },
-    assetInspectorTextureConvert: {
-        componentId: "_AssetInspector_TextureConvert",
-        component: AssetInspectorTextureConvertPanel,
-        title: "VTF Options",
-    },
-    assetInspectorGeneral: {
-        componentId: "_AssetInspector_General",
-        component: AssetInspectorGeneralPanel,
-        title: "General Options",
-    },
-};
-
-const panels = {
-    test: {
-        componentId: "_TestPanel",
-        component: TestPanel,
-        title: "Test Panel",
-    },
-    home: {
-        componentId: "_HomePanel",
-        component: HomePanel,
-        title: "Home",
-    },
-    maps: {
-        componentId: "_Maps",
-        component: MapsPanel,
-        title: "Maps",
-    },
-    fileBrowser: {
-        componentId: "_FileBrowser",
-        component: FileBrowserPanel,
-        title: "File Browser",
-    },
-    assetBrowser: {
-        componentId: "_AssetBrowser",
-        component: AssetBrowserPanel,
-        title: "Asset Browser",
-    },
-    assetInspector: {
-        componentId: "_AssetInspector",
-        component: AssetInspectorPanel,
-        title: "Asset Inspector",
-    },
-} satisfies Record<string, Panel>;
-
-let panelsArray: Panel[] | undefined;
-
-export function getPanels() {
-    return panels;
-}
-
-export function getPanelArray(): Panel[] {
-    if (!panelsArray) {
-        panelsArray = Object.values(panels).sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    return panelsArray;
-}
-
-export function getAdditionalPanels() {
-    return additionalPanels;
-}
-
-export function getAdditionalPanelsArray(): Panel[] {
-    return Object.values(additionalPanels);
-}
+import { ComponentDesc, PanelComponents, PanelTitles } from "~/helper/PanelComponents.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -127,7 +27,7 @@ export const usePanelsStore = defineStore("panels", () => {
         event.api.onDidAddPanel(updatePanels);
     }
 
-    function trySpawnPanel(panel: Panel, options?: Partial<AddPanelOptions>) {
+    function trySpawnPanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>) {
         const openPanel = findOpenPanel(panel.componentId);
         if (openPanel) {
             return;
@@ -137,13 +37,13 @@ export const usePanelsStore = defineStore("panels", () => {
             ...options,
             id: panel.componentId,
             component: panel.componentId,
-            title: panel.title,
+            title: PanelTitles[panel.componentId] ?? "",
         };
 
         return api.value?.addPanel(op);
     }
 
-    function togglePanel(panel: Panel): void {
+    function togglePanel(panel: ComponentDesc): void {
         const p = findOpenPanel(panel.componentId);
         if (p) {
             api.value?.removePanel(p);
@@ -161,15 +61,15 @@ export const usePanelsStore = defineStore("panels", () => {
         (asset) => {
             if (!asset) return;
 
-            const browser = findOpenPanel(panels.assetBrowser.componentId);
+            const browser = findOpenPanel(PanelComponents.panels.assetBrowser.componentId);
             if (!browser) {
                 console.warn("Trying to inspect asset but browser panel cannot be found");
                 return;
             }
-            const inspector = findOpenPanel(panels.assetInspector.componentId);
+            const inspector = findOpenPanel(PanelComponents.panels.assetInspector.componentId);
 
             if (inspector === undefined) {
-                trySpawnPanel(panels.assetInspector, {
+                trySpawnPanel(PanelComponents.panels.assetInspector, {
                     position: { referencePanel: browser.id, direction: "right" },
                 });
             }

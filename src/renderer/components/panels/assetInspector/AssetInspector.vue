@@ -1,18 +1,22 @@
 <template>
     <div class="grid grid-cols-[minmax(0,_1fr)] h-full">
-        <DockviewVue @ready="handleReady" :theme="themeDark" />
+        <DockviewVue
+            @ready="handleReady"
+            :theme="themeDark"
+            :default-tab-component="PanelComponents.tabComponents.subPanelTabs.componentId"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
 import { isTextureAsset, SharedAsset, SharedAssetType, SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { DockviewApi, DockviewReadyEvent, DockviewVue, themeDark } from "dockview-vue";
-import { getAdditionalPanels, Panel } from "~/store/PanelsStore.js";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useImageCacheStore } from "~/store/ImageCacheStore.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import { PanelComponents } from "~/helper/PanelComponents.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 
@@ -69,7 +73,7 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
     if (type === lastType.value) return;
     const additionalPanels = getAdditionalPanels();
 
-    const whichPanelsShouldExist: Panel[] = [];
+    const whichPanelsShouldExist: PanelDesc[] = [];
 
     switch (type) {
         case SharedAssetType.Texture: {

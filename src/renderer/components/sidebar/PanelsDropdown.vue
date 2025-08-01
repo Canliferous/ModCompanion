@@ -6,11 +6,12 @@
 
 <script setup lang="ts">
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
-import { getPanelArray, usePanelsStore } from "~/store/PanelsStore.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { getPanelComponentsArray } from "~/helper/PanelComponents.js";
 
 const panelsStore = usePanelsStore();
 
-const items = getPanelArray().map((p) => {
+const items = getPanelComponentsArray().map((p) => {
     const item: DropdownMenuItem = {
         label: p.title,
         onSelect(e: Event) {
