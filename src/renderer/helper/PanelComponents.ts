@@ -9,6 +9,7 @@ import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspect
 import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertPanel.vue";
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
+import AppDesign from "~/design/AppDesign.js";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -87,9 +88,11 @@ let panelsArray: ComponentDesc[] | undefined;
 export function getPanelComponentsArray(): ComponentDesc[] {
     if (!panelsArray) {
         panelsArray = [];
-        for (const reg of Object.values(PanelComponents)) {
-            const r = Object.values(reg) as any as ComponentDesc; // TODO: Wtf is this type???
-            panelsArray.push(r);
+
+        for (const c of Object.values(PanelComponents)) {
+            for (const reg of Object.values(c)) {
+                panelsArray.push(reg);
+            }
         }
     }
 
@@ -97,6 +100,7 @@ export function getPanelComponentsArray(): ComponentDesc[] {
 }
 
 export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
+    _Home: "Home",
     _Maps: "Maps",
     _AssetBrowser: "Asset Browser",
     _FileBrowser: "File Browser",
@@ -106,4 +110,17 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureConvert: "VTF Options",
     _AssetInspector_TextureChannels: "Channels",
     _AssetInspector_General: "General",
+} as const;
+
+export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
+    _Home: "tdesign:home",
+    _Maps: "tdesign:map",
+    _AssetBrowser: AppDesign.icons.asset,
+    _FileBrowser: "tdesign:file-1",
+    // _AssetInspector: "",
+    // _AssetInspector_TexturePreview: "",
+    // _AssetInspector_TextureMetadata: "",
+    // _AssetInspector_TextureConvert: "",
+    // _AssetInspector_TextureChannels: "",
+    // _AssetInspector_General: "",
 } as const;
