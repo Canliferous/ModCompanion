@@ -16,7 +16,7 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useImageCacheStore } from "~/store/ImageCacheStore.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import { PanelComponents } from "~/helper/PanelComponents.js";
+import { ComponentDesc, PanelComponents, PanelTitles } from "~/helper/PanelComponents.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 
@@ -71,9 +71,9 @@ function updateTextureMeta(asset: SharedTextureAsset) {
 
 function updateTabs(type: SharedAssetType, api: DockviewApi): void {
     if (type === lastType.value) return;
-    const additionalPanels = getAdditionalPanels();
+    const additionalPanels = PanelComponents.additional;
 
-    const whichPanelsShouldExist: PanelDesc[] = [];
+    const whichPanelsShouldExist: ComponentDesc[] = [];
 
     switch (type) {
         case SharedAssetType.Texture: {
@@ -92,7 +92,7 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
         if (panels.some((p) => p.id === panel.componentId)) continue;
 
         api.addPanel({
-            title: panel.title,
+            title: PanelTitles[panel.componentId],
             id: panel.componentId,
             component: panel.componentId,
         });
