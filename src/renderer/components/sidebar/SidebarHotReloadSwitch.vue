@@ -7,6 +7,7 @@ import { useRemember } from "~/composables/useRemember.js";
 
 const enabled = useRemember(ref(true), "hot-reload-enabled");
 
+window.electronAPI.hotReload.setEnabled(enabled.value);
 watch(enabled, (on) => {
     window.electronAPI.hotReload.setEnabled(on);
 });
