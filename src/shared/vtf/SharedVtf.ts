@@ -62,7 +62,7 @@ export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
         a += ` --compression-level ${options.compressionLevel}`;
     }
     if (options.bumpScale) {
-        a += ` --bump-scale`;
+        a += ` --bump-scale ${options.bumpScale}`;
     }
     if (options.gammaCorrect) {
         a += ` --gamma-correct`;
