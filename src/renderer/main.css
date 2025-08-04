@@ -22,6 +22,10 @@
     scrollbar-width: thin;
 }
 
+*::selection {
+    background-color: var(--color-primary-700);
+}
+
 @theme {
     --font-sans: "Inter", sans-serif;
     --font-mono: "JetBrains Mono Variable", monospace;
