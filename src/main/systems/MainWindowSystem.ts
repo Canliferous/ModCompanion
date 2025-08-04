@@ -35,7 +35,7 @@ export function disablePreventClose(): void {
 function _handleReady(): void {
     _createTray();
     _createWindow();
-    _createGlobalShortcuts();
+    _createShortcuts();
 }
 
 interface WindowRect {
@@ -122,18 +122,23 @@ function _createTray(): void {
 }
 
 let zoomFactor = 1;
-function _createGlobalShortcuts() {
-    globalShortcut.register("Control+=", () => _changeZoom(0.1));
-    globalShortcut.register("Control+-", () => _changeZoom(-0.1));
-    globalShortcut.register("Control+0", () => _resetZoom());
-    globalShortcut.register("Control+num0", () => _resetZoom());
-    globalShortcut.register("Control+numadd", () => _changeZoom(0.1));
-    globalShortcut.register("Control+numsub", () => _changeZoom(-0.1));
-
+function _createShortcuts() {
     mainWindow?.webContents.on("before-input-event", (event, input) => {
         if (input.key.toLowerCase() === "f12") {
             event.preventDefault();
             mainWindow?.webContents.toggleDevTools();
+        }
+
+        if (input.control && !input.isAutoRepeat && input.type !== "keyUp") {
+            if (input.key.toLowerCase() === "+") {
+                _changeZoom(0.1);
+            }
+            if (input.key.toLowerCase() === "-") {
+                _changeZoom(-0.1);
+            }
+            if (input.key.toLowerCase() === "0") {
+                _resetZoom();
+            }
         }
     });
 }
