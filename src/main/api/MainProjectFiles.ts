@@ -99,7 +99,15 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
         }
     }
 
-    infos.sort((x, y) => (x.isFile === y.isFile ? 0 : x.isFile ? 1 : -1));
+    infos.sort((x, y) => {
+        const file1 = x.isFile;
+        const file2 = y.isFile;
+        if (file1 !== file2) {
+            return file1 ? 1 : -1;
+        } else {
+            return x.name.localeCompare(y.name);
+        }
+    });
     // infos.sort((x, y) => (x.isFile === y.isFile ? 0 : x.isFile ? -1 : 1));
 
     return infos;
