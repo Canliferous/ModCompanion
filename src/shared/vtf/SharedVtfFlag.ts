@@ -1,4 +1,5 @@
 import { SharedVtfVersion, SharedVtfVersions } from "./SharedVtfVersion.js";
+import { createGrouping, SharedVtfEnumGroup, SharedVtfEnumGrouping } from "./SharedVtfEnumGrouping.js";
 
 export const SharedVtfFlags = {
     PointSample: "POINT_SAMPLE",
@@ -93,10 +94,10 @@ export interface SharedVtfFlagGroup {
     label: string;
     flags: SharedVtfFlag[];
 }
-export const SharedVtfFlagGroups: SharedVtfFlagGroup[] = [
+const SharedVtfFlagGroups: SharedVtfEnumGroup<SharedVtfFlag>[] = [
     {
         label: "Common Flags",
-        flags: [
+        items: [
             SharedVtfFlags.Normal,
             SharedVtfFlags.PointSample,
             SharedVtfFlags.Anisotropic,
@@ -106,16 +107,12 @@ export const SharedVtfFlagGroups: SharedVtfFlagGroup[] = [
         ],
     },
 ];
-// Wish this could be done at build time :/
-export function getVtfFlagsUngrouped(): SharedVtfFlag[] {
-    const ungrouped = Object.values(SharedVtfFlags);
 
-    for (const group of SharedVtfFlagGroups) {
-        for (const flag of group.flags) {
-            const idx = ungrouped.indexOf(flag);
-            ungrouped.splice(idx, 1);
-        }
+let grouping: SharedVtfEnumGrouping<SharedVtfFlag> | undefined;
+export function getVtfFlagGrouping() {
+    if (!grouping) {
+        grouping = createGrouping(SharedVtfFlagGroups, Object.values(SharedVtfFlags));
     }
 
-    return ungrouped;
+    return grouping;
 }

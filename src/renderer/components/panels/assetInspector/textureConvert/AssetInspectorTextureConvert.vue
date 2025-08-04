@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-2 p-2 gap-2">
         <UFormField label="Version">
-            <EnumSelectBig
+            <EnumSelect
                 :enum="SharedVtfVersions"
                 :options="options"
                 field="version"
@@ -10,16 +10,18 @@
             />
         </UFormField>
         <UFormField label="Format">
-            <EnumSelectBig
+            <EnumSelect
                 :enum="SharedVtfImageFormats"
                 :options="options"
                 field="format"
                 :default="defaults.format"
                 :columns="3"
+                :grouping="getVtfImageFormatGrouping()"
+                :label-func="getVtfFormatName"
             />
         </UFormField>
         <UFormField label="Filter">
-            <EnumSelectBig
+            <EnumSelect
                 :enum="SharedVtfFilters"
                 :options="options"
                 field="filter"
@@ -28,7 +30,7 @@
             />
         </UFormField>
         <UFormField label="Compression Method">
-            <EnumSelectBig
+            <EnumSelect
                 :enum="SharedVtfCompressionMethods"
                 :options="options"
                 field="compressionMethod"
@@ -54,7 +56,12 @@ import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspec
 import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
 import { getVtfFilterName, SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
 import { SharedVtfCompressionMethods, SharedVtfDefaultCompressionMethod } from "Shared/vtf/SharedVtfCompression.js";
-import { SharedVtfDefaultImageFormat, SharedVtfImageFormats } from "Shared/vtf/SharedVtfFormat.js";
+import {
+    getVtfFormatName,
+    getVtfImageFormatGrouping,
+    SharedVtfDefaultImageFormat,
+    SharedVtfImageFormats,
+} from "Shared/vtf/SharedVtfFormat.js";
 import AssetInspectorTextureConvertFlags from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlags.vue";
 import { getVtfDefaults } from "~/helper/VtfDefaults.js";
 

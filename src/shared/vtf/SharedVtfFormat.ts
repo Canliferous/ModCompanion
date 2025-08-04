@@ -1,3 +1,5 @@
+import { createGrouping, SharedVtfEnumGroup, SharedVtfEnumGrouping } from "./SharedVtfEnumGrouping.js";
+
 export const SharedVtfImageFormats = {
     Unchanged: "UNCHANGED",
     Default: "DEFAULT",
@@ -58,3 +60,52 @@ export const SharedVtfImageFormats = {
 } as const;
 export type SharedVtfImageFormat = (typeof SharedVtfImageFormats)[keyof typeof SharedVtfImageFormats];
 export const SharedVtfDefaultImageFormat = SharedVtfImageFormats.BC7;
+
+const SharedVtfImageFormatGroups: SharedVtfEnumGroup<SharedVtfImageFormat>[] = [
+    {
+        label: "Common",
+        items: ["BC7", "BC6H", "RGB888", "RGBA8888", "RGBA16161616", "RGBA16161616F", "RGBA32323232F"],
+    },
+    {
+        label: "Special",
+        items: ["DEFAULT", "UNCHANGED"],
+    },
+    {
+        label: "Single Channel",
+        items: ["R8", "R16F", "R32F", "I8", "P8", "A8"],
+    },
+    {
+        label: "DXT",
+        items: ["DXT1", "DXT1_ONE_BIT_ALPHA", "DXT3", "DXT5"],
+    },
+    {
+        label: "Bluescreen",
+        items: ["RGB888_BLUESCREEN", "BGR888_BLUESCREEN"],
+    },
+] as const;
+
+let grouping: SharedVtfEnumGrouping<SharedVtfImageFormat> | undefined;
+export function getVtfImageFormatGrouping() {
+    if (!grouping) {
+        grouping = createGrouping(SharedVtfImageFormatGroups, Object.values(SharedVtfImageFormats));
+    }
+
+    return grouping;
+}
+
+export function getVtfFormatName(format: SharedVtfImageFormat): string {
+    switch (format) {
+        case SharedVtfImageFormats.BGR888Bluescreen:
+            return "BGR888 Bluescreen";
+        case SharedVtfImageFormats.RGB888Bluescreen:
+            return "RGB888 Bluescreen";
+        case SharedVtfImageFormats.DXT1OneBitAlpha:
+            return "DXT1 One Bit Alpha";
+        case SharedVtfImageFormats.Unchanged:
+            return "Infer from source file";
+        case SharedVtfImageFormats.Default:
+            return "Auto";
+        default:
+            return format;
+    }
+}

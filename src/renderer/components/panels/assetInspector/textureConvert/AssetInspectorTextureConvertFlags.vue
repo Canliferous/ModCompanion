@@ -1,16 +1,16 @@
 <template>
-    <template v-for="group in SharedVtfFlagGroups">
+    <template v-for="group in grouping.groups">
         <AssetInspectorTextureConvertFlagsGroup
             :label="group.label"
-            :flags="group.flags"
+            :flags="group.items"
             :values="flagValues"
             @toggle="handleToggle"
         />
     </template>
-    <template v-if="ungroupedFlags.length > 0">
+    <template v-if="grouping.ungrouped.length > 0">
         <AssetInspectorTextureConvertFlagsGroup
             label="Other Flags"
-            :flags="ungroupedFlags"
+            :flags="grouping.ungrouped"
             :values="flagValues"
             @toggle="handleToggle"
         />
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
-import { getVtfFlagsUngrouped, SharedVtfFlag, SharedVtfFlagGroups, SharedVtfFlags } from "Shared/vtf/SharedVtfFlag.js";
+import { getVtfFlagGrouping, SharedVtfFlag } from "Shared/vtf/SharedVtfFlag.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 
 const props = defineProps<{ options: SharedVtfCreateOptions }>();
@@ -30,7 +30,7 @@ watch(
         flagValues.value = f ?? [];
     },
 );
-const ungroupedFlags = getVtfFlagsUngrouped();
+const grouping = getVtfFlagGrouping();
 
 const inj = inject(AssetInspectorTextureConvertInjectKey);
 
