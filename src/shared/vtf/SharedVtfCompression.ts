@@ -4,4 +4,4 @@ export const SharedVtfCompressionMethods = {
     ConsoleLzma: "CONSOLE_LZMA",
 } as const;
 export type SharedVtfCompressionMethod = (typeof SharedVtfCompressionMethods)[keyof typeof SharedVtfCompressionMethods];
-export const SharedVtfDefaultCompression = SharedVtfCompressionMethods.Deflate;
+export const SharedVtfDefaultCompressionMethod = SharedVtfCompressionMethods.Deflate;

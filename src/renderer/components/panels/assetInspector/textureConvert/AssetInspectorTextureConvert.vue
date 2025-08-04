@@ -5,7 +5,7 @@
                 :enum="SharedVtfVersions"
                 :options="options"
                 field="version"
-                :default="SharedVtfDefaultVersion"
+                :default="defaults.version"
                 :label-func="getVtfVersionName"
             />
         </UFormField>
@@ -14,7 +14,7 @@
                 :enum="SharedVtfImageFormats"
                 :options="options"
                 field="format"
-                :default="SharedVtfDefaultImageFormat"
+                :default="defaults.format"
                 :columns="3"
             />
         </UFormField>
@@ -23,7 +23,8 @@
                 :enum="SharedVtfFilters"
                 :options="options"
                 field="filter"
-                :default="SharedVtfDefaultFilter"
+                :default="defaults.filter"
+                :label-func="getVtfFilterName"
             />
         </UFormField>
         <UFormField label="Compression Method">
@@ -31,7 +32,7 @@
                 :enum="SharedVtfCompressionMethods"
                 :options="options"
                 field="compressionMethod"
-                :default="SharedVtfDefaultCompression"
+                :default="defaults.compressionMethod"
             />
         </UFormField>
         <UFormField label="Toggles" class="col-span-full">
@@ -51,10 +52,11 @@ import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/asset
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertToggles.vue";
 import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
-import { SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
-import { SharedVtfCompressionMethods, SharedVtfDefaultCompression } from "Shared/vtf/SharedVtfCompression.js";
+import { getVtfFilterName, SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
+import { SharedVtfCompressionMethods, SharedVtfDefaultCompressionMethod } from "Shared/vtf/SharedVtfCompression.js";
 import { SharedVtfDefaultImageFormat, SharedVtfImageFormats } from "Shared/vtf/SharedVtfFormat.js";
 import AssetInspectorTextureConvertFlags from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlags.vue";
+import { getVtfDefaults } from "~/helper/VtfDefaults.js";
 
 const props = defineProps<{ asset: SharedTextureAsset }>();
 
@@ -73,6 +75,7 @@ watch(
 );
 
 const assetStore = useAssetListStore();
+const defaults = getVtfDefaults();
 
 provide(AssetInspectorTextureConvertInjectKey, {
     updateOptions(op) {

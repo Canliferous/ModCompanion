@@ -20,7 +20,7 @@
             >
                 <template v-for="item in items">
                     <UButton
-                        :label="item.label"
+                        :label="`${item.label}${item.id === props.default ? ' (Default)' : ''}`"
                         variant="ghost"
                         :color="selectedItem?.id === item.id ? 'primary' : 'neutral'"
                         :icon="selectedItem?.id === item.id ? 'tdesign:check' : 'nothing'"
@@ -40,7 +40,7 @@ const props = defineProps<{
     enum: E;
     options: SharedVtfCreateOptions;
     field: keyof SharedVtfCreateOptions;
-    default: T;
+    default?: T;
     labelFunc?: (v: T) => string;
     columns?: number;
 }>();
