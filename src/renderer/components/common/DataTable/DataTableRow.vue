@@ -29,7 +29,6 @@ const isActive = computed(() => selection?.activeIdx.value === props.idx);
 const isSelected = computed(() => selection?.selectedIdx.value.includes(props.idx));
 
 function handleClick(event: MouseEvent): void {
-    console.log(event);
     event.stopPropagation();
 
     const shift = event.shiftKey;
