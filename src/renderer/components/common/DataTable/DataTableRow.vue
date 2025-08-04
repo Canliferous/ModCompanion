@@ -2,8 +2,7 @@
     <button
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-sm text-left cursor-pointer outline-none hover:bg-accented"
         :class="{ 'bg-primary-500/60': isActive, 'bg-primary-500/20 hover:bg-primary-500/50': isSelected }"
-        @mousedown="handleMouseDown"
-        @mouseover="handleMouseOver"
+        @click="handleClick"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
         @keydown.down="handleDown"
@@ -29,10 +28,9 @@ const entryAction = inject(DataTableEntryActionInjectKey);
 const isActive = computed(() => selection?.activeIdx.value === props.idx);
 const isSelected = computed(() => selection?.selectedIdx.value.includes(props.idx));
 
-function handleMouseDown(event: MouseEvent): void {
+function handleClick(event: MouseEvent): void {
+    console.log(event);
     event.stopPropagation();
-
-    if (event.buttons !== 1) return;
 
     const shift = event.shiftKey;
     const control = event.ctrlKey;
@@ -44,13 +42,6 @@ function handleMouseDown(event: MouseEvent): void {
             selection?.startSelect(props.idx);
         }
     } else {
-        selection?.endSelect(props.idx);
-    }
-}
-
-function handleMouseOver(event: MouseEvent): void {
-    // Left mouse dragged
-    if (event.buttons === 1) {
         selection?.endSelect(props.idx);
     }
 }
