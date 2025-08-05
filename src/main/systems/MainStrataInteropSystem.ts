@@ -1,4 +1,5 @@
 import koffi from "koffi";
+import os from "node:os";
 
 const WINDOW_NAME = "Strata001";
 
@@ -6,6 +7,16 @@ let FindWindowA: koffi.KoffiFunction;
 let SendMessageTimeoutA: koffi.KoffiFunction;
 
 export function initStrataInterop(): boolean {
+    if (os.type() === "windows_nt") {
+        initStrataInteropWindows();
+    } else {
+        console.log("NOTE: Strata interop is not available on", os.type());
+    }
+
+    return true;
+}
+
+function initStrataInteropWindows(): void {
     const user32 = koffi.load("user32.dll");
 
     koffi.struct("COPYDATASTRUCT", {
@@ -24,8 +35,6 @@ export function initStrataInterop(): boolean {
         "uint32", // Timeout (ms)
         "void*", // lpdwResult
     ]);
-
-    return true;
 }
 
 export function isStrataRunning(): boolean {
@@ -34,6 +43,14 @@ export function isStrataRunning(): boolean {
 }
 
 export function runStrataGameCommand(command: string): void {
+    if (os.type() === "windows_nt") {
+        _runStrataGameCommandWindows(command);
+    } else {
+        console.debug("Strata interop not available on", os.type());
+    }
+}
+
+function _runStrataGameCommandWindows(command: string): void {
     const hwnd = FindWindowA(WINDOW_NAME, null);
     if (!hwnd) {
         console.log("Game not running");
