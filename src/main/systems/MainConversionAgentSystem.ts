@@ -8,7 +8,7 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
-import { _convertTextureAsset } from "./converter/MainTextureConverter.js";
+import { _convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 
 const MAX_PARALLEL_JOBS = 5;
@@ -44,9 +44,9 @@ export function enqueueConversion(assetId: string): void {
     _setState(assetId, SharedConversionState.PendingForced);
 }
 
-function _runAgent(): void {
+async function _runAgent(): Promise<void> {
     const assetsIter = getAssetMap().values();
-    let updated = _updateStaleStates(assetsIter);
+    let updated = await _updateStaleStates(assetsIter);
     const assetsToConvert = _getAssetsToConvert();
     if (assetsToConvert.length > 0) {
         updated = true;
@@ -116,30 +116,34 @@ function _onJobPromiseFinished(hash: SharedAssetId) {
     _setState(hash, SharedConversionState.FinishedJob);
 }
 
-function _updateStaleStates(assets: MapIterator<SharedAsset>): boolean {
+async function _updateStaleStates(assets: MapIterator<SharedAsset>): Promise<boolean> {
     let updated = false;
     for (let asset of assets) {
-        if (_updateStaleState(asset.def)) {
+        if (await _updateStaleState(asset.def)) {
             updated = true;
         }
     }
     return updated;
 }
 
-function _updateStaleState(asset: SharedAssetDefinition): boolean {
-    const state = conversions.get(asset.id)?.state ?? SharedConversionState.Unknown;
-    if (state === SharedConversionState.PendingForced) {
+async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean> {
+    const convState = conversions.get(asset.id)?.state ?? SharedConversionState.Unknown;
+    if (convState === SharedConversionState.PendingForced) {
         return false;
     }
 
-    const isConverted = _isConverted(asset);
+    const assetState = await determineAssetState(asset);
 
-    if (!isConverted && state === SharedConversionState.Unknown) {
+    if (assetState === AssetStates.Invalid) {
+        _setState(asset.id, SharedConversionState.Invalid);
+    }
+
+    if (assetState === AssetStates.NoOutputFiles && convState === SharedConversionState.Unknown) {
         conversions.set(asset.id, { hash: asset.id, state: SharedConversionState.Pending });
         return true;
     }
 
-    if (isConverted && state !== SharedConversionState.FinishedConfirmed) {
+    if (assetState !== AssetStates.NoOutputFiles && convState !== SharedConversionState.FinishedConfirmed) {
         _setState(asset.id, SharedConversionState.FinishedConfirmed);
         return true;
     }
@@ -147,26 +151,25 @@ function _updateStaleState(asset: SharedAssetDefinition): boolean {
     return false;
 }
 
-export function _isConverted(asset: SharedAssetDefinition): boolean {
+export const AssetStates = {
+    Invalid: "invalid",
+    HasOutputFiles: "has_output_files",
+    NoOutputFiles: "no_output_files",
+} as const;
+export type AssetState = (typeof AssetStates)[keyof typeof AssetStates];
+export async function determineAssetState(asset: SharedAssetDefinition): Promise<AssetState> {
     switch (asset.type) {
-        case SharedAssetType.Texture: {
-            return _isTextureConverted(asset as SharedTextureAssetDefinition);
-        }
-        // There's no way to convert an invalid asset so we just say it is converted
-        case SharedAssetType.Unknown:
+        case SharedAssetType.Texture:
+            return determineTextureAssetState(asset as SharedTextureAssetDefinition);
         default:
-            return true;
+            return AssetStates.Invalid;
     }
 }
 
-export function _isTextureConverted(asset: SharedTextureAssetDefinition): boolean {
-    return asset.gameFiles !== undefined && asset.gameFiles.length > 0;
-}
-
-function _setState(hash: SharedAssetId, state: SharedConversionState) {
-    if (conversions.has(hash)) {
-        conversions.get(hash)!.state = state;
+function _setState(id: SharedAssetId, state: SharedConversionState) {
+    if (conversions.has(id)) {
+        conversions.get(id)!.state = state;
     } else {
-        conversions.set(hash, { hash, state });
+        conversions.set(id, { hash: id, state });
     }
 }

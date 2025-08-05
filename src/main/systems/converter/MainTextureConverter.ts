@@ -2,11 +2,12 @@ import { SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import { createVtf } from "../MainMaretfSystem.js";
 import { getConfig } from "../MainConfigSystem.js";
 import path from "path";
-import { filename } from "pathe/utils";
+import { AssetState, AssetStates } from "../MainConversionAgentSystem.js";
+import fs from "fs/promises";
 
 export async function _convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<boolean> {
-    if (asset.contentFiles === undefined || asset.contentFiles?.length === 0) return false;
-    if (asset.gameFiles === undefined || asset.gameFiles?.length === 0) return false;
+    if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return false;
+    if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return false;
 
     const srcFileRel = asset.contentFiles[0];
     const config = getConfig();
@@ -19,4 +20,21 @@ export async function _convertTextureAsset(asset: SharedTextureAssetDefinition):
     options = { ...options, ...asset.vtfOptions };
     console.log(`Converting texture ${srcFile} -> ${outFile}`, options);
     return createVtf(srcFile, outFile, options);
+}
+
+export async function determineTextureAssetState(asset: SharedTextureAssetDefinition): Promise<AssetState> {
+    if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return AssetStates.Invalid;
+    if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return AssetStates.Invalid;
+
+    const p = path.join(getConfig().gamePath, asset.gameFiles[0]);
+    try {
+        const stat = await fs.stat(p);
+        if (stat.isFile()) {
+            return AssetStates.HasOutputFiles;
+        } else {
+            return AssetStates.NoOutputFiles;
+        }
+    } catch (e) {
+        return AssetStates.NoOutputFiles;
+    }
 }

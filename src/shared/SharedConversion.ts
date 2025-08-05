@@ -2,6 +2,7 @@ import { SharedAssetId } from "./SharedAssetDefinition.js";
 
 export enum SharedConversionState {
     Unknown = "",
+    Invalid = "invalid",
     Pending = "pending",
     PendingForced = "pending_forced",
     InProgress = "in_progress",

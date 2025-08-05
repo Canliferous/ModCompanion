@@ -4,5 +4,8 @@
   "contentFiles": [
     "materialsrc/test/grass_01.jpg"
   ],
-  "displayName": "content/my_game/materialsrc/test/grass_01.jpg"
+  "displayName": "content/my_game/materialsrc/test/grass_01.jpg",
+  "gameFiles": [
+    "materials/test/grass_01.vtf"
+  ]
 }
