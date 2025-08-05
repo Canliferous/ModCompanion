@@ -136,6 +136,7 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
 
     if (assetState === AssetStates.Invalid) {
         _setState(asset.id, SharedConversionState.Invalid);
+        return true;
     }
 
     if (assetState === AssetStates.NoOutputFiles && convState === SharedConversionState.Unknown) {
@@ -143,7 +144,7 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
         return true;
     }
 
-    if (assetState !== AssetStates.NoOutputFiles && convState !== SharedConversionState.FinishedConfirmed) {
+    if (assetState == AssetStates.HasOutputFiles && convState !== SharedConversionState.FinishedConfirmed) {
         _setState(asset.id, SharedConversionState.FinishedConfirmed);
         return true;
     }
