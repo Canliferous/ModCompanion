@@ -7,7 +7,7 @@ let FindWindowA: koffi.KoffiFunction;
 let SendMessageTimeoutA: koffi.KoffiFunction;
 
 export function initStrataInterop(): boolean {
-    if (os.type() === "windows_nt") {
+    if (os.type().toLowerCase() === "windows_nt") {
         initStrataInteropWindows();
     } else {
         console.log("NOTE: Strata interop is not available on", os.type());
@@ -43,7 +43,7 @@ export function isStrataRunning(): boolean {
 }
 
 export function runStrataGameCommand(command: string): void {
-    if (os.type() === "windows_nt") {
+    if (os.type().toLowerCase() === "windows_nt") {
         _runStrataGameCommandWindows(command);
     } else {
         console.debug("Strata interop not available on", os.type());
