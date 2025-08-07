@@ -112,11 +112,13 @@ const items = computed<ContextMenuItem[][]>(() => {
         ],
         [
             {
-                label: "Create Asset",
+                label: "Create Asset(s)",
                 icon: "tdesign:plus",
                 disabled: !allFiles,
                 onSelect(e) {
-                    assetListStore.createAsset(pathsArray);
+                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
+                    const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
+                    assetListStore.createAsset(primaryPath, otherPaths);
                 },
             },
             {

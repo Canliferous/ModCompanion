@@ -17,37 +17,47 @@ export function registerAssetApi(): boolean {
         MainAssetRepository.rescan();
     });
 
-    ipcMain.handle(SharedIpcChannels.AssetCreate, async (event, files: string[]): Promise<SharedCreateAssetReport> => {
-        console.log("Creating asset for", files);
-        const existingAsset = MainAssetRepository.getAssetFromFiles(files);
-        if (existingAsset) {
-            const allAssetFilesSet = new Set([
-                ...(existingAsset.def.gameFiles ?? []),
-                ...(existingAsset.def.contentFiles ?? []),
-            ]);
-            const filesAlreadyUsed = Array.from(allAssetFilesSet.intersection(new Set(files)));
+    ipcMain.handle(
+        SharedIpcChannels.AssetCreate,
+        async (event, primaryFile: string, otherFiles: string[]): Promise<SharedCreateAssetReport> => {
+            const files = [primaryFile, ...otherFiles];
+            console.log("Asset API: Creating asset for files", primaryFile, otherFiles);
+            const existingAsset = MainAssetRepository.getAssetFromFiles(files);
+            if (existingAsset) {
+                const allAssetFilesSet = new Set([
+                    ...(existingAsset.def.gameFiles ?? []),
+                    ...(existingAsset.def.contentFiles ?? []),
+                ]);
+                const filesAlreadyUsed = Array.from(allAssetFilesSet.intersection(new Set(files)));
 
-            return {
-                type: SharedCreateAssetReportType.ErrorFileAlreadyUsedInAsset,
-                filesAlreadyUsed,
-                asset: existingAsset.def.id,
-            };
-        }
+                console.debug(
+                    "Asset API: Files are already used in asset. Used Files: ",
+                    filesAlreadyUsed,
+                    existingAsset,
+                );
+                return {
+                    type: SharedCreateAssetReportType.ErrorFileAlreadyUsedInAsset,
+                    filesAlreadyUsed,
+                    asset: existingAsset.def.id,
+                };
+            }
 
-        try {
-            const result = await MainAssetRepository.createAsset(files);
-            if (!result) {
+            try {
+                console.debug("Asset API: Files not used in any assets 👍");
+                const result = await MainAssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
+                if (!result) {
+                    return {
+                        type: SharedCreateAssetReportType.ErrorUnknown,
+                    };
+                }
+                return { type: SharedCreateAssetReportType.Success, assets: result };
+            } catch (e) {
                 return {
                     type: SharedCreateAssetReportType.ErrorUnknown,
                 };
             }
-            return { type: SharedCreateAssetReportType.Success, asset: result };
-        } catch (e) {
-            return {
-                type: SharedCreateAssetReportType.ErrorUnknown,
-            };
-        }
-    });
+        },
+    );
 
     ipcMain.handle(
         SharedIpcChannels.AssetUpdate,

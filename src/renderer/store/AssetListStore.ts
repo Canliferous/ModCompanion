@@ -58,10 +58,12 @@ export const useAssetListStore = defineStore("asset-list", () => {
         router.push("/assets");
     });
 
-    async function createAsset(files: string[]): Promise<void> {
-        const result = await window.electronAPI.asset.createAsset(files);
+    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<void> {
+        const result = await window.electronAPI.asset.createAsset(primaryFile, otherFiles);
         if (result.type === SharedCreateAssetReportType.Success) {
-            assets.value.set(result.asset.def.id, result.asset);
+            for (const asset of result.assets) {
+                assets.value.set(asset.def.id, asset);
+            }
         }
     }
 

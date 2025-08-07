@@ -4,16 +4,17 @@ import {
     SharedAssetDefinitionFileExtension,
     SharedAssetId,
     SharedAssetMap,
-    SharedAssetType,
 } from "Shared/SharedAssetDefinition.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
 import { buildAssets } from "./MainAssetScanner.js";
 import { scanContentTree } from "../files/MainFileScanner.js";
 import { v4 } from "uuid";
-import { getGameOrContentRelativePath } from "../../helpers/MainSourceFs.js";
 import path from "path";
 import fs from "fs/promises";
 import { getConfig } from "../MainConfigSystem.js";
+import { AssetCreationInferResults, inferAssetCreationType } from "./MainAssetCreateInferType.js";
+import { createUnknownAssetDefinition } from "./MainAssetCreateUnknown.js";
+import { createTextureAssetDefinition } from "./MainAssetCreateTexture.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
 
@@ -38,28 +39,36 @@ export function generateAssetId(): string {
     return v4();
 }
 
-export async function createAsset(files: string[]): Promise<SharedAsset | undefined> {
+export async function createAssetsFromFiles(
+    primaryFile: string,
+    otherFiles: string[],
+): Promise<SharedAsset[] | undefined> {
+    const files = [primaryFile, ...otherFiles];
     if (files.length === 0) return undefined;
 
-    if (files.length === 1) {
-        const file = files[0];
-        const isContent = file.startsWith("content");
-        const relativeFile = getGameOrContentRelativePath(file);
-        console.log(file, relativeFile);
-        const id = generateAssetId();
-        const assetDef: SharedAssetDefinition = {
-            type: SharedAssetType.Unknown, // TODO: Determine type
-            id: id,
-            contentFiles: isContent ? [relativeFile] : undefined,
-            gameFiles: !isContent ? [relativeFile] : undefined,
-            associatedFiles: undefined,
-            displayName: file,
-        };
+    const inferredType = inferAssetCreationType(files);
 
-        const mcaPath = file + SharedAssetDefinitionFileExtension;
-        const newAsset = await writeAssetDef(assetDef, mcaPath);
-        assetMap.set(id, newAsset);
-        return newAsset;
+    console.log("Inferred asset type", inferredType);
+    if (inferredType === AssetCreationInferResults.Unknown) {
+        const def = createUnknownAssetDefinition(primaryFile, otherFiles);
+        const mca = primaryFile + SharedAssetDefinitionFileExtension;
+
+        const newAsset = await writeAssetDef(def, mca);
+        assetMap.set(def.id, newAsset);
+        return [newAsset];
+    }
+
+    if (inferredType === AssetCreationInferResults.Texture) {
+        const newAssets: SharedAsset[] = [];
+        for (const file of files) {
+            const def = createTextureAssetDefinition(file);
+            const mca = file + SharedAssetDefinitionFileExtension;
+
+            const newAsset = await writeAssetDef(def, mca);
+            assetMap.set(def.id, newAsset);
+            newAssets.push(newAsset);
+        }
+        return newAssets;
     }
 
     return undefined;
@@ -68,6 +77,7 @@ export async function createAsset(files: string[]): Promise<SharedAsset | undefi
 export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: string): Promise<SharedAsset> {
     const absoluteMcaPath = path.join(getConfig().rootPath, mcaPath);
     const payload = JSON.stringify(assetDef, undefined, 2);
+    console.log("Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);
     return { defFilePath: mcaPath, def: assetDef };
 }
@@ -101,7 +111,7 @@ export default {
     rescan,
     getAssetFromFile,
     getAssetFromFiles,
-    createAsset,
+    createAssetsFromFiles,
     getAssetFromId,
     writeAssetDef,
 };

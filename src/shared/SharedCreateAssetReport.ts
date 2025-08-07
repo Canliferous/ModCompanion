@@ -22,7 +22,7 @@ interface FilesAlreadyUsedInAssetError extends BaseSharedCreateAssetReport {
 
 interface Success extends BaseSharedCreateAssetReport {
     type: SharedCreateAssetReportType.Success;
-    asset: SharedAsset;
+    assets: SharedAsset[];
 }
 
 export type SharedCreateAssetReport = UnknownError | FilesAlreadyUsedInAssetError | Success;
