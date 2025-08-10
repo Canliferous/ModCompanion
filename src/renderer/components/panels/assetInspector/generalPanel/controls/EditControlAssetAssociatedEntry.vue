@@ -4,7 +4,7 @@
         <span>{{ entry.name }}</span>
     </div>
     <UButtonGroup>
-        <UInput v-model="file" placeholder="Enter path" @blur="emit('updated', file)" class="grow" />
+        <UInput v-model="file" placeholder="Enter path" @change="emit('updated', file)" class="grow" />
         <UButton icon="tdesign:play" @click="handleRun" variant="subtle" />
     </UButtonGroup>
 </template>

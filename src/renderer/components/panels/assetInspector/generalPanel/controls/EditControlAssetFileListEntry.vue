@@ -1,6 +1,6 @@
 <template>
     <div class="flex">
-        <UInput v-model="text" variant="ghost" class="grow" :placeholder @blur="emit('changed', text)" />
+        <UInput v-model="text" variant="ghost" class="grow" :placeholder @change="emit('changed', text)" />
         <UButton variant="ghost" icon="tdesign:folder-1" color="info" @click="handleExplore" />
         <UButton variant="ghost" icon="tdesign:minus" color="error" @click="emit('remove')" />
     </div>

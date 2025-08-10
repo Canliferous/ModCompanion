@@ -3,7 +3,7 @@
         placeholder="(unknown)"
         class="w-full"
         v-model="displayName"
-        @blur="updateDisplayName"
+        @change="updateDisplayName"
         :disabled="disabled"
     />
 </template>
@@ -25,7 +25,7 @@ watch(
 const inj = inject(AssetInspectorGeneralInjectKey);
 
 const disabled = computed(() => (inj === undefined ? false : inj.waiting.value));
-async function updateDisplayName() {
+function updateDisplayName() {
     if (displayName.value === props.asset.def.displayName) return;
 
     inj?.updateAsset({ displayName: displayName.value });
