@@ -30,6 +30,27 @@ export function getConversionStateName(state: SharedConversionState): string {
     }
 }
 
+export function getConversionStateColor(state: SharedConversionState): string {
+    switch (state) {
+        case SharedConversionState.Invalid: {
+            return "error";
+        }
+        case SharedConversionState.InProgress: {
+            return "info";
+        }
+        case SharedConversionState.FinishedJob:
+        case SharedConversionState.FinishedConfirmed: {
+            return "success";
+        }
+        case SharedConversionState.Pending:
+        case SharedConversionState.PendingForced:
+        case SharedConversionState.Unknown:
+        default: {
+            return "neutral";
+        }
+    }
+}
+
 export interface SharedConversion {
     state: SharedConversionState;
     hash: SharedAssetId;

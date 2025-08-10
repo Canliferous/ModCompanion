@@ -11,7 +11,7 @@ import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { _convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 
-const MAX_PARALLEL_JOBS = 5;
+const MAX_PARALLEL_JOBS = 1;
 
 type JobResult = boolean;
 const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();

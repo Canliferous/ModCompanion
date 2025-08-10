@@ -1,29 +1,39 @@
 <template>
     <div class="flex gap-2 bg-neutral-900">
-        <!--        <UTooltip text="Open in Hammer">-->
-        <UButton icon="famicons:hammer-sharp" color="info" variant="soft" @click="() => handleOpenInHammer(mapPath)" />
-        <!--        </UTooltip>-->
-        <!--        <UTooltip text="Open in Game">-->
-        <UButton icon="tdesign:gamepad-1-filled" color="info" variant="soft" @click="() => handleOpenInGame(mapPath)" />
-        <!--        </UTooltip>-->
-        <!--        <UTooltip text="Compile Now">-->
-        <UButton
-            icon="tdesign:play"
-            variant="soft"
-            @click="() => compileStore.compileNow(mapPath)"
-            :color="listStore.mapQueue.includes(mapPath) ? 'neutral' : 'success'"
-            :disabled="listStore.mapQueue.includes(mapPath)"
-        />
-        <!--        </UTooltip>-->
-        <!--        <UTooltip text="Remove from list">-->
-        <UButton
-            icon="tdesign:minus"
-            variant="soft"
-            @click="() => listStore.removeMap(mapPath)"
-            :color="hasQueue ? 'neutral' : 'error'"
-            :disabled="hasQueue"
-        />
-        <!--        </UTooltip>-->
+        <UTooltip text="Open in Hammer">
+            <UButton
+                icon="famicons:hammer-sharp"
+                color="info"
+                variant="soft"
+                @click="() => handleOpenInHammer(mapPath)"
+            />
+        </UTooltip>
+        <UTooltip text="Open in Game">
+            <UButton
+                icon="tdesign:gamepad-1-filled"
+                color="info"
+                variant="soft"
+                @click="() => handleOpenInGame(mapPath)"
+            />
+        </UTooltip>
+        <UTooltip text="Compile Now">
+            <UButton
+                icon="tdesign:play"
+                variant="soft"
+                @click="() => compileStore.compileNow(mapPath)"
+                :color="listStore.mapQueue.includes(mapPath) ? 'neutral' : 'success'"
+                :disabled="listStore.mapQueue.includes(mapPath)"
+            />
+        </UTooltip>
+        <UTooltip text="Remove from list">
+            <UButton
+                icon="tdesign:minus"
+                variant="soft"
+                @click="() => listStore.removeMap(mapPath)"
+                :color="hasQueue ? 'neutral' : 'error'"
+                :disabled="hasQueue"
+            />
+        </UTooltip>
         <UDropdownMenu :items="dropdownItems">
             <UButton icon="tdesign:more" variant="soft" color="neutral" />
         </UDropdownMenu>

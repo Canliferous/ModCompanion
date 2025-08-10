@@ -1,7 +1,7 @@
 <template>
     <div class="m-2">
         <div>
-            <ConversionStateIcon :state="state" /> <span>{{ getConversionStateName(state) }}</span>
+            <ConversionStateBadge :state="state" />
         </div>
     </div>
 </template>

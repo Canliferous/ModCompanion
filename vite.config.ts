@@ -23,6 +23,7 @@ export default defineConfig({
                 colors: {
                     primary: "fuchsia",
                 },
+                badge: { slots: { base: "select-none" } },
                 button: { slots: { base: "cursor-pointer duration-0" } },
                 select: {
                     slots: { base: "cursor-pointer duration-0" },
@@ -30,13 +31,19 @@ export default defineConfig({
                 },
                 popover: {
                     slots: {
-                        // Above dockview divier lines which are at 99
+                        // Above dockview divider lines which are at 99
                         content: "z-100",
                     },
                 },
                 contextMenu: {
                     slots: {
-                        // Above dockview divier lines which are at 99
+                        // Above dockview divider lines which are at 99
+                        content: "z-100",
+                    },
+                },
+                tooltip: {
+                    slots: {
+                        // Above dockview divider lines which are at 99
                         content: "z-100",
                     },
                 },
