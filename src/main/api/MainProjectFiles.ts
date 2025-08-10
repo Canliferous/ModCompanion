@@ -66,7 +66,7 @@ function _correctProjectPath(somePath: string) {
     const ind = somePath.indexOf(config.rootPath);
     if (ind !== 0) return undefined;
 
-    return SharedSourceFs.forwardSlashed(somePath.replace(config.rootPath, ""));
+    return SharedSourceFs.stripPathStart(somePath, config.rootPath);
 }
 
 async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {

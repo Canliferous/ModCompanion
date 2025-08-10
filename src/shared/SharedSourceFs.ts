@@ -11,13 +11,13 @@ export function getRelativePath(
 
     const isAbsolute = file.startsWith(prefix);
     if (isAbsolute) {
-        return _stripPathStart(filePath, absolutePrefix);
+        return stripPathStart(filePath, absolutePrefix);
     }
 
     const relative = pathe.join(relativePrefix, gameName);
     const isRelativeToGameRoot = file.startsWith(relative);
     if (isRelativeToGameRoot) {
-        return _stripPathStart(filePath, relative);
+        return stripPathStart(filePath, relative);
     }
 
     return filePath;
@@ -60,7 +60,7 @@ export function forwardSlashed(str: string): string {
     return str.replace(/\\/g, "/");
 }
 
-function _stripPathStart(filePath: string, prefix: string): string {
+function stripPathStart(filePath: string, prefix: string): string {
     return forwardSlashed(filePath.substring(prefix.length + 1));
 }
 
@@ -70,4 +70,5 @@ export default {
     isRelativeToRoot,
     getRootRelativePath,
     forwardSlashed,
+    stripPathStart,
 };

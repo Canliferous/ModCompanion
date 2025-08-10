@@ -4,22 +4,19 @@
 import { SharedLaunchers } from "./shared/SharedLaunchers.js";
 import { SharedIpcChannels } from "./shared/SharedIpcChannels.js";
 
-import { contextBridge, ipcRenderer, IpcRendererEvent } from "electron";
+import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
 import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 import { SharedMapPath } from "./shared/SharedMapPath.js";
 import { SharedMapTimeReport } from "./shared/SharedMapTimeReport.js";
 import {
-    SharedAssetDefinition,
     SharedAssetAddedEvent,
+    SharedAssetDefinition,
     SharedAssetId,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
-    SharedAsset,
 } from "./shared/SharedAssetDefinition.js";
-import { SharedImageMetaReport } from "./shared/SharedImageMetaReport";
 import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
-import { SharedFsEntry } from "./shared/SharedFileListing";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -100,5 +97,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     hotReload: {
         setEnabled: (enable: boolean) => ipcRenderer.send(SharedIpcChannels.HotReloadSetEnabled, enable),
+    },
+
+    webUtils: {
+        getPathForFile: (file: File) => webUtils.getPathForFile(file),
     },
 });

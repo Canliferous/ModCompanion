@@ -68,6 +68,9 @@ declare global {
             hotReload: {
                 setEnabled: (enable: boolean) => void;
             };
+            webUtils: {
+                getPathForFile: (file: File) => string;
+            };
         };
     }
 }
