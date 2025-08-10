@@ -9,7 +9,15 @@
             />
         </div>
 
-        <UButton block icon="tdesign:plus" label="Add" color="success" variant="ghost" @click="handleAdd" />
+        <UButton
+            block
+            icon="tdesign:plus"
+            label="Add"
+            color="success"
+            variant="ghost"
+            @click="handleAdd"
+            :disabled="reachedMax"
+        />
     </div>
 </template>
 
@@ -18,7 +26,12 @@ import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAsset
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 
-const props = defineProps<{ asset: SharedAsset; field: keyof SharedAssetDefinitionFileArrays; dir: string }>();
+const props = defineProps<{
+    asset: SharedAsset;
+    field: keyof SharedAssetDefinitionFileArrays;
+    dir: string;
+    maxItems?: number;
+}>();
 
 const inj = inject(AssetInspectorGeneralInjectKey);
 
@@ -29,6 +42,11 @@ watch(
         files.value = f ?? [];
     },
 );
+
+const reachedMax = computed(() => {
+    if (props.maxItems === undefined) return false;
+    return files.value.length >= props.maxItems;
+});
 
 function handleAdd(): void {
     files.value = [...files.value, ""];

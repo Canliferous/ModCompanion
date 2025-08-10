@@ -11,10 +11,10 @@
             <EditControlAssetDisplayName :asset="asset" />
         </UFormField>
         <UFormField label="Content Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="contentFiles" dir="content" />
+            <EditControlAssetFileList :asset="asset" field="contentFiles" dir="content" :max-items="maxContentFiles" />
         </UFormField>
         <UFormField label="Game Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="gameFiles" dir="game" />
+            <EditControlAssetFileList :asset="asset" field="gameFiles" dir="game" :max-items="maxGameFiles" />
         </UFormField>
 
         <USeparator class="my-2" />
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset, SharedAssetDefinition } from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedAssetDefinition, SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import EditControlAssetDisplayName from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetDisplayName.vue";
 import EditControlAssetType from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetType.vue";
@@ -54,6 +54,18 @@ async function updateAsset(def: Partial<SharedAssetDefinition>) {
         waiting.value = false;
     }
 }
+
+const maxContentFiles = computed(() => {
+    if (props.asset.def.type === SharedAssetType.Texture) {
+        return 1;
+    } else return undefined;
+});
+
+const maxGameFiles = computed(() => {
+    if (props.asset.def.type === SharedAssetType.Texture) {
+        return 1;
+    } else return undefined;
+});
 </script>
 
 <style scoped></style>
