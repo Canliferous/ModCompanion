@@ -31,6 +31,17 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     }
 
+    type AssetsWrittenFunc = (assetIds: SharedAssetId[]) => void;
+    const assetsWrittenSubscribers: AssetsWrittenFunc[] = [];
+    function subscribeAssetsWritten(func: AssetsWrittenFunc) {
+        assetsWrittenSubscribers.push(func);
+    }
+    function notifyAssetsWritten(assetIds: SharedAssetId[]) {
+        for (let sub of assetsWrittenSubscribers) {
+            sub(assetIds);
+        }
+    }
+
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
         refreshing.value = false;
@@ -134,6 +145,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         let newAssets = await Promise.all(results);
         const filtered = newAssets.filter((n) => n !== undefined);
         updateAssets(filtered);
+        notifyAssetsWritten(as.map((a) => a.def.id));
     }
 
     return {
@@ -154,5 +166,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectIndices,
         selectAssetsByMca,
         subscribeSelectionUpdated,
+        subscribeAssetsWritten,
     };
 });

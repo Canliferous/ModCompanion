@@ -1,9 +1,5 @@
 <template>
-    <div class="m-2">
-        <div>
-            <ConversionStateBadge :state="state" />
-        </div>
-    </div>
+    <ConversionStateBadge :state="state" />
 </template>
 
 <script setup lang="ts">
