@@ -48,6 +48,7 @@ async function onDrop(files: File[] | null) {
     const correctPath = await window.electronAPI.project.correctPath(fullPath);
     if (correctPath) {
         file.value = correctPath;
+        emit("updated", correctPath);
     }
 }
 const { isOverDropZone } = useDropZone(dropZoneRef, {
