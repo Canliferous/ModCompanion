@@ -16,7 +16,7 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useImageCacheStore } from "~/store/ImageCacheStore.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import { ComponentDesc, PanelComponents, PanelTitles } from "~/helper/PanelComponents.js";
+import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 
@@ -95,6 +95,8 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
             title: PanelTitles[panel.componentId],
             id: panel.componentId,
             component: panel.componentId,
+            tabComponent: PanelComponents.tabComponents.subPanelTabs.componentId,
+            params: { icon: PanelIcons[panel.componentId] },
         });
     }
 }
