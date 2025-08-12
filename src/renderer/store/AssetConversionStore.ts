@@ -7,6 +7,7 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
         conversions.value = event.conversions;
+        console.log(event);
     });
 
     function getState(id: SharedAssetId): SharedConversionState {

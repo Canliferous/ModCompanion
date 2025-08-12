@@ -31,13 +31,13 @@ export async function createVtf(
     return new Promise((resolve, reject) => {
         const proc = child_process.exec(cmd, {}, (error, stdout, stderr) => {
             if (error) {
-                console.warn(error);
+                console.warn("Maretf ERROR", error);
             }
             if (stderr) {
-                console.debug(`Maretf ERR: ${stderr}`);
+                console.debug("Maretf ERROR", stderr);
             }
             if (stdout) {
-                console.debug(`Maretf: ${stdout}`);
+                console.debug("Maretf", stdout);
             }
         });
         proc.on("exit", (code) => {

@@ -50,7 +50,7 @@ async function _runAgent(): Promise<void> {
     const assetsToConvert = _getAssetsToConvert();
     if (assetsToConvert.length > 0) {
         updated = true;
-        _startConversions(assetsToConvert);
+        await _startConversions(assetsToConvert);
     }
 
     if (updated) {
@@ -79,7 +79,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
     return result;
 }
 
-function _startConversions(ids: SharedAssetId[]): void {
+function _startConversions(ids: SharedAssetId[]): Promise<void> {
     const promises: Promise<boolean>[] = [];
     for (const hash of ids) {
         const asset = getAssetFromId(hash);
@@ -96,7 +96,7 @@ function _startConversions(ids: SharedAssetId[]): void {
         conversionJobs.set(hash, timeoutPromise);
     }
 
-    Promise.allSettled(promises).then((p) => {
+    return Promise.allSettled(promises).then((p) => {
         requestHotReload(ids);
     });
 }
@@ -110,10 +110,10 @@ async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
     }
 }
 
-function _onJobPromiseFinished(hash: SharedAssetId) {
-    console.log("Conversion Job finished", hash);
-    conversionJobs.delete(hash);
-    _setState(hash, SharedConversionState.FinishedJob);
+function _onJobPromiseFinished(id: SharedAssetId) {
+    console.log("Conversion Job finished", id);
+    conversionJobs.delete(id);
+    _setState(id, SharedConversionState.FinishedJob);
 }
 
 async function _updateStaleStates(assets: MapIterator<SharedAsset>): Promise<boolean> {
@@ -139,9 +139,14 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
         return true;
     }
 
-    if (assetState === AssetStates.NoOutputFiles && convState === SharedConversionState.Unknown) {
-        conversions.set(asset.id, { hash: asset.id, state: SharedConversionState.Pending });
-        return true;
+    if (assetState === AssetStates.NoOutputFiles) {
+        if (convState === SharedConversionState.Unknown) {
+            conversions.set(asset.id, { hash: asset.id, state: SharedConversionState.Pending });
+            return true;
+        } else if (convState === SharedConversionState.FinishedJob) {
+            _setState(asset.id, SharedConversionState.FinishedFailed);
+            return true;
+        }
     }
 
     if (assetState == AssetStates.HasOutputFiles && convState !== SharedConversionState.FinishedConfirmed) {
