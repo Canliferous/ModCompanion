@@ -103,3 +103,11 @@ export function isTextureAssetDefinition(
 export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedTextureAsset {
     return isTextureAssetDefinition(asset?.def);
 }
+
+export interface SharedModelAssetDefinition extends SharedAssetDefinition {
+    type: SharedAssetType.Model;
+}
+
+export function isModelAssetDefinition(asset: SharedAssetDefinition | undefined): asset is SharedModelAssetDefinition {
+    return asset?.type === SharedAssetType.Model;
+}

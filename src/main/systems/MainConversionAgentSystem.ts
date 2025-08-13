@@ -4,12 +4,14 @@ import {
     SharedAssetDefinition,
     SharedAssetId,
     SharedAssetType,
+    SharedModelAssetDefinition,
     SharedTextureAssetDefinition,
 } from "Shared/SharedAssetDefinition.js";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
-import { _convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
+import { convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
+import { convertModelAsset, determineModelAssetState } from "./converter/MainModelConverter.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -104,7 +106,9 @@ function _startConversions(ids: SharedAssetId[]): Promise<void> {
 async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
     switch (asset.type) {
         case SharedAssetType.Texture:
-            return _convertTextureAsset(asset as SharedTextureAssetDefinition);
+            return convertTextureAsset(asset as SharedTextureAssetDefinition);
+        case SharedAssetType.Model:
+            return convertModelAsset(asset as SharedModelAssetDefinition);
         default:
             return false;
     }
@@ -134,7 +138,7 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
 
     const assetState = await determineAssetState(asset);
 
-    if (assetState === AssetStates.Invalid) {
+    if (assetState === AssetStates.Invalid && convState !== SharedConversionState.Invalid) {
         _setState(asset.id, SharedConversionState.Invalid);
         return true;
     }
@@ -167,6 +171,8 @@ export async function determineAssetState(asset: SharedAssetDefinition): Promise
     switch (asset.type) {
         case SharedAssetType.Texture:
             return determineTextureAssetState(asset as SharedTextureAssetDefinition);
+        case SharedAssetType.Model:
+            return determineModelAssetState(asset as SharedModelAssetDefinition);
         default:
             return AssetStates.Invalid;
     }

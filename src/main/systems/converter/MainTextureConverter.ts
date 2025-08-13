@@ -5,7 +5,7 @@ import path from "path";
 import { AssetState, AssetStates } from "../MainConversionAgentSystem.js";
 import fs from "fs/promises";
 
-export async function _convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<boolean> {
+export async function convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<boolean> {
     if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return false;
     if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return false;
 
