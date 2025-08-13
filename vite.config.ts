@@ -47,6 +47,9 @@ export default defineConfig({
                         content: "z-100",
                     },
                 },
+                input: {
+                    slots: { base: "hover:bg-elevated" },
+                },
                 checkbox: {
                     slots: { root: "cursor-pointer select-none" },
                     variants: { variant: { card: { root: "hover:bg-elevated" } } },
