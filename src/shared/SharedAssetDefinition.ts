@@ -2,15 +2,33 @@ import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
 
 export const SharedAssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
 
-export enum SharedAssetType {
-    Unknown = "unknown",
-    Texture = "texture",
-    Model = "model",
-}
+export const SharedAssetTypes = {
+    Unknown: "unknown",
+    Texture: "texture",
+    Model: "model",
+} as const;
+export type SharedAssetType = (typeof SharedAssetTypes)[keyof typeof SharedAssetTypes];
 
 export function isValidAssetType(str: string): str is SharedAssetType {
-    return (Object.values(SharedAssetType) as string[]).includes(str);
+    return (Object.values(SharedAssetTypes) as string[]).includes(str);
 }
+
+export function getAssetTypeName(type: SharedAssetType): string {
+    switch (type) {
+        case SharedAssetTypes.Texture: {
+            return "Texture";
+        }
+        case SharedAssetTypes.Model: {
+            return "Model";
+        }
+        case SharedAssetTypes.Unknown:
+        default: {
+            return "Unknown";
+        }
+    }
+}
+
+export const SharedAssetTypesValid = [SharedAssetTypes.Texture, SharedAssetTypes.Model];
 
 export interface SharedAssetDefinitionFileArrays {
     readonly contentFiles?: string[];
@@ -90,14 +108,14 @@ export interface SharedAssetUpdatedEvent {
 export type SharedAssetMap = Map<SharedAssetId, SharedAsset>;
 
 export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
-    type: SharedAssetType.Texture;
+    type: typeof SharedAssetTypes.Texture;
     vtfOptions?: SharedVtfCreateOptions;
 }
 
 export function isTextureAssetDefinition(
     asset: SharedAssetDefinition | undefined,
 ): asset is SharedTextureAssetDefinition {
-    return asset?.type === SharedAssetType.Texture;
+    return asset?.type === SharedAssetTypes.Texture;
 }
 
 export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedTextureAsset {
@@ -105,9 +123,9 @@ export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedT
 }
 
 export interface SharedModelAssetDefinition extends SharedAssetDefinition {
-    type: SharedAssetType.Model;
+    type: typeof SharedAssetTypes.Model;
 }
 
 export function isModelAssetDefinition(asset: SharedAssetDefinition | undefined): asset is SharedModelAssetDefinition {
-    return asset?.type === SharedAssetType.Model;
+    return asset?.type === SharedAssetTypes.Model;
 }

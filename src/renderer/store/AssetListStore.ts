@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
-import { SharedAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedAssetId, SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import { useRouter } from "vue-router";
 import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { getContentRelativePath } from "~/helper/SourceFs.js";
@@ -11,7 +11,8 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const refreshing = ref(false);
     const searchTerm = ref("");
     const assetsEntries = computed(() => [...assets.value.values()]);
-    const filteredAssets = useAssetsFilter(assetsEntries, searchTerm);
+    const typeFilter = ref<SharedAssetType[]>([]);
+    const filteredAssets = useAssetsFilter(assetsEntries, searchTerm, typeFilter);
     const activeId = ref<SharedAssetId | undefined>();
     const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
     const selectedIds = ref<SharedAssetId[]>([]);
@@ -157,6 +158,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeAsset,
         selectedIds,
         selectedAssets,
+        typeFilter,
         createAsset,
         writeAssets,
         getAssetByIndex,

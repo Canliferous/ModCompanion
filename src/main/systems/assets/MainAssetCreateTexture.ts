@@ -1,4 +1,4 @@
-import { SharedAssetType, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetType, SharedAssetTypes, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import { generateAssetId } from "./MainAssetRepository.js";
 import { filename } from "pathe/utils";
 import path from "path";
@@ -30,7 +30,7 @@ export function createTextureAssetDefinition(file: string): SharedTextureAssetDe
     const id = generateAssetId();
     const contentFile = getContentRelativePath(file);
     const assetDef: SharedTextureAssetDefinition = {
-        type: SharedAssetType.Texture,
+        type: SharedAssetTypes.Texture,
         id: id,
         contentFiles: [contentFile],
         gameFiles: [deriveTextureGameFileName(contentFile)],

@@ -1,4 +1,4 @@
-import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 
 export const icons = {
     asset: "tdesign:traffic-events-filled",
@@ -14,11 +14,11 @@ export const colors = {
 
 export function getAssetTypeIcon(type: SharedAssetType): string {
     switch (type) {
-        case SharedAssetType.Texture:
+        case SharedAssetTypes.Texture:
             return icons.texture;
-        case SharedAssetType.Model:
+        case SharedAssetTypes.Model:
             return icons.model;
-        case SharedAssetType.Unknown:
+        case SharedAssetTypes.Unknown:
         default:
             return icons.asset;
     }
@@ -26,14 +26,14 @@ export function getAssetTypeIcon(type: SharedAssetType): string {
 
 export function getAssetTypeName(type: SharedAssetType) {
     switch (type) {
-        case SharedAssetType.Model: {
+        case SharedAssetTypes.Model: {
             return "Model";
         }
-        case SharedAssetType.Texture: {
+        case SharedAssetTypes.Texture: {
             return "Texture";
         }
         default:
-        case SharedAssetType.Unknown: {
+        case SharedAssetTypes.Unknown: {
             return "Unknown";
         }
     }

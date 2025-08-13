@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref } from "vue";
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedAssetType } from "Shared/SharedAssetDefinition.js";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
     return computed(() => {
@@ -30,15 +30,25 @@ export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string,
     });
 }
 
-export function useAssetsFilter(assets: ComputedRef<SharedAsset[]>, filter: Ref<string>) {
+export function useAssetsFilter(
+    assets: ComputedRef<SharedAsset[]>,
+    searchFilter: Ref<string>,
+    typeFilter: Ref<SharedAssetType[]>,
+) {
     return computed(() => {
-        if (filter.value === "") {
+        const typeFilterVal = typeFilter.value;
+        if (searchFilter.value === "" && typeFilterVal.length === 0) {
             return assets.value;
         }
 
         const filteredAssets: SharedAsset[] = [];
         for (const asset of assets.value) {
-            const splits = filter.value.split(" ");
+            if (typeFilterVal.length > 0) {
+                const isIncluded = typeFilter.value.includes(asset.def.type);
+                if (!isIncluded) continue;
+            }
+
+            const splits = searchFilter.value.split(" ");
 
             let match = true;
             for (const split of splits) {

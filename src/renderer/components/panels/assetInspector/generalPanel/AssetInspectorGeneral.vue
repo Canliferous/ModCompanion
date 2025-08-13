@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset, SharedAssetDefinition, SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedAssetDefinition, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import EditControlAssetDisplayName from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetDisplayName.vue";
 import EditControlAssetType from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetType.vue";
@@ -56,13 +56,13 @@ async function updateAsset(def: Partial<SharedAssetDefinition>) {
 }
 
 const maxContentFiles = computed(() => {
-    if (props.asset.def.type === SharedAssetType.Texture) {
+    if (props.asset.def.type === SharedAssetTypes.Texture) {
         return 1;
     } else return undefined;
 });
 
 const maxGameFiles = computed(() => {
-    if (props.asset.def.type === SharedAssetType.Texture) {
+    if (props.asset.def.type === SharedAssetTypes.Texture) {
         return 1;
     } else return undefined;
 });

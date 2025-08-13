@@ -3,7 +3,7 @@ import {
     SharedAsset,
     SharedAssetDefinition,
     SharedAssetId,
-    SharedAssetType,
+    SharedAssetTypes,
     SharedModelAssetDefinition,
     SharedTextureAssetDefinition,
 } from "Shared/SharedAssetDefinition.js";
@@ -105,9 +105,9 @@ function _startConversions(ids: SharedAssetId[]): Promise<void> {
 
 async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
     switch (asset.type) {
-        case SharedAssetType.Texture:
+        case SharedAssetTypes.Texture:
             return convertTextureAsset(asset as SharedTextureAssetDefinition);
-        case SharedAssetType.Model:
+        case SharedAssetTypes.Model:
             return convertModelAsset(asset as SharedModelAssetDefinition);
         default:
             return false;
@@ -169,9 +169,9 @@ export const AssetStates = {
 export type AssetState = (typeof AssetStates)[keyof typeof AssetStates];
 export async function determineAssetState(asset: SharedAssetDefinition): Promise<AssetState> {
     switch (asset.type) {
-        case SharedAssetType.Texture:
+        case SharedAssetTypes.Texture:
             return determineTextureAssetState(asset as SharedTextureAssetDefinition);
-        case SharedAssetType.Model:
+        case SharedAssetTypes.Model:
             return determineModelAssetState(asset as SharedModelAssetDefinition);
         default:
             return AssetStates.Invalid;

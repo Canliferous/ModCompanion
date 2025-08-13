@@ -2,6 +2,7 @@
     <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-[auto_minmax(0,_1fr)] gap-1 h-full p-1">
         <div class="flex gap-1">
             <AssetBrowserSearchInput />
+            <AssetBrowserTypeSelect />
             <AssetBrowserRefreshButton />
         </div>
         <div>

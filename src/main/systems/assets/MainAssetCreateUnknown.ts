@@ -1,4 +1,4 @@
-import { SharedAssetDefinition, SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetDefinition, SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { getContentRelativePath, getGameRelativePath } from "../../helpers/MainSourceFs.js";
 import { generateAssetId } from "./MainAssetRepository.js";
 
@@ -19,7 +19,7 @@ export function createUnknownAssetDefinition(primaryFile: string, otherFiles: st
 
     const id = generateAssetId();
     const assetDef: SharedAssetDefinition = {
-        type: SharedAssetType.Unknown,
+        type: SharedAssetTypes.Unknown,
         id: id,
         contentFiles,
         gameFiles,

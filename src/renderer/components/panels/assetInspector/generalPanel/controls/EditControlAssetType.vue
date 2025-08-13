@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset, SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import { SharedAsset, SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { SelectItem } from "@nuxt/ui/components/Select.vue.js";
 import { getAssetTypeIcon, getAssetTypeName } from "~/design/AppDesign.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
@@ -18,7 +18,7 @@ watch(
     },
 );
 
-const selectItems = Object.values(SharedAssetType).map<SelectItem>((t) => ({
+const selectItems = Object.values(SharedAssetTypes).map<SelectItem>((t) => ({
     id: t,
     label: getAssetTypeName(t),
     icon: getAssetTypeIcon(t),
