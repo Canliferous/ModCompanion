@@ -7,7 +7,15 @@
     >
         <DataTableHeader v-if="!noHeader" :columns="columns" />
         <div class="grid col-span-full grid-cols-subgrid content-start pr-1 overflow-y-scroll" ref="grid">
-            <DataTableRow v-for="(entry, i) in props.entries" :idx="i" :entry="entry" :columns="props.columns" />
+            <DataTableRow
+                v-for="(entry, i) in props.entries"
+                :idx="i"
+                :entry="entry"
+                :columns="props.columns"
+                @dragStart="(e) => emit('onDragStart', e, i)"
+                @dragEnd="(e) => emit('onDragEnd', e, i)"
+                :draggable="draggable"
+            />
         </div>
     </div>
 </template>
@@ -20,12 +28,14 @@ import {
 } from "~/components/common/DataTable/DataTable.model.js";
 import DataTableHeader from "~/components/common/DataTable/DataTableHeader.vue";
 
-const props = defineProps<{ entries: T[]; columns: DataTableColumn<T>[]; noHeader?: boolean }>();
+const props = defineProps<{ entries: T[]; columns: DataTableColumn<T>[]; noHeader?: boolean; draggable?: boolean }>();
 const emit = defineEmits<{
     onEntryActivated: [idx: number];
     onEntryContextMenu: [idx: number];
     onActiveChanged: [idx: number | undefined];
     onSelectionChanged: [idx: number[]];
+    onDragStart: [event: DragEvent, idx: number];
+    onDragEnd: [event: DragEvent, idx: number];
 }>();
 const rootEl = useTemplateRef("root");
 const gridEl = useTemplateRef("grid");

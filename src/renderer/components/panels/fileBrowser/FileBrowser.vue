@@ -9,7 +9,9 @@
                 @onEntryActivated="handleActivated"
                 @onSelectionChanged="handleSelectionChanged"
                 @onActiveChanged="handleActiveChanged"
+                @onDragStart="handleDragStart"
                 ref="dataTable"
+                :draggable="true"
             />
         </UContextMenu>
     </div>
@@ -147,6 +149,11 @@ function handleSelectionChanged(idxs: number[]): void {
 
 function handleActiveChanged(idx: number | undefined): void {
     activeIndex.value = idx;
+}
+
+function handleDragStart(event: DragEvent, idx: number): void {
+    const entry = entries.value[idx];
+    event.dataTransfer?.setData("text/plain", entry.path);
 }
 </script>
 

@@ -3,7 +3,7 @@
         <UIcon :name="entry.icon" />
         <span>{{ entry.name }}</span>
     </div>
-    <div ref="dropZoneRef">
+    <div ref="dropZoneRef" @dragenter="handleDragEnter" @drop="handleDrop">
         <UButtonGroup class="w-full">
             <UInput
                 v-model="file"
@@ -47,14 +47,21 @@ function handleRun() {
 }
 
 const dropZoneRef = ref<HTMLDivElement>();
-async function onDrop(files: File[] | null) {
-    if (files === null || files.length !== 1) return;
+async function onDrop(files: File[] | null, event: DragEvent) {
+    if (files !== null && files.length === 1) {
+        const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
+        const correctPath = await window.electronAPI.project.correctPath(fullPath);
+        if (correctPath) {
+            file.value = correctPath;
+            emit("updated", correctPath);
+        }
+        return;
+    }
 
-    const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
-    const correctPath = await window.electronAPI.project.correctPath(fullPath);
-    if (correctPath) {
-        file.value = correctPath;
-        emit("updated", correctPath);
+    const plaintext = event.dataTransfer?.getData("text/plain");
+    if (plaintext) {
+        file.value = plaintext;
+        emit("updated", plaintext);
     }
 }
 const { isOverDropZone } = useDropZone(dropZoneRef, {

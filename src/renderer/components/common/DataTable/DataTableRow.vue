@@ -8,6 +8,9 @@
         @keydown.down="handleDown"
         @keydown.up="handleUp"
         @keydown.enter="handleEnter"
+        :draggable="draggable"
+        @dragstart="(e) => emit('dragStart', e)"
+        @dragend="(e) => emit('dragEnd', e)"
     >
         <component v-for="col in columns" :is="col.cell ? col.cell(entry) : 'div'" />
     </button>
@@ -20,13 +23,18 @@ import {
     DataTableSelectionInjectKey,
 } from "~/components/common/DataTable/DataTable.model.js";
 
-const props = defineProps<{ entry: T; idx: number; columns: DataTableColumn<T>[] }>();
+const props = defineProps<{ entry: T; idx: number; columns: DataTableColumn<T>[]; draggable?: boolean }>();
 
 const selection = inject(DataTableSelectionInjectKey);
 const entryAction = inject(DataTableEntryActionInjectKey);
 
 const isActive = computed(() => selection?.activeIdx.value === props.idx);
 const isSelected = computed(() => selection?.selectedIdx.value.includes(props.idx));
+
+const emit = defineEmits<{
+    dragStart: [event: DragEvent];
+    dragEnd: [event: DragEvent];
+}>();
 
 function handleClick(event: MouseEvent): void {
     event.stopPropagation();
