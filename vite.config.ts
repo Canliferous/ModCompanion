@@ -48,7 +48,10 @@ export default defineConfig({
                     },
                 },
                 input: {
-                    slots: { base: "hover:bg-elevated" },
+                    slots: { base: "hover:bg-elevated duration-0" },
+                },
+                textarea: {
+                    slots: { base: "hover:bg-elevated duration-0" },
                 },
                 checkbox: {
                     slots: { root: "cursor-pointer select-none" },
