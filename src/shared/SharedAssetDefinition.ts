@@ -60,12 +60,12 @@ export const SharedAssetDefinitionAssociatedFilesEntries: SharedAssetDefinitionA
     {
         field: "substanceDesigner",
         name: "Substance Designer",
-        icon: "nothing",
+        icon: "substance:designer",
     },
     {
         field: "substancePainter",
         name: "Substance Painter",
-        icon: "nothing",
+        icon: "substance:painter",
     },
     {
         field: "blender",
