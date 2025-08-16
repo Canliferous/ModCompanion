@@ -3,7 +3,7 @@
         <UIcon :name="entry.icon" />
         <span>{{ entry.name }}</span>
     </div>
-    <div ref="dropZoneRef" @dragenter="handleDragEnter" @drop="handleDrop">
+    <div ref="dropZoneRef">
         <UButtonGroup class="w-full">
             <UInput
                 v-model="file"
@@ -60,8 +60,9 @@ async function onDrop(files: File[] | null, event: DragEvent) {
 
     const plaintext = event.dataTransfer?.getData("text/plain");
     if (plaintext) {
-        file.value = plaintext;
-        emit("updated", plaintext);
+        const lines = plaintext.split("\n");
+        file.value = lines[0];
+        emit("updated", lines[0]);
     }
 }
 const { isOverDropZone } = useDropZone(dropZoneRef, {

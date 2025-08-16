@@ -14,3 +14,8 @@ export function getGameRelativePath(filePath: string): string {
 export function getRootRelativePath(filePath: string): string {
     return SharedSourceFs.getRootRelativePath(filePath, getAppConfig().rootPath);
 }
+
+export function getGameOrContentRelativePath(filePath: string): string {
+    const config = getAppConfig();
+    return SharedSourceFs.getGameOrContentRelativePath(filePath, config.gameName, config.rootPath);
+}

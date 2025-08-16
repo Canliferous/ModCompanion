@@ -12,8 +12,8 @@
                 :idx="i"
                 :entry="entry"
                 :columns="props.columns"
-                @dragStart="(e) => emit('onDragStart', e, i)"
-                @dragEnd="(e) => emit('onDragEnd', e, i)"
+                @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
+                @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
                 :draggable="draggable"
             />
         </div>
@@ -34,8 +34,8 @@ const emit = defineEmits<{
     onEntryContextMenu: [idx: number];
     onActiveChanged: [idx: number | undefined];
     onSelectionChanged: [idx: number[]];
-    onDragStart: [event: DragEvent, idx: number];
-    onDragEnd: [event: DragEvent, idx: number];
+    onDragStart: [event: DragEvent, primaryIdx: number, allIdx: number[]];
+    onDragEnd: [event: DragEvent, primaryIdx: number, allIdx: number[]];
 }>();
 const rootEl = useTemplateRef("root");
 const gridEl = useTemplateRef("grid");
@@ -173,6 +173,19 @@ function handleKeyDown(event: KeyboardEvent) {
         selectAll();
         event.stopPropagation();
         event.preventDefault();
+    }
+}
+
+// Dragan drop
+
+function handleDragEvent(event: DragEvent, idx: number, emitEvent: "onDragStart" | "onDragEnd"): void {
+    if (selectedIdx.value.includes(idx)) {
+        const orderedIdx = new Set([idx, ...selectedIdx.value]);
+        //@ts-ignore
+        emit(emitEvent, event, idx, Array.from(orderedIdx));
+    } else {
+        //@ts-ignore
+        emit(emitEvent, event, idx, [idx]);
     }
 }
 </script>

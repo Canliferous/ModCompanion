@@ -1,5 +1,9 @@
 <template>
-    <div class="border border-accented bg-neutral-900">
+    <div
+        class="border border-accented bg-neutral-900"
+        :class="{ 'border-primary-400': isOverDropZone }"
+        ref="dropZoneRef"
+    >
         <div v-for="(file, i) in files" class="border-b border-accented">
             <EditControlAssetFileListEntry
                 :entry="file"
@@ -25,6 +29,8 @@
 import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAssetDefinition.js";
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
+import { useDropZone } from "@vueuse/core";
+import { getGameOrContentRelativePath } from "~/helper/SourceFs.js";
 
 const props = defineProps<{
     asset: SharedAsset;
@@ -81,6 +87,41 @@ function save(): void {
     const filteredFiles = files.value.filter((f) => f.length > 0);
     inj?.updateAsset({ [props.field]: filteredFiles });
 }
+
+const dropZoneRef = ref<HTMLDivElement>();
+async function onDrop(fileList: File[] | null, event: DragEvent) {
+    const entriesToAdd: string[] = [];
+
+    if (fileList !== null) {
+        for (const file of fileList) {
+            const fullPath = window.electronAPI.webUtils.getPathForFile(file);
+            const correctPath = await window.electronAPI.project.correctPath(fullPath);
+            if (correctPath) {
+                entriesToAdd.push(correctPath);
+            }
+        }
+        return;
+    }
+
+    const plaintext = event.dataTransfer?.getData("text/plain");
+    if (plaintext) {
+        const lines = plaintext.split("\n");
+        for (const line of lines) {
+            const relativeLine = getGameOrContentRelativePath(line);
+            entriesToAdd.push(relativeLine);
+        }
+    }
+
+    const combined = new Set([...files.value, ...entriesToAdd]);
+
+    files.value = Array.from(combined);
+
+    save();
+}
+const { isOverDropZone } = useDropZone(dropZoneRef, {
+    onDrop,
+    preventDefaultForUnhandled: false,
+});
 </script>
 
 <style scoped></style>

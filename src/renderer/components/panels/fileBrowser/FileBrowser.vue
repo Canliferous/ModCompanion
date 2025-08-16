@@ -151,9 +151,9 @@ function handleActiveChanged(idx: number | undefined): void {
     activeIndex.value = idx;
 }
 
-function handleDragStart(event: DragEvent, idx: number): void {
-    const entry = entries.value[idx];
-    event.dataTransfer?.setData("text/plain", entry.path);
+function handleDragStart(event: DragEvent, primaryIdx: number, allIdx: number[]): void {
+    const payload = allIdx.map((idx) => entries.value[idx].path).join("\n");
+    event.dataTransfer?.setData("text/plain", payload);
 }
 </script>
 
