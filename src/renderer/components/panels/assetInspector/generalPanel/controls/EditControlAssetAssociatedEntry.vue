@@ -13,7 +13,13 @@
                 class="grow"
                 :highlight="isOverDropZone"
             />
-            <UButton icon="tdesign:play" @click="handleRun" variant="subtle" color="neutral" />
+            <UButton
+                icon="tdesign:play"
+                @click="handleRun"
+                variant="subtle"
+                color="neutral"
+                :disabled="file.length === 0"
+            />
         </UButtonGroup>
     </div>
 </template>
