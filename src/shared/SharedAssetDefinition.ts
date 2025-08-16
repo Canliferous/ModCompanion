@@ -41,6 +41,7 @@ export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
     readonly displayName?: string;
 
     readonly associatedFiles?: SharedAssetDefinitionAssociatedFiles;
+    readonly credits?: string;
 }
 
 export interface SharedAssetDefinitionAssociatedFiles {

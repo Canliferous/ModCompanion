@@ -22,6 +22,10 @@
         <UFormField label="Associated Files" class="col-span-2">
             <EditControlAssetAssociated :asset="asset" />
         </UFormField>
+
+        <UFormField label="Credits" class="col-span-2">
+            <EditControlAssetCredits :asset="asset" />
+        </UFormField>
     </div>
 </template>
 
