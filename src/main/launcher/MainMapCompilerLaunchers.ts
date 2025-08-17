@@ -1,6 +1,7 @@
 import * as child_process from "node:child_process";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
+import fs from "fs/promises";
 
 export type MapCompilerAction = (
     mapPath: string,
@@ -44,6 +45,27 @@ export const runPostcompiler: MapCompilerAction = (
     return _runMapCompiler(mapPath, config.postcompilerExePath, config.postcompilerArgs, onStdOut, onStdErr);
 };
 
+export const runDone: MapCompilerAction = async (
+    mapPath: string,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
+): Promise<boolean> => {
+    const config = getConfig();
+    const sourceBsp = mapPath.replace(".vmf", ".bsp");
+    const outBsp = path.basename(sourceBsp);
+    const from = path.join(config.mapSourcePath, sourceBsp);
+    const to = path.join(config.mapOutputPath, outBsp);
+
+    try {
+        await fs.copyFile(from, to);
+        onStdOut?.(`Copied file ${from} ${to}`);
+        return true;
+    } catch (e) {
+        onStdErr?.(`Failed to copy file ${from} ${to}`);
+        return false;
+    }
+};
+
 function _runMapCompiler(
     mapPath: string,
     exePath: string,
@@ -56,7 +78,16 @@ function _runMapCompiler(
     const cmd = `${exePath} ${args} ${map}`;
     const cwd = path.join(config.rootPath, "game");
 
-    console.log("Running map compiler", cmd, cwd);
+    return _runCommand(cmd, cwd, onStdOut, onStdErr);
+}
+
+function _runCommand(
+    cmd: string,
+    cwd: string,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
+): Promise<boolean> {
+    console.log("Running map command", cmd, cwd);
     return new Promise((resolve, reject) => {
         const proc = child_process.exec(cmd, { cwd }, (error, stdout, stderr) => {
             if (stdout) {

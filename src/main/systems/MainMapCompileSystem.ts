@@ -1,7 +1,14 @@
 import { notifyCompileLog, notifyCompileProgress, notifyQueueUpdated } from "../api/MainMapCompileApi.js";
-import { MapCompilerAction, runPostcompiler, runVBsp, runVRad, runVVis } from "../launcher/MainMapCompilerLaunchers.js";
-import { SharedMapCompileLogEventType } from "../../shared/SharedMapCompileLogEvent.js";
-import { SharedMapCompileState, SharedMapCompileStep } from "../../shared/SharedMapCompile.js";
+import {
+    MapCompilerAction,
+    runDone,
+    runPostcompiler,
+    runVBsp,
+    runVRad,
+    runVVis,
+} from "../launcher/MainMapCompilerLaunchers.js";
+import { SharedMapCompileLogEventType } from "Shared/SharedMapCompileLogEvent.js";
+import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 
 interface Stage {
     step: SharedMapCompileStep;
@@ -56,6 +63,11 @@ function _createStages(): Stage[] {
             state: SharedMapCompileState.Idle,
             step: SharedMapCompileStep.VRad,
             action: runVRad,
+        },
+        {
+            state: SharedMapCompileState.Idle,
+            step: SharedMapCompileStep.Done,
+            action: runDone,
         },
     ];
 }
