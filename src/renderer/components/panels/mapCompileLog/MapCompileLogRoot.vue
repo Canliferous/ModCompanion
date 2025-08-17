@@ -1,9 +1,15 @@
 <template>
-    <div class="p-1 h-full">
-        <div class="p-2 h-full font-mono text-xs text-neutral-300 overflow-auto" ref="logOutput">
-            <pre>
-                {{ log }}
-            </pre>
+    <div class="p-1 h-full grid grid-rows-[auto_minmax(0,_1fr)]">
+        <div class="flex">
+            <div class="ml-auto" />
+            <UCheckbox v-model="lineWrap" label="Line Wrap" />
+        </div>
+        <div
+            class="p-2 font-mono text-xs text-neutral-300 overflow-y-scroll text-nowrap wrap-anywhere"
+            :class="{ 'text-wrap': lineWrap }"
+            ref="logOutput"
+        >
+            {{ log }}
         </div>
     </div>
 </template>
@@ -12,11 +18,13 @@
 import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { computed, useTemplateRef, watch } from "vue";
+import { useRemember } from "~/composables/useRemember.js";
 
 const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();
 
 const logOutput = useTemplateRef("logOutput");
+const lineWrap = useRemember(ref(false), "map-compile-log-line-wrap");
 
 const log = computed(() => {
     if (!listStore.selectedMap) {
