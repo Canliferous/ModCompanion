@@ -30,7 +30,16 @@
                 :label-func="getVtfFilterName"
             />
         </UFormField>
-        <div />
+        <UFormField label="Bump Scale">
+            <AssetInspectorTextureConvertNumber
+                :options="options"
+                field="bumpScale"
+                :default="defaults.bumpScale"
+                :min="0"
+                :max="2"
+                :step="0.1"
+            />
+        </UFormField>
 
         <USeparator class="col-span-2" />
 

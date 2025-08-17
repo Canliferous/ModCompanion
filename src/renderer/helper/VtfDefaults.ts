@@ -18,6 +18,7 @@ export function getVtfDefaults(): SharedVtfCreateOptions {
     if (defaults.filter === undefined) defaults.filter = SharedVtfDefaultFilter;
     if (defaults.compressionMethod === undefined) defaults.compressionMethod = SharedVtfDefaultCompressionMethod;
     if (defaults.compressionLevel === undefined) defaults.compressionLevel = SharedVtfDefaultCompressionLevel;
+    if (defaults.bumpScale === undefined) defaults.bumpScale = 1; // TODO: Where should this be grouped??
 
     return defaults;
 }

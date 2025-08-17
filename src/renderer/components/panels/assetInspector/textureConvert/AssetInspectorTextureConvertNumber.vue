@@ -1,5 +1,5 @@
 <template>
-    <UInputNumber class="w-full" v-model="val" :min="min" :max="max" @change="handleChange" />
+    <UInputNumber class="w-full" v-model="val" :min="min" :max="max" @change="handleChange" :step="step" />
 </template>
 
 <script setup lang="ts">
@@ -12,6 +12,7 @@ const props = defineProps<{
     default?: number;
     min?: number;
     max?: number;
+    step?: number;
 }>();
 const val = ref(props.options[props.field] ?? props.default);
 watch(
