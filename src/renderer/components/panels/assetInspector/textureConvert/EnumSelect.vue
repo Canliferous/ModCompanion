@@ -25,7 +25,7 @@
                         @click="handleClick"
                         :label-func="labelFunc"
                         :default="props.default"
-                        :is-selected="selectedVal === entry.id"
+                        :is-selected="selectedVal === entry"
                     />
                 </template>
 
