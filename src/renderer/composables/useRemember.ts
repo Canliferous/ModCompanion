@@ -11,7 +11,7 @@ export function useRemember<T>(ref: Ref<T>, keyName: string) {
     return ref;
 }
 
-export function useRememberStringArray(ref: Ref<string[]>, keyName: string) {
+export function useRememberStringArray<T extends string>(ref: Ref<T[]>, keyName: string): Ref<T[], T[]> {
     watchDeep(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 
     const arrStr = localStorage.getItem(keyName);
@@ -30,6 +30,6 @@ export function useRememberStringArray(ref: Ref<string[]>, keyName: string) {
         return ref;
     }
 
-    ref.value = arrAny as string[];
+    ref.value = arrAny as T[];
     return ref;
 }

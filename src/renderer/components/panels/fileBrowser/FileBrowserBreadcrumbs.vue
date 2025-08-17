@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
+import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 
-const looseFilesStore = useLooseFilesStore();
+const looseFilesStore = useFileBrowserStore();
 const pathSplits = computed(() => looseFilesStore.currentDir.split("/"));
 
 function handleClick(event: MouseEvent, index: number): void {

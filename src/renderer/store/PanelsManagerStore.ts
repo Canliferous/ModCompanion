@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { PanelComponents } from "~/helper/PanelComponents.js";
-import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
+import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 
 export const usePanelsManagerStore = defineStore("panels-manager", () => {
     const assetListStore = useAssetListStore();
@@ -26,7 +26,7 @@ export const usePanelsManagerStore = defineStore("panels-manager", () => {
 
     function openFileBrowser(path: string): void {
         panelsStore.focusOrCreatePanel(PanelComponents.panels.fileBrowser);
-        useLooseFilesStore().updateCurrentDir(path);
+        useFileBrowserStore().updateCurrentDir(path);
     }
 
     return { openFileBrowser };

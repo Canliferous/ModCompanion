@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
-import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
+import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
@@ -31,7 +31,7 @@ import pathe from "pathe";
 import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
 import AppDesign from "~/design/AppDesign.js";
 
-const looseFilesStore = useLooseFilesStore();
+const looseFilesStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 
 const entries = computed(() => looseFilesStore.currentEntries ?? []);

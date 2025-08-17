@@ -2,9 +2,10 @@ import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import { defineStore } from "pinia";
 import { getRootRelativePath } from "~/helper/SourceFs.js";
 import pathe from "pathe";
+import { useRemember } from "~/composables/useRemember.js";
 
-export const useLooseFilesStore = defineStore("loose-files", () => {
-    const currentDir = ref("");
+export const useFileBrowserStore = defineStore("file-browser", () => {
+    const currentDir = useRemember(ref(""), "file-browser-dir");
     const fsEntries = reactive(new Map<string, SharedFsEntry[]>());
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
 

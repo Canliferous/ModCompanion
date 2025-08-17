@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { useLooseFilesStore } from "~/store/LooseFilesStore.js";
+import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { forwardSlashed } from "Shared/SharedSourceFs.js";
 
 const showBreadcrumbs = ref(true);
@@ -30,7 +30,7 @@ const emit = defineEmits<{
 
 function handleBgClicked(): void {
     showBreadcrumbs.value = false;
-    inputText.value = useLooseFilesStore().currentDir;
+    inputText.value = useFileBrowserStore().currentDir;
 }
 
 function handleBlur(): void {
@@ -49,7 +49,7 @@ function handleDown(event: KeyboardEvent): void {
 
 function _finish() {
     showBreadcrumbs.value = true;
-    useLooseFilesStore().updateCurrentDir(forwardSlashed(inputText.value));
+    useFileBrowserStore().updateCurrentDir(forwardSlashed(inputText.value));
 }
 </script>
 
