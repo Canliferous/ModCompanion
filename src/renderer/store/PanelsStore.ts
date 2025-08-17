@@ -27,10 +27,10 @@ export const usePanelsStore = defineStore("panels", () => {
         event.api.onDidAddPanel(updatePanels);
     }
 
-    function trySpawnPanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>) {
+    function trySpawnPanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): IDockviewPanel | undefined {
         const openPanel = findOpenPanel(panel.componentId);
         if (openPanel) {
-            return;
+            return openPanel;
         }
 
         const op: AddPanelOptions = {
@@ -52,29 +52,14 @@ export const usePanelsStore = defineStore("panels", () => {
         }
     }
 
-    function findOpenPanel(panelId: string) {
+    function findOpenPanel(panelId: string): IDockviewPanel | undefined {
         return api.value?.panels.find((p) => p.id.startsWith(panelId));
     }
 
-    watch(
-        () => useAssetListStore().activeAsset,
-        (asset) => {
-            if (!asset) return;
-
-            const browser = findOpenPanel(PanelComponents.panels.assetBrowser.componentId);
-            if (!browser) {
-                console.warn("Trying to inspect asset but browser panel cannot be found");
-                return;
-            }
-            const inspector = findOpenPanel(PanelComponents.panels.assetInspector.componentId);
-
-            if (inspector === undefined) {
-                trySpawnPanel(PanelComponents.panels.assetInspector, {
-                    position: { referencePanel: browser.id, direction: "right" },
-                });
-            }
-        },
-    );
+    function focusOrCreatePanel(panel: ComponentDesc): void {
+        const p = trySpawnPanel(panel);
+        p?.focus();
+    }
 
     const SERIALIZE_KEY = "panel-layout";
 
@@ -99,5 +84,5 @@ export const usePanelsStore = defineStore("panels", () => {
         }
     }
 
-    return { api, handleReady, trySpawnPanel, togglePanel };
+    return { api, handleReady, trySpawnPanel, togglePanel, findOpenPanel, focusOrCreatePanel };
 });

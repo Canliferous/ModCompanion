@@ -1,6 +1,7 @@
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import { defineStore } from "pinia";
 import { getRootRelativePath } from "~/helper/SourceFs.js";
+import pathe from "pathe";
 
 export const useLooseFilesStore = defineStore("loose-files", () => {
     const currentDir = ref("");
@@ -15,12 +16,15 @@ export const useLooseFilesStore = defineStore("loose-files", () => {
     }
 
     function updateCurrentDir(dir: string): void {
-        const correctedPath = getRootRelativePath(dir);
+        let correctedPath = getRootRelativePath(dir);
         if (correctedPath === undefined) {
             console.warn(`Cannot update path to ${dir} because it's invalid`);
             return;
         }
 
+        if (pathe.extname(correctedPath) !== "") {
+            correctedPath = pathe.dirname(correctedPath);
+        }
         currentDir.value = correctedPath;
     }
 

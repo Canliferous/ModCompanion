@@ -15,6 +15,14 @@
                     size="xs"
                     color="neutral"
                     variant="subtle"
+                    label="Browse to"
+                    icon="tdesign:folder-1"
+                    @click="handleBrowse"
+                />
+                <UButton
+                    size="xs"
+                    color="neutral"
+                    variant="subtle"
                     label="Explore to"
                     @click="handleExplore"
                     icon="tdesign:folder-1"
@@ -26,7 +34,8 @@
 
 <script setup lang="ts">
 import { SharedAsset } from "Shared/SharedAssetDefinition.js";
-import { exploreToMca, openMca } from "~/helper/AssetHelper.js";
+import { browseToMca, exploreToMca, openMca } from "~/helper/AssetHelper.js";
+import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 
@@ -36,6 +45,10 @@ function handleOpen() {
 
 function handleExplore() {
     exploreToMca(props.asset);
+}
+
+function handleBrowse() {
+    browseToMca(props.asset);
 }
 </script>
 

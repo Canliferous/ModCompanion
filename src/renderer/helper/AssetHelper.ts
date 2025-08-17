@@ -1,6 +1,7 @@
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { SharedAsset } from "Shared/SharedAssetDefinition.js";
+import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 
 export function openMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
@@ -12,6 +13,12 @@ export function exploreToMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
     if (!p) return;
     window.electronAPI.app.browseToFile(pathe.join(getAppConfig().rootPath, p));
+}
+
+export function browseToMca(asset: SharedAsset): void {
+    const p = asset.defFilePath;
+    if (!p) return;
+    usePanelsManagerStore().openFileBrowser(asset.defFilePath);
 }
 
 export function openAssociatedFile(associatedFile: string): void {
