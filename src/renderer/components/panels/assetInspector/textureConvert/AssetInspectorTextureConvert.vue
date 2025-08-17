@@ -18,6 +18,7 @@
                 :columns="3"
                 :grouping="getVtfImageFormatGrouping()"
                 :label-func="getVtfFormatName"
+                :disabled-func="isVtfFormatDisabled"
             />
         </UFormField>
         <UFormField label="Filter">
@@ -29,19 +30,25 @@
                 :label-func="getVtfFilterName"
             />
         </UFormField>
+        <div />
+        <USeparator class="col-span-2" />
         <UFormField label="Compression Method">
             <EnumSelect
                 :enum="SharedVtfCompressionMethods"
                 :options="options"
                 field="compressionMethod"
                 :default="defaults.compressionMethod"
+                :label-func="getVtfCompressionMethodName"
+                :disabled-func="isVtfCompressionMethodDisabled"
             />
         </UFormField>
+        <USeparator class="col-span-2" />
         <UFormField label="Toggles" class="col-span-full">
             <div class="grid grid-cols-2 gap-2">
                 <AssetInspectorTextureConvertToggles :options="options" />
             </div>
         </UFormField>
+        <USeparator class="col-span-2" />
         <AssetInspectorTextureConvertFlags :options="options" />
     </div>
 </template>
@@ -55,10 +62,16 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertToggles.vue";
 import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
 import { getVtfFilterName, SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
-import { SharedVtfCompressionMethods, SharedVtfDefaultCompressionMethod } from "Shared/vtf/SharedVtfCompression.js";
+import {
+    getVtfCompressionMethodName,
+    isVtfCompressionMethodDisabled,
+    SharedVtfCompressionMethods,
+    SharedVtfDefaultCompressionMethod,
+} from "Shared/vtf/SharedVtfCompression.js";
 import {
     getVtfFormatName,
     getVtfImageFormatGrouping,
+    isVtfFormatDisabled,
     SharedVtfDefaultImageFormat,
     SharedVtfImageFormats,
 } from "Shared/vtf/SharedVtfFormat.js";

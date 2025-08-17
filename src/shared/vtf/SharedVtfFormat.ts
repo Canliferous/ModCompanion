@@ -42,18 +42,18 @@ export const SharedVtfImageFormats = {
     RGBA1010102: "RGBA1010102",
     BGRA1010102: "BGRA1010102",
     R16F: "R16F",
-    // consolebgrx8888LINEAR: "CONSOLE_BGRX8888_LINEAR",
-    // consolergba8888LINEAR: "CONSOLE_RGBA8888_LINEAR",
-    // consoleabgr8888LINEAR: "CONSOLE_ABGR8888_LINEAR",
-    // consoleargb8888LINEAR: "CONSOLE_ARGB8888_LINEAR",
-    // consolebgra8888LINEAR: "CONSOLE_BGRA8888_LINEAR",
-    // consolergb888LINEAR: "CONSOLE_RGB888_LINEAR",
-    // consolebgr888LINEAR: "CONSOLE_BGR888_LINEAR",
-    // consolebgrx5551LINEAR: "CONSOLE_BGRX5551_LINEAR",
-    // consolei8LINEAR: "CONSOLE_I8_LINEAR",
-    // consolergba16161616LINEAR: "CONSOLE_RGBA16161616_LINEAR",
-    // consolebgrx8888LE: "CONSOLE_BGRX8888_LE",
-    // consolebgra8888LE: "CONSOLE_BGRA8888_LE",
+    ConsoleBGRX8888Linear: "CONSOLE_BGRX8888_LINEAR",
+    ConsoleRGBA8888Linear: "CONSOLE_RGBA8888_LINEAR",
+    ConsoleABGR8888Linear: "CONSOLE_ABGR8888_LINEAR",
+    ConsoleARGB8888Linear: "CONSOLE_ARGB8888_LINEAR",
+    ConsoleBGRA8888Linear: "CONSOLE_BGRA8888_LINEAR",
+    ConsoleRGB888Linear: "CONSOLE_RGB888_LINEAR",
+    ConsoleBGR888Linear: "CONSOLE_BGR888_LINEAR",
+    ConsoleBGRX5551Linear: "CONSOLE_BGRX5551_LINEAR",
+    ConsoleI8Linear: "CONSOLE_I8_LINEAR",
+    ConsoleRGBA16161616Linear: "CONSOLE_RGBA16161616_LINEAR",
+    ConsoleBGRX8888LE: "CONSOLE_BGRX8888_LE",
+    ConsoleBGRA8888LE: "CONSOLE_BGRA8888_LE",
     R8: "R8",
     BC7: "BC7",
     BC6H: "BC6H",
@@ -108,4 +108,10 @@ export function getVtfFormatName(format: SharedVtfImageFormat): string {
         default:
             return format;
     }
+}
+
+export function isVtfFormatDisabled(format: SharedVtfImageFormat): boolean {
+    if (format.startsWith("CONSOLE")) return true;
+
+    return false;
 }

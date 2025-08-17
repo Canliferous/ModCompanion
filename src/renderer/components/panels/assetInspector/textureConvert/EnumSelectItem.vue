@@ -5,6 +5,7 @@
         :color="isSelected ? 'primary' : 'neutral'"
         :icon="isSelected ? 'tdesign:check' : 'nothing'"
         @click="() => emit('click', entry)"
+        :disabled="disabled"
     />
 </template>
 
@@ -14,6 +15,7 @@ const props = defineProps<{
     labelFunc?: (v: T) => string;
     default?: T;
     isSelected: boolean;
+    disabled?: boolean;
 }>();
 const emit = defineEmits<{
     click: [entry: T];

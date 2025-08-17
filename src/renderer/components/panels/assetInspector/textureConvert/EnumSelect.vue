@@ -26,6 +26,7 @@
                         :label-func="labelFunc"
                         :default="props.default"
                         :is-selected="selectedVal === entry"
+                        :disabled="disabledFunc ? disabledFunc(entry) : false"
                     />
                 </template>
 
@@ -40,6 +41,7 @@
                                     :label-func="labelFunc"
                                     :default="props.default"
                                     :is-selected="selectedVal === item"
+                                    :disabled="disabledFunc ? disabledFunc(item) : false"
                                 />
                             </template>
                         </div>
@@ -57,6 +59,7 @@
                                 :label-func="labelFunc"
                                 :default="props.default"
                                 :is-selected="selectedVal === item"
+                                :disabled="disabledFunc ? disabledFunc(item) : false"
                             />
                         </template>
                     </div>
@@ -77,6 +80,7 @@ const props = defineProps<{
     field: keyof SharedVtfCreateOptions;
     default?: T;
     labelFunc?: (v: T) => string;
+    disabledFunc?: (v: T) => boolean;
     columns?: number;
     grouping?: SharedVtfEnumGrouping<T>;
 }>();
