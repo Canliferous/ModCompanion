@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 p-2 gap-2">
+    <div class="grid grid-cols-2 content-start p-2 gap-2 h-full overflow-y-auto">
         <UFormField label="Version">
             <EnumSelect
                 :enum="SharedVtfVersions"
