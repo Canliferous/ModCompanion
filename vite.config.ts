@@ -21,7 +21,7 @@ export default defineConfig({
             },
             ui: {
                 colors: {
-                    primary: "fuchsia",
+                    primary: "magenta",
                 },
                 badge: { slots: { base: "select-none" } },
                 button: { slots: { base: "cursor-pointer duration-0" } },
