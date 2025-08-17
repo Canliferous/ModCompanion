@@ -79,7 +79,8 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
     if (type === lastType.value) return;
     const additionalPanels = PanelComponents.additional;
 
-    const whichPanelsShouldExist: ComponentDesc[] = [];
+    const defaultPanels = [additionalPanels.assetInspectorGeneral];
+    const whichPanelsShouldExist: ComponentDesc[] = defaultPanels;
 
     switch (type) {
         case SharedAssetTypes.Texture: {
@@ -90,20 +91,27 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
         }
     }
 
-    // Add last
-    whichPanelsShouldExist.push(additionalPanels.assetInspectorGeneral);
-
     const panels = api.panels;
+    // Spawn missing panels
     for (const panel of whichPanelsShouldExist) {
-        if (panels.some((p) => p.id === panel.componentId)) continue;
+        const alreadyExists = panels.some((p) => p.id === panel.componentId);
+        if (!alreadyExists) {
+            api.addPanel({
+                title: PanelTitles[panel.componentId],
+                id: panel.componentId,
+                component: panel.componentId,
+                tabComponent: PanelComponents.tabComponents.subPanelTabs.componentId,
+                params: { icon: PanelIcons[panel.componentId] },
+            });
+        }
+    }
 
-        api.addPanel({
-            title: PanelTitles[panel.componentId],
-            id: panel.componentId,
-            component: panel.componentId,
-            tabComponent: PanelComponents.tabComponents.subPanelTabs.componentId,
-            params: { icon: PanelIcons[panel.componentId] },
-        });
+    // Destroy unneeded panels
+    for (const panel of panels) {
+        const shouldExist = whichPanelsShouldExist.some((p) => panel.id === p.componentId);
+        if (!shouldExist) {
+            api.removePanel(panel);
+        }
     }
 }
 </script>
