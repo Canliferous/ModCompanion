@@ -1,5 +1,5 @@
 <template>
-    <USwitch label="Hot Reload" color="success" size="sm" v-model="enabled" />
+    <UCheckbox label="Auto Hot Reload" v-model="enabled" size="lg" />
 </template>
 
 <script setup lang="ts">

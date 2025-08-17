@@ -5,7 +5,7 @@
         </div>
 
         <div class="grid gap-1 content-start">
-            <SidebarHotReloadSwitch />
+            <SidebarHotReload />
             <USeparator />
             <UButton
                 v-for="btn of launcherButtons"
