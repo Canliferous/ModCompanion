@@ -29,6 +29,8 @@ export type SharedVtfCreateEnumOptions =
     | typeof SharedVtfFilters
     | typeof SharedVtfCompressionMethods;
 
+export type SharedVtfCreateNumberOptions = "compressionLevel" | "bumpScale";
+
 export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     let a = "";
 

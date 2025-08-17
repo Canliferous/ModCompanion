@@ -3,7 +3,10 @@ import { getAppConfig } from "~/renderer-config.js";
 import { SharedVtfDefaultImageFormat } from "Shared/vtf/SharedVtfFormat.js";
 import { SharedVtfDefaultVersion } from "Shared/vtf/SharedVtfVersion.js";
 import { SharedVtfDefaultFilter } from "Shared/vtf/SharedVtfFilter.js";
-import { SharedVtfDefaultCompressionMethod } from "Shared/vtf/SharedVtfCompression.js";
+import {
+    SharedVtfDefaultCompressionLevel,
+    SharedVtfDefaultCompressionMethod,
+} from "Shared/vtf/SharedVtfCompression.js";
 
 let defaults: SharedVtfCreateOptions | undefined;
 export function getVtfDefaults(): SharedVtfCreateOptions {
@@ -14,6 +17,7 @@ export function getVtfDefaults(): SharedVtfCreateOptions {
     if (defaults.version === undefined) defaults.version = SharedVtfDefaultVersion;
     if (defaults.filter === undefined) defaults.filter = SharedVtfDefaultFilter;
     if (defaults.compressionMethod === undefined) defaults.compressionMethod = SharedVtfDefaultCompressionMethod;
+    if (defaults.compressionLevel === undefined) defaults.compressionLevel = SharedVtfDefaultCompressionLevel;
 
     return defaults;
 }

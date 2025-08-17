@@ -31,7 +31,9 @@
             />
         </UFormField>
         <div />
+
         <USeparator class="col-span-2" />
+
         <UFormField label="Compression Method">
             <EnumSelect
                 :enum="SharedVtfCompressionMethods"
@@ -42,13 +44,27 @@
                 :disabled-func="isVtfCompressionMethodDisabled"
             />
         </UFormField>
+        <UFormField label="Compression Level">
+            <!-- TODO: Deflate has max of 9 https://github.com/craftablescience/MareTF -->
+            <AssetInspectorTextureConvertNumber
+                :options="options"
+                field="compressionLevel"
+                :default="defaults.compressionLevel"
+                :min="-1"
+                :max="22"
+            />
+        </UFormField>
+
         <USeparator class="col-span-2" />
+
         <UFormField label="Toggles" class="col-span-full">
             <div class="grid grid-cols-2 gap-2">
                 <AssetInspectorTextureConvertToggles :options="options" />
             </div>
         </UFormField>
+
         <USeparator class="col-span-2" />
+
         <AssetInspectorTextureConvertFlags :options="options" />
     </div>
 </template>

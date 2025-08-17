@@ -5,6 +5,7 @@ export const SharedVtfCompressionMethods = {
 } as const;
 export type SharedVtfCompressionMethod = (typeof SharedVtfCompressionMethods)[keyof typeof SharedVtfCompressionMethods];
 export const SharedVtfDefaultCompressionMethod = SharedVtfCompressionMethods.Deflate;
+export const SharedVtfDefaultCompressionLevel = 6;
 
 export function getVtfCompressionMethodName(compressionMethod: SharedVtfCompressionMethod): string {
     switch (compressionMethod) {
