@@ -14,8 +14,7 @@ export const runVBsp: MapCompilerAction = (
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getConfig();
-
-    return runMapCompiler(mapPath, config.vbspExePath, config.vbspArgs, onStdOut, onStdErr);
+    return _runMapCompiler(mapPath, config.vbspExePath, config.vbspArgs, onStdOut, onStdErr);
 };
 
 export const runVVis: MapCompilerAction = (
@@ -24,8 +23,7 @@ export const runVVis: MapCompilerAction = (
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getConfig();
-
-    return runMapCompiler(mapPath, config.vvisExePath, config.vvisArgs, onStdOut, onStdErr);
+    return _runMapCompiler(mapPath, config.vvisExePath, config.vvisArgs, onStdOut, onStdErr);
 };
 
 export const runVRad: MapCompilerAction = (
@@ -34,11 +32,19 @@ export const runVRad: MapCompilerAction = (
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getConfig();
-
-    return runMapCompiler(mapPath, config.vradExePath, config.vradArgs, onStdOut, onStdErr);
+    return _runMapCompiler(mapPath, config.vradExePath, config.vradArgs, onStdOut, onStdErr);
 };
 
-function runMapCompiler(
+export const runPostcompiler: MapCompilerAction = (
+    mapPath: string,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
+): Promise<boolean> => {
+    const config = getConfig();
+    return _runMapCompiler(mapPath, config.postcompilerExePath, config.postcompilerArgs, onStdOut, onStdErr);
+};
+
+function _runMapCompiler(
     mapPath: string,
     exePath: string,
     args: string,
