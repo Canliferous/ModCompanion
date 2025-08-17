@@ -1,5 +1,5 @@
 <template>
-    <div class="flex gap-2 bg-neutral-900">
+    <div class="flex bg-neutral-900">
         <UTooltip text="Open in Hammer">
             <UButton
                 icon="famicons:hammer-sharp"

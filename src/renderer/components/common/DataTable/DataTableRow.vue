@@ -1,10 +1,17 @@
 <template>
     <button
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-sm text-left cursor-pointer outline-none hover:bg-accented"
-        :class="{
-            'bg-primary-700 hover:bg-primary-500': isSelected && !isActive,
-            'bg-primary-600 hover:bg-primary-500': isActive,
-        }"
+        :class="
+            neutralHighlight
+                ? {
+                      'bg-neutral-750 hover:bg-neutral-600': isSelected && !isActive,
+                      'bg-neutral-700 hover:bg-neutral-600': isActive,
+                  }
+                : {
+                      'bg-primary-700 hover:bg-primary-500': isSelected && !isActive,
+                      'bg-primary-600 hover:bg-primary-500': isActive,
+                  }
+        "
         @click="handleClick"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
@@ -26,7 +33,13 @@ import {
     DataTableSelectionInjectKey,
 } from "~/components/common/DataTable/DataTable.model.js";
 
-const props = defineProps<{ entry: T; idx: number; columns: DataTableColumn<T>[]; draggable?: boolean }>();
+const props = defineProps<{
+    entry: T;
+    idx: number;
+    columns: DataTableColumn<T>[];
+    draggable?: boolean;
+    neutralHighlight?: boolean;
+}>();
 
 const selection = inject(DataTableSelectionInjectKey);
 const entryAction = inject(DataTableEntryActionInjectKey);

@@ -15,6 +15,7 @@
                 @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
                 @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
                 :draggable="draggable"
+                :neutral-highlight="neutralHighlight"
             />
         </div>
     </div>
@@ -28,7 +29,13 @@ import {
 } from "~/components/common/DataTable/DataTable.model.js";
 import DataTableHeader from "~/components/common/DataTable/DataTableHeader.vue";
 
-const props = defineProps<{ entries: T[]; columns: DataTableColumn<T>[]; noHeader?: boolean; draggable?: boolean }>();
+const props = defineProps<{
+    entries: T[];
+    columns: DataTableColumn<T>[];
+    noHeader?: boolean;
+    draggable?: boolean;
+    neutralHighlight?: boolean;
+}>();
 const emit = defineEmits<{
     onEntryActivated: [idx: number];
     onEntryContextMenu: [idx: number];

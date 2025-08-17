@@ -1,5 +1,5 @@
 <template>
-    <DataTable :entries="listStore.filteredMapPaths" :columns="columns" />
+    <DataTable :entries="listStore.filteredMapPaths" :columns="columns" neutral-highlight />
 </template>
 
 <script setup lang="ts">
