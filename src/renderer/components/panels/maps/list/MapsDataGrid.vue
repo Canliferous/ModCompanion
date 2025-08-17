@@ -1,5 +1,10 @@
 <template>
-    <DataTable :entries="listStore.filteredMapPaths" :columns="columns" neutral-highlight />
+    <DataTable
+        :entries="listStore.filteredMapPaths"
+        :columns="columns"
+        neutral-highlight
+        @onActiveChanged="handleActiveChanged"
+    />
 </template>
 
 <script setup lang="ts">
@@ -115,6 +120,8 @@ const reportColumns: DataTableColumn<string>[] = [
     },
 ];
 
+// The intent is to not show the map's folder "prefix" if all maps share are in the same folder.
+// Only show it when they're in different folders
 const mapDisplayNames = computed(() => {
     let prefix: string | undefined = undefined;
     let addPrefix = false;
@@ -142,6 +149,15 @@ const mapDisplayNames = computed(() => {
 
     return map;
 });
+
+function handleActiveChanged(idx: number | undefined): void {
+    if (idx === undefined) {
+        listStore.selectMap(undefined);
+    } else {
+        const p = listStore.mapPaths[idx];
+        listStore.selectMap(p);
+    }
+}
 </script>
 
 <style scoped></style>

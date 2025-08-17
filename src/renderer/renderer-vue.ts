@@ -4,6 +4,7 @@ import ui from "@nuxt/ui/vue-plugin";
 import App from "~/components/App.vue";
 import { initPanels } from "~/renderer-panels.js";
 import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
+import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -21,4 +22,5 @@ export function initVue() {
 // These stores need to be initialized on app startup
 function _initSystemStores() {
     usePanelsManagerStore();
+    useMapConsoleStore();
 }

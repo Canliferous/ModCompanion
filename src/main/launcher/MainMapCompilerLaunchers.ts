@@ -46,22 +46,20 @@ function runMapCompiler(
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
     const config = getConfig();
+    const map = path.join(config.mapSourcePath, mapPath);
+    const cmd = `${exePath} ${args} ${map}`;
+    const cwd = path.join(config.rootPath, "game");
 
+    console.log("Running map compiler", cmd, cwd);
     return new Promise((resolve, reject) => {
-        const proc = child_process.exec(
-            `${exePath} ${args} ${path.join(config.mapSourcePath, mapPath)}`,
-            {
-                cwd: config.gamePath,
-            },
-            (error, stdout, stderr) => {
-                if (stdout) {
-                    onStdOut?.(stdout);
-                }
-                if (stderr) {
-                    onStdErr?.(stderr);
-                }
-            },
-        );
+        const proc = child_process.exec(cmd, { cwd }, (error, stdout, stderr) => {
+            if (stdout) {
+                onStdOut?.(stdout);
+            }
+            if (stderr) {
+                onStdErr?.(stderr);
+            }
+        });
         proc.on("exit", (code) => {
             resolve(code === 1);
         });

@@ -105,9 +105,11 @@ function _startStage(mapPath: string, stageIdx: number): void {
     currentCompilePromise = stage.action(
         mapPath,
         (msg: string) => {
+            console.log(msg);
             notifyCompileLog({ type: SharedMapCompileLogEventType.AppendMessage, mapPath, message: msg });
         },
         (msg: string) => {
+            console.log(msg);
             notifyCompileLog({ type: SharedMapCompileLogEventType.AppendError, mapPath, message: msg });
         },
     );

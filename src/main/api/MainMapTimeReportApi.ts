@@ -40,7 +40,7 @@ async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeRe
     const srcPath = config.mapSourcePath;
 
     const report: SharedMapTimeReport = {
-        maps: new Map<string, SharedSeconds>(),
+        mapList: new Map<string, SharedSeconds>(),
         totals: new Map<SharedMapPath, SharedSeconds>(),
     };
 

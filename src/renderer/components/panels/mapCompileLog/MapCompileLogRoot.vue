@@ -1,19 +1,17 @@
 <template>
-    <div
-        v-show="consoleStore.isOpen"
-        class="w-140 grid bg-secondary/10 border-secondary-800 border-1"
-        id="maps-log-container"
-    >
+    <div class="p-1 h-full">
         <div class="p-2 h-full font-mono text-xs text-neutral-300 overflow-auto" ref="logOutput">
-            {{ log }}
+            <pre>
+                {{ log }}
+            </pre>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch, useTemplateRef } from "vue";
-import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { useMapListStore } from "~/store/MapListStore.js";
+import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
+import { computed, useTemplateRef, watch } from "vue";
 
 const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();

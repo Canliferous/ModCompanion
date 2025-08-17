@@ -4,7 +4,7 @@ import { useRememberStringArray } from "~/composables/useRemember.js";
 import { useFilter } from "~/composables/useFilter.js";
 
 export const useMapListStore = defineStore("map-list", () => {
-    const mapPaths = useRememberStringArray(ref([]), "map-list");
+    const mapPaths = useRememberStringArray(ref<string[]>([]), "map-list");
     const searchTerm = ref<string>("");
     const filteredMapPaths = useFilter<string>(mapPaths, (item) => item.toLowerCase(), searchTerm);
     const selectedMap = ref<string | undefined>();

@@ -10,6 +10,7 @@ import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspecto
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 import AppDesign from "~/design/AppDesign.js";
+import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -22,8 +23,9 @@ export const PanelComponentIds = {
     AssetInspectorTextureMetadata: "_AssetInspector_TextureMetadata",
     AssetInspectorTextureConvert: "_AssetInspector_TextureConvert",
     AssetInspectorGeneral: "_AssetInspector_General",
-    Maps: "_Maps",
+    MapList: "_MapList",
     Home: "_Home",
+    MapCompileLog: "_MapCompileLog",
     FileBrowser: "_FileBrowser",
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
@@ -59,9 +61,13 @@ export const PanelComponents = {
             componentId: "_Home",
             component: HomePanel,
         },
-        maps: {
-            componentId: "_Maps",
+        mapList: {
+            componentId: "_MapList",
             component: MapsPanel,
+        },
+        mapCompileLog: {
+            componentId: "_MapCompileLog",
+            component: MapCompileLogPanel,
         },
         fileBrowser: {
             componentId: "_FileBrowser",
@@ -101,7 +107,8 @@ export function getPanelComponentsArray(): ComponentDesc[] {
 
 export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _Home: "Home",
-    _Maps: "Maps",
+    _MapList: "Maps",
+    _MapCompileLog: "Map Compile Log",
     _AssetBrowser: "Asset Browser",
     _FileBrowser: "File Browser",
     _AssetInspector: "Asset Inspector",
@@ -114,7 +121,8 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
 
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _Home: "tdesign:home",
-    _Maps: "tdesign:map",
+    _MapList: "tdesign:map",
+    _MapCompileLog: "tdesign:list",
     _AssetBrowser: AppDesign.icons.asset,
     _FileBrowser: "tdesign:file-1",
     // _AssetInspector: "",

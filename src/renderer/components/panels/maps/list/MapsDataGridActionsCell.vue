@@ -1,5 +1,14 @@
 <template>
     <div class="flex bg-neutral-900">
+        <UTooltip text="Compile Now">
+            <UButton
+                icon="tdesign:play"
+                variant="soft"
+                @click="() => compileStore.compileNow(mapPath)"
+                :color="listStore.mapQueue.includes(mapPath) ? 'neutral' : 'success'"
+                :disabled="listStore.mapQueue.includes(mapPath)"
+            />
+        </UTooltip>
         <UTooltip text="Open in Hammer">
             <UButton
                 icon="famicons:hammer-sharp"
@@ -14,15 +23,6 @@
                 color="info"
                 variant="soft"
                 @click="() => handleOpenInGame(mapPath)"
-            />
-        </UTooltip>
-        <UTooltip text="Compile Now">
-            <UButton
-                icon="tdesign:play"
-                variant="soft"
-                @click="() => compileStore.compileNow(mapPath)"
-                :color="listStore.mapQueue.includes(mapPath) ? 'neutral' : 'success'"
-                :disabled="listStore.mapQueue.includes(mapPath)"
             />
         </UTooltip>
         <UTooltip text="Remove from list">
