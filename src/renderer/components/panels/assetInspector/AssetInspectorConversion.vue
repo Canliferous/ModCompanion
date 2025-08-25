@@ -1,17 +1,22 @@
 <template>
-    <ConversionStateBadge :state="state" />
+    <div class="flex gap-1">
+        <ConversionStateBadge :state="state" />
+        <UButton label="Convert" variant="ghost" size="sm" color="success" icon="tdesign:play" @click="handleClick" />
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import ConversionStateIcon from "~/components/common/ConversionStateIcon.vue";
-import { getConversionStateName } from "Shared/SharedConversion.js";
 
 const props = defineProps<{ assetId: SharedAssetId }>();
 
 const conversionStore = useAssetConversionStore();
 const state = computed(() => conversionStore.getState(props.assetId));
+
+function handleClick(): void {
+    useAssetConversionStore().enqueue(props.assetId);
+}
 </script>
 
 <style scoped></style>
