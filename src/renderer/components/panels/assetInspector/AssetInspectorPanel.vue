@@ -8,7 +8,7 @@
                         <AssetInspectorSaved />
                     </div>
                 </header>
-                <AssetInspector :asset="assetStore.activeAsset" />
+                <AssetInspectorRoot :asset="assetStore.activeAsset" />
             </div>
         </template>
         <div v-else class="grid h-full place-items-center">Nothing Selected</div>

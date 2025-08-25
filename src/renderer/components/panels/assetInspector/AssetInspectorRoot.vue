@@ -19,14 +19,12 @@ import {
 import { DockviewApi, DockviewReadyEvent, DockviewVue, themeDark } from "dockview-vue";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
-import { useImageCacheStore } from "~/store/ImageCacheStore.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
+import { fetchImageMeta } from "~/ImageMeta/ImageCacheStore.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
-
-const imageCacheStore = useImageCacheStore();
 
 const api = ref<DockviewApi>();
 const lastType = ref<SharedAssetType | undefined>();
@@ -36,6 +34,8 @@ const textureMeta = ref<SharedImageMetaReport | undefined>(undefined);
 function handleReady(e: DockviewReadyEvent): void {
     api.value = e.api;
     updateTabs(props.asset.def.type, e.api);
+
+    handleAssetUpdated(props.asset, api.value);
 }
 
 watch(
@@ -70,7 +70,7 @@ function updateTextureMeta(asset: SharedTextureAsset) {
     const sourceFile = content[0];
 
     const fullPath = pathe.join(getAppConfig().contentPath, sourceFile);
-    imageCacheStore.getMeta(fullPath).then((meta) => {
+    fetchImageMeta(fullPath).then((meta) => {
         textureMeta.value = meta;
     });
 }
