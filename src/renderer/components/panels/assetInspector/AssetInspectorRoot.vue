@@ -36,6 +36,8 @@ function handleReady(e: DockviewReadyEvent): void {
     updateTabs(props.asset.def.type, e.api);
 
     handleAssetUpdated(props.asset, api.value);
+
+    e.api.onDidLayoutChange(() => serializeLayout(e.api));
 }
 
 watch(
@@ -75,21 +77,43 @@ function updateTextureMeta(asset: SharedTextureAsset) {
     });
 }
 
-function updateTabs(type: SharedAssetType, api: DockviewApi): void {
-    if (type === lastType.value) return;
+function serializeLayout(a: DockviewApi) {
+    const json = a.toJSON();
+    const currentType = props.asset.def.type;
+    const key = `asset-inspector-layout-${currentType}`;
+
+    localStorage.setItem(key, JSON.stringify(json));
+}
+
+function deserializeLayout(type: SharedAssetType) {
+    const key = `asset-inspector-layout-${type}`;
+    const itemRaw = localStorage.getItem(key);
+    if (itemRaw === null) {
+        return undefined;
+    }
+
+    const item = JSON.parse(itemRaw);
+    return item;
+}
+
+function getPanelsByType(type: SharedAssetType) {
     const additionalPanels = PanelComponents.additional;
 
     const defaultPanels = [additionalPanels.assetInspectorGeneral];
     const whichPanelsShouldExist: ComponentDesc[] = defaultPanels;
 
-    switch (type) {
-        case SharedAssetTypes.Texture: {
-            whichPanelsShouldExist.push(additionalPanels.assetInspectorTexturePreview);
-            whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
-            whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
-            whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
-        }
+    if (type === SharedAssetTypes.Texture) {
+        whichPanelsShouldExist.push(additionalPanels.assetInspectorTexturePreview);
+        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
+        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
+        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
     }
+
+    return whichPanelsShouldExist;
+}
+
+function setupTabs(type: SharedAssetType, api: DockviewApi) {
+    const whichPanelsShouldExist = getPanelsByType(type);
 
     const panels = api.panels;
     // Spawn missing panels
@@ -112,6 +136,17 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
         if (!shouldExist) {
             api.removePanel(panel);
         }
+    }
+}
+
+function updateTabs(type: SharedAssetType, api: DockviewApi): void {
+    if (type === lastType.value) return;
+
+    const savedPanels = deserializeLayout(type);
+    if (savedPanels) {
+        api.fromJSON(savedPanels);
+    } else {
+        setupTabs(type, api);
     }
 }
 </script>
