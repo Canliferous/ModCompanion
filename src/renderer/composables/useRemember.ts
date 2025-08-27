@@ -1,7 +1,7 @@
-import { Ref, watch } from "vue";
+import { Reactive, Ref, watch } from "vue";
 import { watchDeep } from "@vueuse/core";
 
-export function useRemember<T>(ref: Ref<T>, keyName: string) {
+export function useRememberRef<T>(ref: Ref<T>, keyName: string) {
     watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 
     const val = localStorage.getItem(keyName);
@@ -9,6 +9,20 @@ export function useRemember<T>(ref: Ref<T>, keyName: string) {
 
     ref.value = JSON.parse(val);
     return ref;
+}
+
+export function useRememberReactive<T>(r: Reactive<T>, keyName: string) {
+    watch(r, (r) => {
+        console.log(r);
+        localStorage.setItem(keyName, JSON.stringify(r));
+    });
+
+    const val = localStorage.getItem(keyName);
+    if (val === null) return r;
+
+    r = JSON.parse(val);
+
+    return r;
 }
 
 export function useRememberStringArray<T extends string>(ref: Ref<T[]>, keyName: string): Ref<T[], T[]> {

@@ -1,7 +1,8 @@
 <template>
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start">
-            <PanelsDropdown />
+            <SidebarPanels />
+            <SidebarWorkspaces />
         </div>
 
         <div class="grid gap-1 content-start">
@@ -34,7 +35,7 @@
 import BitmapIcon from "../common/BitmapIcon.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
-import PanelsDropdown from "~/components/sidebar/PanelsDropdown.vue";
+import SidebarPanels from "~/components/sidebar/SidebarPanels.vue";
 
 function quit() {
     window.electronAPI.app.exit();

@@ -18,13 +18,13 @@
 import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { computed, useTemplateRef, watch } from "vue";
-import { useRemember } from "~/composables/useRemember.js";
+import { useRememberRef } from "~/composables/useRemember.js";
 
 const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();
 
 const logOutput = useTemplateRef("logOutput");
-const lineWrap = useRemember(ref(false), "map-compile-log-line-wrap");
+const lineWrap = useRememberRef(ref(false), "map-compile-log-line-wrap");
 
 const log = computed(() => {
     if (!listStore.selectedMap) {

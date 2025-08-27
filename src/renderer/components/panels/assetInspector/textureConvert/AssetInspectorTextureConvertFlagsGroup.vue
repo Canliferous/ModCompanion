@@ -24,12 +24,12 @@
 <script setup lang="ts">
 import { SharedVtfFlag } from "Shared/vtf/SharedVtfFlag.js";
 import AssetInspectorTextureConvertFlagsGroupCheckbox from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlagsGroupCheckbox.vue";
-import { useRemember } from "~/composables/useRemember.js";
+import { useRememberRef } from "~/composables/useRemember.js";
 
 const props = defineProps<{ label: string; flags: SharedVtfFlag[]; values: SharedVtfFlag[] }>();
 const emit = defineEmits<{ toggle: [flag: SharedVtfFlag] }>();
 
-const open = useRemember(ref(false), "texture-flags-group-open-" + props.label);
+const open = useRememberRef(ref(false), "texture-flags-group-open-" + props.label);
 </script>
 
 <style scoped></style>

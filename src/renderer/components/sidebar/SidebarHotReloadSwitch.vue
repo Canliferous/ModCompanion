@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRemember } from "~/composables/useRemember.js";
+import { useRememberRef } from "~/composables/useRemember.js";
 
-const enabled = useRemember(ref(true), "hot-reload-enabled");
+const enabled = useRememberRef(ref(true), "hot-reload-enabled");
 
 window.electronAPI.hotReload.setEnabled(enabled.value);
 watch(enabled, (on) => {

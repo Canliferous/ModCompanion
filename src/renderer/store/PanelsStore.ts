@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { useAssetListStore } from "~/store/AssetListStore.js";
-import { ComponentDesc, PanelComponents, PanelTitles } from "~/helper/PanelComponents.js";
+import { ComponentDesc, PanelTitles } from "~/helper/PanelComponents.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();

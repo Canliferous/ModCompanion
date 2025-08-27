@@ -1,6 +1,6 @@
 import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
-import { useRemember } from "~/composables/useRemember.js";
+import { useRememberRef } from "~/composables/useRemember.js";
 import {
     isAppendErrorEvent,
     isAppendMessageEvent,
@@ -9,7 +9,7 @@ import {
 } from "Shared/SharedMapCompileLogEvent.js";
 
 export const useMapConsoleStore = defineStore("map-console", () => {
-    const isOpen = useRemember(ref(false), "map-console-open");
+    const isOpen = useRememberRef(ref(false), "map-console-open");
     const logMessageTextMap = reactive<Map<string, string>>(new Map<string, string>());
     const logErrorTextMap = reactive<Map<string, string>>(new Map<string, string>());
 

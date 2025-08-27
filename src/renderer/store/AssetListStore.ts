@@ -5,12 +5,12 @@ import { SharedAsset, SharedAssetId, SharedAssetType } from "Shared/SharedAssetD
 import { useRouter } from "vue-router";
 import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { getContentRelativePath } from "~/helper/SourceFs.js";
-import { useRemember, useRememberStringArray } from "~/composables/useRemember.js";
+import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
     const refreshing = ref(false);
-    const searchTerm = useRemember(ref(""), "asset-list-search");
+    const searchTerm = useRememberRef(ref(""), "asset-list-search");
     const assetsEntries = computed(() => [...assets.value.values()]);
     const typeFilter = useRememberStringArray(ref<SharedAssetType[]>([]), "asset-list-types");
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm, typeFilter);
