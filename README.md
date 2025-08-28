@@ -12,14 +12,10 @@ You need
 ## Set up appconfig.json
 
 Some sample assets are included in the repository. **Don't push any changes you make to those, like when converting assets, unintentionally**
-```json
-{
-  "root": "./sample",
-  "searchPath": "my_game"
-}
-```
 
-Or set root to your Portal Revolution 2 repository and set searchPath to `revolution`
+To use the sample, duplicate `appconfig.sample.json` as `appconfig.json`
+
+Or if you want to use real data, set root to your Portal Revolution 2 repository and set searchPath to `revolution`
 ```json
 {
   "root": "D:/Projects/...",
