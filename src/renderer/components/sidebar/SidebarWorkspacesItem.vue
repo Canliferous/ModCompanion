@@ -1,5 +1,5 @@
 <template>
-    <UButtonGroup class="w-full group">
+    <UButtonGroup class="w-full group" ref="btnGroup">
         <UButton
             :label="label || '(unknown)'"
             :icon="icon || 'nothing'"
@@ -10,7 +10,7 @@
             @click="() => workspaceStore.activateWorkspace(id)"
         />
 
-        <UPopover v-model:open="open" :content="{ side: 'right', align: 'start' }">
+        <UPopover v-model:open="open" :content="{ side: 'right', align: 'start' }" :reference="btnGroup">
             <UButton
                 size="sm"
                 variant="soft"
@@ -46,6 +46,8 @@ import { useWorkspaceStore, WorkspaceId } from "~/store/WorkspaceStore.js";
 
 const props = defineProps<{ id: WorkspaceId }>();
 const workspaceStore = useWorkspaceStore();
+
+const btnGroup = ref();
 
 const open = ref(false);
 

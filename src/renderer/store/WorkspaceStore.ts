@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { v4 } from "uuid";
 import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
+import { SerializedDockview } from "dockview-vue";
 
 export type WorkspaceId = string;
 
@@ -12,7 +13,8 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     const workspaces = useRememberStringArray(ref<WorkspaceId[]>([]), "workspace-ids");
     const workspaceLabels = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-labels");
     const workspaceIcons = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-icons");
-    const activeWorkspace = ref<WorkspaceId | undefined>();
+    const activeWorkspace = useRememberRef(ref<WorkspaceId | undefined>(), "workspace-active");
+    const workspacePanels = useRememberRef(ref<Record<WorkspaceId, SerializedDockview>>({}), "workspace-panels");
 
     function createWorkspace() {
         const id = generateWorkspaceId();
@@ -48,6 +50,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         workspaces,
         workspaceLabels,
         workspaceIcons,
+        workspacePanels,
         activeWorkspace,
         createWorkspace,
         deleteWorkspace,
