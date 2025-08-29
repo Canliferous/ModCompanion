@@ -81,21 +81,26 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
     for (const p of paths) {
         if (p.startsWith(".")) continue;
 
-        const s = await fs.stat(path.join(fullPath, p));
-
-        if (s.isFile()) {
-            infos.push({
-                name: p,
-                path: path.join(dirPath, p).replaceAll("\\", "/"),
-                isFile: true,
-                fileSize: s.size,
-            });
-        } else {
-            infos.push({
-                name: p,
-                path: path.join(dirPath, p).replaceAll("\\", "/"),
-                isFile: false,
-            });
+        try {
+            const s = await fs.stat(path.join(fullPath, p));
+            if (s.isFile()) {
+                infos.push({
+                    name: p,
+                    path: path.join(dirPath, p).replaceAll("\\", "/"),
+                    isFile: true,
+                    fileSize: s.size,
+                });
+            } else {
+                infos.push({
+                    name: p,
+                    path: path.join(dirPath, p).replaceAll("\\", "/"),
+                    isFile: false,
+                });
+            }
+        } catch (e) {
+            // Error is expected so don't print or throw.
+            // Windows returns garbage paths that we can't read so just skip them
+            // Like "System Volume Information", which exists when using the P:/ drive alias on the repo root
         }
     }
 
