@@ -32,6 +32,12 @@ export const useWorkspaceStore = defineStore("workspace", () => {
 
         workspaceLabels.value = { ...workspaceLabels.value, [id]: undefined };
         workspaceIcons.value = { ...workspaceIcons.value, [id]: undefined };
+
+        if (w.length === 0) {
+            activeWorkspace.value = undefined;
+        } else {
+            activeWorkspace.value = w[0];
+        }
     }
 
     function activateWorkspace(id: WorkspaceId) {
