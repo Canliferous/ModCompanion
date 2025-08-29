@@ -1,6 +1,13 @@
 <template>
     <UDropdownMenu :items="items" :content="{ side: 'bottom', align: 'start' }">
-        <UButton :ui="{ item: 'py-0' }" variant="soft" color="neutral" label="Panels" icon="tdesign:component-layout" />
+        <UButton
+            :ui="{ item: 'py-0' }"
+            variant="soft"
+            size="sm"
+            color="neutral"
+            label="Panels"
+            icon="tdesign:component-layout"
+        />
     </UDropdownMenu>
 </template>
 

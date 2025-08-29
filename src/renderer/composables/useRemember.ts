@@ -11,20 +11,6 @@ export function useRememberRef<T>(ref: Ref<T>, keyName: string) {
     return ref;
 }
 
-export function useRememberReactive<T>(r: Reactive<T>, keyName: string) {
-    watch(r, (r) => {
-        console.log(r);
-        localStorage.setItem(keyName, JSON.stringify(r));
-    });
-
-    const val = localStorage.getItem(keyName);
-    if (val === null) return r;
-
-    r = JSON.parse(val);
-
-    return r;
-}
-
 export function useRememberStringArray<T extends string>(ref: Ref<T[]>, keyName: string): Ref<T[], T[]> {
     watchDeep(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 

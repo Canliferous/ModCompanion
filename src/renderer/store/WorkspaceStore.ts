@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { v4 } from "uuid";
-import { useRememberReactive, useRememberStringArray } from "~/composables/useRemember.js";
+import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 
 export type WorkspaceId = string;
 
@@ -10,15 +10,17 @@ export function generateWorkspaceId(): string {
 
 export const useWorkspaceStore = defineStore("workspace", () => {
     const workspaces = useRememberStringArray(ref<WorkspaceId[]>([]), "workspace-ids");
-    const workspaceLabels = useRememberReactive(reactive(new Map<WorkspaceId, string>()), "workspace-labels");
-    const workspaceIcons = useRememberReactive(reactive(new Map<WorkspaceId, string>()), "workspace-icons");
+    const workspaceLabels = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-labels");
+    const workspaceIcons = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-icons");
     const activeWorkspace = ref<WorkspaceId | undefined>();
+
+    console.log(workspaces, workspaceLabels, workspaceIcons);
 
     function createWorkspace() {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
-        workspaceLabels.set(id, "New Workspace");
-        workspaceIcons.set(id, "tdesign:heart");
+        workspaceLabels.value = { ...workspaceLabels.value, [id]: "New Workspace" };
+        workspaceIcons.value = { ...workspaceIcons.value, [id]: "New Workspace" };
         activeWorkspace.value = id;
         return id;
     }
@@ -28,12 +30,22 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         w.splice(w.indexOf(id));
         workspaces.value = w;
 
-        workspaceLabels.delete(id);
-        workspaceIcons.delete(id);
+        workspaceLabels.value = { ...workspaceLabels.value, [id]: undefined };
+        workspaceIcons.value = { ...workspaceIcons.value, [id]: undefined };
     }
 
     function activateWorkspace(id: WorkspaceId) {
         activeWorkspace.value = id;
+    }
+
+    function updateLabel(id: WorkspaceId, label: string | undefined): void {
+        console.log(workspaceLabels);
+
+        workspaceLabels.value = { ...workspaceLabels.value, [id]: label };
+    }
+
+    function updateIcon(id: WorkspaceId, icon: string | undefined): void {
+        workspaceIcons.value = { ...workspaceIcons.value, [id]: icon };
     }
 
     return {
@@ -44,5 +56,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         createWorkspace,
         deleteWorkspace,
         activateWorkspace,
+        updateLabel,
+        updateIcon,
     };
 });

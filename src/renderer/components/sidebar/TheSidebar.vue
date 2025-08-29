@@ -1,6 +1,6 @@
 <template>
     <aside class="h-full flex flex-col">
-        <div class="grow grid gap-1 content-start">
+        <div class="grow grid gap-1 content-start grid-cols-1">
             <SidebarPanels />
             <SidebarWorkspaces />
         </div>
