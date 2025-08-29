@@ -40,6 +40,18 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         }
     }
 
+    function duplicateWorkspace(id: WorkspaceId) {
+        const newId = generateWorkspaceId();
+
+        const oldLabel = workspaceLabels.value[id];
+        const newLabel = `${oldLabel} (Copy)`;
+
+        workspaces.value = [...workspaces.value, newId];
+        workspaceLabels.value = { ...workspaceLabels.value, [newId]: newLabel };
+        workspaceIcons.value = { ...workspaceIcons.value, [newId]: workspaceIcons.value[id] };
+        workspacePanels.value = { ...workspacePanels.value, [newId]: workspacePanels.value[id] };
+    }
+
     function activateWorkspace(id: WorkspaceId) {
         activeWorkspace.value = id;
     }
@@ -64,6 +76,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         activeWorkspace,
         createWorkspace,
         deleteWorkspace,
+        duplicateWorkspace,
         activateWorkspace,
         updateLabel,
         updateIcon,

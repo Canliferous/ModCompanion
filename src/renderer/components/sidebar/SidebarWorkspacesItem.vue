@@ -27,14 +27,26 @@
                         v-model="label"
                         @keydown="handleNameKeydown"
                     />
-                    <UButton
-                        label="Delete"
-                        block
-                        variant="ghost"
-                        color="error"
-                        icon="tdesign:delete"
-                        @click="handleDelete"
-                    />
+                    <div class="flex gap-1">
+                        <UButton
+                            label="Duplicate"
+                            block
+                            size="sm"
+                            variant="ghost"
+                            color="info"
+                            icon="tdesign:copy"
+                            @click="handleDuplicate"
+                        />
+                        <UButton
+                            label="Delete"
+                            block
+                            size="sm"
+                            variant="ghost"
+                            color="error"
+                            icon="tdesign:delete"
+                            @click="handleDelete"
+                        />
+                    </div>
                 </div>
             </template>
         </UPopover>
@@ -61,10 +73,9 @@ watch(icon, (v) => {
     workspaceStore.updateIcon(props.id, v);
 });
 
-function handleContextMenu() {
-    open.value = true;
+function handleDuplicate() {
+    workspaceStore.duplicateWorkspace(props.id);
 }
-
 function handleDelete() {
     workspaceStore.deleteWorkspace(props.id);
 }
