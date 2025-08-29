@@ -2,10 +2,19 @@ import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { ComponentDesc, PanelTitles } from "~/helper/PanelComponents.js";
+import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
     const currentPanels = ref<IDockviewPanel[]>([]);
+    const workspaceStore = useWorkspaceStore();
+
+    watch(
+        () => workspaceStore.activeWorkspace,
+        (value) => {
+            deserialize();
+        },
+    );
 
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
@@ -60,27 +69,32 @@ export const usePanelsStore = defineStore("panels", () => {
         p?.focus();
     }
 
-    const SERIALIZE_KEY = "panel-layout";
-
     function deserialize(): void {
-        const loadedLayout = localStorage.getItem(SERIALIZE_KEY);
-        if (!(loadedLayout && api.value)) {
+        const activeWorkspace = workspaceStore.activeWorkspace;
+        if (!activeWorkspace || !api.value) {
             return;
         }
 
         try {
-            const layout = JSON.parse(loadedLayout);
-            api.value.fromJSON(layout);
+            const panels = workspaceStore.workspacePanels[activeWorkspace];
+            if (panels) {
+                api.value.fromJSON(panels);
+            } else {
+                api.value.clear();
+            }
         } catch (err) {
-            console.warn("Failed to load layout");
+            console.warn("Failed to load layout", err);
         }
     }
 
     function serialize(): void {
-        if (api.value) {
-            const serialized = api.value.toJSON();
-            localStorage.setItem(SERIALIZE_KEY, JSON.stringify(serialized));
+        const activeWorkspace = workspaceStore.activeWorkspace;
+        if (!activeWorkspace || !api.value) {
+            return;
         }
+
+        const serializedDockview = api.value.toJSON();
+        workspaceStore.updatePanels(activeWorkspace, serializedDockview);
     }
 
     return { api, handleReady, trySpawnPanel, togglePanel, findOpenPanel, focusOrCreatePanel };

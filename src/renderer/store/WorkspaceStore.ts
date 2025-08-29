@@ -20,7 +20,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
         workspaceLabels.value = { ...workspaceLabels.value, [id]: "New Workspace" };
-        workspaceIcons.value = { ...workspaceIcons.value, [id]: "New Workspace" };
+        workspaceIcons.value = { ...workspaceIcons.value, [id]: "tdesign:heart" };
         activeWorkspace.value = id;
         return id;
     }
@@ -46,6 +46,10 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         workspaceIcons.value = { ...workspaceIcons.value, [id]: icon };
     }
 
+    function updatePanels(id: WorkspaceId, panels: SerializedDockview): void {
+        workspacePanels.value = { ...workspacePanels.value, [id]: panels };
+    }
+
     return {
         workspaces,
         workspaceLabels,
@@ -57,5 +61,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         activateWorkspace,
         updateLabel,
         updateIcon,
+        updatePanels,
     };
 });
