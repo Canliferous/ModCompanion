@@ -14,8 +14,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     const workspaceIcons = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-icons");
     const activeWorkspace = ref<WorkspaceId | undefined>();
 
-    console.log(workspaces, workspaceLabels, workspaceIcons);
-
     function createWorkspace() {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
@@ -39,8 +37,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     }
 
     function updateLabel(id: WorkspaceId, label: string | undefined): void {
-        console.log(workspaceLabels);
-
         workspaceLabels.value = { ...workspaceLabels.value, [id]: label };
     }
 
