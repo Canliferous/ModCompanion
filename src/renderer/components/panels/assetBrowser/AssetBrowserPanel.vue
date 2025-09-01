@@ -1,6 +1,6 @@
 <template>
     <TooltipProvider>
-        <AssetBrowser />
+        <AssetBrowserRoot />
     </TooltipProvider>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <FileBrowser />
+    <FileBrowserRoot />
 </template>
 
 <script setup lang="ts"></script>

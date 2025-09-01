@@ -1,9 +1,9 @@
 <template>
-    <Maps />
+    <MapsRoot />
 </template>
 
 <script setup lang="ts">
-import Maps from "~/components/panels/maps/Maps.vue";
+import MapsRoot from "~/components/panels/maps/MapsRoot.vue";
 </script>
 
 <style scoped></style>
