@@ -23,8 +23,10 @@ import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { fetchImageMeta } from "~/ImageMeta/ImageCacheStore.js";
+import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
+const workspaceStore = useWorkspaceStore();
 
 const api = ref<DockviewApi>();
 const lastType = ref<SharedAssetType | undefined>();
@@ -80,13 +82,15 @@ function updateTextureMeta(asset: SharedTextureAsset) {
 function serializeLayout(a: DockviewApi) {
     const json = a.toJSON();
     const currentType = props.asset.def.type;
-    const key = `asset-inspector-layout-${currentType}`;
+    const workspace = workspaceStore.activeWorkspace ?? "unknown";
+    const key = `asset-inspector-layout-${workspace}-${currentType}`;
 
     localStorage.setItem(key, JSON.stringify(json));
 }
 
 function deserializeLayout(type: SharedAssetType) {
-    const key = `asset-inspector-layout-${type}`;
+    const workspace = workspaceStore.activeWorkspace ?? "unknown";
+    const key = `asset-inspector-layout-${workspace}-${type}`;
     const itemRaw = localStorage.getItem(key);
     if (itemRaw === null) {
         return undefined;
