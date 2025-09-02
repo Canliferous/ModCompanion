@@ -3,17 +3,6 @@
         <template v-for="id in workspaceStore.workspaces">
             <SidebarWorkspacesItem :id="id" />
         </template>
-
-        <USeparator class="py-1" />
-
-        <UButton
-            label="New Workspace"
-            icon="tdesign:add"
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            @click="workspaceStore.createWorkspace()"
-        />
     </div>
 </template>
 

@@ -1,8 +1,10 @@
 <template>
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start grid-cols-1">
-            <SidebarPanels />
             <SidebarWorkspaces />
+            <SidebarAddWorkspaceButton />
+            <USeparator class="py-1" />
+            <SidebarAddPanelsButton />
         </div>
 
         <div class="grid gap-1 content-start">
@@ -35,7 +37,8 @@
 import BitmapIcon from "../common/BitmapIcon.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
-import SidebarPanels from "~/components/sidebar/SidebarPanels.vue";
+import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
+import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 
 function quit() {
     window.electronAPI.app.exit();

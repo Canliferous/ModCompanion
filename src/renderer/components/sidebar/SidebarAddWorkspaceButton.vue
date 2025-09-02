@@ -1,0 +1,18 @@
+<template>
+    <UButton
+        label="New Workspace"
+        icon="tdesign:table-add-filled"
+        color="neutral"
+        variant="ghost"
+        size="sm"
+        @click="workspaceStore.createWorkspace()"
+    />
+</template>
+
+<script setup lang="ts">
+import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
+
+const workspaceStore = useWorkspaceStore();
+</script>
+
+<style scoped></style>
