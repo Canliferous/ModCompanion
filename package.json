@@ -55,7 +55,7 @@
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.5",
     "@fontsource/inter": "^5.2.5",
-    "@nuxt/ui": "^3.3.2",
+    "@nuxt/ui": "^3.3.3",
     "@sourcelib/kv": "^0.7.3",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vueuse/core": "^13.2.0",
