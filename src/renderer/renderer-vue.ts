@@ -5,6 +5,7 @@ import App from "~/components/App.vue";
 import { initPanels } from "~/renderer-panels.js";
 import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
+import { createMemoryHistory, createRouter } from "vue-router";
 
 export function initVue() {
     const pinia = createPinia();
@@ -12,6 +13,9 @@ export function initVue() {
 
     app.use(pinia);
     app.use(ui);
+
+    // Create empty router because nuxt ui has a stupid dependency on it
+    app.use(createRouter({ history: createMemoryHistory(), routes: [] }));
 
     initPanels(app);
     _initSystemStores();
