@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { v4 } from "uuid";
 import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 import { SerializedDockview } from "dockview-vue";
+import { useEventListener } from "@vueuse/core";
 
 export type WorkspaceId = string;
 
@@ -15,6 +16,19 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     const workspaceIcons = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-icons");
     const activeWorkspace = useRememberRef(ref<WorkspaceId | undefined>(), "workspace-active");
     const workspacePanels = useRememberRef(ref<Record<WorkspaceId, SerializedDockview>>({}), "workspace-panels");
+
+    useEventListener(document, "keydown", (e) => {
+        if (!e.altKey) return;
+
+        const numParsed = Number(e.key);
+        if (Number.isNaN(numParsed)) return;
+
+        const w = workspaces.value;
+        if (numParsed > w.length && numParsed >= 0) return;
+
+        const newId = w[numParsed - 1];
+        activeWorkspace.value = newId;
+    });
 
     function createWorkspace() {
         const id = generateWorkspaceId();
