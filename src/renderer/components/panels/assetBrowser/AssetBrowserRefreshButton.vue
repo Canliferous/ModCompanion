@@ -1,6 +1,12 @@
 <template>
     <UTooltip :text="listStore.refreshing ? 'Refreshing' : 'Force Refresh'">
-        <UButton color="neutral" variant="subtle" @click="listStore.forceRefresh()" :disabled="listStore.refreshing">
+        <UButton
+            color="neutral"
+            variant="subtle"
+            size="sm"
+            @click="listStore.forceRefresh()"
+            :disabled="listStore.refreshing"
+        >
             <template #default>
                 <UIcon name="tdesign:refresh" :class="{ 'animate-spin': listStore.refreshing }" />
             </template>

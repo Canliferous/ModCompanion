@@ -5,6 +5,7 @@
         value-key="id"
         multiple
         class="min-w-32"
+        size="sm"
         placeholder="No Filter"
         icon="tdesign:filter"
     />

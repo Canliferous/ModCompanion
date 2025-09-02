@@ -1,5 +1,12 @@
 <template>
-    <UInput placeholder="Search" leading-icon="tdesign:search" class="grow" autofocus v-model="listStore.searchTerm" />
+    <UInput
+        placeholder="Search"
+        leading-icon="tdesign:search"
+        size="sm"
+        class="grow"
+        autofocus
+        v-model="listStore.searchTerm"
+    />
 </template>
 
 <script setup lang="ts">
