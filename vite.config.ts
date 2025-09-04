@@ -95,6 +95,13 @@ export default defineConfig({
     base: "./",
     build: {
         outDir: "build_dist/renderer",
+        rollupOptions: {
+            output: {
+                entryFileNames: `index.js`,
+                chunkFileNames: `chunks/[name].js`,
+                assetFileNames: `assets/[name][extname]`,
+            },
+        },
     },
     resolve: {
         alias: {
