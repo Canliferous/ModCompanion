@@ -6,6 +6,7 @@
   "main": "build_dist/main.js",
   "type": "module",
   "keywords": [],
+  "private": true,
   "author": {
     "name": "Second Face Software",
     "email": "hello@secondfacesoftware.com"
