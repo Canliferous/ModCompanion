@@ -7,7 +7,7 @@ import {
     SharedModelAssetDefinition,
     SharedTextureAssetDefinition,
 } from "Shared/SharedAssetDefinition.js";
-import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
+import { SharedConversion, SharedConversionHistoryItem, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
@@ -15,11 +15,12 @@ import { convertModelAsset, determineModelAssetState } from "./converter/MainMod
 
 const MAX_PARALLEL_JOBS = 1;
 
-type JobResult = boolean;
+type JobResult = string | undefined;
 const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();
 
 let agentInterval: NodeJS.Timeout | undefined;
 const conversions: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
+const conversionHistory: SharedConversionHistoryItem[] = [];
 
 export function initConvertAgentSystem(): boolean {
     return true;
@@ -56,7 +57,7 @@ async function _runAgent(): Promise<void> {
     }
 
     if (updated) {
-        notifyConversionsUpdated({ conversions });
+        notifyConversionsUpdated({ conversions, history: conversionHistory });
     }
 }
 
@@ -82,20 +83,28 @@ function _getAssetsToConvert(): SharedAssetId[] {
 }
 
 function _startConversions(ids: SharedAssetId[]): Promise<void> {
-    const promises: Promise<boolean>[] = [];
-    for (const hash of ids) {
-        const asset = getAssetFromId(hash);
+    const promises: Promise<string | undefined>[] = [];
+    for (const id of ids) {
+        const asset = getAssetFromId(id);
+        const stateBefore = conversions.get(id)?.state ?? SharedConversionState.Unknown;
         if (!asset) {
-            _setState(hash, SharedConversionState.Unknown);
+            _setState(id, SharedConversionState.Unknown);
             continue;
         }
-        _setState(hash, SharedConversionState.InProgress);
+        _setState(id, SharedConversionState.InProgress);
 
+        const startTime = new Date();
         const timeoutPromise = _convertAsset(asset.def);
         promises.push(timeoutPromise);
-        timeoutPromise.catch((a) => console.warn("Conversion failed", a));
-        timeoutPromise.finally(() => _onJobPromiseFinished(hash));
-        conversionJobs.set(hash, timeoutPromise);
+        timeoutPromise.catch((a) => {
+            _onJobPromiseDone(id, startTime, stateBefore, SharedConversionState.FinishedFailed, a);
+        });
+        timeoutPromise.then((log) => {
+            const newState =
+                log === undefined ? SharedConversionState.FinishedFailed : SharedConversionState.FinishedJob;
+            _onJobPromiseDone(id, startTime, stateBefore, newState, log ?? "");
+        });
+        conversionJobs.set(id, timeoutPromise);
     }
 
     return Promise.allSettled(promises).then((p) => {
@@ -103,21 +112,39 @@ function _startConversions(ids: SharedAssetId[]): Promise<void> {
     });
 }
 
-async function _convertAsset(asset: SharedAssetDefinition): Promise<boolean> {
+async function _convertAsset(asset: SharedAssetDefinition): Promise<string | undefined> {
     switch (asset.type) {
         case SharedAssetTypes.Texture:
             return convertTextureAsset(asset as SharedTextureAssetDefinition);
         case SharedAssetTypes.Model:
             return convertModelAsset(asset as SharedModelAssetDefinition);
         default:
-            return false;
+            return undefined;
     }
 }
 
-function _onJobPromiseFinished(id: SharedAssetId) {
-    console.log("Conversion Job finished", id);
+function _onJobPromiseDone(
+    id: SharedAssetId,
+    startTime: Date,
+    stateBefore: SharedConversionState,
+    stateAfter: SharedConversionState,
+    log: string,
+) {
+    const endTime = new Date();
+    const durationMs = endTime.getTime() - startTime.getTime();
+
+    console.log(`Conversion Job completed as ${stateAfter} ${id} took ${durationMs}ms`);
     conversionJobs.delete(id);
-    _setState(id, SharedConversionState.FinishedJob);
+    _setState(id, stateAfter);
+
+    conversionHistory.push({
+        assetId: id,
+        stateAfter,
+        startTime,
+        endTime,
+        stateBefore,
+        log,
+    });
 }
 
 async function _updateStaleStates(assets: MapIterator<SharedAsset>): Promise<boolean> {

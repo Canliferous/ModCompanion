@@ -5,9 +5,9 @@ import path from "path";
 import { AssetState, AssetStates } from "../MainConversionAgentSystem.js";
 import fs from "fs/promises";
 
-export async function convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<boolean> {
-    if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return false;
-    if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return false;
+export async function convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<string | undefined> {
+    if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return undefined;
+    if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return undefined;
 
     const srcFileRel = asset.contentFiles[0];
     const config = getConfig();

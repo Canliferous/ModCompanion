@@ -1,9 +1,8 @@
 <template>
     <div class="p-1 h-full overflow-y-scroll">
-        <template v-for="conv in conversionStore.conversions.values()">
+        <template v-for="item in conversionStore.conversionHistory">
             <div>
-                <span>{{ assetListStore.assets.get(conv.hash)?.def.displayName ?? "(unknown)" }}</span>
-                <ConversionStateBadge :state="conv.state" />
+                {{ item }}
             </div>
         </template>
     </div>

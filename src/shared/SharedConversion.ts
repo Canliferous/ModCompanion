@@ -60,8 +60,18 @@ export interface SharedConversion {
     hash: SharedAssetId;
 }
 
+export interface SharedConversionHistoryItem {
+    assetId: SharedAssetId;
+    stateBefore: SharedConversionState;
+    stateAfter: SharedConversionState;
+    startTime: Date;
+    endTime: Date;
+    log: string;
+}
+
 export interface SharedConversionUpdateEvent {
     conversions: Map<SharedAssetId, SharedConversion>;
+    history: SharedConversionHistoryItem[];
 }
 
 export interface SharedConversionGetStateReport {
