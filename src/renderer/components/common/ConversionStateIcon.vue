@@ -7,7 +7,7 @@
         class="text-neutral-400"
     />
     <UIcon v-if="state === SharedConversionState.InProgress" name="tdesign:loading" class="text-info animate-spin" />
-    <UIcon v-if="state === SharedConversionState.FinishedJob" name="tdesign:check" class="text-neutral-400" />
+    <UIcon v-if="state === SharedConversionState.FinishedJob" name="tdesign:check" class="text-success" />
     <UIcon v-if="state === SharedConversionState.FinishedConfirmed" name="tdesign:check" class="text-success" />
     <UIcon v-if="state === SharedConversionState.FinishedFailed" name="tdesign:close" class="text-error" />
 </template>

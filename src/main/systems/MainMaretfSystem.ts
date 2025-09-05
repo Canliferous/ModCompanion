@@ -28,26 +28,15 @@ export async function createVtf(
     const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
     console.log("Creating vtf. cmd:", cmd);
 
-    // TODO: String builder or something faster??
-    let log = "";
+    let log: string[] = [];
 
     return new Promise((resolve, reject) => {
-        const proc = child_process.exec(cmd, {}, (error, stdout, stderr) => {
-            if (error) {
-                log += error;
-                console.warn("Maretf ERROR", error);
-            }
-            if (stderr) {
-                log += stderr;
-                console.debug("Maretf ERROR", stderr);
-            }
-            if (stdout) {
-                log += stdout;
-                console.debug("Maretf", stdout);
-            }
+        const proc = child_process.exec(cmd);
+        proc.stdout?.on("data", (d) => {
+            log.push(d);
         });
         proc.on("exit", (code) => {
-            resolve(log);
+            resolve(log.join());
         });
     });
 }

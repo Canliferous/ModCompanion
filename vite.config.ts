@@ -23,7 +23,18 @@ export default defineConfig({
                 colors: {
                     primary: "magenta",
                 },
-                badge: { slots: { base: "select-none" } },
+                badge: {
+                    slots: {
+                        base: "select-none",
+                    },
+                    compoundVariants: [
+                        {
+                            color: "success",
+                            variant: "label",
+                            class: "bg-none text-success",
+                        },
+                    ],
+                },
                 button: { slots: { base: "cursor-pointer duration-0" } },
                 select: {
                     slots: { base: "cursor-pointer duration-0" },

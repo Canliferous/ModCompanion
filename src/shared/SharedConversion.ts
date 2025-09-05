@@ -22,7 +22,7 @@ export function getConversionStateName(state: SharedConversionState): string {
         case SharedConversionState.InProgress:
             return "In Progress";
         case SharedConversionState.FinishedJob:
-            return "Finished (Unconfirmed";
+            return "Finished (Unconfirmed)";
         case SharedConversionState.FinishedConfirmed:
             return "Finished";
         case SharedConversionState.FinishedFailed:

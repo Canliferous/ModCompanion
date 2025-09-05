@@ -27,26 +27,15 @@ export async function createMdl(qcPath: string): Promise<string> {
     const cmd = `${config.studioMdlPath} -game ${config.gamePath} ${qcPath}`;
     console.log("Creating mdl. cmd:", cmd);
 
-    // TODO: String builder or something faster??
-    let log = "";
+    let log: string[] = [];
 
     return new Promise((resolve, reject) => {
-        const proc = child_process.exec(cmd, { cwd: config.gamePath }, (error, stdout, stderr) => {
-            if (error) {
-                log += error;
-                console.warn(error);
-            }
-            if (stderr) {
-                log += stderr;
-                console.debug(`StudioMDL ERR: ${stderr}`);
-            }
-            if (stdout) {
-                log += stdout;
-                console.debug(`StudioMDL: ${stdout}`);
-            }
+        const proc = child_process.exec(cmd, { cwd: config.gamePath });
+        proc.stdout?.on("data", (d) => {
+            log.push(d);
         });
         proc.on("exit", (code) => {
-            resolve(log);
+            resolve(log.join());
         });
     });
 }
