@@ -11,6 +11,7 @@ import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/gener
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 import AppDesign from "~/design/AppDesign.js";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
+import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -29,6 +30,7 @@ export const PanelComponentIds = {
     FileBrowser: "_FileBrowser",
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
+    Conversions: "_Conversions",
     SubPanelTab: "_SubPanelTab",
 } as const;
 export type PanelComponentId = (typeof PanelComponentIds)[keyof typeof PanelComponentIds];
@@ -81,6 +83,10 @@ export const PanelComponents = {
             componentId: "_AssetInspector",
             component: AssetInspectorPanel,
         },
+        conversions: {
+            componentId: "_Conversions",
+            component: ConversionsPanel,
+        },
     } as const,
     tabComponents: {
         subPanelTabs: {
@@ -117,6 +123,7 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureConvert: "VTF Options",
     _AssetInspector_TextureChannels: "Channels",
     _AssetInspector_General: "General",
+    _Conversions: "Conversions",
 } as const;
 
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
@@ -131,4 +138,5 @@ export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureConvert: "tdesign:arrow-left-right-3",
     _AssetInspector_TextureChannels: "tdesign:grid-view-filled",
     _AssetInspector_General: "tdesign:list",
+    _Conversions: "tdesign:arrow-left-right-3",
 } as const;

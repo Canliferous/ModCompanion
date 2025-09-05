@@ -25,5 +25,5 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { getState, enqueue };
+    return { conversions, getState, enqueue };
 });
