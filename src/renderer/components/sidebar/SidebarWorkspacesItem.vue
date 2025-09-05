@@ -21,12 +21,8 @@
 
             <template #content>
                 <div class="p-2 grid gap-2">
-                    <UInput
-                        placeholder="Workspace Name..."
-                        variant="ghost"
-                        v-model="label"
-                        @keydown="handleNameKeydown"
-                    />
+                    <UInput placeholder="Workspace Name..." v-model="label" @keydown="handleNameKeydown" />
+                    <UInput placeholder="Icon Name" v-model="icon" @keydown="handleIconDown" />
                     <div class="flex gap-1">
                         <UButton
                             label="Duplicate"
@@ -85,6 +81,7 @@ function handleNameKeydown(e: KeyboardEvent) {
         open.value = false;
     }
 }
+const handleIconDown = handleNameKeydown;
 </script>
 
 <style scoped></style>
