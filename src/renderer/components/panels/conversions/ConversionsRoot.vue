@@ -1,5 +1,5 @@
 <template>
-    <div class="p-1 h-full overflow-y-scroll">
+    <div>
         <UContextMenu :items="items">
             <DataTable
                 :entries="entries"
