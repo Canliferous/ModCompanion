@@ -10,6 +10,7 @@ import { registerImageMetaApi } from "../api/MainImageMetaApi.js";
 import { registerConversionApi } from "../api/MainConversionApi.js";
 import { registerProjectFilesApi } from "../api/MainProjectFiles.js";
 import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
+import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -24,6 +25,7 @@ const apis: (() => boolean)[] = [
     registerConversionApi,
     registerProjectFilesApi,
     registerHotReloadApi,
+    registerAssetGroupsApi,
 ];
 
 export function initApiSystem(): boolean {

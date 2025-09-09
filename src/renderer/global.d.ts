@@ -1,6 +1,6 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { IpcRenderer } from "electron";
+import { ipcRenderer, IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
@@ -18,6 +18,8 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
+import { SharedAssetGroupDefinition } from "Shared/SharedAssetGroup.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export {};
 
@@ -54,6 +56,9 @@ declare global {
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (primaryFile: string, otherFiles: string[]) => Promise<SharedCreateAssetReport>;
                 update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) => Promise<SharedAsset | undefined>;
+            };
+            assetGroups: {
+                create: (assetGroupDef: SharedAssetGroupDefinition) => void;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

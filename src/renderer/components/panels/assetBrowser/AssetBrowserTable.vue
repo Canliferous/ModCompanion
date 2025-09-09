@@ -17,7 +17,6 @@ import {
     getAssociatedEntryName,
     SharedAsset,
     SharedAssetDefinitionAssociatedFiles,
-    SharedAssetDefinitionAssociatedFilesEntries,
 } from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
@@ -25,10 +24,11 @@ import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
-import { usePanelsStore } from "~/store/PanelsStore.js";
+import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
+const assetGroupsStore = useAssetGroupsStore();
 
 const table = useTemplateRef("table");
 
@@ -84,6 +84,14 @@ const items = computed(() => {
                 }
             },
             icon: "tdesign:forward-filled",
+            color: "success",
+        },
+        {
+            label: "Create Asset Group",
+            onSelect(e: Event) {
+                assetGroupsStore.createGroup(selected.map((s) => s.def.id));
+            },
+            icon: "tdesign:app-filled",
             color: "success",
         },
     ]);

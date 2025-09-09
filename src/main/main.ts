@@ -9,6 +9,7 @@ import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 import { initConvertAgentSystem } from "./systems/MainConversionAgentSystem.js";
 import { initHotReloadSystem } from "./systems/MainHotReloadSystem.js";
 import { initStrataInterop } from "./systems/MainStrataInteropSystem.js";
+import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -26,6 +27,7 @@ const systems: System[] = [
     { name: "ConversionAgent", initFunction: initConvertAgentSystem },
     { name: "StrataInterop", initFunction: initStrataInterop },
     { name: "HotReload", initFunction: initHotReloadSystem },
+    { name: "AssetGroups", initFunction: initAssetGroupsSystem },
 ];
 
 async function startSystems() {

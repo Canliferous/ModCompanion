@@ -28,4 +28,6 @@ export const SharedIpcChannels = {
     ConversionGetState: "conversion_get_state",
     HotReloadSetEnabled: "hotreload_set_enabled",
     HotReloadTriggered: "hotreload_triggered",
+    AssetGroupsRescanned: "assetgroup_rescanned",
+    AssetGroupsCreate: "assetgroup_create",
 } as const;
