@@ -1,14 +1,13 @@
 <template>
-    <div>
-        <UContextMenu :items="items">
-            <DataTable
-                :entries="entries"
-                :columns="columns"
-                neutral-highlight
-                @on-active-changed="handleActiveChanged"
-            />
-        </UContextMenu>
-    </div>
+    <UContextMenu :items="items">
+        <DataTable
+            :entries="entries"
+            :columns="columns"
+            neutral-highlight
+            @on-active-changed="handleActiveChanged"
+            no-header
+        />
+    </UContextMenu>
 </template>
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
