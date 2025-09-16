@@ -3,8 +3,9 @@
         class="grid content-start p-1 w-full h-full"
         :class="noHeader ? 'grid-rows-[minmax(0,_1fr)]' : 'grid-rows-[auto_minmax(0,_1fr)]'"
         :style="`grid-template-columns: ${columnTemplate}`"
-        @keydown="handleKeyDown"
         ref="root"
+        @click="handleClickEmptyArea"
+        @keydown="handleKeyDown"
     >
         <DataTableHeader v-if="!noHeader" :columns="columns" />
         <div class="grid col-span-full grid-cols-subgrid content-start pr-1 overflow-y-scroll" ref="grid">
@@ -13,11 +14,11 @@
                 :idx="i"
                 :entry="entry.entry"
                 :columns="props.columns"
-                @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
-                @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
                 :draggable="draggable"
                 :neutral-highlight="neutralHighlight"
                 :depth="entry.depth"
+                @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
+                @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
             />
         </div>
     </div>
@@ -141,7 +142,7 @@ function deselect(): void {
 
 function startSelect(startIdx: number): void {
     if (startIdx < 0) return;
-    if (startIdx > props.entries.length - 1) return;
+    if (startIdx > entriesHierarchy.value.length - 1) return;
 
     selectedIdx.value = [startIdx];
     activeIdx.value = startIdx;
@@ -150,12 +151,12 @@ function startSelect(startIdx: number): void {
 
 function endSelect(endIdx: number): void {
     if (endIdx < 0) return;
-    if (endIdx > props.entries.length - 1) return;
+    if (endIdx > entriesHierarchy.value.length - 1) return;
     if (activeIdx.value === undefined || selectStartIdx.value === undefined) {
         startSelect(endIdx);
         return;
     }
-    const entries = props.entries;
+    const entries = entriesHierarchy.value;
     if (entries === undefined) return;
     const startIdx = selectStartIdx.value;
 
@@ -196,7 +197,7 @@ function toggleSelect(idx: number): void {
 
 function selectAll(): void {
     // Select bottom to top so the top item is the active one
-    startSelect(props.entries.length - 1);
+    startSelect(entriesHierarchy.value.length - 1);
     endSelect(0);
 }
 
@@ -235,6 +236,12 @@ function handleDragEvent(event: DragEvent, idx: number, emitEvent: "onDragStart"
         //@ts-ignore
         emit(emitEvent, event, idx, [idx]);
     }
+}
+
+// ----
+
+function handleClickEmptyArea(): void {
+    deselect();
 }
 </script>
 

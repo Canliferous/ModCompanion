@@ -4,10 +4,10 @@
             ref="table"
             :entries="entries"
             :columns="columns"
+            :tree-child-func="treeChildFunc"
+            tree
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"
-            tree
-            :tree-child-func="treeChildFunc"
         />
     </UContextMenu>
 </template>
@@ -45,7 +45,6 @@ const table = useTemplateRef("table");
 
 const entries = computed(() => {
     const assetGroups = assetGroupsStore.groups;
-    console.log(assetGroups);
     const assetIdsInGroups: SharedAssetId[] = [];
 
     // Add groups first

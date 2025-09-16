@@ -2,13 +2,13 @@
     <button
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-sm text-left cursor-pointer outline-none hover:bg-accented"
         :class="rowHighlightClass"
+        :draggable="draggable"
         @click="handleClick"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
         @keydown.down="handleDown"
         @keydown.up="handleUp"
         @keydown.enter="handleEnter"
-        :draggable="draggable"
         @dragstart="(e) => emit('dragStart', e)"
         @dragend="(e) => emit('dragEnd', e)"
     >
@@ -86,12 +86,12 @@ function handleEnter(event: KeyboardEvent): void {
 const rowHighlightClass = computed(() =>
     props.neutralHighlight
         ? {
-              "bg-neutral-750 hover:bg-neutral-600": isSelected && !isActive,
-              "bg-neutral-700 hover:bg-neutral-600": isActive,
+              "bg-neutral-750 hover:bg-neutral-600": isSelected.value && !isActive.value,
+              "bg-neutral-700 hover:bg-neutral-600": isActive.value,
           }
         : {
-              "bg-primary-700 hover:bg-primary-500": isSelected && !isActive,
-              "bg-primary-600 hover:bg-primary-500": isActive,
+              "bg-primary-700 hover:bg-primary-500": isSelected.value && !isActive.value,
+              "bg-primary-600 hover:bg-primary-500": isActive.value,
           },
 );
 </script>
