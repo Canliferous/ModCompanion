@@ -1,6 +1,6 @@
 <template>
     <div class="p-2 grid grid-cols-2">
-        <UFormField label="Group Name">
+        <UFormField label="Group Name" class="col-span-2">
             <UInput
                 placeholder="Group Name..."
                 class="w-full"
