@@ -4,6 +4,7 @@ import "@fontsource-variable/jetbrains-mono";
 import { initVue } from "~/renderer-vue.js";
 import { initConfig } from "~/renderer-config.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { initIcons } from "~/renderer-icons.js";
 
 initConfig();
@@ -12,6 +13,7 @@ initIcons();
 
 function postInit() {
     useAssetListStore().forceRefresh();
+    useAssetGroupsStore().forceRefresh();
 }
 
 postInit();

@@ -1,16 +1,24 @@
 import { defineStore } from "pinia";
-import { SharedAssetGroupDefinition } from "Shared/SharedAssetGroup.js";
+import { SharedAssetGroup, SharedAssetGroupDefinition } from "Shared/SharedAssetGroup.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetGroupsStore = defineStore("asset-groups", () => {
-    const groups = ref<SharedAssetGroupDefinition[]>([]);
+    const groups = ref<SharedAssetGroup[]>([]);
 
-    function createGroup(assets: SharedAssetId[]) {
+    window.electronAPI.assetGroups.subscribeRescanned((event) => {
+        groups.value = event.groups;
+    });
+
+    async function createGroup(assets: SharedAssetId[]) {
         const newGroup = { displayName: `New Group (${assets.length} assets)`, assets };
 
-        groups.value.push(newGroup);
-        window.electronAPI.assetGroups.create(newGroup);
+        const result = await window.electronAPI.assetGroups.create(newGroup);
+        groups.value.push(result);
     }
 
-    return { groups, createGroup };
+    function forceRefresh(): void {
+        window.electronAPI.assetGroups.forceRescan();
+    }
+
+    return { groups, createGroup, forceRefresh };
 });

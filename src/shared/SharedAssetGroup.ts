@@ -9,3 +9,7 @@ export interface SharedAssetGroup {
     def: SharedAssetGroupDefinition;
     filePath: string;
 }
+
+export interface SharedAssetGroupRescanEvent {
+    groups: SharedAssetGroup[];
+}

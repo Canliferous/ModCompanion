@@ -1,25 +1,41 @@
 import fs from "fs/promises";
-import { getAssetGroupDir } from "./assetGroups/MainAssetGroups.js";
-import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
+import { SharedAssetGroup, SharedAssetGroupDefinition } from "Shared/SharedAssetGroup.js";
 import path from "path";
 import { existsSync } from "fs";
+import { notifyAssetGroupsUpdated } from "../api/MainAssetGroupsApi.js";
+import { getConfig } from "./MainConfigSystem.js";
+import { v4 } from "uuid";
 
-const groups: SharedAssetGroup[] = [];
+let groups: SharedAssetGroup[] = [];
+
+export function getAssetGroupDir(): string {
+    return path.join(getConfig().contentPath, "_modcomp_asset_groups");
+}
 
 export async function initAssetGroupsSystem(): Promise<boolean> {
-    await _loadAssetGroups();
+    const dir = getAssetGroupDir();
+    if (!existsSync(dir)) {
+        await fs.mkdir(dir);
+    }
 
     return true;
 }
 
-async function _loadAssetGroups() {
-    const startTime = new Date().getTime();
-    const dir = getAssetGroupDir();
+export async function writeAssetGroup(assetGroupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> {
+    const filePath = path.join(getAssetGroupDir(), v4() + ".json");
+    const contents = JSON.stringify(assetGroupDef);
+    await fs.writeFile(filePath, contents);
+    console.log("Wrote asset group", filePath, assetGroupDef);
+    return { filePath, def: assetGroupDef };
+}
 
-    if (!existsSync(dir)) {
-        await fs.mkdir(dir);
-    }
+export async function scanAssetGroups() {
+    console.trace();
+    const startTime = new Date().getTime();
+    groups = [];
+    const dir = getAssetGroupDir();
     const dirItems = await fs.readdir(dir);
+    console.log(dir, dirItems);
     for (const dirItem of dirItems) {
         if (!dirItem.endsWith(".json")) continue;
         const dirItemFull = path.join(dir, dirItem);
@@ -34,4 +50,6 @@ async function _loadAssetGroups() {
 
     const endTime = new Date().getTime();
     console.log(`Loaded ${groups.length} asset groups in ${endTime - startTime}ms`);
+
+    notifyAssetGroupsUpdated({ groups });
 }

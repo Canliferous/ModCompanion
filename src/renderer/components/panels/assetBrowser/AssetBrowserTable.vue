@@ -45,6 +45,7 @@ const table = useTemplateRef("table");
 
 const entries = computed(() => {
     const assetGroups = assetGroupsStore.groups;
+    console.log(assetGroups);
     const assetIdsInGroups: SharedAssetId[] = [];
 
     // Add groups first
@@ -52,10 +53,10 @@ const entries = computed(() => {
     for (const assetGroup of assetGroups) {
         result.push({
             type: AssetBrowserEntryTypes.Group,
-            group: assetGroup,
+            group: assetGroup.def,
         });
 
-        assetIdsInGroups.push(...assetGroup.assets);
+        assetIdsInGroups.push(...assetGroup.def.assets);
     }
 
     // Add remaining ungrouped assets
