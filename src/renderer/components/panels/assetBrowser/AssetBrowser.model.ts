@@ -1,5 +1,5 @@
-import { SharedAssetDefinition, SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { SharedAssetGroupDefinition } from "Shared/SharedAssetGroup.js";
+import { SharedAssetDefinition } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
 
 export const AssetBrowserEntryTypes = {
     Unknown: 0,
@@ -19,7 +19,7 @@ export interface AssetBrowserAssetEntry extends AssetBrowserBaseEntry {
 
 export interface AssetBrowserGroupEntry extends AssetBrowserBaseEntry {
     type: typeof AssetBrowserEntryTypes.Group;
-    group: SharedAssetGroupDefinition;
+    group: SharedAssetGroup;
 }
 
 export type AssetBrowserEntry = AssetBrowserAssetEntry | AssetBrowserGroupEntry;
@@ -33,7 +33,7 @@ export function isAssetBrowserGroupEntry(entry: AssetBrowserEntry | undefined | 
 
 export function getAssetBrowserEntrySortString(entry: AssetBrowserEntry): string {
     if (isAssetBrowserGroupEntry(entry)) {
-        return entry.group.displayName;
+        return entry.group.def.displayName;
     }
 
     if (isAssetBrowserAssetEntry(entry)) {

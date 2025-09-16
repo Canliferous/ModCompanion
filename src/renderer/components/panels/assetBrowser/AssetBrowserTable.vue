@@ -21,7 +21,6 @@ import {
     SharedAssetId,
 } from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellAssetName from "~/components/panels/assetBrowser/AssetBrowserCellAssetName.vue";
@@ -49,10 +48,10 @@ const entries = computed(() => {
 
     // Add groups first
     const result: AssetBrowserEntry[] = [];
-    for (const assetGroup of assetGroups) {
+    for (const assetGroup of assetGroups.values()) {
         result.push({
             type: AssetBrowserEntryTypes.Group,
-            group: assetGroup.def,
+            group: assetGroup,
         });
 
         assetIdsInGroups.push(...assetGroup.def.assets);
@@ -86,7 +85,7 @@ listStore.subscribeSelectionUpdated(() => {
 
 function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefined {
     if (isAssetBrowserGroupEntry(entry)) {
-        const assets = listStore.getAssetsById(entry.group.assets);
+        const assets = listStore.getAssetsById(entry.group.def.assets);
         const entries = assets.map<AssetBrowserAssetEntry>((a) => ({
             type: AssetBrowserEntryTypes.Asset,
             assetDef: a.def,
@@ -109,7 +108,7 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
                     depth,
                 });
             } else if (isAssetBrowserGroupEntry(entry)) {
-                return h(AssetBrowserCellGroupName, { name: entry.group.displayName });
+                return h(AssetBrowserCellGroupName, { name: entry.group.def.displayName });
             }
 
             return undefined;
@@ -136,6 +135,10 @@ function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
 function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
     if (isAssetBrowserAssetEntry(entry)) {
         listStore.activateAssetById(entry.assetDef.id);
+        assetGroupsStore.selectGroup(undefined);
+    } else if (isAssetBrowserGroupEntry(entry)) {
+        assetGroupsStore.selectGroup(entry.group.id);
+        listStore.activateAssetById(undefined);
     }
 }
 

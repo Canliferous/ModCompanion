@@ -5,11 +5,14 @@ export interface SharedAssetGroupDefinition {
     displayName: string;
 }
 
+export type SharedAssetGroupId = string;
+
 export interface SharedAssetGroup {
     def: SharedAssetGroupDefinition;
     filePath: string;
+    id: SharedAssetGroupId;
 }
 
 export interface SharedAssetGroupRescanEvent {
-    groups: SharedAssetGroup[];
+    groups: Map<SharedAssetGroupId, SharedAssetGroup>;
 }
