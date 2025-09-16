@@ -11,6 +11,9 @@
                 <AssetInspectorRoot :asset="assetStore.activeAsset" />
             </div>
         </template>
+        <template v-else-if="assetGroupsStore.activeGroup">
+            <AssetInspectorGroupPanel :group="assetGroupsStore.activeGroup" />
+        </template>
         <div v-else class="grid h-full place-items-center">Nothing Selected</div>
     </TooltipProvider>
 </template>
@@ -19,8 +22,10 @@
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { TooltipProvider } from "reka-ui";
 import AssetInspectorSaved from "~/components/panels/assetInspector/AssetInspectorSaved.vue";
+import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 
 const assetStore = useAssetListStore();
+const assetGroupsStore = useAssetGroupsStore();
 </script>
 
 <style scoped></style>

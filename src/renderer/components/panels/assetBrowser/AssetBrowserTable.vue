@@ -135,9 +135,9 @@ function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
 function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
     if (isAssetBrowserAssetEntry(entry)) {
         listStore.activateAssetById(entry.assetDef.id);
-        assetGroupsStore.selectGroup(undefined);
+        assetGroupsStore.activateGroup(undefined);
     } else if (isAssetBrowserGroupEntry(entry)) {
-        assetGroupsStore.selectGroup(entry.group.id);
+        assetGroupsStore.activateGroup(entry.group.id);
         listStore.activateAssetById(undefined);
     }
 }

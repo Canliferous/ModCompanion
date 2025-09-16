@@ -17,7 +17,7 @@ import {
     SharedAssetUpdatedEvent,
 } from "./shared/SharedAssetDefinition.js";
 import { SharedConversionUpdateEvent } from "./shared/SharedConversion";
-import { SharedAssetGroupDefinition, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
+import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -89,6 +89,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
         create: (assetGroupDef: SharedAssetGroupDefinition) =>
             ipcRenderer.invoke(SharedIpcChannels.AssetGroupsCreate, assetGroupDef),
+        update: (groupId: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) =>
+            ipcRenderer.invoke(SharedIpcChannels.AssetGroupsUpdate, groupId, groupDef),
     },
 
     image: {

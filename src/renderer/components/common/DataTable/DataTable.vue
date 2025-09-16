@@ -63,7 +63,7 @@ const entriesHierarchy = computed(() => {
             });
             const children = func?.(entry);
             if (children) {
-                populateResult(children, ++depth);
+                populateResult(children, depth + 1);
             }
         }
     }

@@ -1,10 +1,18 @@
 import { defineStore } from "pinia";
-import { SharedAssetGroup, SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
+import { SharedAssetGroup, SharedAssetGroupDefinition, SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetGroupsStore = defineStore("asset-groups", () => {
     const groups = ref<Map<SharedAssetGroupId, SharedAssetGroup>>(new Map());
-    const selectedGroup = ref<SharedAssetGroupId | undefined>();
+    const activeGroupId = ref<SharedAssetGroupId | undefined>();
+    const activeGroup = computed(() => {
+        const v = activeGroupId.value;
+        if (!v) {
+            return undefined;
+        } else {
+            return groups.value.get(v);
+        }
+    });
 
     window.electronAPI.assetGroups.subscribeRescanned((event) => {
         groups.value = event.groups;
@@ -21,9 +29,14 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         window.electronAPI.assetGroups.forceRescan();
     }
 
-    function selectGroup(id: SharedAssetGroupId | undefined): void {
-        selectedGroup.value = id;
+    function activateGroup(id: SharedAssetGroupId | undefined): void {
+        activeGroupId.value = id;
     }
 
-    return { groups, selectedGroup, createGroup, forceRefresh, selectGroup };
+    async function writeGroup(id: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) {
+        const result = await window.electronAPI.assetGroups.update(id, groupDef);
+        groups.value.set(result.id, result);
+    }
+
+    return { groups, activeGroupId, activeGroup, createGroup, forceRefresh, activateGroup, writeGroup };
 });

@@ -18,7 +18,12 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
-import { SharedAssetGroup, SharedAssetGroupDefinition, SharedAssetGroupRescanEvent } from "Shared/SharedAssetGroup.js";
+import {
+    SharedAssetGroup,
+    SharedAssetGroupDefinition,
+    SharedAssetGroupId,
+    SharedAssetGroupRescanEvent,
+} from "Shared/SharedAssetGroup.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export {};
@@ -60,7 +65,11 @@ declare global {
             assetGroups: {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetGroupRescanEvent) => void) => IpcRenderer;
-                create: (assetGroupDef: SharedAssetGroupDefinition) => Promise<SharedAssetGroup>;
+                create: (groupDef: SharedAssetGroupDefinition) => Promise<SharedAssetGroup>;
+                update: (
+                    groupId: SharedAssetGroupId,
+                    groupDef: SharedAssetGroupDefinition,
+                ) => Promise<SharedAssetGroup>;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

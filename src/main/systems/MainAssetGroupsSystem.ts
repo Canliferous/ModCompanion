@@ -22,12 +22,14 @@ export async function initAssetGroupsSystem(): Promise<boolean> {
     return true;
 }
 
-function _generateGroupId(): SharedAssetGroupId {
+export function generateAssetGroupId(): SharedAssetGroupId {
     return v4();
 }
 
-export async function writeAssetGroup(assetGroupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> {
-    const id = _generateGroupId();
+export async function writeAssetGroup(
+    id: SharedAssetGroupId,
+    assetGroupDef: SharedAssetGroupDefinition,
+): Promise<SharedAssetGroup> {
     const filePath = path.join(getAssetGroupDir(), id + ".json");
     const contents = JSON.stringify(assetGroupDef);
     await fs.writeFile(filePath, contents);
