@@ -3,7 +3,6 @@
         class="grid content-start p-1 w-full h-full"
         :class="noHeader ? 'grid-rows-[minmax(0,_1fr)]' : 'grid-rows-[auto_minmax(0,_1fr)]'"
         :style="`grid-template-columns: ${columnTemplate}`"
-        ref="root"
         @click="handleClickEmptyArea"
         @keydown="handleKeyDown"
     >
@@ -81,7 +80,6 @@ const emit = defineEmits<{
     onDragStart: [event: DragEvent, primaryEntry: T, allEntries: T[]];
     onDragEnd: [event: DragEvent, primaryEntry: T, allEntries: T[]];
 }>();
-const rootEl = useTemplateRef("root");
 const gridEl = useTemplateRef("grid");
 
 const columnTemplate = computed(() => props.columns.map((c) => c.size ?? "auto").join(" "));
