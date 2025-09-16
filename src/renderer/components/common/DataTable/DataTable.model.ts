@@ -2,7 +2,7 @@ export interface DataTableColumn<T> {
     id: string;
     label?: string;
     size?: string;
-    cell?: (entry: T) => VNode;
+    cell?: (entry: T, depth: number) => VNode | undefined;
     headerClass?: string;
 }
 

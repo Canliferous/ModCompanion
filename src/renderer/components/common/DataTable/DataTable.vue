@@ -9,14 +9,15 @@
         <DataTableHeader v-if="!noHeader" :columns="columns" />
         <div class="grid col-span-full grid-cols-subgrid content-start pr-1 overflow-y-scroll" ref="grid">
             <DataTableRow
-                v-for="(entry, i) in props.entries"
+                v-for="(entry, i) in entriesHierarchy"
                 :idx="i"
-                :entry="entry"
+                :entry="entry.entry"
                 :columns="props.columns"
                 @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
                 @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
                 :draggable="draggable"
                 :neutral-highlight="neutralHighlight"
+                :depth="entry.depth"
             />
         </div>
     </div>
@@ -36,14 +37,48 @@ const props = defineProps<{
     noHeader?: boolean;
     draggable?: boolean;
     neutralHighlight?: boolean;
+    tree?: boolean;
+    treeChildFunc?: (entry: T) => T[] | undefined;
 }>();
+
+interface HierarchyEntry {
+    entry: T;
+    depth: number;
+}
+
+const entriesHierarchy = computed(() => {
+    const func = props.treeChildFunc;
+    if (func === undefined) {
+        return props.entries.map<HierarchyEntry>((e) => ({ entry: e, depth: 0 }));
+    }
+
+    const result: HierarchyEntry[] = [];
+
+    function populateResult(entries: T[], depth: number = 0): void {
+        for (const entry of entries) {
+            result.push({
+                entry,
+                depth,
+            });
+            const children = func?.(entry);
+            if (children) {
+                populateResult(children, ++depth);
+            }
+        }
+    }
+
+    populateResult(props.entries);
+
+    return result;
+});
+
 const emit = defineEmits<{
-    onEntryActivated: [idx: number];
-    onEntryContextMenu: [idx: number];
-    onActiveChanged: [idx: number | undefined];
-    onSelectionChanged: [idx: number[]];
-    onDragStart: [event: DragEvent, primaryIdx: number, allIdx: number[]];
-    onDragEnd: [event: DragEvent, primaryIdx: number, allIdx: number[]];
+    onEntryActivated: [entry: T];
+    onEntryContextMenu: [entry: T];
+    onActiveChanged: [entry: T | undefined];
+    onSelectionChanged: [entries: T[]];
+    onDragStart: [event: DragEvent, primaryEntry: T, allEntries: T[]];
+    onDragEnd: [event: DragEvent, primaryEntry: T, allEntries: T[]];
 }>();
 const rootEl = useTemplateRef("root");
 const gridEl = useTemplateRef("grid");
@@ -54,8 +89,13 @@ const activeIdx = ref<number | undefined>();
 const selectedIdx = ref<number[]>([]);
 const selectStartIdx = ref<number | undefined>();
 
-watch(activeIdx, (newVal) => emit("onActiveChanged", newVal));
-watch(selectedIdx, (newVal) => emit("onSelectionChanged", newVal));
+watch(activeIdx, (newIdx) => emit("onActiveChanged", newIdx ? entriesHierarchy.value[newIdx].entry : undefined));
+watch(selectedIdx, (newIdxs) =>
+    emit(
+        "onSelectionChanged",
+        newIdxs.map((i) => entriesHierarchy.value[i].entry),
+    ),
+);
 
 provide(DataTableSelectionInjectKey, {
     activeIdx,
@@ -70,13 +110,13 @@ provide(DataTableSelectionInjectKey, {
 });
 
 provide(DataTableEntryActionInjectKey, {
-    onEntryActivated: (idx: number) => emit("onEntryActivated", idx),
+    onEntryActivated: (idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
     onEntryContextMenu: (idx: number) => {
         // Make the right-clicked item active
         activeIdx.value = idx;
         selectedIdx.value = [...selectedIdx.value, idx].sort();
 
-        emit("onEntryContextMenu", idx);
+        emit("onEntryContextMenu", entriesHierarchy.value[idx].entry);
     },
 });
 

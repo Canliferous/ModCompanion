@@ -5,6 +5,7 @@ import App from "~/components/App.vue";
 import { initPanels } from "~/renderer-panels.js";
 import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { createMemoryHistory, createRouter } from "vue-router";
 
 export function initVue() {
@@ -27,4 +28,5 @@ export function initVue() {
 function _initSystemStores() {
     usePanelsManagerStore();
     useMapConsoleStore();
+    useAssetConversionStore();
 }

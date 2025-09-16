@@ -1,17 +1,7 @@
 <template>
     <button
         class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-sm text-left cursor-pointer outline-none hover:bg-accented"
-        :class="
-            neutralHighlight
-                ? {
-                      'bg-neutral-750 hover:bg-neutral-600': isSelected && !isActive,
-                      'bg-neutral-700 hover:bg-neutral-600': isActive,
-                  }
-                : {
-                      'bg-primary-700 hover:bg-primary-500': isSelected && !isActive,
-                      'bg-primary-600 hover:bg-primary-500': isActive,
-                  }
-        "
+        :class="rowHighlightClass"
         @click="handleClick"
         @contextmenu="handleContextMenu"
         @dblclick="handleDoubleClick"
@@ -22,7 +12,7 @@
         @dragstart="(e) => emit('dragStart', e)"
         @dragend="(e) => emit('dragEnd', e)"
     >
-        <component v-for="col in columns" :is="col.cell ? col.cell(entry) : 'div'" />
+        <component v-for="col in columns" :is="col.cell ? (col.cell(entry, depth) ?? 'div') : 'div'" />
     </button>
 </template>
 
@@ -39,6 +29,7 @@ const props = defineProps<{
     columns: DataTableColumn<T>[];
     draggable?: boolean;
     neutralHighlight?: boolean;
+    depth: number;
 }>();
 
 const selection = inject(DataTableSelectionInjectKey);
@@ -92,6 +83,17 @@ function handleEnter(event: KeyboardEvent): void {
     event.stopPropagation();
     entryAction?.onEntryActivated(props.idx);
 }
+const rowHighlightClass = computed(() =>
+    props.neutralHighlight
+        ? {
+              "bg-neutral-750 hover:bg-neutral-600": isSelected && !isActive,
+              "bg-neutral-700 hover:bg-neutral-600": isActive,
+          }
+        : {
+              "bg-primary-700 hover:bg-primary-500": isSelected && !isActive,
+              "bg-primary-600 hover:bg-primary-500": isActive,
+          },
+);
 </script>
 
 <style scoped></style>

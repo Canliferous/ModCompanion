@@ -85,7 +85,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing.value = true;
     }
 
-    function activateAssetById(assetHash: string): void {
+    function activateAssetById(assetHash: string | undefined): void {
         activeId.value = assetHash;
     }
 
@@ -112,6 +112,10 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectedIds.value = idxs.map((i) => getIdByIndex(i)).filter((i) => i !== undefined);
     }
 
+    function selectAssetsById(assets: SharedAssetId[]): void {
+        selectedIds.value = assets;
+    }
+
     function selectAssetsByMca(mcaPaths: string[]): void {
         const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
         const sel: SharedAssetId[] = [];
@@ -132,6 +136,10 @@ export const useAssetListStore = defineStore("asset-list", () => {
         const arr = filteredAssets.value;
         if (idx > arr.length - 1) return undefined;
         return arr[idx];
+    }
+
+    function getAssetsById(ids: SharedAssetId[]): SharedAsset[] {
+        return ids.map((id) => assets.value.get(id)).filter((a) => a !== undefined);
     }
 
     function updateAssets(as: SharedAsset[]): void {
@@ -163,10 +171,12 @@ export const useAssetListStore = defineStore("asset-list", () => {
         createAsset,
         writeAssets,
         getAssetByIndex,
+        getAssetsById,
         forceRefresh,
         activateAssetById,
         activateAssetByIndex,
         selectIndices,
+        selectAssetsById,
         selectAssetsByMca,
         subscribeSelectionUpdated,
         subscribeAssetsWritten,

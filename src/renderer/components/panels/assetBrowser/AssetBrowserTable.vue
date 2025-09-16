@@ -2,10 +2,12 @@
     <UContextMenu :items="items">
         <DataTable
             ref="table"
-            :entries="listStore.filteredAssets"
+            :entries="entries"
             :columns="columns"
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"
+            tree
+            :tree-child-func="treeChildFunc"
         />
     </UContextMenu>
 </template>
@@ -15,22 +17,63 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
 import {
     getAssociatedEntryName,
-    SharedAsset,
     SharedAssetDefinitionAssociatedFiles,
+    SharedAssetId,
 } from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import AssetTypeIcon from "~/components/common/AssetTypeIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
-import AssetBrowserCellName from "~/components/panels/assetBrowser/AssetBrowserCellName.vue";
+import AssetBrowserCellAssetName from "~/components/panels/assetBrowser/AssetBrowserCellAssetName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
+import {
+    AssetBrowserAssetEntry,
+    AssetBrowserEntry,
+    AssetBrowserEntryTypes,
+    getAssetBrowserEntrySortString,
+    isAssetBrowserAssetEntry,
+    isAssetBrowserGroupEntry,
+} from "~/components/panels/assetBrowser/AssetBrowser.model.js";
+import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
 const assetGroupsStore = useAssetGroupsStore();
 
 const table = useTemplateRef("table");
+
+const entries = computed(() => {
+    const assetGroups = assetGroupsStore.groups;
+    const assetIdsInGroups: SharedAssetId[] = [];
+
+    // Add groups first
+    const result: AssetBrowserEntry[] = [];
+    for (const assetGroup of assetGroups) {
+        result.push({
+            type: AssetBrowserEntryTypes.Group,
+            group: assetGroup,
+        });
+
+        assetIdsInGroups.push(...assetGroup.assets);
+    }
+
+    // Add remaining ungrouped assets
+    for (let assets of listStore.filteredAssets) {
+        if (assetIdsInGroups.includes(assets.def.id)) {
+            continue;
+        }
+
+        result.push({
+            type: AssetBrowserEntryTypes.Asset,
+            assetDef: assets.def,
+        });
+    }
+
+    result.sort((a, b) => getAssetBrowserEntrySortString(a).localeCompare(getAssetBrowserEntrySortString(b)));
+
+    return result;
+});
 
 // TODO: Also update active
 listStore.subscribeSelectionUpdated(() => {
@@ -41,33 +84,59 @@ listStore.subscribeSelectionUpdated(() => {
     table.value?.select(selIdxs);
 });
 
-const columns: DataTableColumn<SharedAsset>[] = [
-    {
-        id: "type",
-        label: "",
-        cell: (entry) => h(AssetTypeIcon, { type: entry.def.type }),
-        size: "auto",
-    },
+function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefined {
+    if (isAssetBrowserGroupEntry(entry)) {
+        const assets = listStore.getAssetsById(entry.group.assets);
+        const entries = assets.map<AssetBrowserAssetEntry>((a) => ({
+            type: AssetBrowserEntryTypes.Asset,
+            assetDef: a.def,
+        }));
+        return entries;
+    }
+
+    return undefined;
+}
+
+const columns: DataTableColumn<AssetBrowserEntry>[] = [
     {
         id: "name",
         label: "Name",
-        cell: (entry) => h(AssetBrowserCellName, { name: entry.def.displayName ?? "(unknown)" }),
+        cell: (entry, depth) => {
+            if (isAssetBrowserAssetEntry(entry)) {
+                return h(AssetBrowserCellAssetName, {
+                    name: entry.assetDef.displayName ?? "(unknown)",
+                    type: entry.assetDef.type,
+                    depth,
+                });
+            } else if (isAssetBrowserGroupEntry(entry)) {
+                return h(AssetBrowserCellGroupName, { name: entry.group.displayName });
+            }
+
+            return undefined;
+        },
         size: "minmax(0, 1fr)",
     },
     {
         id: "converted",
         label: "Conv",
-        cell: (entry) => h(AssetBrowserCellConverted, { state: conversionStore.getState(entry.def.id) }),
+        cell: (entry) => {
+            if (isAssetBrowserAssetEntry(entry)) {
+                const state = conversionStore.getState(entry.assetDef.id);
+                return h(AssetBrowserCellConverted, { state });
+            }
+        },
         size: "auto",
     },
 ];
 
-function handleSelectionChanged(idxs: number[]): void {
-    listStore.selectIndices(idxs);
+function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
+    listStore.selectAssetsById(entries.filter(isAssetBrowserAssetEntry).map((a) => a.assetDef.id));
 }
 
-function handleActiveChanged(idx: number | undefined): void {
-    listStore.activateAssetByIndex(idx);
+function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
+    if (isAssetBrowserAssetEntry(entry)) {
+        listStore.activateAssetById(entry.assetDef.id);
+    }
 }
 
 const items = computed(() => {
