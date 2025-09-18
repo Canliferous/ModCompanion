@@ -228,13 +228,16 @@ function handleKeyDown(event: KeyboardEvent) {
 // Dragan drop
 
 function handleDragEvent(event: DragEvent, idx: number, emitEvent: "onDragStart" | "onDragEnd"): void {
-    if (selectedIdx.value.includes(idx)) {
-        const orderedIdx = new Set([idx, ...selectedIdx.value]);
-        //@ts-ignore
-        emit(emitEvent, event, idx, Array.from(orderedIdx));
+    const selection = selectedIdx.value;
+    const primarySelected = entriesHierarchy.value[idx].entry;
+    if (selection.includes(idx)) {
+        const entries = entriesHierarchy.value.filter((value, index) => selection.includes(index)).map((e) => e.entry);
+        const orderedEntries = new Set([primarySelected, ...entries]);
+        // @ts-ignore
+        emit(emitEvent, event, idx, Array.from(orderedEntries));
     } else {
-        //@ts-ignore
-        emit(emitEvent, event, idx, [idx]);
+        // @ts-ignore
+        emit(emitEvent, event, idx, primarySelected);
     }
 }
 
