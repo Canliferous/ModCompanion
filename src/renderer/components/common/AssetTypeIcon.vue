@@ -1,6 +1,10 @@
+<template>
+    <UIcon :name="iconName" :class="getAssetTypeTextColor(type)" />
+</template>
+
 <script setup lang="ts">
 import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
-import { getAssetTypeIcon } from "~/design/AppDesign.js";
+import { getAssetTypeIcon, getAssetTypeTextColor } from "~/design/AppDesign.js";
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -8,9 +12,5 @@ const props = defineProps<{
 }>();
 const iconName = computed(() => getAssetTypeIcon(props.type));
 </script>
-
-<template>
-    <UIcon :name="iconName" />
-</template>
 
 <style scoped></style>

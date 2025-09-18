@@ -5,11 +5,7 @@ export const icons = {
     material: "tdesign:highlight-1",
     model: "tdesign:control-platform",
     texture: "tdesign:image-filled",
-} as const;
-
-export const colors = {
-    gameAsset: "amber",
-    contentAsset: "lime",
+    assetGroup: "tdesign:combination-filled",
 } as const;
 
 export function getAssetTypeIcon(type: SharedAssetType): string {
@@ -21,6 +17,17 @@ export function getAssetTypeIcon(type: SharedAssetType): string {
         case SharedAssetTypes.Unknown:
         default:
             return icons.asset;
+    }
+}
+export function getAssetTypeTextColor(type: SharedAssetType): string {
+    switch (type) {
+        case SharedAssetTypes.Texture:
+            return "text-blue-400";
+        case SharedAssetTypes.Model:
+            return "text-red-400";
+        case SharedAssetTypes.Unknown:
+        default:
+            return "text-neutral-500";
     }
 }
 
