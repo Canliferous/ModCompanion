@@ -45,8 +45,7 @@ function handleRemoveAsset(index: number) {
 }
 
 function handleAddAsset(ids: SharedAssetId[]) {
-    const assets: SharedAssetId[] = Array.from(new Set([...props.group.def.assets, ...ids]));
-    groupStore.writeGroup(props.group.id, { ...toRaw(props.group.def), assets });
+    groupStore.writeAddAssetsToGroup(props.group.id, ids);
 }
 </script>
 

@@ -111,7 +111,7 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
                     depth,
                 });
             } else if (isAssetBrowserGroupEntry(entry)) {
-                return h(AssetBrowserCellGroupName, { name: entry.group.def.displayName });
+                return h(AssetBrowserCellGroupName, { name: entry.group.def.displayName, id: entry.group.id });
             }
 
             return undefined;

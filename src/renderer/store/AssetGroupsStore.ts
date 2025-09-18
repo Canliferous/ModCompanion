@@ -38,5 +38,22 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         groups.value.set(result.id, result);
     }
 
-    return { groups, activeGroupId, activeGroup, createGroup, forceRefresh, activateGroup, writeGroup };
+    function writeAddAssetsToGroup(groupId: SharedAssetGroupId, assetIds: SharedAssetId[]) {
+        const group = groups.value.get(groupId);
+        if (group === undefined) return;
+
+        const assets: SharedAssetId[] = Array.from(new Set([...group.def.assets, ...assetIds]));
+        return writeGroup(group.id, { ...toRaw(group.def), assets });
+    }
+
+    return {
+        groups,
+        activeGroupId,
+        activeGroup,
+        createGroup,
+        forceRefresh,
+        activateGroup,
+        writeGroup,
+        writeAddAssetsToGroup,
+    };
 });
