@@ -6,8 +6,10 @@
             :columns="columns"
             :tree-child-func="treeChildFunc"
             tree
+            draggable
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"
+            @onDragStart="handleDragStart"
         />
     </UContextMenu>
 </template>
@@ -35,6 +37,7 @@ import {
     isAssetBrowserGroupEntry,
 } from "~/components/panels/assetBrowser/AssetBrowser.model.js";
 import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
+import { SharedFsEntry } from "Shared/SharedFileListing.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -218,6 +221,21 @@ const items = computed(() => {
 
     return options;
 });
+
+function handleDragStart(event: DragEvent, primaryEntry: AssetBrowserEntry, allEntries: AssetBrowserEntry[]): void {
+    const payloads: string[] = [];
+
+    for (const entry of allEntries) {
+        if (isAssetBrowserAssetEntry(entry)) {
+            payloads.push(`asset;${entry.assetDef.id}`);
+        } else {
+            payloads.push(`group;${entry.group.id}`);
+        }
+    }
+
+    const payload = payloads.join("\n");
+    event.dataTransfer?.setData("text/plain", payload);
+}
 </script>
 
 <style scoped></style>

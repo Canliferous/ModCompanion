@@ -234,10 +234,10 @@ function handleDragEvent(event: DragEvent, idx: number, emitEvent: "onDragStart"
         const entries = entriesHierarchy.value.filter((value, index) => selection.includes(index)).map((e) => e.entry);
         const orderedEntries = new Set([primarySelected, ...entries]);
         // @ts-ignore
-        emit(emitEvent, event, idx, Array.from(orderedEntries));
+        emit(emitEvent, event, primarySelected, Array.from(orderedEntries));
     } else {
         // @ts-ignore
-        emit(emitEvent, event, idx, primarySelected);
+        emit(emitEvent, event, primarySelected, [primarySelected]);
     }
 }
 

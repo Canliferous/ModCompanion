@@ -138,6 +138,10 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return arr[idx];
     }
 
+    function getAssetById(id: SharedAssetId): SharedAsset | undefined {
+        return assets.value.get(id);
+    }
+
     function getAssetsById(ids: SharedAssetId[]): SharedAsset[] {
         return ids.map((id) => assets.value.get(id)).filter((a) => a !== undefined);
     }
@@ -171,6 +175,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         createAsset,
         writeAssets,
         getAssetByIndex,
+        getAssetById,
         getAssetsById,
         forceRefresh,
         activateAssetById,
