@@ -88,7 +88,9 @@ const activeIdx = ref<number | undefined>();
 const selectedIdx = ref<number[]>([]);
 const selectStartIdx = ref<number | undefined>();
 
-watch(activeIdx, (newIdx) => emit("onActiveChanged", newIdx ? entriesHierarchy.value[newIdx].entry : undefined));
+watch(activeIdx, (newIdx) =>
+    emit("onActiveChanged", newIdx !== undefined ? entriesHierarchy.value[newIdx].entry : undefined),
+);
 watch(selectedIdx, (newIdxs) =>
     emit(
         "onSelectionChanged",
