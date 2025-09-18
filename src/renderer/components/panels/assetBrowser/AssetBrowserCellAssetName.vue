@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center gap-1">
-        <div :style="`width: ${depth}rem`" />
+        <div :style="`width: ${depth}rem`" :class="{ hidden: depth == 0 }" />
         <AssetTypeIcon :type />
         <div class="text-sm font-mono text-neutral-300 text-ellipsis overflow-hidden text-left" dir="rtl">
             &lrm;{{ name }}
