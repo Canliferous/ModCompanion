@@ -1,0 +1,11 @@
+{
+  "type": "texture",
+  "id": "67887df8-328d-4b5f-998c-aea0dd4c07b6",
+  "contentFiles": [
+    "materialsrc/test/grass_04.jpg"
+  ],
+  "gameFiles": [
+    "materials/test/grass_04.vtf"
+  ],
+  "displayName": "test/grass_04"
+}
