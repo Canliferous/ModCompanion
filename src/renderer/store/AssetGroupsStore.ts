@@ -46,6 +46,14 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         return writeGroup(group.id, { ...toRaw(group.def), assets });
     }
 
+    function isGrouped(assetId: SharedAssetId) {
+        for (const group of groups.value.values()) {
+            if (group.def.assets.includes(assetId)) return true;
+        }
+
+        return false;
+    }
+
     return {
         groups,
         activeGroupId,
@@ -55,5 +63,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         activateGroup,
         writeGroup,
         writeAddAssetsToGroup,
+        isGrouped,
     };
 });

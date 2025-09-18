@@ -150,6 +150,8 @@ const items = computed(() => {
     const options: ContextMenuItem[][] = [];
     if (selected.length === 0) return;
 
+    const isAnyGrouped = selected.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
+
     options.push([
         {
             label: "Convert",
@@ -168,6 +170,7 @@ const items = computed(() => {
             },
             icon: "tdesign:app-filled",
             color: "success",
+            disabled: isAnyGrouped,
         },
     ]);
 
