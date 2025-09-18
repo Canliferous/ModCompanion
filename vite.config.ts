@@ -120,4 +120,9 @@ export default defineConfig({
             Shared: "/src/shared",
         },
     },
+    server: {
+        watch: {
+            ignored: ["**/sample/**"],
+        },
+    },
 });
