@@ -29,13 +29,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         currentDir.value = correctedPath;
     }
 
-    function onEntryActivated(idx: number): void {
-        const entries = currentEntries.value;
-        if (!entries) return;
-
-        const entry = idx <= entries?.length - 1 ? entries[idx] : undefined;
-        if (!entry) return;
-
+    function onEntryActivated(entry: SharedFsEntry): void {
         if (entry.isFile) {
             window.electronAPI.project.launchFile(entry.path);
         } else {

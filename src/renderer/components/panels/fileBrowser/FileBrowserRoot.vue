@@ -36,8 +36,8 @@ const assetListStore = useAssetListStore();
 
 const entries = computed(() => looseFilesStore.currentEntries ?? []);
 
-const selectedIndexes = ref<number[]>([]);
-const activeIndex = ref<number>();
+const selectedEntries = ref<SharedFsEntry[]>([]);
+const activeEntry = ref<SharedFsEntry>();
 
 watch(entries, () => {
     dataTable.value?.deselect();
@@ -70,27 +70,6 @@ const columns: DataTableColumn<SharedFsEntry>[] = [
             ),
     },
 ];
-
-const activeEntry = computed(() => {
-    const index = activeIndex.value;
-    if (index === undefined || index < 0) return undefined;
-    const etr = entries.value;
-    if (index > etr.length - 1) return undefined;
-    return etr[index];
-});
-
-const selectedEntries = computed(() => {
-    const idxs = selectedIndexes.value;
-    const result: SharedFsEntry[] = [];
-    const entries1 = entries.value;
-    for (let i = 0; i < entries1.length; i++) {
-        if (idxs.includes(i)) {
-            result.push(entries1[i]);
-        }
-    }
-
-    return result;
-});
 
 const items = computed<ContextMenuItem[][]>(() => {
     const entries = selectedEntries.value;
@@ -139,20 +118,20 @@ function handleFocusList(): void {
     dataTable.value?.focus();
 }
 
-function handleActivated(idx: number): void {
-    looseFilesStore.onEntryActivated(idx);
+function handleActivated(active: SharedFsEntry): void {
+    looseFilesStore.onEntryActivated(active);
 }
 
-function handleSelectionChanged(idxs: number[]): void {
-    selectedIndexes.value = idxs;
+function handleSelectionChanged(entries: SharedFsEntry[]): void {
+    selectedEntries.value = entries;
 }
 
-function handleActiveChanged(idx: number | undefined): void {
-    activeIndex.value = idx;
+function handleActiveChanged(entry: SharedFsEntry | undefined): void {
+    activeEntry.value = entry;
 }
 
-function handleDragStart(event: DragEvent, primaryIdx: number, allIdx: number[]): void {
-    const payload = allIdx.map((idx) => entries.value[idx].path).join("\n");
+function handleDragStart(event: DragEvent, primaryEntry: SharedFsEntry, allEntries: SharedFsEntry[]): void {
+    const payload = allEntries.map((e) => e.path).join("\n");
     event.dataTransfer?.setData("text/plain", payload);
 }
 </script>
