@@ -10,6 +10,7 @@
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"
             @onDragStart="handleDragStart"
+            @onEntryActivated="handleEntryActivated"
         />
     </UContextMenu>
 </template>
@@ -88,6 +89,8 @@ listStore.subscribeSelectionUpdated(() => {
 
 function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefined {
     if (isAssetBrowserGroupEntry(entry)) {
+        if (!assetGroupsStore.isExpanded(entry.group.id)) return undefined;
+
         const assets = listStore.getAssetsById(entry.group.def.assets);
         const entries = assets.map<AssetBrowserAssetEntry>((a) => ({
             type: AssetBrowserEntryTypes.Asset,
@@ -238,6 +241,12 @@ function handleDragStart(event: DragEvent, primaryEntry: AssetBrowserEntry, allE
 
     const payload = payloads.join("\n");
     event.dataTransfer?.setData("text/plain", payload);
+}
+
+function handleEntryActivated(entry: AssetBrowserEntry): void {
+    if (isAssetBrowserGroupEntry(entry)) {
+        assetGroupsStore.toggleCollapsed(entry.group.id);
+    }
 }
 </script>
 

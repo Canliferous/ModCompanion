@@ -3,7 +3,7 @@ import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.
 export const icons = {
     asset: "tdesign:traffic-events-filled",
     material: "tdesign:highlight-1",
-    model: "tdesign:control-platform",
+    model: "tdesign:control-platform-filled",
     texture: "tdesign:image-filled",
     assetGroup: "tdesign:combination-filled",
 } as const;
@@ -24,7 +24,7 @@ export function getAssetTypeTextColor(type: SharedAssetType): string {
         case SharedAssetTypes.Texture:
             return "text-blue-400";
         case SharedAssetTypes.Model:
-            return "text-red-400";
+            return "text-pink-400";
         case SharedAssetTypes.Unknown:
         default:
             return "text-neutral-500";

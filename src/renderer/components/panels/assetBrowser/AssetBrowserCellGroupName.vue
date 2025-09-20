@@ -1,7 +1,14 @@
 <template>
-    <div class="flex items-center gap-1" :class="{ 'bg-amber-400/30': isOverDropZone }" ref="dropZoneRef">
-        <UIcon :name="AppDesign.icons.assetGroup" class="text-amber-400" />
-        <div class="text-sm font-mono text-ellipsis overflow-hidden text-left" dir="rtl">{{ name }}</div>
+    <div class="flex items-center gap-1" :class="{ 'bg-neutral-400/30': isOverDropZone }" ref="dropZoneRef">
+        <UButton
+            :icon="groupsStore.isExpanded(id) ? 'tdesign:chevron-down' : 'tdesign:chevron-up'"
+            variant="link"
+            color="neutral"
+            size="xs"
+            class="p-0"
+        />
+        <UIcon :name="AppDesign.icons.assetGroup" class="text-neutral-400" />
+        <div class="text-sm font-mono text-ellipsis overflow-hidden text-left" dir="rtl">&lrm;{{ name }}</div>
     </div>
 </template>
 
@@ -11,6 +18,8 @@ import { useDropZone } from "@vueuse/core";
 import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
+
+const groupsStore = useAssetGroupsStore();
 
 const props = defineProps<{
     name: string;
