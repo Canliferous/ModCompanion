@@ -53,6 +53,14 @@ const entries = computed(() => {
     // Add groups first
     const result: AssetBrowserEntry[] = [];
     for (const assetGroup of assetGroups.values()) {
+        const searchTerm = listStore.searchTerm;
+        if (searchTerm) {
+            const passesSearch = assetGroup.def.displayName.includes(searchTerm);
+            if (!passesSearch) {
+                continue;
+            }
+        }
+
         result.push({
             type: AssetBrowserEntryTypes.Group,
             group: assetGroup,
