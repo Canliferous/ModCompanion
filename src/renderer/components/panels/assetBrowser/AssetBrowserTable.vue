@@ -178,6 +178,7 @@ const items = computed(() => {
             label: "Create Asset Group",
             onSelect(e: Event) {
                 assetGroupsStore.createGroup(selected.map((s) => s.def.id));
+                table.value?.deselect();
             },
             icon: "tdesign:app-filled",
             color: "success",
