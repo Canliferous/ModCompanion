@@ -79,6 +79,7 @@ const emit = defineEmits<{
     onSelectionChanged: [entries: T[]];
     onDragStart: [event: DragEvent, primaryEntry: T, allEntries: T[]];
     onDragEnd: [event: DragEvent, primaryEntry: T, allEntries: T[]];
+    onKeyDown: [event: KeyboardEvent, active: T | undefined];
 }>();
 const gridEl = useTemplateRef("grid");
 
@@ -222,7 +223,10 @@ function handleKeyDown(event: KeyboardEvent) {
         selectAll();
         event.stopPropagation();
         event.preventDefault();
+        return;
     }
+
+    emit("onKeyDown", event, activeIdx.value ? entriesHierarchy.value[activeIdx.value].entry : undefined);
 }
 
 // Dragan drop
