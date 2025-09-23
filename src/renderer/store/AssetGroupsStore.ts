@@ -20,6 +20,17 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         groups.value = event.groups;
     });
 
+    type GroupsWrittenFunc = (groupId: SharedAssetGroupId) => void;
+    const groupsWrittenSubscribers: GroupsWrittenFunc[] = [];
+    function subscribeGroupsWritten(func: GroupsWrittenFunc) {
+        groupsWrittenSubscribers.push(func);
+    }
+    function notifyGroupsWritten(groupId: SharedAssetGroupId) {
+        for (let sub of groupsWrittenSubscribers) {
+            sub(groupId);
+        }
+    }
+
     async function createGroup(assets: SharedAssetId[]) {
         const newGroup = { displayName: `New Group (${assets.length} assets)`, assets };
 
@@ -38,6 +49,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
     async function writeGroup(id: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) {
         const result = await window.electronAPI.assetGroups.update(id, groupDef);
         groups.value.set(result.id, result);
+        notifyGroupsWritten(id);
     }
 
     function writeAddAssetsToGroup(groupId: SharedAssetGroupId, assetIds: SharedAssetId[]) {
@@ -117,5 +129,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         toggleCollapsed,
         collapse,
         expand,
+        subscribeGroupsWritten,
     };
 });

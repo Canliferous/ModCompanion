@@ -1,6 +1,15 @@
 <template>
     <div class="p-2 grid gap-2">
         <UFormField label="Group Name">
+            <template #hint>
+                <UBadge
+                    label="Saved"
+                    icon="tdesign:check"
+                    color="success"
+                    class="transition-opacity opacity-0"
+                    :class="{ 'opacity-100': savedIndicatorShown }"
+                />
+            </template>
             <UInput
                 placeholder="Group Name..."
                 class="w-full"
@@ -47,6 +56,16 @@ function handleRemoveAsset(index: number) {
 function handleAddAsset(ids: SharedAssetId[]) {
     groupStore.writeAddAssetsToGroup(props.group.id, ids);
 }
+
+const savedIndicatorShown = ref(false);
+const savedIndicatorTimeoutHandle = ref<any | undefined>(undefined);
+groupStore.subscribeGroupsWritten(() => {
+    savedIndicatorShown.value = true;
+    if (savedIndicatorTimeoutHandle.value !== undefined) {
+        clearTimeout(savedIndicatorTimeoutHandle.value);
+    }
+    savedIndicatorTimeoutHandle.value = setTimeout(() => (savedIndicatorShown.value = false), 2000);
+});
 </script>
 
 <style scoped></style>
