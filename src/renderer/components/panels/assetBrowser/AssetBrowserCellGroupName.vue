@@ -6,6 +6,7 @@
             color="neutral"
             size="xs"
             class="p-0"
+            @click="handleToggleExpanded()"
         />
         <UIcon :name="AppDesign.icons.assetGroup" class="text-neutral-400" />
         <div class="text-sm font-mono text-ellipsis overflow-hidden text-left" dir="rtl">&lrm;{{ name }}</div>
@@ -40,6 +41,10 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
     onDrop,
     preventDefaultForUnhandled: false,
 });
+
+function handleToggleExpanded() {
+    groupsStore.toggleCollapsed(props.id);
+}
 </script>
 
 <style scoped></style>
