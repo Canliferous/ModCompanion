@@ -21,6 +21,10 @@
         <UFormField label="Assets">
             <GroupList :group="group" @remove="handleRemoveAsset" @add="handleAddAsset" />
         </UFormField>
+
+        <div>
+            <UButton label="Delete Group" color="error" variant="subtle" icon="tdesign:delete" @click="handleDelete" />
+        </div>
     </div>
 </template>
 
@@ -55,6 +59,10 @@ function handleRemoveAsset(index: number) {
 
 function handleAddAsset(ids: SharedAssetId[]) {
     groupStore.writeAddAssetsToGroup(props.group.id, ids);
+}
+
+function handleDelete() {
+    groupStore.deleteGroup(props.group.id);
 }
 
 const savedIndicatorShown = ref(false);

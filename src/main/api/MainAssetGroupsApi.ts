@@ -7,7 +7,12 @@ import {
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
 import { getMainWindow } from "../systems/MainWindowSystem.js";
-import { writeAssetGroup, scanAssetGroups, generateAssetGroupId } from "../systems/MainAssetGroupsSystem.js";
+import {
+    writeAssetGroup,
+    scanAssetGroups,
+    generateAssetGroupId,
+    deleteAssetGroup,
+} from "../systems/MainAssetGroupsSystem.js";
 
 export function registerAssetGroupsApi(): boolean {
     ipcMain.handle(
@@ -24,6 +29,9 @@ export function registerAssetGroupsApi(): boolean {
     );
     ipcMain.on(SharedIpcChannels.AssetGroupsForceRescan, (event): void => {
         scanAssetGroups();
+    });
+    ipcMain.on(SharedIpcChannels.AssetGroupsDelete, (event, groupId: SharedAssetGroupId): void => {
+        deleteAssetGroup(groupId);
     });
 
     return true;

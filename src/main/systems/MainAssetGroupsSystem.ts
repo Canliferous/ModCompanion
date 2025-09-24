@@ -37,6 +37,11 @@ export async function writeAssetGroup(
     return { filePath, def: assetGroupDef, id };
 }
 
+export function deleteAssetGroup(id: SharedAssetGroupId) {
+    const filePath = path.join(getAssetGroupDir(), id + ".json");
+    return fs.rm(filePath);
+}
+
 export async function scanAssetGroups() {
     const startTime = new Date().getTime();
     groups.clear();

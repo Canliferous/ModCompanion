@@ -70,6 +70,7 @@ declare global {
                     groupId: SharedAssetGroupId,
                     groupDef: SharedAssetGroupDefinition,
                 ) => Promise<SharedAssetGroup>;
+                delete: (groupId: SharedAssetGroupId) => void;
             };
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;

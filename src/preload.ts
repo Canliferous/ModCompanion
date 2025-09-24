@@ -91,6 +91,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.invoke(SharedIpcChannels.AssetGroupsCreate, assetGroupDef),
         update: (groupId: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) =>
             ipcRenderer.invoke(SharedIpcChannels.AssetGroupsUpdate, groupId, groupDef),
+        delete: (groupId: SharedAssetGroupId) => ipcRenderer.send(SharedIpcChannels.AssetGroupsDelete, groupId),
     },
 
     image: {

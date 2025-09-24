@@ -38,6 +38,11 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         groups.value.set(result.id, result);
     }
 
+    function deleteGroup(id: SharedAssetGroupId) {
+        window.electronAPI.assetGroups.delete(id);
+        groups.value.delete(id);
+    }
+
     function forceRefresh(): void {
         window.electronAPI.assetGroups.forceRescan();
     }
@@ -130,5 +135,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         collapse,
         expand,
         subscribeGroupsWritten,
+        deleteGroup,
     };
 });

@@ -42,4 +42,5 @@ export const SharedIpcChannels = {
     AssetGroupsForceRescan: "assetgroup_force_rescan",
     AssetGroupsCreate: "assetgroup_create",
     AssetGroupsUpdate: "assetgroup_update",
+    AssetGroupsDelete: "assetgroup_delete",
 } as const;

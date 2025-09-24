@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center gap-1">
-        <div :style="`width: ${depth}rem`" :class="{ hidden: depth == 0 }" />
+        <div :style="`width: ${depth + 1}rem`" />
         <AssetTypeIcon :type />
         <div class="text-sm font-mono text-neutral-300 text-ellipsis overflow-hidden text-left" dir="rtl">
             &lrm;{{ name }}
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
 
-defineProps<{ name: string; type: SharedAssetType; depth: number }>();
+const props = defineProps<{ name: string; type: SharedAssetType; depth: number }>();
 </script>
 
 <style scoped></style>

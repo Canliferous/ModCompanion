@@ -1,20 +1,19 @@
 <template>
     <div class="flex items-center gap-1" :class="{ 'bg-neutral-400/30': isOverDropZone }" ref="dropZoneRef">
         <UButton
-            :icon="groupsStore.isExpanded(id) ? 'tdesign:chevron-down' : 'tdesign:chevron-right'"
+            :icon="isExpanded ? 'tdesign:chevron-down' : 'tdesign:chevron-right'"
             variant="link"
             color="neutral"
             size="xs"
             class="p-0"
             @click="handleToggleExpanded()"
         />
-        <UIcon :name="AppDesign.icons.assetGroup" class="text-neutral-400" />
+        <UIcon :name="isExpanded ? 'tdesign:folder-open-1-filled' : 'tdesign:folder-filled'" class="text-yellow-200" />
         <div class="text-sm font-mono text-ellipsis overflow-hidden text-left" dir="rtl">&lrm;{{ name }}</div>
     </div>
 </template>
 
 <script setup lang="ts">
-import AppDesign from "~/design/AppDesign.js";
 import { useDropZone } from "@vueuse/core";
 import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
@@ -26,6 +25,8 @@ const props = defineProps<{
     name: string;
     id: SharedAssetGroupId;
 }>();
+
+const isExpanded = computed(() => groupsStore.isExpanded(props.id));
 
 function onDrop(files: File[] | null, event: DragEvent) {
     const data = event.dataTransfer?.getData("text/plain");
