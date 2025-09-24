@@ -4,6 +4,8 @@ export const SharedIpcChannels = {
     AppBrowseToFile: "app_browse_to_file",
     AppOpenFile: "app_open_file",
 
+    ClipboardWriteText: "clipboard_write_text",
+
     ProjectListFiles: "project_list_files",
     ProjectCorrectPath: "project_correct_path",
     ProjectLaunchFile: "project_launch_file",

@@ -1,6 +1,6 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { ipcRenderer, IpcRenderer } from "electron";
+import { clipboard, ipcRenderer, IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
@@ -86,6 +86,9 @@ declare global {
             };
             webUtils: {
                 getPathForFile: (file: File) => string;
+            };
+            clipboard: {
+                writeText: (text: string, type?: "selection" | "clipboard") => void;
             };
         };
     }

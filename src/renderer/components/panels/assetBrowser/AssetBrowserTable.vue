@@ -11,6 +11,7 @@
             @onSelectionChanged="handleSelectionChanged"
             @onDragStart="handleDragStart"
             @onEntryActivated="handleEntryActivated"
+            @onKeyDown="handleKeyDown"
         />
     </UContextMenu>
 </template>
@@ -38,7 +39,7 @@ import {
     isAssetBrowserGroupEntry,
 } from "~/components/panels/assetBrowser/AssetBrowser.model.js";
 import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
-import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import ClipboardHelper from "~/helper/ClipboardHelper.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -255,6 +256,26 @@ function handleDragStart(event: DragEvent, primaryEntry: AssetBrowserEntry, allE
 function handleEntryActivated(entry: AssetBrowserEntry): void {
     if (isAssetBrowserGroupEntry(entry)) {
         assetGroupsStore.toggleCollapsed(entry.group.id);
+    }
+}
+
+function handleKeyDown(event: KeyboardEvent, entry: AssetBrowserEntry | undefined): void {
+    // Copy
+    if (event.ctrlKey && event.key === "c") {
+        let name: string | undefined = undefined;
+
+        if (isAssetBrowserAssetEntry(entry)) {
+            name = entry.assetDef.displayName;
+        }
+        if (isAssetBrowserGroupEntry(entry)) {
+            name = entry.group.def.displayName;
+        }
+
+        if (name) {
+            ClipboardHelper.writeTextAndToast(name);
+        }
+
+        event.preventDefault();
     }
 }
 </script>

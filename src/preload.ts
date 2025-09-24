@@ -4,7 +4,7 @@
 import { SharedLaunchers } from "./shared/SharedLaunchers.js";
 import { SharedIpcChannels } from "./shared/SharedIpcChannels.js";
 
-import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
+import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils, clipboard as electronClipboard } from "electron";
 import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 import { SharedMapPath } from "./shared/SharedMapPath.js";
@@ -115,5 +115,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     webUtils: {
         getPathForFile: (file: File) => webUtils.getPathForFile(file),
+    },
+
+    clipboard: {
+        writeText: (text: string, type?: "selection" | "clipboard") =>
+            ipcRenderer.send(SharedIpcChannels.ClipboardWriteText, text, type),
     },
 });

@@ -11,6 +11,7 @@ import { registerConversionApi } from "../api/MainConversionApi.js";
 import { registerProjectFilesApi } from "../api/MainProjectFiles.js";
 import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
 import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
+import { registerClipboardApi } from "../api/MainClipboardApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -26,6 +27,7 @@ const apis: (() => boolean)[] = [
     registerProjectFilesApi,
     registerHotReloadApi,
     registerAssetGroupsApi,
+    registerClipboardApi,
 ];
 
 export function initApiSystem(): boolean {
