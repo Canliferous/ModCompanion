@@ -7,6 +7,7 @@
             :tree-child-func="treeChildFunc"
             tree
             draggable
+            neutral-highlight
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"
             @onDragStart="handleDragStart"
