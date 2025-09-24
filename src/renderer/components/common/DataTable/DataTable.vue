@@ -72,6 +72,10 @@ const entriesHierarchy = computed(() => {
     return result;
 });
 
+watch(entriesHierarchy, (value) => {
+    deselect();
+});
+
 const emit = defineEmits<{
     onEntryActivated: [entry: T];
     onEntryContextMenu: [entry: T];
