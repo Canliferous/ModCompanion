@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center gap-1" :class="{ 'bg-neutral-400/30': isOverDropZone }" ref="dropZoneRef">
         <UButton
-            :icon="groupsStore.isExpanded(id) ? 'tdesign:chevron-down' : 'tdesign:chevron-up'"
+            :icon="groupsStore.isExpanded(id) ? 'tdesign:chevron-down' : 'tdesign:chevron-right'"
             variant="link"
             color="neutral"
             size="xs"
