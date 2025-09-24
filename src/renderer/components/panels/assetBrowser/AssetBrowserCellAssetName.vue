@@ -2,7 +2,7 @@
     <div class="flex items-center gap-1">
         <div :style="`width: ${depth + 1}rem`" />
         <AssetTypeIcon :type />
-        <div class="text-sm font-mono text-neutral-300 text-ellipsis overflow-hidden text-left" dir="rtl">
+        <div class="text-sm text-neutral-300 tracking-wide text-ellipsis overflow-hidden text-left" dir="rtl">
             &lrm;{{ name }}
         </div>
     </div>

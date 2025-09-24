@@ -9,7 +9,9 @@
             @click="handleToggleExpanded()"
         />
         <UIcon :name="isExpanded ? 'tdesign:folder-open-1-filled' : 'tdesign:folder-filled'" class="text-yellow-200" />
-        <div class="text-sm font-mono text-ellipsis overflow-hidden text-left" dir="rtl">&lrm;{{ name }}</div>
+        <div class="text-sm text-neutral-300 tracking-wide text-ellipsis overflow-hidden text-left" dir="rtl">
+            &lrm;{{ name }}
+        </div>
     </div>
 </template>
 
