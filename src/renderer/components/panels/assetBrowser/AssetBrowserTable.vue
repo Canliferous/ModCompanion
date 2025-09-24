@@ -160,7 +160,21 @@ function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
 const items = computed(() => {
     const selected = listStore.selectedAssets;
     const options: ContextMenuItem[][] = [];
-    if (selected.length === 0) return;
+
+    if (assetGroupsStore.activeGroupId !== undefined) {
+        options.push([
+            {
+                label: "Copy Name",
+                icon: "empty",
+                onSelect(e: Event) {
+                    ClipboardHelper.writeTextAndToast(assetGroupsStore.activeGroup?.def.displayName!);
+                },
+                disabled: assetGroupsStore.activeGroup?.def.displayName == undefined,
+            },
+        ]);
+    }
+
+    if (selected.length === 0) return options;
 
     const isAnyGrouped = selected.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
 
@@ -182,13 +196,35 @@ const items = computed(() => {
                 table.value?.deselect();
             },
             icon: "tdesign:app-filled",
-            color: "success",
+            color: isAnyGrouped ? "neutral" : "success",
             disabled: isAnyGrouped,
         },
     ]);
 
     if (selected.length === 1) {
         const sel = selected[0];
+
+        if (sel.def.associatedFiles) {
+            const ass = sel.def.associatedFiles;
+            for (const assKey in ass) {
+                const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
+                const v = ass[key];
+                if (v) {
+                    const entry = getAssociatedEntryName(key)!;
+                    options.push([
+                        {
+                            label: `Open ${entry.name}`,
+                            color: "info",
+                            onSelect(e: Event) {
+                                openAssociatedFile(v);
+                            },
+                            icon: entry.icon,
+                        },
+                    ]);
+                }
+            }
+        }
+
         options.push([
             {
                 label: "Open .mca",
@@ -204,36 +240,24 @@ const items = computed(() => {
                 },
                 icon: "tdesign:folder-1-filled",
             },
+            {
+                label: "Copy Name",
+                icon: "empty",
+                onSelect(e: Event) {
+                    ClipboardHelper.writeTextAndToast(sel.def.displayName!);
+                },
+                disabled: sel.def.displayName == undefined,
+            },
+            {
+                label: "Copy ID",
+                icon: "empty",
+                onSelect(e: Event) {
+                    ClipboardHelper.writeTextAndToast(sel.def.id);
+                },
+                disabled: sel.def.displayName == undefined,
+            },
         ]);
-
-        if (sel.def.associatedFiles) {
-            const ass = sel.def.associatedFiles;
-            for (const assKey in ass) {
-                const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
-                const v = ass[key];
-                if (v) {
-                    const entry = getAssociatedEntryName(key)!;
-                    options.push([
-                        {
-                            label: `Open ${entry.name}`,
-                            onSelect(e: Event) {
-                                openAssociatedFile(v);
-                            },
-                            icon: entry.icon,
-                        },
-                    ]);
-                }
-            }
-        }
     }
-
-    options.push([
-        {
-            label: `${selected.length} selected`,
-            disabled: true,
-            icon: "a", // Empty icon
-        },
-    ]);
 
     return options;
 });

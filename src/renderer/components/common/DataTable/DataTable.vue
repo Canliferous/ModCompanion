@@ -112,11 +112,15 @@ provide(DataTableSelectionInjectKey, {
 });
 
 provide(DataTableEntryActionInjectKey, {
-    onEntryActivated: (idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
-    onEntryContextMenu: (idx: number) => {
+    onEntryActivated: (event: MouseEvent, idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
+    onEntryContextMenu: (event: MouseEvent, idx: number) => {
         // Make the right-clicked item active
         activeIdx.value = idx;
-        selectedIdx.value = [...selectedIdx.value, idx].sort();
+        if (event.ctrlKey) {
+            selectedIdx.value = [...selectedIdx.value, idx].sort();
+        } else {
+            selectedIdx.value = [idx].sort();
+        }
 
         emit("onEntryContextMenu", entriesHierarchy.value[idx].entry);
     },

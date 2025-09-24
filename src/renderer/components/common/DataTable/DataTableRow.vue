@@ -61,12 +61,12 @@ function handleClick(event: MouseEvent): void {
 }
 
 function handleContextMenu(event: MouseEvent): void {
-    entryAction?.onEntryContextMenu(props.idx);
+    entryAction?.onEntryContextMenu(event, props.idx);
 }
 
 function handleDoubleClick(event: MouseEvent): void {
     event.stopPropagation();
-    entryAction?.onEntryActivated(props.idx);
+    entryAction?.onEntryActivated(event, props.idx);
 }
 
 function handleDown(event: KeyboardEvent): void {
