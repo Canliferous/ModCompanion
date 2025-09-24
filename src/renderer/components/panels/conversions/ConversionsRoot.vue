@@ -1,13 +1,19 @@
 <template>
-    <UContextMenu :items="items">
-        <DataTable
-            :entries="entries"
-            :columns="columns"
-            neutral-highlight
-            @on-active-changed="handleActiveChanged"
-            no-header
-        />
-    </UContextMenu>
+    <template v-if="entries.length > 0">
+        <UContextMenu :items="items">
+            <DataTable
+                :entries="entries"
+                :columns="columns"
+                neutral-highlight
+                @on-active-changed="handleActiveChanged"
+                no-header
+            />
+        </UContextMenu>
+    </template>
+
+    <template v-else>
+        <div class="grid place-items-center h-full">No conversions yet</div>
+    </template>
 </template>
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
