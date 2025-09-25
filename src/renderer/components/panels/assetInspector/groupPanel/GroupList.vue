@@ -4,7 +4,7 @@
         :class="{ 'border-primary-400': isOverDropZone }"
         ref="dropZoneRef"
     >
-        <div v-for="(assetId, i) in group.def.assets" class="border-b border-accented">
+        <div v-for="(assetId, i) in group.def.assets" class="grid grid-cols-[auto_1fr_auto] border-b border-accented">
             <GroupListEntry :asset-id="assetId" @remove="() => remove(i)" />
         </div>
 
