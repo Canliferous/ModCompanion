@@ -37,7 +37,6 @@ const props = defineProps<{
     noHeader?: boolean;
     draggable?: boolean;
     neutralHighlight?: boolean;
-    tree?: boolean;
     treeChildFunc?: (entry: T) => T[] | undefined;
 }>();
 
@@ -116,7 +115,7 @@ provide(DataTableSelectionInjectKey, {
 });
 
 provide(DataTableEntryActionInjectKey, {
-    onEntryActivated: (event: MouseEvent, idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
+    onEntryActivated: (idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
     onEntryContextMenu: (event: MouseEvent, idx: number) => {
         // Make the right-clicked item active
         activeIdx.value = idx;
@@ -141,12 +140,17 @@ defineExpose({
     selectAll,
     deselect,
     select,
+    activate,
+    deactivate,
 });
 
 function deselect(): void {
-    activeIdx.value = undefined;
     selectedIdx.value = [];
     selectStartIdx.value = undefined;
+}
+
+function deactivate(): void {
+    activeIdx.value = undefined;
 }
 
 function startSelect(startIdx: number): void {
@@ -185,9 +189,27 @@ function endSelect(endIdx: number): void {
     activeIdx.value = endIdx;
 }
 
-function select(idxs: number[]): void {
-    selectedIdx.value = idxs;
-    activeIdx.value = undefined;
+function select(selectFunc: (entry: T) => boolean): void {
+    const selection: number[] = [];
+    for (let i = 0; i < entriesHierarchy.value.length; i++) {
+        const entry = entriesHierarchy.value[i];
+        if (selectFunc(entry.entry)) {
+            selection.push(i);
+        }
+    }
+
+    selectedIdx.value = selection;
+}
+
+function activate(activeFunc: (entry: T) => boolean): void {
+    for (let i = 0; i < entriesHierarchy.value.length; i++) {
+        const entry = entriesHierarchy.value[i];
+        if (activeFunc(entry.entry)) {
+            activeIdx.value = i;
+            selectedIdx.value = [i];
+            return;
+        }
+    }
 }
 
 function toggleSelect(idx: number): void {

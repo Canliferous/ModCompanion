@@ -35,7 +35,6 @@ const grouping = getVtfFlagGrouping();
 const inj = inject(AssetInspectorTextureConvertInjectKey);
 
 function handleToggle(flag: SharedVtfFlag) {
-    console.log("toggle", flag);
     const copyFlags = [...flagValues.value];
     const idx = copyFlags.indexOf(flag);
     if (idx > -1) {

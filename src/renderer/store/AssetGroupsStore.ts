@@ -43,7 +43,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         groups.value.delete(id);
     }
 
-    function forceRefresh(): void {
+    function refresh(): void {
         window.electronAPI.assetGroups.forceRescan();
     }
 
@@ -126,7 +126,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         isExpanded,
         isCollapsedAsset,
         createGroup,
-        forceRefresh,
+        refresh,
         activateGroup,
         writeGroup,
         writeAddAssetsToGroup,

@@ -12,8 +12,8 @@ initVue();
 initIcons();
 
 function postInit() {
-    useAssetListStore().forceRefresh();
-    useAssetGroupsStore().forceRefresh();
+    useAssetListStore().refresh();
+    useAssetGroupsStore().refresh();
 }
 
 postInit();

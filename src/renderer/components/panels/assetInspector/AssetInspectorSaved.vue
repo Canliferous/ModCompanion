@@ -15,7 +15,7 @@ const assetListStore = useAssetListStore();
 
 const shown = ref(false);
 const timeoutHandle = ref<any | undefined>(undefined);
-assetListStore.subscribeAssetsWritten((assetIds) => {
+assetListStore.writtenEvent.on((assetIds) => {
     shown.value = true;
     if (timeoutHandle.value !== undefined) {
         clearTimeout(timeoutHandle.value);

@@ -4,11 +4,12 @@
         :class="{ 'border-primary-400': isOverDropZone }"
         ref="dropZoneRef"
     >
-        <div v-for="(assetId, i) in group.def.assets" class="grid grid-cols-[auto_1fr_auto] border-b border-accented">
-            <GroupListEntry :asset-id="assetId" @remove="() => remove(i)" />
+        <div
+            v-for="(assetId, i) in group.def.assets"
+            class="grid grid-cols-[1fr_auto] not-last:border-b border-accented"
+        >
+            <GroupListEntry :asset-id="assetId" :group-id="group.id" @remove="() => remove(i)" />
         </div>
-
-        <div class="text-center px-2.5 py-1.5">Drag asset here to add</div>
     </div>
 </template>
 

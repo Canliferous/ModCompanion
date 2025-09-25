@@ -15,8 +15,8 @@ import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 const listStore = useAssetListStore();
 
 function handleRefresh() {
-    listStore.forceRefresh();
-    useAssetGroupsStore().forceRefresh();
+    listStore.refresh();
+    useAssetGroupsStore().refresh();
 }
 </script>
 

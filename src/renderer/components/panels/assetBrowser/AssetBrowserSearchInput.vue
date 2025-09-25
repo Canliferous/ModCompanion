@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAssetListStore } from "../../../store/AssetListStore.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
 
 const listStore = useAssetListStore();
 </script>

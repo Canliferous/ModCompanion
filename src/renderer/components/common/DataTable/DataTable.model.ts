@@ -19,6 +19,6 @@ export const DataTableSelectionInjectKey = Symbol() as InjectionKey<{
 }>;
 
 export const DataTableEntryActionInjectKey = Symbol() as InjectionKey<{
-    onEntryActivated: (event: MouseEvent, idx: number) => void;
+    onEntryActivated: (idx: number) => void;
     onEntryContextMenu: (event: MouseEvent, idx: number) => void;
 }>;

@@ -107,7 +107,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.icons.asset,
                 disabled: mcaFiles.length === 0,
                 onSelect(e: Event) {
-                    assetListStore.selectAssetsByMca(mcaFiles.map((m) => m.path));
+                    assetListStore.selectByMca(mcaFiles.map((m) => m.path));
                 },
             },
         ],

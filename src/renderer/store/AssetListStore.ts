@@ -5,7 +5,8 @@ import { SharedAsset, SharedAssetId, SharedAssetType } from "Shared/SharedAssetD
 import { useRouter } from "vue-router";
 import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { getContentRelativePath } from "~/helper/SourceFs.js";
-import { useRememberRef, useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { useEvent } from "~/composables/useEvent.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
@@ -17,32 +18,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const activeId = ref<SharedAssetId | undefined>();
     const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
     const selectedIds = ref<SharedAssetId[]>([]);
-
     const selectedAssets = computed(() =>
         filteredAssets.value.filter((value, index) => selectedIds.value.includes(value.def.id)),
     );
 
-    type SelectionUpdatedFunc = () => void;
-    const selectionUpdatedSubscribers: SelectionUpdatedFunc[] = [];
-    function subscribeSelectionUpdated(func: SelectionUpdatedFunc) {
-        selectionUpdatedSubscribers.push(func);
-    }
-    function notifySelectionUpdated() {
-        for (let sub of selectionUpdatedSubscribers) {
-            sub();
-        }
-    }
-
-    type AssetsWrittenFunc = (assetIds: SharedAssetId[]) => void;
-    const assetsWrittenSubscribers: AssetsWrittenFunc[] = [];
-    function subscribeAssetsWritten(func: AssetsWrittenFunc) {
-        assetsWrittenSubscribers.push(func);
-    }
-    function notifyAssetsWritten(assetIds: SharedAssetId[]) {
-        for (let sub of assetsWrittenSubscribers) {
-            sub(assetIds);
-        }
-    }
+    const activateEvent = useEvent<SharedAssetId | undefined>();
+    const selectEvent = useEvent<SharedAssetId[]>();
+    const writtenEvent = useEvent<SharedAssetId[]>();
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -80,43 +62,16 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     }
 
-    function forceRefresh(): void {
+    function refresh(): void {
         window.electronAPI.asset.forceRescan();
         refreshing.value = true;
     }
 
-    function activateAssetById(assetHash: string | undefined): void {
-        activeId.value = assetHash;
+    function activate(id: SharedAssetId | undefined): void {
+        activateEvent.call(id);
     }
 
-    function activateAssetByIndex(idx: number | undefined): void {
-        if (idx === undefined) {
-            activeId.value = undefined;
-            return;
-        }
-
-        const id = getIdByIndex(idx);
-        if (id !== undefined) {
-            activateAssetById(id);
-        }
-    }
-
-    function getIdByIndex(idx: number): SharedAssetId | undefined {
-        if (idx < 0) return undefined;
-        const arr = filteredAssets.value;
-        if (idx > arr.length - 1) return undefined;
-        return arr[idx].def.id;
-    }
-
-    function selectIndices(idxs: number[]): void {
-        selectedIds.value = idxs.map((i) => getIdByIndex(i)).filter((i) => i !== undefined);
-    }
-
-    function selectAssetsById(assets: SharedAssetId[]): void {
-        selectedIds.value = assets;
-    }
-
-    function selectAssetsByMca(mcaPaths: string[]): void {
+    function selectByMca(mcaPaths: string[]): void {
         const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
         const sel: SharedAssetId[] = [];
         for (let asset of assets.value.values()) {
@@ -126,16 +81,12 @@ export const useAssetListStore = defineStore("asset-list", () => {
             }
         }
 
-        activeId.value = undefined;
-        selectedIds.value = sel;
-        notifySelectionUpdated();
-    }
+        if (sel.length === 0) return;
 
-    function getAssetByIndex(idx: number): SharedAsset | undefined {
-        if (idx < 0) return undefined;
-        const arr = filteredAssets.value;
-        if (idx > arr.length - 1) return undefined;
-        return arr[idx];
+        activateEvent.call(sel[0]);
+        if (sel.length > 1) {
+            selectEvent.call(sel);
+        }
     }
 
     function getAssetById(id: SharedAssetId): SharedAsset | undefined {
@@ -159,7 +110,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         let newAssets = await Promise.all(results);
         const filtered = newAssets.filter((n) => n !== undefined);
         updateAssets(filtered);
-        notifyAssetsWritten(as.map((a) => a.def.id));
+        writtenEvent.call(as.map((a) => a.def.id));
     }
 
     return {
@@ -174,16 +125,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
         typeFilter,
         createAsset,
         writeAssets,
-        getAssetByIndex,
         getAssetById,
         getAssetsById,
-        forceRefresh,
-        activateAssetById,
-        activateAssetByIndex,
-        selectIndices,
-        selectAssetsById,
-        selectAssetsByMca,
-        subscribeSelectionUpdated,
-        subscribeAssetsWritten,
+        refresh,
+        activate,
+        selectByMca,
+        activateEvent,
+        selectEvent,
+        writtenEvent,
     };
 });

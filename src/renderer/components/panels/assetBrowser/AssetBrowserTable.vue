@@ -5,7 +5,6 @@
             :entries="entries"
             :columns="columns"
             :tree-child-func="treeChildFunc"
-            tree
             draggable
             neutral-highlight
             @onActiveChanged="handleActiveChanged"
@@ -48,6 +47,22 @@ const assetGroupsStore = useAssetGroupsStore();
 
 const table = useTemplateRef("table");
 
+listStore.activateEvent.on((assetId) => {
+    if (assetId === undefined) {
+        table.value?.deactivate();
+    } else {
+        table.value?.activate((entry) => isAssetBrowserAssetEntry(entry) && entry.assetDef.id === assetId);
+    }
+});
+
+listStore.selectEvent.on((assetIds) => {
+    if (assetIds.length === 0) {
+        table.value?.deselect();
+    } else {
+        table.value?.select((entry) => isAssetBrowserAssetEntry(entry) && assetIds.includes(entry.assetDef.id));
+    }
+});
+
 const entries = computed(() => {
     const assetGroups = assetGroupsStore.groups;
     const assetIdsInGroups: SharedAssetId[] = [];
@@ -86,15 +101,6 @@ const entries = computed(() => {
     result.sort((a, b) => getAssetBrowserEntrySortString(a).localeCompare(getAssetBrowserEntrySortString(b)));
 
     return result;
-});
-
-// TODO: Also update active
-listStore.subscribeSelectionUpdated(() => {
-    const selIds = listStore.selectedIds;
-
-    const assets = listStore.filteredAssets;
-    const selIdxs = selIds.map((s) => assets.findIndex((v) => v.def.id === s));
-    table.value?.select(selIdxs);
 });
 
 function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefined {
@@ -145,16 +151,16 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
 ];
 
 function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
-    listStore.selectAssetsById(entries.filter(isAssetBrowserAssetEntry).map((a) => a.assetDef.id));
+    listStore.selectedIds = entries.filter(isAssetBrowserAssetEntry).map((a) => a.assetDef.id);
 }
 
 function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
     if (isAssetBrowserAssetEntry(entry)) {
-        listStore.activateAssetById(entry.assetDef.id);
+        listStore.activeId = entry.assetDef.id;
         assetGroupsStore.activateGroup(undefined);
     } else if (isAssetBrowserGroupEntry(entry)) {
         assetGroupsStore.activateGroup(entry.group.id);
-        listStore.activateAssetById(undefined);
+        listStore.activeId = undefined;
     }
 }
 
