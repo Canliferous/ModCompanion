@@ -22,8 +22,8 @@ import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
-import { fetchImageMeta } from "~/ImageMeta/ImageCacheStore.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
+import { fetchImageMeta } from "~/store/ImageCacheStore.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 const workspaceStore = useWorkspaceStore();
