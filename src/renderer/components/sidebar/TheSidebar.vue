@@ -1,15 +1,22 @@
 <template>
     <aside class="h-full flex flex-col">
-        <div class="grow grid gap-1 content-start grid-cols-1">
-            <SidebarWorkspaces />
-            <SidebarAddWorkspaceButton />
-            <USeparator class="py-1" />
-            <SidebarAddPanelsButton />
+        <div class="grow">
+            <div class="grid gap-1 content-start grid-cols-1 bg-primary-800/70 p-1">
+                <p class="text-sm text-primary px-3 py-1 select-none">Workspace</p>
+                <SidebarWorkspaces />
+                <USeparator color="primary" class="opacity-20" />
+                <SidebarAddWorkspaceButton />
+                <SidebarAddPanelsButton />
+            </div>
+
+            <div class="grid gap-1 content-start grid-cols-1 bg-success-900/20 p-1">
+                <p class="text-sm text-success px-3 py-1 select-none">Assets</p>
+                <SidebarCreateAsset />
+                <SidebarHotReloadSwitch />
+            </div>
         </div>
 
-        <div class="grid gap-1 content-start">
-            <SidebarHotReload />
-            <USeparator />
+        <div class="grid gap-1 content-start p-1">
             <UButton
                 v-for="btn of launcherButtons"
                 :color="btn.color"
@@ -39,6 +46,7 @@ import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
+import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
 
 function quit() {
     window.electronAPI.app.exit();

@@ -1,5 +1,12 @@
 <template>
-    <UCheckbox label="Auto Hot Reload" v-model="enabled" size="lg" />
+    <UButton
+        size="sm"
+        color="success"
+        label="Auto Hot Reload"
+        :icon="enabled ? 'tdesign:check-rectangle-filled' : 'tdesign:rectangle'"
+        variant="ghost"
+        @click="enabled = !enabled"
+    />
 </template>
 
 <script setup lang="ts">

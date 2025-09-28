@@ -3,10 +3,10 @@
         <UButton
             :label="label || '(unknown)'"
             :icon="icon || 'nothing'"
-            variant="soft"
+            :variant="workspaceStore.activeWorkspace === id ? 'subtle' : 'ghost'"
             size="sm"
             class="overflow-x-hidden text-ellipsis grow text-xs"
-            :color="workspaceStore.activeWorkspace === id ? 'primary' : 'neutral'"
+            color="primary"
             @click="() => workspaceStore.activateWorkspace(id)"
         />
 
@@ -14,7 +14,7 @@
             <UButton
                 size="sm"
                 variant="soft"
-                :color="workspaceStore.activeWorkspace === id ? 'primary' : 'neutral'"
+                color="primary"
                 icon="tdesign:chevron-right"
                 class="hidden group-hover:flex"
             />

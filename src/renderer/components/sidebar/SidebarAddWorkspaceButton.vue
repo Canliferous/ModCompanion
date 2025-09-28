@@ -1,8 +1,8 @@
 <template>
     <UButton
-        label="New Workspace"
-        icon="tdesign:table-add-filled"
-        color="neutral"
+        label="Add Workspace"
+        icon="tdesign:add"
+        color="primary"
         variant="ghost"
         size="sm"
         @click="workspaceStore.createWorkspace()"

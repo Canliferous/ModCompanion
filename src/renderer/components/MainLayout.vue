@@ -1,9 +1,9 @@
 <template>
-    <div class="p-1 grid main-layout gap-1 h-screen">
-        <div class="">
+    <div class="grid main-layout h-screen">
+        <div>
             <slot name="sidebar" />
         </div>
-        <div class="h-full grid grid-cols-1 grid-rows-1">
+        <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
             <slot name="page" />
         </div>
     </div>
