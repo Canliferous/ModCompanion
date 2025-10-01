@@ -58,6 +58,12 @@ export default defineConfig({
                         content: "z-100",
                     },
                 },
+                modal: {
+                    slots: {
+                        // Above dockview divider lines which are at 99
+                        content: "z-100",
+                    },
+                },
                 input: {
                     slots: { base: "hover:bg-elevated duration-0" },
                 },
