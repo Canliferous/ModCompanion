@@ -89,7 +89,8 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     }
 
-    function getAssetById(id: SharedAssetId): SharedAsset | undefined {
+    function getAssetById(id: SharedAssetId | undefined): SharedAsset | undefined {
+        if (id === undefined) return undefined;
         return assets.value.get(id);
     }
 

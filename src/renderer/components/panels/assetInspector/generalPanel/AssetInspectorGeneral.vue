@@ -1,5 +1,5 @@
 <template>
-    <div class="p-2 grid grid-cols-2 gap-2 h-full overflow-y-auto">
+    <div class="p-2 grid grid-cols-2 gap-2 content-start h-full overflow-y-auto">
         <EditControlAssetDef :asset="asset" />
         <UFormField label="Type">
             <EditControlAssetType :asset="asset" />

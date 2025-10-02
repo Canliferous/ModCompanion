@@ -5,6 +5,7 @@ import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());
     const conversionHistory = ref<SharedConversionHistoryItem[]>([]);
+    const activeHistory = ref<SharedConversionHistoryItem | undefined>();
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
         conversions.value = event.conversions;
@@ -27,5 +28,5 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { conversions, conversionHistory, getState, enqueue };
+    return { conversions, conversionHistory, activeHistory, getState, enqueue };
 });
