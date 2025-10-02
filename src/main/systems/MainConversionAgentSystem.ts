@@ -97,11 +97,10 @@ function _startConversions(ids: SharedAssetId[]): Promise<void> {
         const timeoutPromise = _convertAsset(asset.def);
         promises.push(timeoutPromise);
         timeoutPromise.catch((a) => {
-            _onJobPromiseDone(id, startTime, stateBefore, SharedConversionState.FinishedFailed, a);
+            _onJobPromiseDone(id, startTime, stateBefore, SharedConversionState.Failed, a);
         });
         timeoutPromise.then((log) => {
-            const newState =
-                log === undefined ? SharedConversionState.FinishedFailed : SharedConversionState.FinishedJob;
+            const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;
             _onJobPromiseDone(id, startTime, stateBefore, newState, log ?? "");
         });
         conversionJobs.set(id, timeoutPromise);
@@ -174,14 +173,11 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
         if (convState === SharedConversionState.Unknown) {
             conversions.set(asset.id, { hash: asset.id, state: SharedConversionState.Pending });
             return true;
-        } else if (convState === SharedConversionState.FinishedJob) {
-            _setState(asset.id, SharedConversionState.FinishedFailed);
-            return true;
         }
     }
 
-    if (assetState == AssetStates.HasOutputFiles && convState !== SharedConversionState.FinishedConfirmed) {
-        _setState(asset.id, SharedConversionState.FinishedConfirmed);
+    if (assetState == AssetStates.HasOutputFiles && convState !== SharedConversionState.Finished) {
+        _setState(asset.id, SharedConversionState.Finished);
         return true;
     }
 

@@ -6,9 +6,8 @@ export enum SharedConversionState {
     Pending = "pending",
     PendingForced = "pending_forced",
     InProgress = "in_progress",
-    FinishedJob = "finished_job",
-    FinishedConfirmed = "finished_confirmed",
-    FinishedFailed = "finished_failed",
+    Finished = "finished",
+    Failed = "failed",
 }
 
 export function getConversionStateName(state: SharedConversionState): string {
@@ -21,11 +20,9 @@ export function getConversionStateName(state: SharedConversionState): string {
             return "Pending (Forced)";
         case SharedConversionState.InProgress:
             return "In Progress";
-        case SharedConversionState.FinishedJob:
-            return "Finished (Unconfirmed)";
-        case SharedConversionState.FinishedConfirmed:
+        case SharedConversionState.Finished:
             return "Finished";
-        case SharedConversionState.FinishedFailed:
+        case SharedConversionState.Failed:
             return "Failed";
         case SharedConversionState.Unknown:
         default:
@@ -36,14 +33,13 @@ export function getConversionStateName(state: SharedConversionState): string {
 export function getConversionStateColor(state: SharedConversionState): string {
     switch (state) {
         case SharedConversionState.Invalid:
-        case SharedConversionState.FinishedFailed: {
+        case SharedConversionState.Failed: {
             return "error";
         }
         case SharedConversionState.InProgress: {
             return "info";
         }
-        case SharedConversionState.FinishedJob:
-        case SharedConversionState.FinishedConfirmed: {
+        case SharedConversionState.Finished: {
             return "success";
         }
         case SharedConversionState.Pending:
