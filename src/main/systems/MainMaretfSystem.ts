@@ -31,10 +31,9 @@ export async function createVtf(
     const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
     console.log("Creating vtf. cmd:", cmd);
 
-    let log: string[] = [];
+    let log: string[] = [`Command: ${cmd}`, ""];
     try {
         const dir = path.dirname(outputPath);
-        console.log("Mkdir", dir);
         fs.mkdirSync(dir, { recursive: true });
     } catch (e) {
         console.log(e);
@@ -47,7 +46,7 @@ export async function createVtf(
                 log.push(d);
             });
             proc.on("exit", (code) => {
-                resolve(log.join());
+                resolve(log.join("\n"));
             });
         } catch (e) {
             if (typeof e === "string") {
@@ -61,6 +60,6 @@ export async function createVtf(
 
 function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: SharedVtfCreateOptions): string {
     const args = buildMareTfCreateArgs(options);
-    const cmd = `${binary} create ${inputPath} --yes -o ${outputPath} ${args}`;
+    const cmd = `${binary} create ${inputPath} --yes --no-pretty-formatting -o ${outputPath} ${args}`;
     return cmd;
 }

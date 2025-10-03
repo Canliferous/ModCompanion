@@ -26,7 +26,7 @@
         </div>
 
         <div class="text-sm bg-neutral-900 border border-accented overflow-y-scroll">
-            {{ item.log }}
+            <pre>{{ item.log }}</pre>
         </div>
     </div>
 </template>

@@ -18,6 +18,13 @@ export interface SharedVtfCreateOptions {
     gammaCorrect?: boolean;
 
     /**
+     *  The quality of DXTn/BCn format compression, between 0.0 and 1.0. Higher quality will take significantly longer to create the texture.
+     *  Ignored if output format is uncompressed.
+     *  default: 0.105
+     */
+    quality?: number;
+
+    /**
      * Default: 2.2. This is a string and not a number because of floating point precision
      */
     gammaCorrectAmount?: string;
@@ -71,6 +78,9 @@ export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     }
     if (options.gammaCorrectAmount) {
         a += ` --gamma-correct-amount ${options.gammaCorrectAmount}`;
+    }
+    if (options.quality) {
+        a += ` --quality ${options.quality}`;
     }
 
     return a;
