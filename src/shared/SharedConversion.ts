@@ -8,6 +8,7 @@ export enum SharedConversionState {
     InProgress = "in_progress",
     Finished = "finished",
     Failed = "failed",
+    NoChange = "no_change",
 }
 
 export function getConversionStateName(state: SharedConversionState): string {
@@ -24,6 +25,8 @@ export function getConversionStateName(state: SharedConversionState): string {
             return "Finished";
         case SharedConversionState.Failed:
             return "Failed";
+        case SharedConversionState.NoChange:
+            return "No Change";
         case SharedConversionState.Unknown:
         default:
             return "Unknown";
@@ -53,7 +56,7 @@ export function getConversionStateColor(state: SharedConversionState): string {
 
 export interface SharedConversion {
     state: SharedConversionState;
-    hash: SharedAssetId;
+    assetId: SharedAssetId;
 }
 
 export interface SharedConversionHistoryItem {

@@ -15,8 +15,6 @@ export function setHotReloadEnabled(enabled: boolean): void {
 export function requestHotReload(assets: SharedAssetId[]): void {
     if (!hotReloadEnabled) return;
 
-    console.log("Hot reloading");
-
     let texturesToReload: string[] = [];
     for (const assetId of assets) {
         const asset = getAssetMap().get(assetId);

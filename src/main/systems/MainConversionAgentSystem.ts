@@ -3,6 +3,7 @@ import {
     SharedAsset,
     SharedAssetDefinition,
     SharedAssetId,
+    SharedAssetMap,
     SharedAssetTypes,
     SharedModelAssetDefinition,
     SharedTextureAssetDefinition,
@@ -12,6 +13,11 @@ import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 import { convertModelAsset, determineModelAssetState } from "./converter/MainModelConverter.js";
+import path from "path";
+import fs from "fs/promises";
+import crypto from "node:crypto";
+import { getConfig } from "./MainConfigSystem.js";
+import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -21,9 +27,26 @@ const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAss
 let agentInterval: NodeJS.Timeout | undefined;
 const conversions: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
 const conversionHistory: SharedConversionHistoryItem[] = [];
+const assetChecksums: Map<SharedAssetId, string> = new Map<SharedAssetId, string>();
 
 export function initConvertAgentSystem(): boolean {
+    subscribeAssetsRescanned((event) => {
+        _initializeAssetChecksums(event.assets);
+    });
     return true;
+}
+
+async function _initializeAssetChecksums(map: SharedAssetMap) {
+    const assets = map.values();
+    const promises = assets.map(async (asset) => {
+        if (!asset.def.contentFiles) return;
+
+        const sum = await _createAssetChecksum(asset.def.contentFiles);
+        assetChecksums.set(asset.def.id, sum);
+    });
+
+    await Promise.allSettled(promises);
+    console.log("Initialized asset checksums");
 }
 
 export function startConversionAgent(): void {
@@ -70,11 +93,11 @@ function _getAssetsToConvert(): SharedAssetId[] {
     for (const conv of conversions.values()) {
         if (newJobsCount === 0) break;
 
-        const alreadyAdded = conversionJobs.has(conv.hash);
+        const alreadyAdded = conversionJobs.has(conv.assetId);
         const isPending =
             conv.state === SharedConversionState.Pending || conv.state === SharedConversionState.PendingForced;
         if (isPending && !alreadyAdded) {
-            result.push(conv.hash);
+            result.push(conv.assetId);
             newJobsCount--;
         }
     }
@@ -82,7 +105,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
     return result;
 }
 
-function _startConversions(ids: SharedAssetId[]): Promise<void> {
+async function _startConversions(ids: SharedAssetId[]): Promise<void> {
     const promises: Promise<string | undefined>[] = [];
     for (const id of ids) {
         const asset = getAssetFromId(id);
@@ -92,6 +115,12 @@ function _startConversions(ids: SharedAssetId[]): Promise<void> {
             continue;
         }
         _setState(id, SharedConversionState.InProgress);
+
+        const hasChanged = await _hasAssetChanged(asset.def);
+        if (!hasChanged) {
+            _setState(id, SharedConversionState.NoChange);
+            return;
+        }
 
         const startTime = new Date();
         const timeoutPromise = _convertAsset(asset.def);
@@ -171,7 +200,7 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
 
     if (assetState === AssetStates.NoOutputFiles) {
         if (convState === SharedConversionState.Unknown) {
-            conversions.set(asset.id, { hash: asset.id, state: SharedConversionState.Pending });
+            conversions.set(asset.id, { assetId: asset.id, state: SharedConversionState.Pending });
             return true;
         }
     }
@@ -205,6 +234,35 @@ function _setState(id: SharedAssetId, state: SharedConversionState) {
     if (conversions.has(id)) {
         conversions.get(id)!.state = state;
     } else {
-        conversions.set(id, { hash: id, state });
+        conversions.set(id, { assetId: id, state });
     }
+}
+
+async function _hasAssetChanged(asset: SharedAssetDefinition) {
+    if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
+
+    const newSum = await _createAssetChecksum(asset.contentFiles);
+    const oldSum = assetChecksums.get(asset.id);
+
+    if (newSum !== oldSum) {
+        assetChecksums.set(asset.id, newSum);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+async function _createAssetChecksum(contentFiles: string[]) {
+    const contentPath = getConfig().contentPath;
+
+    const promises = contentFiles.map(async (f) => {
+        const p = path.join(contentPath, f);
+        const fileContents = await fs.readFile(p, "base64");
+        const hash = crypto.createHash("sha1").update(fileContents).digest("base64");
+        return hash;
+    });
+
+    const results = await Promise.all(promises);
+    const sum = results.join();
+    return sum;
 }
