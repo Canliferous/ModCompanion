@@ -2,11 +2,13 @@ import path from "path";
 import fs from "fs/promises";
 import { SharedAppConfig } from "Shared/SharedAppConfig.js";
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import os from "node:os";
 
 interface ConfigFile {
     root?: string;
     searchPath?: string;
     mapSourceDirs?: string[];
+    launcherName?: string;
 
     assetDefaults?: {
         vtfOptions?: SharedVtfCreateOptions;
@@ -47,6 +49,7 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
         rootPath: root,
         contentPath: path.join(root, "content", c.searchPath),
         gamePath: path.join(root, "game", c.searchPath),
+        gameRootPath: path.join(root, "game"),
 
         textureSourcePath: path.join(root, "content", c.searchPath, "materialsrc"),
         textureOutputPath: path.join(root, "game", c.searchPath, "materials"),
@@ -55,17 +58,17 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
         mapSourcePath: path.join(root, "content", c.searchPath, "maps"),
         mapOutputPath: path.join(root, "game", c.searchPath, "maps"),
 
-        studioMdlPath: path.join(root, "game/bin/win64/studiomdl.exe"),
-        hlmvPath: path.join(root, "game/bin/win64/hlmv.exe"),
-        hammerPath: path.join(root, "game/bin/win64/hammer.exe"),
-        faceposerPath: path.join(root, "game/bin/win64/hlfaceposer.exe"),
-        mdlInfoPath: path.join(root, "game/bin/win64/mdlinfo.exe"),
-        gameExePath: path.join(root, "game/bin/win64/revolution.exe"),
+        studioMdlPath: _buildBinaryPath(root, "studiomdl", true),
+        hlmvPath: _buildBinaryPath(root, "hlmv", true),
+        hammerPath: _buildBinaryPath(root, "hammer", true),
+        faceposerPath: _buildBinaryPath(root, "hlfaceposer", true),
+        mdlInfoPath: _buildBinaryPath(root, "mdlinfo"),
+        gameExePath: _buildBinaryPath(root, c.launcherName ?? "revolution"),
 
-        vbspExePath: path.join(root, "game/bin/win64/vbsp.exe"),
+        vbspExePath: _buildBinaryPath(root, "vbsp"),
         postcompilerExePath: path.join(root, "game/bin/win64/postcompiler/postcompiler.exe"),
-        vvisExePath: path.join(root, "game/bin/win64/vvis.exe"),
-        vradExePath: path.join(root, "game/bin/win64/vrad.exe"),
+        vvisExePath: _buildBinaryPath(root, "vvis"),
+        vradExePath: _buildBinaryPath(root, "vrad"),
 
         vbspArgs: `-game ${c.searchPath} -report`,
         postcompilerArgs: "--nopack",
@@ -76,6 +79,20 @@ export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig |
         mapSourceDirs: c.mapSourceDirs,
         assetDefaults: c.assetDefaults,
     };
+}
+
+function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): string {
+    const platform = os.platform();
+    if (platform === "linux" && !proton) {
+        return path.join(root, "game/bin/linux64", binaryName);
+    }
+
+    if (platform === "win32" || proton) {
+        return path.join(root, "game/bin/win64", binaryName + ".exe");
+    }
+
+    console.warn("Unsupported operating system platform", platform);
+    return path.join(root, binaryName);
 }
 
 export function getConfigPath(): string {

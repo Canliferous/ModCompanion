@@ -1,9 +1,29 @@
 import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
 
 export interface SharedAppConfig {
+    /**
+     * Path of the repo root directory
+     * Represents: <repo>/
+     * */
     rootPath: string;
+
+    /**
+     * Path of the content folder in the repo with the search path appended
+     * Represents: <repo>/content/<search_path>
+     * */
     contentPath: string;
+
+    /**
+     * Path of the game folder in the repo with the search path appended
+     * Represents: <repo>/game/<search_path>
+     * */
     gamePath: string;
+
+    /**
+     * Path of the game folder in the repo
+     * Represents: <repo>/game
+     * */
+    gameRootPath: string;
 
     textureSourcePath: string;
     textureOutputPath: string;

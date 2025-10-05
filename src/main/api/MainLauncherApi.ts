@@ -12,11 +12,21 @@ export function registerLauncherApi(): boolean {
             return;
         }
 
+        const workingDir = getConfig().gameRootPath;
+
+        let cmd = exe;
         if (launcherArgs) {
-            child_process.exec(`${exe} ${launcherArgs}`);
-        } else {
-            child_process.exec(exe);
+            cmd = `${exe} ${launcherArgs}`;
         }
+
+        console.log(`Launching '${cmd}' Working Dir '${workingDir}'`);
+        const proc = child_process.spawn(cmd, { cwd: workingDir, shell: true });
+        proc.stdout.on("data", (message) => {
+            console.log("Launched App: ", String(message));
+        });
+        proc.on("error", (message) => {
+            console.warn("Launched App: ", message);
+        });
     });
 
     return true;
