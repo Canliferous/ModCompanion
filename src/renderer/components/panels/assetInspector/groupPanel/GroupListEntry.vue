@@ -15,6 +15,8 @@
                 </template>
             </UButton>
 
+            <ConversionStateIcon :state="conversionStore.getState(asset.def.id)" />
+
             <UButton variant="ghost" color="error" icon="tdesign:remove" @click="emit('remove')" />
 
             <div class="col-span-full">
@@ -37,9 +39,11 @@ import { SharedAssetDefinitionAssociatedFilesEntries, SharedAssetId } from "Shar
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 
 const groupsStore = useAssetGroupsStore();
 const listStore = useAssetListStore();
+const conversionStore = useAssetConversionStore();
 
 const props = defineProps<{
     assetId: SharedAssetId;
