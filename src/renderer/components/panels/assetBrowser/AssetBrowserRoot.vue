@@ -3,6 +3,7 @@
         <div class="flex gap-1">
             <AssetBrowserSearchInput />
             <AssetBrowserTypeSelect />
+            <AssetBrowserCollapseButtons />
             <AssetBrowserRefreshButton />
         </div>
         <div>

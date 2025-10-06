@@ -118,6 +118,14 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         expandedState.value = newState;
     }
 
+    function collapseAll() {
+        expandedState.value = [];
+    }
+
+    function expandAll() {
+        expandedState.value = Array.from(groups.value.keys());
+    }
+
     return {
         groups,
         activeGroupId,
@@ -136,5 +144,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         expand,
         subscribeGroupsWritten,
         deleteGroup,
+        collapseAll,
+        expandAll,
     };
 });
