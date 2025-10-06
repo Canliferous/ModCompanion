@@ -8,14 +8,15 @@ export function useEvent<T>() {
         const index = listeners.length - 1;
 
         offFunc = () => {
-            listeners.splice(index, 1);
+            const idx = listeners.indexOf(listener);
+            if (idx > 0) {
+                listeners.splice(index);
+            } else {
+                console.warn("Failed to delete event listener because it's not in the list. Was it deleted twice?");
+            }
         };
         onScopeDispose(offFunc);
         return offFunc;
-    }
-
-    function off() {
-        offFunc?.();
     }
 
     function call(payload: T) {
@@ -24,5 +25,5 @@ export function useEvent<T>() {
         }
     }
 
-    return { on, off, call };
+    return { on, call };
 }
