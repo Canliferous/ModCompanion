@@ -116,10 +116,12 @@ async function _startConversions(ids: SharedAssetId[]): Promise<void> {
         }
         _setState(id, SharedConversionState.InProgress);
 
-        const hasChanged = await _hasAssetChanged(asset.def);
-        if (!hasChanged) {
-            _setState(id, SharedConversionState.NoChange);
-            return;
+        if (stateBefore !== SharedConversionState.PendingForced) {
+            const hasChanged = await _hasAssetChanged(asset.def);
+            if (!hasChanged) {
+                _setState(id, SharedConversionState.NoChange);
+                return;
+            }
         }
 
         const startTime = new Date();
