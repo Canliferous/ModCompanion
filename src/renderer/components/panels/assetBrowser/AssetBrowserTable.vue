@@ -40,6 +40,7 @@ import {
 } from "~/components/panels/assetBrowser/AssetBrowser.model.js";
 import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
 import ClipboardHelper from "~/helper/ClipboardHelper.js";
+import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -143,6 +144,11 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
         cell: (entry) => {
             if (isAssetBrowserAssetEntry(entry)) {
                 const state = conversionStore.getState(entry.assetDef.id);
+                return h(AssetBrowserCellConverted, { state });
+            }
+
+            if (isAssetBrowserGroupEntry(entry)) {
+                const state = summarizeConversionStates(entry.group.def.assets.map(conversionStore.getState));
                 return h(AssetBrowserCellConverted, { state });
             }
         },
