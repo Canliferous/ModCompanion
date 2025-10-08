@@ -1,5 +1,5 @@
 <template>
-    <UButton label="Create Asset" icon="tdesign:add" color="success" variant="ghost" size="sm" />
+    <UButton label="Create Asset" icon="tdesign:add" color="neutral" variant="ghost" size="sm" />
 </template>
 
 <script setup lang="ts"></script>

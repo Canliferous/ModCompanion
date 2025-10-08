@@ -6,7 +6,7 @@
             :variant="workspaceStore.activeWorkspace === id ? 'subtle' : 'ghost'"
             size="sm"
             class="overflow-x-hidden text-ellipsis grow text-xs"
-            color="primary"
+            color="neutral"
             @click="() => workspaceStore.activateWorkspace(id)"
         />
 

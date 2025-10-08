@@ -2,7 +2,7 @@
     <UButton
         label="Add Workspace"
         icon="tdesign:add"
-        color="primary"
+        color="neutral"
         variant="ghost"
         size="sm"
         @click="workspaceStore.createWorkspace()"

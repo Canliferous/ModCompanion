@@ -1,7 +1,7 @@
 <template>
     <UButton
         size="sm"
-        color="success"
+        color="neutral"
         label="Auto Hot Reload"
         :icon="enabled ? 'tdesign:check-rectangle-filled' : 'tdesign:rectangle'"
         variant="ghost"

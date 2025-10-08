@@ -1,18 +1,21 @@
 <template>
     <aside class="h-full flex flex-col">
-        <div class="grow">
-            <div class="grid gap-1 content-start grid-cols-1 bg-primary-800/70 p-1">
-                <p class="text-sm text-primary px-3 py-1 select-none">Workspace</p>
-                <SidebarWorkspaces />
-                <USeparator color="primary" class="opacity-20" />
-                <SidebarAddWorkspaceButton />
-                <SidebarAddPanelsButton />
+        <div class="grow grid gap-1 content-start p-1 pr-0">
+            <div class="border border-accented">
+                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Workspace</p>
+                <div class="p-1 grid gap-1 content-start">
+                    <SidebarAddWorkspaceButton />
+                    <SidebarAddPanelsButton />
+                    <SidebarWorkspaces />
+                </div>
             </div>
 
-            <div class="grid gap-1 content-start grid-cols-1 bg-success-900/20 p-1">
-                <p class="text-sm text-success px-3 py-1 select-none">Assets</p>
-                <SidebarCreateAsset />
-                <SidebarHotReloadSwitch />
+            <div class="border border-accented">
+                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Assets</p>
+                <div class="p-1 grid gap-1 content-start">
+                    <SidebarCreateAsset />
+                    <SidebarHotReloadSwitch />
+                </div>
             </div>
         </div>
 
