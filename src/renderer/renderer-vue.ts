@@ -7,6 +7,7 @@ import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { createMemoryHistory, createRouter } from "vue-router";
+import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -29,4 +30,5 @@ function _initSystemStores() {
     usePanelsManagerStore();
     useMapConsoleStore();
     useAssetConversionStore();
+    useStrataInteropStore();
 }

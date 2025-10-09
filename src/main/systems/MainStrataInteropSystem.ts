@@ -1,6 +1,7 @@
 import koffi from "koffi";
 import os from "node:os";
 import net from "node:net";
+import { notifyStrataInteropConnected, notifyStrataInteropDisconnected } from "../api/MainStrataInteropApi.js";
 
 const WINDOW_NAME = "Strata001";
 
@@ -43,16 +44,33 @@ function _connect(port: number, timeout: number): Promise<net.Socket | undefined
 
 async function _healthcheck() {
     if (!socket) {
-        const s = await _connect(port, healthCheckIntervalMs);
-        if (s) {
-            socket = s;
-            console.log("Strata connected");
+        if (reconnect) {
+            const s = await _connect(port, healthCheckIntervalMs);
+            if (s) {
+                socket = s;
+                console.log("Strata connected");
+                notifyStrataInteropConnected();
+            }
         }
+        return;
     }
+
+    socket.on("close", (hadError) => {
+        socket = undefined;
+        notifyStrataInteropDisconnected();
+    });
+
+    socket.on("data", (data) => {
+        console.log(String(data));
+    });
 }
 
 function _initStrataInteropSocket(): void {
     healthCheckInterval = setInterval(() => _healthcheck(), healthCheckIntervalMs);
+}
+
+export function sendStrataCommand(command: string) {
+    socket?.emit(command);
 }
 
 // 🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖🦖v

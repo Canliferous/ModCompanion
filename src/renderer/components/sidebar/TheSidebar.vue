@@ -20,6 +20,8 @@
         </div>
 
         <div class="grid gap-1 content-start p-1">
+            <SidebarInteropStatus />
+
             <UButton
                 v-for="btn of launcherButtons"
                 :color="btn.color"
@@ -50,6 +52,7 @@ import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.
 import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
+import SidebarInteropStatus from "~/components/sidebar/SidebarInteropStatus.vue";
 
 function quit() {
     window.electronAPI.app.exit();

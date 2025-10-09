@@ -38,6 +38,10 @@ export const SharedIpcChannels = {
     HotReloadSetEnabled: "hotreload_set_enabled",
     HotReloadTriggered: "hotreload_triggered",
 
+    InteropSendCommand: "interop_send_command",
+    InteropConnected: "interop_connected",
+    InteropDisconnected: "interop_disconnected",
+
     AssetGroupsRescanned: "assetgroup_rescanned",
     AssetGroupsForceRescan: "assetgroup_force_rescan",
     AssetGroupsCreate: "assetgroup_create",

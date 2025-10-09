@@ -122,4 +122,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
         writeText: (text: string, type?: "selection" | "clipboard") =>
             ipcRenderer.send(SharedIpcChannels.ClipboardWriteText, text, type),
     },
+
+    interop: {
+        subscribeConnected: (callback: () => void) =>
+            ipcRenderer.on(SharedIpcChannels.InteropConnected, (e: IpcRendererEvent) => callback()),
+        subscribeDisconnected: (callback: () => void) =>
+            ipcRenderer.on(SharedIpcChannels.InteropDisconnected, (e: IpcRendererEvent) => callback()),
+        sendCommand: (command: string) => ipcRenderer.send(SharedIpcChannels.InteropSendCommand, command),
+    },
 });

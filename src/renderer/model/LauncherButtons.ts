@@ -1,4 +1,5 @@
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
+import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "Shared/SharedStrataInterop.js";
 
 export interface LauncherButton {
     name: string;
@@ -14,7 +15,7 @@ export const launcherButtons: LauncherButton[] = [
         name: "Game",
         color: "error",
         icon: "revolution",
-        binary: "revolution.exe",
+        binary: `revolution.exe -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
         launcherType: "game",
     },
     {
@@ -23,7 +24,7 @@ export const launcherButtons: LauncherButton[] = [
         icon: "revolution",
         binary: "revolution.exe",
         launcherType: "game",
-        launcherArgs: "-dev -condebug -novid",
+        launcherArgs: `-dev -condebug -novid -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
     },
     {
         name: "Game (Tools)",

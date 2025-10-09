@@ -1,6 +1,6 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { clipboard, ipcRenderer, IpcRenderer } from "electron";
+import { IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
@@ -24,7 +24,6 @@ import {
     SharedAssetGroupId,
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export {};
 
@@ -90,6 +89,11 @@ declare global {
             };
             clipboard: {
                 writeText: (text: string, type?: "selection" | "clipboard") => void;
+            };
+            interop: {
+                subscribeConnected: (callback: () => void) => IpcRenderer;
+                subscribeDisconnected: (callback: () => void) => IpcRenderer;
+                sendCommand: (command: string) => void;
             };
         };
     }
