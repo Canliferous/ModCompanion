@@ -1,5 +1,5 @@
 import { isTextureAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { runStrataGameCommand } from "./MainStrataInteropSystem.js";
+import { runStrataGameCommand, sendStrataCommand } from "./MainStrataInteropSystem.js";
 import { getAssetMap } from "./assets/MainAssetRepository.js";
 
 let hotReloadEnabled = false;
@@ -36,6 +36,6 @@ export function requestHotReload(assets: SharedAssetId[]): void {
 
     for (const vtf of texturesToReload) {
         console.log("Reloading texture", vtf);
-        runStrataGameCommand(`mat_reloadtexture ${vtf}`);
+        sendStrataCommand(`mat_reloadtexture ${vtf}`);
     }
 }

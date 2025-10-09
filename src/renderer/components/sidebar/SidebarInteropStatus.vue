@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center text-sm select-none">
+    <div class="text-center text-sm select-noneFix sidebar workspace styles">
         <div v-if="interopStore.connected" class="p-0.5 bg-green-900 text-green-300">Interop: Connected</div>
         <div v-else class="p-0.5 bg-neutral-800 text-neutral-400">Interop: Idle</div>
     </div>

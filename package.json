@@ -71,7 +71,6 @@
     "humanize-plus": "^1.8.2",
     "idb-keyval": "^6.2.2",
     "jwt-decode": "^4.0.0",
-    "koffi": "^2.12.2",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.2",
