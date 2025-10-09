@@ -1,5 +1,9 @@
 import net from "node:net";
-import { notifyStrataInteropConnected, notifyStrataInteropDisconnected } from "../api/MainStrataInteropApi.js";
+import {
+    notifyStrataInteropConnected,
+    notifyStrataInteropDisconnected,
+    notifyStrataInteropLog,
+} from "../api/MainStrataInteropApi.js";
 import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "Shared/SharedStrataInterop.js";
 
 let socket: net.Socket | undefined = undefined;
@@ -13,7 +17,8 @@ export function initStrataInterop(): boolean {
 }
 
 export function sendStrataCommand(command: string) {
-    socket?.emit(command);
+    console.log(`Sending command to strata: '${command}'`);
+    socket?.write(command + "\n");
 }
 
 function _connect(port: number, timeout: number): Promise<net.Socket | undefined> {
@@ -35,6 +40,15 @@ async function _healthcheck() {
         if (reconnect) {
             const s = await _connect(SHARED_STRATA_INTEROP_SOCKET_PORT, healthCheckIntervalMs);
             if (s) {
+                s.on("close", (hadError) => {
+                    socket = undefined;
+                    notifyStrataInteropDisconnected();
+                });
+
+                s.on("data", (data) => {
+                    notifyStrataInteropLog(String(data));
+                });
+
                 socket = s;
                 console.log("Strata connected");
                 notifyStrataInteropConnected();
@@ -42,15 +56,6 @@ async function _healthcheck() {
         }
         return;
     }
-
-    socket.on("close", (hadError) => {
-        socket = undefined;
-        notifyStrataInteropDisconnected();
-    });
-
-    socket.on("data", (data) => {
-        console.log(String(data));
-    });
 }
 
 function _initStrataInteropSocket(): void {

@@ -1,6 +1,6 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { IpcRenderer } from "electron";
+import { ipcRenderer, IpcRenderer, IpcRendererEvent } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
@@ -24,6 +24,7 @@ import {
     SharedAssetGroupId,
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export {};
 
@@ -93,6 +94,7 @@ declare global {
             interop: {
                 subscribeConnected: (callback: () => void) => IpcRenderer;
                 subscribeDisconnected: (callback: () => void) => IpcRenderer;
+                subscribeLog: (callback: (message: string) => void) => IpcRenderer;
                 sendCommand: (command: string) => void;
             };
         };

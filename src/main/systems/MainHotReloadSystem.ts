@@ -1,5 +1,5 @@
 import { isTextureAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { runStrataGameCommand, sendStrataCommand } from "./MainStrataInteropSystem.js";
+import { sendStrataCommand } from "./MainStrataInteropSystem.js";
 import { getAssetMap } from "./assets/MainAssetRepository.js";
 
 let hotReloadEnabled = false;

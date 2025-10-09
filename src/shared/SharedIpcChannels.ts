@@ -41,6 +41,7 @@ export const SharedIpcChannels = {
     InteropSendCommand: "interop_send_command",
     InteropConnected: "interop_connected",
     InteropDisconnected: "interop_disconnected",
+    InteropLog: "interop_log",
 
     AssetGroupsRescanned: "assetgroup_rescanned",
     AssetGroupsForceRescan: "assetgroup_force_rescan",

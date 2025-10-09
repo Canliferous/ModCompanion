@@ -18,3 +18,7 @@ export function notifyStrataInteropConnected(): void {
 export function notifyStrataInteropDisconnected(): void {
     getMainWindow()?.webContents.send(SharedIpcChannels.InteropDisconnected);
 }
+
+export function notifyStrataInteropLog(message: string): void {
+    getMainWindow()?.webContents.send(SharedIpcChannels.InteropLog, message);
+}

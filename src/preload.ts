@@ -128,6 +128,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.on(SharedIpcChannels.InteropConnected, (e: IpcRendererEvent) => callback()),
         subscribeDisconnected: (callback: () => void) =>
             ipcRenderer.on(SharedIpcChannels.InteropDisconnected, (e: IpcRendererEvent) => callback()),
+        subscribeLog: (callback: (message: string) => void) =>
+            ipcRenderer.on(SharedIpcChannels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
         sendCommand: (command: string) => ipcRenderer.send(SharedIpcChannels.InteropSendCommand, command),
     },
 });
