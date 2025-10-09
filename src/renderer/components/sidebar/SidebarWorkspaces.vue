@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full gap-1 grid-cols-1">
+    <div class="grid w-full gap-1 grid-cols-1">
         <template v-for="id in workspaceStore.workspaces">
             <SidebarWorkspacesItem :id="id" />
         </template>

@@ -14,7 +14,7 @@
             <UButton
                 size="sm"
                 variant="soft"
-                color="primary"
+                color="neutral"
                 icon="tdesign:chevron-right"
                 class="hidden group-hover:flex"
             />
