@@ -5,7 +5,6 @@ export interface LauncherButton {
     name: string;
     icon: string;
     binary: string;
-    color: string;
     launcherType: SharedLaunchers;
     launcherArgs?: string;
 }
@@ -13,14 +12,12 @@ export interface LauncherButton {
 export const launcherButtons: LauncherButton[] = [
     {
         name: "Game",
-        color: "error",
         icon: "revolution",
         binary: `revolution.exe -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
         launcherType: "game",
     },
     {
         name: "Game (Dev)",
-        color: "error",
         icon: "revolution",
         binary: "revolution.exe",
         launcherType: "game",
@@ -28,7 +25,6 @@ export const launcherButtons: LauncherButton[] = [
     },
     {
         name: "Game (Tools)",
-        color: "error",
         icon: "revolution",
         binary: "revolution.exe",
         launcherType: "game",
@@ -36,21 +32,18 @@ export const launcherButtons: LauncherButton[] = [
     },
     {
         name: "Hammer",
-        color: "success",
         icon: "hammer",
         binary: "revolution.exe",
         launcherType: "hammer",
     },
     {
         name: "Faceposer",
-        color: "info",
         icon: "faceposer",
         binary: "revolution.exe",
         launcherType: "faceposer",
     },
     {
         name: "HLMV",
-        color: "warning",
         icon: "hlmv",
         binary: "revolution.exe",
         launcherType: "hlmv",

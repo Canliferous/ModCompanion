@@ -1,7 +1,9 @@
 <template>
     <div class="p-1 h-full grid grid-cols-1 grid-rows-[1fr_auto] gap-2">
         <div class="overflow-y-scroll" ref="scroller">
-            <pre class="whitespace-pre-wrap text-sm text-neutral-200">{{ interopStore.log }}</pre>
+            <pre class="whitespace-pre-wrap text-sm Run windows launchers through wine on linux">{{
+                interopStore.log
+            }}</pre>
         </div>
 
         <div class="flex">

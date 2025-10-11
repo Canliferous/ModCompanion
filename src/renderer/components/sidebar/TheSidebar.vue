@@ -19,28 +19,40 @@
             </div>
         </div>
 
-        <div class="grid gap-1 content-start p-1">
+        <div class="grid gap-1 content-start p-1 pr-0">
+            <div class="grid gap-1 border border-accented">
+                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Launchers</p>
+
+                <UButton
+                    v-for="btn of launcherButtons"
+                    :label="btn.name"
+                    @click="() => launch(btn.launcherType, btn.launcherArgs)"
+                    size="sm"
+                    variant="ghost"
+                    class="mx-1"
+                    color="neutral"
+                >
+                    <template #leading>
+                        <BitmapIcon :name="btn.icon" class="w-4 h-4" />
+                    </template>
+                </UButton>
+
+                <USeparator />
+
+                <UButton
+                    size="sm"
+                    variant="ghost"
+                    color="neutral"
+                    label="Quit Sibelius"
+                    @click="() => quit()"
+                    icon="tdesign:close"
+                    class="mx-1 mb-1"
+                />
+            </div>
+        </div>
+
+        <div class="ml-1 mb-1">
             <SidebarInteropStatus />
-
-            <UButton
-                v-for="btn of launcherButtons"
-                :color="btn.color"
-                @click="() => launch(btn.launcherType, btn.launcherArgs)"
-                :label="btn.name"
-                size="small"
-                variant="soft"
-            >
-                <template #leading>
-                    <BitmapIcon :name="btn.icon" class="size-4 mx-2" />
-                </template>
-            </UButton>
-
-            <USeparator />
-            <UButton size="small" variant="soft" color="neutral" label="Quit Sibelius" @click="() => quit()">
-                <template #leading>
-                    <UIcon class="h-4 mx-2" name="tdesign:close-rectangle-filled" />
-                </template>
-            </UButton>
         </div>
     </aside>
 </template>
