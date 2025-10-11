@@ -33,5 +33,9 @@ export const useStrataInteropStore = defineStore("strata-interop", () => {
         return undefined;
     }
 
-    return { connected, log, addToHistory, getHistoryUp, getHistoryDown };
+    function clearLog() {
+        log.value = "";
+    }
+
+    return { connected, log, clearLog, addToHistory, getHistoryUp, getHistoryDown };
 });

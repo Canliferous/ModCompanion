@@ -1,7 +1,7 @@
 <template>
-    <div class="p-1 h-full grid grid-cols-1 grid-rows-[1fr_auto]">
+    <div class="p-1 h-full grid grid-cols-1 grid-rows-[1fr_auto] gap-2">
         <div class="overflow-y-scroll" ref="scroller">
-            <pre>{{ interopStore.log }}</pre>
+            <pre class="whitespace-pre-wrap text-sm text-neutral-200">{{ interopStore.log }}</pre>
         </div>
 
         <div class="flex">
@@ -19,6 +19,7 @@
                 :disabled="!prompt"
                 @click="handleSubmit"
             />
+            <UButton label="Clear" color="neutral" variant="ghost" @click="handleClear" />
         </div>
     </div>
 </template>
@@ -59,6 +60,10 @@ function handleHistoryDown() {
     if (newPrompt) {
         prompt.value = newPrompt;
     }
+}
+
+function handleClear() {
+    interopStore.clearLog();
 }
 </script>
 
