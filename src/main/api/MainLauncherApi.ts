@@ -3,10 +3,11 @@ import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 import * as child_process from "node:child_process";
 import { getConfig } from "../systems/MainConfigSystem.js";
+import os from "node:os";
 
 export function registerLauncherApi(): boolean {
     ipcMain.on(SharedIpcChannels.AppLaunch, (event, launcherType: SharedLaunchers, launcherArgs?: string) => {
-        const exe = getLauncherExe(launcherType);
+        const exe = _getLauncherExe(launcherType);
         if (!exe) {
             console.warn("Unknown launcher type", launcherType);
             return;
@@ -17,6 +18,14 @@ export function registerLauncherApi(): boolean {
         let cmd = exe;
         if (launcherArgs) {
             cmd = `${exe} ${launcherArgs}`;
+        }
+
+        if (_isWine(exe) && os.platform() === "linux") {
+            cmd = `wine ${cmd}`;
+        }
+
+        if (!cmd.includes("-game")) {
+            cmd += ` -game ${getConfig().gameName}`;
         }
 
         console.log(`Launching '${cmd}' Working Dir '${workingDir}'`);
@@ -32,7 +41,7 @@ export function registerLauncherApi(): boolean {
     return true;
 }
 
-export function getLauncherExe(launcherType: SharedLaunchers): string | undefined {
+function _getLauncherExe(launcherType: SharedLaunchers): string | undefined {
     const config = getConfig();
     if (launcherType === "game") {
         return config.gameExePath;
@@ -45,4 +54,8 @@ export function getLauncherExe(launcherType: SharedLaunchers): string | undefine
     }
 
     return undefined;
+}
+
+function _isWine(binaryPath: string) {
+    return binaryPath.includes("win64");
 }

@@ -32,7 +32,7 @@ export const launcherButtons: LauncherButton[] = [
         icon: "revolution",
         binary: "revolution.exe",
         launcherType: "game",
-        launcherArgs: "-tools",
+        launcherArgs: `-tools -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
     },
     {
         name: "Hammer",
