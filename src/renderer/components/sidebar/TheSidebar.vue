@@ -43,28 +43,23 @@
                     size="sm"
                     variant="ghost"
                     color="neutral"
-                    label="Quit Sibelius"
+                    label="Quit"
                     @click="() => quit()"
                     icon="tdesign:close"
                     class="mx-1 mb-1"
                 />
             </div>
         </div>
-
-        <div class="ml-1 mb-1">
-            <SidebarInteropStatus />
-        </div>
     </aside>
 </template>
 
 <script setup lang="ts">
 import BitmapIcon from "../common/BitmapIcon.vue";
-import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
-import SidebarInteropStatus from "~/components/sidebar/SidebarInteropStatus.vue";
+import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 
 function quit() {
     window.electronAPI.app.exit();

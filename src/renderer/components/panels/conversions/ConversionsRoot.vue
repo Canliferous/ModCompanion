@@ -9,7 +9,7 @@
     </template>
 
     <template v-else>
-        <div class="grid place-items-center h-full">No conversions yet</div>
+        <div class="grid place-items-center h-full text-neutral-400">No conversions yet</div>
     </template>
 </template>
 <script setup lang="ts">
