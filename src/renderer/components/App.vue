@@ -5,7 +5,7 @@
                 <TheSidebar />
             </div>
             <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
-                <DockviewVue @ready="panelsStore.handleReady" :theme="themeDark" />
+                <DockviewVue @ready="panelsStore.handleReady" :theme="themeDark" watermark-component="_Watermark" />
             </div>
             <div class="col-span-full h-full">
                 <TheFooter />

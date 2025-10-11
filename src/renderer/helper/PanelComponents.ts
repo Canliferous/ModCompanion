@@ -13,6 +13,7 @@ import AppDesign from "~/design/AppDesign.js";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
+import Watermark from "~/components/panels/Watermark.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -34,6 +35,7 @@ export const PanelComponentIds = {
     Conversions: "_Conversions",
     StrataConsole: "_StrataConsole",
     SubPanelTab: "_SubPanelTab",
+    Watermark: "_Watermark",
 } as const;
 export type PanelComponentId = (typeof PanelComponentIds)[keyof typeof PanelComponentIds];
 
@@ -100,6 +102,12 @@ export const PanelComponents = {
             component: SubPanelTab,
         },
     } as const,
+    other: {
+        watermark: {
+            componentId: "_Watermark",
+            component: Watermark,
+        },
+    },
 } as const;
 
 let panelsArray: ComponentDesc[] | undefined;
