@@ -4,23 +4,16 @@
         <span>{{ entry.name }}</span>
     </div>
     <div ref="dropZoneRef">
-        <UButtonGroup class="w-full">
+        <div class="flex items-center w-full gap-1">
             <UInput
                 v-model="file"
                 placeholder="Enter path"
                 @change="emit('updated', file)"
-                variant="outline"
                 class="grow"
                 :highlight="isOverDropZone"
             />
-            <UButton
-                icon="tdesign:play"
-                @click="handleRun"
-                variant="subtle"
-                color="neutral"
-                :disabled="file.length === 0"
-            />
-        </UButtonGroup>
+            <UButton icon="tdesign:play" @click="handleRun" :disabled="file.length === 0" />
+        </div>
     </div>
 </template>
 

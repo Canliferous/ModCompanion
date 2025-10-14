@@ -1,28 +1,28 @@
 <template>
-    <div
-        class="border border-accented bg-neutral-900"
-        :class="{ 'border-primary-400': isOverDropZone }"
-        ref="dropZoneRef"
-    >
-        <div v-for="(file, i) in files" class="border-b border-accented">
-            <EditControlAssetFileListEntry
-                :entry="file"
-                @remove="() => handleRemove(i)"
-                @changed="(newText) => handleChanged(i, newText)"
-                :dir
+    <UFormField :label="heading" class="col-span-2" ref="dropZoneRef">
+        <template #hint>
+            <UButton
+                icon="tdesign:plus"
+                color="success"
+                class="justify-self-end"
+                @click="handleAdd"
+                :disabled="reachedMax"
+                size="xs"
             />
-        </div>
+        </template>
+        <div class="grid gap-1">
+            <template v-for="(file, i) in files">
+                <EditControlAssetFileListEntry
+                    :entry="file"
+                    @remove="() => handleRemove(i)"
+                    @changed="(newText) => handleChanged(i, newText)"
+                    :dir
+                />
+            </template>
 
-        <UButton
-            block
-            icon="tdesign:plus"
-            label="Add"
-            color="success"
-            variant="ghost"
-            @click="handleAdd"
-            :disabled="reachedMax"
-        />
-    </div>
+            <DropArea v-if="files.length === 0" :drag-over="isOverDropZone" />
+        </div>
+    </UFormField>
 </template>
 
 <script setup lang="ts">
@@ -31,12 +31,14 @@ import EditControlAssetFileListEntry from "~/components/panels/assetInspector/ge
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import { useDropZone } from "@vueuse/core";
 import { getGameOrContentRelativePath } from "~/helper/SourceFs.js";
+import DropArea from "~/components/common/DropArea.vue";
 
 const props = defineProps<{
     asset: SharedAsset;
     field: keyof SharedAssetDefinitionFileArrays;
     dir: string;
     maxItems?: number;
+    heading: string;
 }>();
 
 const inj = inject(AssetInspectorGeneralInjectKey);

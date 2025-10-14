@@ -1,21 +1,9 @@
 <template>
     <UTooltip text="Collapse All">
-        <UButton
-            color="neutral"
-            variant="subtle"
-            size="sm"
-            @click="assetGroupStore.collapseAll"
-            icon="tdesign:shrink-vertical"
-        />
+        <UButton @click="assetGroupStore.collapseAll" icon="tdesign:shrink-vertical" />
     </UTooltip>
     <UTooltip text="Expand All">
-        <UButton
-            color="neutral"
-            variant="subtle"
-            size="sm"
-            @click="assetGroupStore.expandAll()"
-            icon="tdesign:expand-vertical"
-        />
+        <UButton @click="assetGroupStore.expandAll()" icon="tdesign:expand-vertical" />
     </UTooltip>
 </template>
 

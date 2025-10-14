@@ -10,14 +10,21 @@
         <UFormField label="Display Name" class="col-span-2">
             <EditControlAssetDisplayName :asset="asset" />
         </UFormField>
-        <UFormField label="Content Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="contentFiles" dir="content" :max-items="maxContentFiles" />
-        </UFormField>
-        <UFormField label="Game Files" class="col-span-2">
-            <EditControlAssetFileList :asset="asset" field="gameFiles" dir="game" :max-items="maxGameFiles" />
-        </UFormField>
 
-        <USeparator class="my-2" />
+        <EditControlAssetFileList
+            heading="Content Files"
+            :asset="asset"
+            field="contentFiles"
+            dir="content"
+            :max-items="maxContentFiles"
+        />
+        <EditControlAssetFileList
+            heading="Game Files"
+            :asset="asset"
+            field="gameFiles"
+            dir="game"
+            :max-items="maxGameFiles"
+        />
 
         <UFormField label="Associated Files" class="col-span-2">
             <EditControlAssetAssociated :asset="asset" />

@@ -16,13 +16,13 @@
         <div class="grid gap-1 content-start p-1 pr-0">
             <SidebarGroup heading="Launchers">
                 <UButton
+                    size="sm"
+                    variant="soft"
+                    color="neutral"
+                    class="bg-neutral-800/50"
                     v-for="btn of launcherButtons"
                     :label="btn.name"
                     @click="() => launch(btn.launcherType, btn.launcherArgs)"
-                    size="sm"
-                    variant="ghost"
-                    s
-                    color="neutral"
                 >
                     <template #leading>
                         <BitmapIcon :name="btn.icon" class="w-4 h-4" />
@@ -33,11 +33,12 @@
 
                 <UButton
                     size="sm"
-                    variant="ghost"
+                    variant="soft"
                     color="neutral"
                     label="Quit"
-                    @click="() => quit()"
+                    class="bg-neutral-800/50"
                     icon="tdesign:close"
+                    @click="() => quit()"
                 />
             </SidebarGroup>
         </div>

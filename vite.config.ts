@@ -35,10 +35,45 @@ export default defineConfig({
                         },
                     ],
                 },
-                button: { slots: { base: "cursor-pointer duration-0" } },
+                button: {
+                    slots: {
+                        base: "cursor-pointer",
+                    },
+                    variants: {
+                        variant: {
+                            solid: "inset-shadow-rim",
+                        },
+                    },
+                    compoundVariants: [
+                        {
+                            color: "neutral",
+                            variant: "solid",
+                            class: "bg-neutral-800 hover:bg-neutral-750 active:bg-neutral-850 disabled:bg-neutral-900 text-neutral-100 shadow-xs shadow-neutral-950/50",
+                        },
+                    ],
+                    defaultVariants: {
+                        color: "neutral",
+                        variant: "solid",
+                        size: "md",
+                    },
+                },
                 select: {
-                    slots: { base: "cursor-pointer duration-0" },
-                    variants: { variant: { outline: "hover:bg-elevated active:bg-elevated" } },
+                    slots: {
+                        base: "cursor-pointer",
+                        content: "shadow-md inset-shadow-rim shadow-md shadow-neutral-950",
+                    },
+                    variants: {
+                        variant: {
+                            outline: "hover:bg-elevated active:bg-elevated",
+                            lowered:
+                                "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid",
+                        },
+                    },
+                    defaultVariants: {
+                        color: "primary",
+                        variant: "lowered",
+                        size: "md",
+                    },
                 },
                 popover: {
                     slots: {
@@ -64,8 +99,27 @@ export default defineConfig({
                         content: "z-100",
                     },
                 },
+                formField: {
+                    slots: {
+                        root: "p-2 bg-neutral-800 rounded-lg",
+                        label: "mx-1",
+                    },
+                },
                 input: {
-                    slots: { base: "hover:bg-elevated duration-0" },
+                    slots: {
+                        base: "",
+                    },
+                    variants: {
+                        variant: {
+                            lowered:
+                                "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid",
+                        },
+                    },
+                    defaultVariants: {
+                        color: "primary",
+                        variant: "lowered",
+                        size: "md",
+                    },
                 },
                 textarea: {
                     slots: { base: "hover:bg-elevated duration-0" },

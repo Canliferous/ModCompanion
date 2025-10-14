@@ -3,30 +3,9 @@
         <UInput disabled v-model="asset.defFilePath" class="w-full" size="xs" />
         <template #hint>
             <div class="flex gap-1">
-                <UButton
-                    size="xs"
-                    color="neutral"
-                    variant="subtle"
-                    label="Open"
-                    icon="tdesign:file-code-1"
-                    @click="handleOpen"
-                />
-                <UButton
-                    size="xs"
-                    color="neutral"
-                    variant="subtle"
-                    label="Browse to"
-                    icon="tdesign:folder-1"
-                    @click="handleBrowse"
-                />
-                <UButton
-                    size="xs"
-                    color="neutral"
-                    variant="subtle"
-                    label="Explore to"
-                    @click="handleExplore"
-                    icon="tdesign:folder-1"
-                />
+                <UButton size="xs" label="Open" icon="tdesign:file-code-1" @click="handleOpen" />
+                <UButton size="xs" label="Browse to" icon="tdesign:folder-1" @click="handleBrowse" />
+                <UButton size="xs" label="Explore to" @click="handleExplore" icon="tdesign:folder-1" />
             </div>
         </template>
     </UFormField>
