@@ -1,35 +1,27 @@
 <template>
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start p-1 pr-0">
-            <div class="border border-accented">
-                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Workspace</p>
-                <div class="p-1 grid gap-1 content-start">
-                    <SidebarAddWorkspaceButton />
-                    <SidebarAddPanelsButton />
-                    <SidebarWorkspaces />
-                </div>
-            </div>
+            <SidebarGroup heading="Workspace">
+                <SidebarAddWorkspaceButton />
+                <SidebarAddPanelsButton />
+                <SidebarWorkspaces />
+            </SidebarGroup>
 
-            <div class="border border-accented">
-                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Assets</p>
-                <div class="p-1 grid gap-1 content-start">
-                    <SidebarCreateAsset />
-                    <SidebarHotReloadSwitch />
-                </div>
-            </div>
+            <SidebarGroup heading="Assets">
+                <SidebarCreateAsset />
+                <SidebarHotReloadSwitch />
+            </SidebarGroup>
         </div>
 
         <div class="grid gap-1 content-start p-1 pr-0">
-            <div class="grid gap-1 border border-accented">
-                <p class="text-xs px-3 py-1 select-none bg-neutral-800 border-b border-b-accented">Launchers</p>
-
+            <SidebarGroup heading="Launchers">
                 <UButton
                     v-for="btn of launcherButtons"
                     :label="btn.name"
                     @click="() => launch(btn.launcherType, btn.launcherArgs)"
                     size="sm"
                     variant="ghost"
-                    class="mx-1"
+                    s
                     color="neutral"
                 >
                     <template #leading>
@@ -46,9 +38,8 @@
                     label="Quit"
                     @click="() => quit()"
                     icon="tdesign:close"
-                    class="mx-1 mb-1"
                 />
-            </div>
+            </SidebarGroup>
         </div>
     </aside>
 </template>
