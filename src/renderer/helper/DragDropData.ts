@@ -9,7 +9,7 @@ export interface AssetDragDropTransferData {
 const AssetIdPrefix = "asset;";
 const GroupIdPrefix = "group;";
 
-export function deserializeAssetDragDropTransferData(transferData: string) {
+export function deserializeAssetDragDropTransferData(transferData: string): AssetDragDropTransferData {
     const splits = transferData.split("\n");
 
     const assetIds: SharedAssetId[] = [];

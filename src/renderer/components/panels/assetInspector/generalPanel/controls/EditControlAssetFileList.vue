@@ -20,7 +20,7 @@
                 />
             </template>
 
-            <MDropArea v-if="files.length === 0" :drag-over="isOverDropZone" />
+            <MDropArea v-if="files.length === 0" @change="handleDrop" />
         </div>
     </UFormField>
 </template>
@@ -90,22 +90,8 @@ function save(): void {
     inj?.updateAsset({ [props.field]: filteredFiles });
 }
 
-const dropZoneRef = ref<HTMLDivElement>();
-async function onDrop(fileList: File[] | null, event: DragEvent) {
+function handleDrop(plaintext: string) {
     const entriesToAdd: string[] = [];
-
-    if (fileList !== null) {
-        for (const file of fileList) {
-            const fullPath = window.electronAPI.webUtils.getPathForFile(file);
-            const correctPath = await window.electronAPI.project.correctPath(fullPath);
-            if (correctPath) {
-                entriesToAdd.push(correctPath);
-            }
-        }
-        return;
-    }
-
-    const plaintext = event.dataTransfer?.getData("text/plain");
     if (plaintext) {
         const lines = plaintext.split("\n");
         for (const line of lines) {
@@ -120,10 +106,6 @@ async function onDrop(fileList: File[] | null, event: DragEvent) {
 
     save();
 }
-const { isOverDropZone } = useDropZone(dropZoneRef, {
-    onDrop,
-    preventDefaultForUnhandled: false,
-});
 </script>
 
 <style scoped></style>

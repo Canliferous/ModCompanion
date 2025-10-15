@@ -8,7 +8,7 @@
 import { useDropZone } from "@vueuse/core";
 import { handleDrop } from "~/helper/DragDropData.js";
 
-const model = defineModel<string>();
+const model = defineModel<string>({ required: false });
 const emit = defineEmits<{ change: [string] }>();
 defineSlots<{
     default(props: { isOverDropZone: boolean }): any;

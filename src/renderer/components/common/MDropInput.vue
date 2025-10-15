@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const model = defineModel<string>("");
+const model = defineModel<string>({ required: false });
 const emit = defineEmits<{ change: [string] }>();
 const props = defineProps<{ placeholder?: string }>();
 </script>
