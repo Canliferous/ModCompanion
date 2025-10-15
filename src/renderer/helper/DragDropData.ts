@@ -28,3 +28,19 @@ export function deserializeAssetDragDropTransferData(transferData: string) {
 
     return { assetIds, groupIds };
 }
+
+export async function handleDrop(files: File[] | null, event: DragEvent) {
+    if (files !== null && files.length === 1) {
+        const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
+        const correctPath = await window.electronAPI.project.correctPath(fullPath);
+        return correctPath;
+    }
+
+    const plaintext = event.dataTransfer?.getData("text/plain");
+    if (plaintext) {
+        const lines = plaintext.split("\n");
+        return lines[0];
+    }
+
+    return undefined;
+}

@@ -5,13 +5,7 @@
     </div>
     <div ref="dropZoneRef">
         <div class="flex items-center w-full gap-1">
-            <UInput
-                v-model="file"
-                placeholder="Enter path"
-                @change="emit('updated', file)"
-                class="grow"
-                :highlight="isOverDropZone"
-            />
+            <MDropInput v-model="file" placeholder="Enter path" @change="emit('updated', file)" class="grow" />
             <UButton icon="tdesign:play" @click="handleRun" :disabled="file.length === 0" />
         </div>
     </div>
@@ -38,30 +32,6 @@ function handleRun() {
     const p = pathe.join(getAppConfig().rootPath, file.value);
     window.electronAPI.app.openFile(p);
 }
-
-const dropZoneRef = ref<HTMLDivElement>();
-async function onDrop(files: File[] | null, event: DragEvent) {
-    if (files !== null && files.length === 1) {
-        const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
-        const correctPath = await window.electronAPI.project.correctPath(fullPath);
-        if (correctPath) {
-            file.value = correctPath;
-            emit("updated", correctPath);
-        }
-        return;
-    }
-
-    const plaintext = event.dataTransfer?.getData("text/plain");
-    if (plaintext) {
-        const lines = plaintext.split("\n");
-        file.value = lines[0];
-        emit("updated", lines[0]);
-    }
-}
-const { isOverDropZone } = useDropZone(dropZoneRef, {
-    onDrop,
-    preventDefaultForUnhandled: false,
-});
 </script>
 
 <style scoped></style>
