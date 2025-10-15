@@ -1,14 +1,7 @@
 <template>
     <UFormField :label="heading" class="col-span-2" ref="dropZoneRef">
         <template #hint>
-            <UButton
-                icon="tdesign:plus"
-                color="success"
-                class="justify-self-end"
-                @click="handleAdd"
-                :disabled="reachedMax"
-                size="xs"
-            />
+            <UButton icon="tdesign:plus" class="justify-self-end" @click="handleAdd" :disabled="reachedMax" size="xs" />
         </template>
         <div class="grid gap-1">
             <template v-for="(file, i) in files">

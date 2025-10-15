@@ -3,8 +3,8 @@
         <UInput v-model="text" class="grow" :placeholder @change="emit('changed', text)" />
 
         <UButtonGroup class="flex">
-            <UButton icon="tdesign:folder-1" color="info" @click="handleExplore" />
-            <UButton icon="tdesign:minus" color="error" @click="emit('remove')" />
+            <UButton icon="tdesign:folder-1" @click="handleExplore" />
+            <UButton icon="tdesign:minus" @click="emit('remove')" />
         </UButtonGroup>
     </div>
 </template>
