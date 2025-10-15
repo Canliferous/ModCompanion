@@ -21,7 +21,7 @@ import {
     DataTableColumn,
     DataTableEntryActionInjectKey,
     DataTableSelectionInjectKey,
-} from "~/components/common/DataTable/DataTable.model.js";
+} from "~/components/common/dataTable/MDataTable.model.js";
 
 const props = defineProps<{
     entry: T;

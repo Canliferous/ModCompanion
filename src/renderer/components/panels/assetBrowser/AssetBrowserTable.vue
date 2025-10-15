@@ -1,6 +1,6 @@
 <template>
     <UContextMenu :items="items">
-        <DataTable
+        <MDataTable
             ref="table"
             :entries="entries"
             :columns="columns"
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import {
     getAssociatedEntryName,
     SharedAssetDefinitionAssociatedFiles,

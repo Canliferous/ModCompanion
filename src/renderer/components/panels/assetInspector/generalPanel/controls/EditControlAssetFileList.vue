@@ -20,7 +20,7 @@
                 />
             </template>
 
-            <DropArea v-if="files.length === 0" :drag-over="isOverDropZone" />
+            <MDropArea v-if="files.length === 0" :drag-over="isOverDropZone" />
         </div>
     </UFormField>
 </template>
@@ -31,7 +31,7 @@ import EditControlAssetFileListEntry from "~/components/panels/assetInspector/ge
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import { useDropZone } from "@vueuse/core";
 import { getGameOrContentRelativePath } from "~/helper/SourceFs.js";
-import DropArea from "~/components/common/DropArea.vue";
+import MDropArea from "~/components/common/MDropArea.vue";
 
 const props = defineProps<{
     asset: SharedAsset;

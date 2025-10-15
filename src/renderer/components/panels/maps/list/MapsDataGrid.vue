@@ -1,5 +1,5 @@
 <template>
-    <DataTable
+    <MDataTable
         :entries="listStore.filteredMapPaths"
         :columns="columns"
         neutral-highlight
@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
-import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { computed } from "vue";
 import pathe from "pathe";
 import { filename } from "pathe/utils";

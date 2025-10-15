@@ -12,7 +12,7 @@
                     size="xl"
                 >
                     <template #leading>
-                        <BitmapIcon :name="btn.icon" />
+                        <MBitmapIcon :name="btn.icon" />
                     </template>
                 </UButton>
             </div>
@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { getAppConfig } from "~/renderer-config.js";
-import BitmapIcon from "../common/BitmapIcon.vue";
+import MBitmapIcon from "../common/MBitmapIcon.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 
 function printConfig() {

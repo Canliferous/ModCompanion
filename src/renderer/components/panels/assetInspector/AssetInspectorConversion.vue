@@ -1,6 +1,6 @@
 <template>
     <div class="flex gap-1">
-        <ConversionStateBadge :state="state" />
+        <MConversionStateBadge :state="state" />
         <UButton label="Convert" variant="ghost" size="sm" color="success" icon="tdesign:play" @click="handleClick" />
     </div>
 </template>

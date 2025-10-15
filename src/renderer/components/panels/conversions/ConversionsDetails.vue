@@ -7,13 +7,13 @@
             @click="handleClickAsset"
         >
             <template #leading>
-                <AssetTypeIcon :type="asset?.def?.type ?? SharedAssetTypes.Unknown" />
+                <MAssetTypeIcon :type="asset?.def?.type ?? SharedAssetTypes.Unknown" />
             </template>
         </UButton>
         <div class="flex gap-2 items-center">
-            <ConversionStateBadge :state="item.stateBefore" />
+            <MConversionStateBadge :state="item.stateBefore" />
             <UIcon name="tdesign:arrow-right" class="text-neutral-500" />
-            <ConversionStateBadge :state="item.stateAfter" />
+            <MConversionStateBadge :state="item.stateAfter" />
         </div>
         <div class="flex gap-2 items-center">
             <ConversionsCellTime :date-time="item.startTime" />

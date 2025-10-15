@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VerticalTableItem } from "~/components/common/VerticalTable.model.js";
+import { VerticalTableItem } from "~/components/common/MVerticalTable.model.js";
 
 const props = defineProps<{ items: VerticalTableItem[] }>();
 </script>

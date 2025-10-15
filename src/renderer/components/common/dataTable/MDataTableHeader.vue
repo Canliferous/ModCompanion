@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 
 defineProps<{ columns: DataTableColumn<T>[] }>();
 </script>

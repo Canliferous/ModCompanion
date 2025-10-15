@@ -6,7 +6,7 @@
             :variant="variant ?? 'subtle'"
         >
             <template #leading>
-                <ConversionStateIcon :state="state" />
+                <MConversionStateIcon :state="state" />
             </template>
         </UBadge>
     </UTooltip>

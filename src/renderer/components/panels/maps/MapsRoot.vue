@@ -9,7 +9,7 @@
 
                 <div class="mx-auto">
                     <!-- https://youtrack.secondfacesoftware.com/issue/REVO2-91 -->
-                    <!--                <PlayPauseStopControls />-->
+                    <!--                <MPlayPauseStopControls />-->
                 </div>
                 <MapsTimeReportToggle />
             </div>

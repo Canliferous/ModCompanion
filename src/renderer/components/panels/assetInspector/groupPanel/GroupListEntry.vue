@@ -11,11 +11,11 @@
                 @click="handleClickAsset"
             >
                 <template #leading>
-                    <AssetTypeIcon :type="asset.def.type" />
+                    <MAssetTypeIcon :type="asset.def.type" />
                 </template>
             </UButton>
 
-            <ConversionStateIcon :state="conversionStore.getState(asset.def.id)" />
+            <MConversionStateIcon :state="conversionStore.getState(asset.def.id)" />
 
             <UButton variant="ghost" color="error" icon="tdesign:remove" @click="emit('remove')" />
 

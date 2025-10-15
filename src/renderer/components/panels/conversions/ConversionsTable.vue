@@ -1,6 +1,6 @@
 <template>
     <UContextMenu :items="items">
-        <DataTable
+        <MDataTable
             :entries="entries"
             :columns="columns"
             neutral-highlight
@@ -14,10 +14,10 @@
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedConversionHistoryItem } from "Shared/SharedConversion.js";
-import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import ConversionsCellTime from "~/components/panels/conversions/ConversionsCellTime.vue";
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
-import ConversionStateBadge from "~/components/common/ConversionStateBadge.vue";
+import MConversionStateBadge from "~/components/common/MConversionStateBadge.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 
 const conversionStore = useAssetConversionStore();
@@ -47,7 +47,7 @@ const columns: DataTableColumn<SharedConversionHistoryItem>[] = [
     {
         id: "status",
         label: "Status",
-        cell: (entry) => h(ConversionStateBadge, { state: entry.stateAfter, variant: "label" }),
+        cell: (entry) => h(MConversionStateBadge, { state: entry.stateAfter, variant: "label" }),
         size: "auto",
     },
 ];

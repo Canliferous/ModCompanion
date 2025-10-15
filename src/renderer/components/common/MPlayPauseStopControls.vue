@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { State } from "./PlayPauseStopControls.model";
+import { State } from "./MPlayPauseStopControls.model.js";
 import { useMapCompileStore } from "~/store/MapCompileStore.js";
 
 const compileStore = useMapCompileStore();

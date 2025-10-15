@@ -6,9 +6,9 @@
         @click="handleClickEmptyArea"
         @keydown="handleKeyDown"
     >
-        <DataTableHeader v-if="!noHeader" :columns="columns" />
+        <MDataTableHeader v-if="!noHeader" :columns="columns" />
         <div class="grid col-span-full grid-cols-subgrid content-start pr-1 overflow-y-scroll" ref="grid">
-            <DataTableRow
+            <MDataTableRow
                 v-for="(entry, i) in entriesHierarchy"
                 :idx="i"
                 :entry="entry.entry"
@@ -28,8 +28,8 @@ import {
     DataTableColumn,
     DataTableEntryActionInjectKey,
     DataTableSelectionInjectKey,
-} from "~/components/common/DataTable/DataTable.model.js";
-import DataTableHeader from "~/components/common/DataTable/DataTableHeader.vue";
+} from "~/components/common/dataTable/MDataTable.model.js";
+import MDataTableHeader from "~/components/common/dataTable/MDataTableHeader.vue";
 
 const props = defineProps<{
     entries: T[];

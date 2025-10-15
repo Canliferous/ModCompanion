@@ -1,12 +1,12 @@
 <template>
     <div class="grid place-items-center">
-        <ConversionStateIcon :state="state" />
+        <MConversionStateIcon :state="state" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { SharedConversionState } from "Shared/SharedConversion.js";
-import ConversionStateIcon from "~/components/common/ConversionStateIcon.vue";
+import MConversionStateIcon from "~/components/common/MConversionStateIcon.vue";
 
 defineProps<{ state: SharedConversionState }>();
 </script>

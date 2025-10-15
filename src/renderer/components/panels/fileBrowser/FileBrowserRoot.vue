@@ -3,7 +3,7 @@
         <div><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
         <USeparator />
         <UContextMenu :items="items">
-            <DataTable
+            <MDataTable
                 :columns="columns"
                 :entries="entries"
                 @onEntryActivated="handleActivated"
@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
-import { DataTableColumn } from "~/components/common/DataTable/DataTable.model.js";
+import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
 import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEntryIcon.vue";
-import DataTable from "~/components/common/DataTable/DataTable.vue";
+import MDataTable from "~/components/common/dataTable/MDataTable.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import pathe from "pathe";

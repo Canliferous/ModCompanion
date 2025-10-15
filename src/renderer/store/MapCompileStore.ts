@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { State, State as PlayPauseStopControlsState } from "~/components/common/PlayPauseStopControls.model.js";
+import { State, State as PlayPauseStopControlsState } from "~/components/common/MPlayPauseStopControls.model.js";
 import { SharedMapCompileState } from "Shared/SharedMapCompile.js";
 
 export const useMapCompileStore = defineStore("map-compile", () => {

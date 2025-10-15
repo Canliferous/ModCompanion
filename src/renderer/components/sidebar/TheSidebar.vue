@@ -25,7 +25,7 @@
                     @click="() => launch(btn.launcherType, btn.launcherArgs)"
                 >
                     <template #leading>
-                        <BitmapIcon :name="btn.icon" class="w-4 h-4" />
+                        <MBitmapIcon :name="btn.icon" class="w-4 h-4" />
                     </template>
                 </UButton>
 
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import BitmapIcon from "../common/BitmapIcon.vue";
+import MBitmapIcon from "../common/MBitmapIcon.vue";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
