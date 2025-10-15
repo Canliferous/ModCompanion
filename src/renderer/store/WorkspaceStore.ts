@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 import { SerializedDockview } from "dockview-vue";
 import { useEventListener } from "@vueuse/core";
+import { AppDesign } from "~/design/AppDesign.js";
 
 export type WorkspaceId = string;
 
@@ -34,7 +35,7 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
         workspaceLabels.value = { ...workspaceLabels.value, [id]: "New Workspace" };
-        workspaceIcons.value = { ...workspaceIcons.value, [id]: "tdesign:heart" };
+        workspaceIcons.value = { ...workspaceIcons.value, [id]: AppDesign.Icons.NewWorkspace };
         activeWorkspace.value = id;
         return id;
     }

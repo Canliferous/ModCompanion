@@ -4,7 +4,7 @@
             :label="label"
             variant="ghost"
             color="neutral"
-            :icon="open ? 'tdesign:chevron-up' : 'tdesign:chevron-down'"
+            :icon="open ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronDown"
         />
 
         <template #content>
@@ -25,6 +25,7 @@
 import { SharedVtfFlag } from "Shared/vtf/SharedVtfFlag.js";
 import AssetInspectorTextureConvertFlagsGroupCheckbox from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlagsGroupCheckbox.vue";
 import { useRememberRef } from "~/composables/useRemember.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ label: string; flags: SharedVtfFlag[]; values: SharedVtfFlag[] }>();
 const emit = defineEmits<{ toggle: [flag: SharedVtfFlag] }>();

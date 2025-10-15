@@ -4,7 +4,7 @@
             :label="labelFunc ? labelFunc(selectedVal.toString()) : selectedVal.toString()"
             variant="outline"
             :color="!isDefault ? 'primary' : 'neutral'"
-            trailing-icon="tdesign:chevron-down"
+            :trailing-icon="AppDesign.Icons.ChevronDown"
             block
             :ui="{
                 base: 'relative hover:bg-none',
@@ -73,6 +73,7 @@
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { SharedVtfEnumGrouping } from "Shared/vtf/SharedVtfEnumGrouping.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{
     enum: E;

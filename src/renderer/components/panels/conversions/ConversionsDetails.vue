@@ -12,12 +12,12 @@
         </UButton>
         <div class="flex gap-2 items-center">
             <MConversionStateBadge :state="item.stateBefore" />
-            <UIcon name="tdesign:arrow-right" class="text-neutral-500" />
+            <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
             <MConversionStateBadge :state="item.stateAfter" />
         </div>
         <div class="flex gap-2 items-center">
             <ConversionsCellTime :date-time="item.startTime" />
-            <UIcon name="tdesign:arrow-right" class="text-neutral-500" />
+            <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
             <ConversionsCellTime :date-time="item.endTime" />
 
             <span class="flex">
@@ -35,6 +35,7 @@ import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { SharedConversionHistoryItem } from "Shared/SharedConversion.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const assetListStore = useAssetListStore();
 

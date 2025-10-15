@@ -1,22 +1,77 @@
 import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 
-export const icons = {
-    asset: "tdesign:traffic-events-filled",
-    material: "tdesign:highlight-1",
-    model: "tdesign:control-platform-filled",
-    texture: "tdesign:image-filled",
-    assetGroup: "tdesign:combination-filled",
+export const Icons = {
+    Asset: "tdesign:traffic-events-filled",
+    Material: "tdesign:highlight-1",
+    Model: "lucide:box",
+    Texture: "lucide:image",
+
+    Dot: "lucide:dot",
+    Check: "lucide:check",
+    Loading: "lucide:loader-circle",
+    Filter: "lucide:funnel",
+    Search: "lucide:search",
+    CollapseVertical: "lucide:chevrons-down-up",
+    ExpandVertical: "lucide:chevrons-up-down",
+    ChevronUp: "lucide:chevron-up",
+    ChevronDown: "lucide:chevron-down",
+    ChevronLeft: "lucide:chevron-left",
+    ChevronRight: "lucide:chevron-right",
+    ArrowUp: "lucide:arrow-up",
+    ArrowDown: "lucide:arrow-down",
+    ArrowLeft: "lucide:arrow-left",
+    ArrowRight: "lucide:arrow-right",
+
+    FsFolder: "tdesign:folder-filled",
+    FsFolderOpen: "tdesign:folder-open-1-filled",
+
+    ActionAdd: "lucide:plus",
+    ActionRemove: "lucide:minus",
+
+    ActionConvertAsset: "lucide:arrow-big-right-dash",
+    ActionCreateAsset: "lucide:plus",
+    ActionCreateAssetGroup: "lucide:folder-plus",
+
+    ActionBrowseToFolder: "lucide:folder",
+    ActionExploreToFolder: "lucide:folder",
+    ActionOpenFileCode: "lucide:file",
+
+    ActionMcaFile: "lucide:file-code",
+    ActionExploreToMca: "lucide:folder-code",
+    ActionBrowseToMca: "lucide:folder-code",
+    ActionOpenFileMca: "lucide:file-code",
+
+    ActionLaunchFile: "lucide:play",
+
+    ActionPlay: "lucide:play",
+    ActionPause: "lucide:pause",
+    ActionStop: "lucide:stop",
+
+    ActionRefresh: "lucide:refresh-cw",
+
+    NewWorkspace: "lucide:heart",
+
+    MapCompileIdle: "lucide:dot",
+    MapCompileInProgress: "lucide:loading",
+    MapCompileCompleted: "lucide:check",
+
+    ConversionStateInvalid: "lucide:triangle-alert",
+    ConversionStateUnknown: "lucide:circle-question-mark",
+    ConversionStatePending: "lucide:dot",
+    ConversionStateInProgress: "lucide:loading",
+    ConversionStateFinished: "lucide:check",
+    ConversionStateFailed: "lucide:x",
 } as const;
 
 export function getAssetTypeIcon(type: SharedAssetType): string {
     switch (type) {
         case SharedAssetTypes.Texture:
-            return icons.texture;
+            return Icons.Texture;
         case SharedAssetTypes.Model:
-            return icons.model;
+            return Icons.Model;
         case SharedAssetTypes.Unknown:
         default:
-            return icons.asset;
+            return Icons.Asset;
     }
 }
 export function getAssetTypeTextColor(type: SharedAssetType): string {
@@ -46,6 +101,6 @@ export function getAssetTypeName(type: SharedAssetType) {
     }
 }
 
-export default {
-    icons,
+export const AppDesign = {
+    Icons,
 };

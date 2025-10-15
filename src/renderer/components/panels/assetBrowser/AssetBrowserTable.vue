@@ -41,6 +41,7 @@ import {
 import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
 import ClipboardHelper from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -199,7 +200,7 @@ const items = computed(() => {
                     conversionStore.enqueue(sel.def.id);
                 }
             },
-            icon: "tdesign:forward-filled",
+            icon: AppDesign.Icons.ActionConvertAsset,
             color: "success",
         },
         {
@@ -208,7 +209,7 @@ const items = computed(() => {
                 assetGroupsStore.createGroup(selected.map((s) => s.def.id));
                 table.value?.deselect();
             },
-            icon: "tdesign:app-filled",
+            icon: AppDesign.Icons.ActionCreateAssetGroup,
             color: isAnyGrouped ? "neutral" : "success",
             disabled: isAnyGrouped,
         },
@@ -244,14 +245,14 @@ const items = computed(() => {
                 onSelect(e: Event) {
                     openMca(sel);
                 },
-                icon: "tdesign:file-code-1-filled",
+                icon: AppDesign.Icons.ActionOpenFileMca,
             },
             {
                 label: "Explore to .mca",
                 onSelect(e: Event) {
                     exploreToMca(sel);
                 },
-                icon: "tdesign:folder-1-filled",
+                icon: AppDesign.Icons.ActionExploreToMca,
             },
             {
                 label: "Copy Name",

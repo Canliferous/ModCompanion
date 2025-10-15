@@ -9,11 +9,11 @@ import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspect
 import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertPanel.vue";
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
-import AppDesign from "~/design/AppDesign.js";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
 import Watermark from "~/components/panels/Watermark.vue";
+import { AppDesign } from "~/design/AppDesign.js";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -145,7 +145,7 @@ export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _Home: "tdesign:home",
     _MapList: "tdesign:map",
     _MapCompileLog: "tdesign:list",
-    _AssetBrowser: AppDesign.icons.asset,
+    _AssetBrowser: AppDesign.Icons.Asset,
     _FileBrowser: "tdesign:folder-open-1-filled",
     _AssetInspector: "tdesign:file-1",
     _AssetInspector_TexturePreview: "tdesign:image-1-filled",

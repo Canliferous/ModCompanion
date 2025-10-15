@@ -2,7 +2,10 @@
     <UTooltip :text="listStore.refreshing ? 'Refreshing' : 'Force Refresh'">
         <UButton @click="handleRefresh" :disabled="listStore.refreshing">
             <template #default>
-                <UIcon name="tdesign:refresh" :class="{ 'animate-spin': listStore.refreshing }" />
+                <UIcon
+                    :name="listStore.refreshing ? AppDesign.Icons.Loading : AppDesign.Icons.ActionRefresh"
+                    :class="{ 'animate-spin': listStore.refreshing }"
+                />
             </template>
         </UButton>
     </UTooltip>
@@ -11,6 +14,7 @@
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const listStore = useAssetListStore();
 

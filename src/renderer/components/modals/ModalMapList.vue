@@ -7,7 +7,7 @@
                         <div v-if="isMapTreeItem(item)">
                             <UButton
                                 :class="{ invisible: listStore.isMapAdded(item.vmfPath) }"
-                                icon="tdesign:arrow-right"
+                                icon="lucide:arrow-right"
                                 variant="ghost"
                                 @click="listStore.addMap(item.vmfPath)"
                             />

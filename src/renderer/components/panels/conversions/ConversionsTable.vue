@@ -19,6 +19,7 @@ import ConversionsCellTime from "~/components/panels/conversions/ConversionsCell
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
 import MConversionStateBadge from "~/components/common/MConversionStateBadge.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const conversionStore = useAssetConversionStore();
 const assetListStore = useAssetListStore();
@@ -59,7 +60,7 @@ const items = computed<ContextMenuItem[][]>(() => {
         [
             {
                 label: "Convert again",
-                icon: "tdesign:play",
+                icon: AppDesign.Icons.ActionConvertAsset,
                 color: "success",
                 onSelect(e: Event) {
                     if (active) {

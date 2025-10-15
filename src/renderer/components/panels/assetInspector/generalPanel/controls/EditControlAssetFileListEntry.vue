@@ -3,8 +3,8 @@
         <UInput v-model="text" class="grow" :placeholder @change="emit('changed', text)" />
 
         <UButtonGroup class="flex">
-            <UButton icon="tdesign:folder-1" @click="handleExplore" />
-            <UButton icon="tdesign:minus" @click="emit('remove')" />
+            <UButton :icon="AppDesign.Icons.ActionExploreToFolder" @click="handleExplore" />
+            <UButton :icon="AppDesign.Icons.ActionRemove" @click="emit('remove')" />
         </UButtonGroup>
     </div>
 </template>
@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ entry: string; dir: string }>();
 const text = ref(props.entry);

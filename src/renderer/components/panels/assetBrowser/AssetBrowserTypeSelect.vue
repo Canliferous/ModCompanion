@@ -6,13 +6,13 @@
         multiple
         class="min-w-32"
         placeholder="No Filter"
-        icon="tdesign:filter"
+        :icon="AppDesign.Icons.Filter"
     />
 </template>
 
 <script setup lang="ts">
 import { getAssetTypeName, SharedAssetType, SharedAssetTypesValid } from "Shared/SharedAssetDefinition.js";
-import { getAssetTypeIcon } from "~/design/AppDesign.js";
+import { AppDesign, getAssetTypeIcon } from "~/design/AppDesign.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 
 const listStore = useAssetListStore();

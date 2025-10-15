@@ -17,7 +17,7 @@
 
             <MConversionStateIcon :state="conversionStore.getState(asset.def.id)" />
 
-            <UButton variant="ghost" color="error" icon="tdesign:remove" @click="emit('remove')" />
+            <UButton variant="ghost" color="error" :icon="AppDesign.Icons.ActionRemove" @click="emit('remove')" />
 
             <div class="col-span-full">
                 <template v-if="asset.def.associatedFiles">
@@ -40,6 +40,7 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const groupsStore = useAssetGroupsStore();
 const listStore = useAssetListStore();

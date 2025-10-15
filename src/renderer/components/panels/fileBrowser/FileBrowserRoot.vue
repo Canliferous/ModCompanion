@@ -24,12 +24,11 @@ import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.
 import { SharedFsEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
 import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEntryIcon.vue";
-import MDataTable from "~/components/common/dataTable/MDataTable.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import pathe from "pathe";
 import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
-import AppDesign from "~/design/AppDesign.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const looseFilesStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -84,7 +83,7 @@ const items = computed<ContextMenuItem[][]>(() => {
         [
             {
                 label: "Open / Run",
-                icon: "tdesign:arrow-right",
+                icon: allFiles ? AppDesign.Icons.ActionLaunchFile : "nothing",
                 disabled: !allFiles,
                 onSelect(e: Event) {
                     window.electronAPI.project.launchFile(pathsArray);
@@ -94,7 +93,7 @@ const items = computed<ContextMenuItem[][]>(() => {
         [
             {
                 label: "Create Asset(s)",
-                icon: "tdesign:plus",
+                icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect(e) {
                     const primaryPath = activeEntry.value?.path ?? pathsArray[0];
@@ -104,7 +103,7 @@ const items = computed<ContextMenuItem[][]>(() => {
             },
             {
                 label: "Select Asset in Browser",
-                icon: AppDesign.icons.asset,
+                icon: AppDesign.Icons.Asset,
                 disabled: mcaFiles.length === 0,
                 onSelect(e: Event) {
                     assetListStore.selectByMca(mcaFiles.map((m) => m.path));

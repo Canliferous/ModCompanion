@@ -1,7 +1,7 @@
 <template>
     <UBadge
         label="Saved"
-        icon="tdesign:check"
+        :icon="AppDesign.Icons.Check"
         color="success"
         class="transition-opacity opacity-0"
         :class="{ 'opacity-100': shown }"
@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const assetListStore = useAssetListStore();
 

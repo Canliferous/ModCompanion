@@ -1,12 +1,16 @@
 <template>
     <div class="flex justify-center">
-        <UIcon name="lucide:dot" v-if="state === SharedMapCompileState.Idle" />
+        <UIcon :name="AppDesign.Icons.MapCompileIdle" v-if="state === SharedMapCompileState.Idle" />
         <UIcon
-            name="tdesign:loading"
+            :name="AppDesign.Icons.MapCompileInProgress"
             class="text-info animate-spin"
             v-if="state === SharedMapCompileState.InProgress"
         />
-        <UIcon name="tdesign:check" class="text-success" v-if="state === SharedMapCompileState.Completed" />
+        <UIcon
+            :name="AppDesign.Icons.MapCompileCompleted"
+            class="text-success"
+            v-if="state === SharedMapCompileState.Completed"
+        />
     </div>
 </template>
 
@@ -14,6 +18,7 @@
 import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 import { useMapCompileStore } from "~/store/MapCompileStore.js";
 import { computed } from "vue";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ mapPath: string; step: SharedMapCompileStep }>();
 const key = props.mapPath + props.step;
