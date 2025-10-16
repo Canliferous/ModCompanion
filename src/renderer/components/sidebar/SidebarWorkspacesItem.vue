@@ -2,7 +2,6 @@
     <div class="flex w-full group" ref="btnGroup">
         <UButton
             :label="label || '(unknown)'"
-            :icon="icon || 'nothing'"
             :variant="workspaceStore.activeWorkspace === id ? 'subtle' : 'ghost'"
             size="sm"
             class="overflow-x-hidden text-ellipsis grow text-xs"
@@ -22,7 +21,6 @@
             <template #content>
                 <div class="p-2 grid gap-2">
                     <UInput placeholder="Workspace Name..." v-model="label" @keydown="handleNameKeydown" />
-                    <UInput placeholder="Icon Name" v-model="icon" @keydown="handleIconDown" />
                     <div class="flex gap-1">
                         <UButton
                             label="Duplicate"
@@ -61,13 +59,8 @@ const btnGroup = ref();
 const open = ref(false);
 
 const label = ref(workspaceStore.workspaceLabels[props.id]);
-const icon = ref(workspaceStore.workspaceIcons[props.id]);
-
 watch(label, (v) => {
     workspaceStore.updateLabel(props.id, v);
-});
-watch(icon, (v) => {
-    workspaceStore.updateIcon(props.id, v);
 });
 
 function handleDuplicate() {
@@ -82,7 +75,6 @@ function handleNameKeydown(e: KeyboardEvent) {
         open.value = false;
     }
 }
-const handleIconDown = handleNameKeydown;
 </script>
 
 <style scoped></style>

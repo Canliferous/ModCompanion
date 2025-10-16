@@ -3,7 +3,6 @@ import { v4 } from "uuid";
 import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 import { SerializedDockview } from "dockview-vue";
 import { useEventListener } from "@vueuse/core";
-import { AppDesign } from "~/design/AppDesign.js";
 
 export type WorkspaceId = string;
 
@@ -14,7 +13,6 @@ export function generateWorkspaceId(): string {
 export const useWorkspaceStore = defineStore("workspace", () => {
     const workspaces = useRememberStringArray(ref<WorkspaceId[]>([]), "workspace-ids");
     const workspaceLabels = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-labels");
-    const workspaceIcons = useRememberRef(ref<Record<WorkspaceId, string | undefined>>({}), "workspace-icons");
     const activeWorkspace = useRememberRef(ref<WorkspaceId | undefined>(), "workspace-active");
     const workspacePanels = useRememberRef(ref<Record<WorkspaceId, SerializedDockview>>({}), "workspace-panels");
 
@@ -35,7 +33,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
         workspaceLabels.value = { ...workspaceLabels.value, [id]: "New Workspace" };
-        workspaceIcons.value = { ...workspaceIcons.value, [id]: AppDesign.Icons.NewWorkspace };
         activeWorkspace.value = id;
         return id;
     }
@@ -46,7 +43,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         workspaces.value = w;
 
         workspaceLabels.value = { ...workspaceLabels.value, [id]: undefined };
-        workspaceIcons.value = { ...workspaceIcons.value, [id]: undefined };
 
         if (w.length === 0) {
             activeWorkspace.value = undefined;
@@ -63,7 +59,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
 
         workspaces.value = [...workspaces.value, newId];
         workspaceLabels.value = { ...workspaceLabels.value, [newId]: newLabel };
-        workspaceIcons.value = { ...workspaceIcons.value, [newId]: workspaceIcons.value[id] };
         workspacePanels.value = { ...workspacePanels.value, [newId]: workspacePanels.value[id] };
     }
 
@@ -75,10 +70,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         workspaceLabels.value = { ...workspaceLabels.value, [id]: label };
     }
 
-    function updateIcon(id: WorkspaceId, icon: string | undefined): void {
-        workspaceIcons.value = { ...workspaceIcons.value, [id]: icon };
-    }
-
     function updatePanels(id: WorkspaceId, panels: SerializedDockview): void {
         workspacePanels.value = { ...workspacePanels.value, [id]: panels };
     }
@@ -86,7 +77,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
     return {
         workspaces,
         workspaceLabels,
-        workspaceIcons,
         workspacePanels,
         activeWorkspace,
         createWorkspace,
@@ -94,7 +84,6 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         duplicateWorkspace,
         activateWorkspace,
         updateLabel,
-        updateIcon,
         updatePanels,
     };
 });
