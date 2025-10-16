@@ -1,7 +1,7 @@
 <template>
-    <UCheckbox label="No Mipmaps" variant="card" v-model="noMips" @change="save" />
-    <UCheckbox label="No Animation" variant="card" v-model="noAnim" @change="save" />
-    <UCheckbox label="No Thumbnail" variant="card" v-model="noThumb" @change="save" />
+    <UCheckbox label="No Mipmaps" v-model="noMips" @change="save" />
+    <UCheckbox label="No Animation" v-model="noAnim" @change="save" />
+    <UCheckbox label="No Thumbnail" v-model="noThumb" @change="save" />
 </template>
 
 <script setup lang="ts">

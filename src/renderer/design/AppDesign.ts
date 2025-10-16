@@ -21,16 +21,29 @@ export const Icons = {
     ArrowDown: "lucide:arrow-down",
     ArrowLeft: "lucide:arrow-left",
     ArrowRight: "lucide:arrow-right",
+    Ellipsis: "lucide:ellipsis",
+    EllipsisVertical: "lucide:ellipsis-vertical",
+    Home: "lucide:home",
+    Close: "lucide:x",
+    Copy: "lucide:copy",
+
+    CheckmarkChecked: "lucide:square-check-big",
+    CheckmarkUnchecked: "lucide:square",
+
+    Conversion: "tdesign:arrow-left-right-3",
 
     FsFolder: "tdesign:folder-filled",
     FsFolderOpen: "tdesign:folder-open-1-filled",
+    FsFile: "tdesign:file-filled",
 
     ActionAdd: "lucide:plus",
     ActionRemove: "lucide:minus",
+    ActionSend: "lucide:send-horizontal",
 
     ActionConvertAsset: "lucide:arrow-big-right-dash",
     ActionCreateAsset: "lucide:plus",
     ActionCreateAssetGroup: "lucide:folder-plus",
+    ActionCompileMap: "lucide:arrow-big-right-dash",
 
     ActionBrowseToFolder: "lucide:folder",
     ActionExploreToFolder: "lucide:folder",
@@ -61,6 +74,14 @@ export const Icons = {
     ConversionStateInProgress: "lucide:loading",
     ConversionStateFinished: "lucide:check",
     ConversionStateFailed: "lucide:x",
+} as const;
+
+export const BitmapIcon = {
+    Hammer: "hammer",
+    Game: "revolution",
+    Faceposer: "faceposer",
+    Hlmv: "hlmv",
+    ModCompanion: "mod_companion_192",
 } as const;
 
 export function getAssetTypeIcon(type: SharedAssetType): string {
@@ -103,4 +124,5 @@ export function getAssetTypeName(type: SharedAssetType) {
 
 export const AppDesign = {
     Icons,
+    BitmapIcon,
 };

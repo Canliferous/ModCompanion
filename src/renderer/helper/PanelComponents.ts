@@ -142,17 +142,17 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
 } as const;
 
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
-    _Home: "tdesign:home",
-    _MapList: "tdesign:map",
+    _Home: "lucide:home",
+    _MapList: "lucide:map",
     _MapCompileLog: "tdesign:list",
     _AssetBrowser: AppDesign.Icons.Asset,
-    _FileBrowser: "tdesign:folder-open-1-filled",
-    _AssetInspector: "tdesign:file-1",
-    _AssetInspector_TexturePreview: "tdesign:image-1-filled",
-    _AssetInspector_TextureMetadata: "tdesign:assignment-filled",
-    _AssetInspector_TextureConvert: "tdesign:arrow-left-right-3",
-    _AssetInspector_TextureChannels: "tdesign:grid-view-filled",
-    _AssetInspector_General: "tdesign:list",
-    _Conversions: "tdesign:arrow-left-right-3",
-    _StrataConsole: "tdesign:terminal",
+    _FileBrowser: "lucide:folder",
+    _AssetInspector: "lucide:file",
+    _AssetInspector_TexturePreview: "lucide:image",
+    _AssetInspector_TextureMetadata: "lucide:list",
+    _AssetInspector_TextureConvert: AppDesign.Icons.Conversion,
+    _AssetInspector_TextureChannels: "lucide:grid-2x2",
+    _AssetInspector_General: "lucide:list",
+    _Conversions: AppDesign.Icons.Conversion,
+    _StrataConsole: "lucide:terminal",
 } as const;

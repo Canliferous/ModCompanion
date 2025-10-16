@@ -19,7 +19,7 @@
                     size="sm"
                     variant="soft"
                     color="neutral"
-                    class="bg-neutral-800/50"
+                    class="bg-neutral-800"
                     v-for="btn of launcherButtons"
                     :label="btn.name"
                     @click="() => launch(btn.launcherType, btn.launcherArgs)"
@@ -36,8 +36,8 @@
                     variant="soft"
                     color="neutral"
                     label="Quit"
-                    class="bg-neutral-800/50"
-                    icon="tdesign:close"
+                    class="bg-neutral-800"
+                    :icon="AppDesign.Icons.Close"
                     @click="() => quit()"
                 />
             </SidebarGroup>
@@ -52,6 +52,7 @@ import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 function quit() {
     window.electronAPI.app.exit();

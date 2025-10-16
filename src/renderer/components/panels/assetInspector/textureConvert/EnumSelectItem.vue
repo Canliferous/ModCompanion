@@ -3,13 +3,15 @@
         :label="label"
         variant="ghost"
         :color="isSelected ? 'primary' : 'neutral'"
-        :icon="isSelected ? 'tdesign:check' : 'nothing'"
+        :icon="isSelected ? AppDesign.Icons.Check : 'nothing'"
         @click="() => emit('click', entry)"
         :disabled="disabled"
     />
 </template>
 
 <script setup lang="ts" generic="T">
+import { AppDesign } from "~/design/AppDesign.js";
+
 const props = defineProps<{
     entry: T;
     labelFunc?: (v: T) => string;

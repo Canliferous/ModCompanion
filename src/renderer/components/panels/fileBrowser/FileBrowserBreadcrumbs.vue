@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center select-none">
-        <UButton size="sm" color="neutral" variant="ghost" icon="tdesign:home-filled" @click="handleHomeClick" />
+        <UButton size="sm" color="neutral" variant="ghost" :icon="AppDesign.Icons.Home" @click="handleHomeClick" />
         <template v-for="(split, index) in pathSplits">
             <span class="text-xs">/</span>
             <UButton
@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const looseFilesStore = useFileBrowserStore();
 const pathSplits = computed(() => looseFilesStore.currentDir.split("/"));

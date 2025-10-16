@@ -15,7 +15,7 @@
                 v-model="prompt"
             />
             <UButton
-                icon="tdesign:send-filled"
+                :icon="AppDesign.Icons.ActionSend"
                 color="neutral"
                 variant="ghost"
                 :disabled="!prompt"
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const interopStore = useStrataInteropStore();
 

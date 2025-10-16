@@ -4,7 +4,7 @@
             <template #hint>
                 <UBadge
                     label="Saved"
-                    icon="tdesign:check"
+                    :icon="AppDesign.Icons.Check"
                     color="success"
                     class="transition-opacity opacity-0"
                     :class="{ 'opacity-100': savedIndicatorShown }"
@@ -23,7 +23,13 @@
         </UFormField>
 
         <div>
-            <UButton label="Delete Group" color="error" variant="subtle" icon="tdesign:delete" @click="handleDelete" />
+            <UButton
+                label="Delete Group"
+                color="error"
+                variant="subtle"
+                :icon="AppDesign.Icons.ActionRemove"
+                @click="handleDelete"
+            />
         </div>
     </div>
 </template>
@@ -32,6 +38,7 @@
 import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const groupStore = useAssetGroupsStore();
 

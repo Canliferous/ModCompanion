@@ -1,5 +1,6 @@
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "Shared/SharedStrataInterop.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 export interface LauncherButton {
     name: string;
@@ -12,39 +13,39 @@ export interface LauncherButton {
 export const launcherButtons: LauncherButton[] = [
     {
         name: "Game",
-        icon: "revolution",
+        icon: AppDesign.BitmapIcon.Game,
         binary: `revolution.exe -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
         launcherType: "game",
     },
     {
         name: "Game (Dev)",
-        icon: "revolution",
+        icon: AppDesign.BitmapIcon.Game,
         binary: "revolution.exe",
         launcherType: "game",
         launcherArgs: `-dev -condebug -novid -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
     },
     {
         name: "Game (Tools)",
-        icon: "revolution",
+        icon: AppDesign.BitmapIcon.Game,
         binary: "revolution.exe",
         launcherType: "game",
         launcherArgs: `-tools -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
     },
     {
         name: "Hammer",
-        icon: "hammer",
+        icon: AppDesign.BitmapIcon.Hammer,
         binary: "revolution.exe",
         launcherType: "hammer",
     },
     {
         name: "Faceposer",
-        icon: "faceposer",
+        icon: AppDesign.BitmapIcon.Faceposer,
         binary: "revolution.exe",
         launcherType: "faceposer",
     },
     {
         name: "HLMV",
-        icon: "hlmv",
+        icon: AppDesign.BitmapIcon.Hlmv,
         binary: "revolution.exe",
         launcherType: "hlmv",
     },

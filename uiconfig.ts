@@ -136,8 +136,53 @@ export default function buildConfig(): NuxtUIOptions {
                 slots: { base: "hover:bg-elevated duration-0" },
             },
             checkbox: {
-                slots: { root: "cursor-pointer select-none" },
-                variants: { variant: { card: { root: "hover:bg-elevated" } } },
+                slots: {
+                    root: "cursor-pointer select-none transition-colors",
+                    base: "cursor-pointer overflow-visible ring-0 inset-shadow-cave border border-accented bg-neutral-900",
+                    icon: "cursor-pointer  w-7 h-7 translate-x-0.5",
+                    indicator: "cursor-pointer bg-transparent",
+                    label: "cursor-pointer",
+                },
+                variants: {
+                    variant: {
+                        card: {
+                            root: "hover:bg-elevated",
+                        },
+                        button: {
+                            root: "hover:bg-elevated rounded",
+                        },
+                    },
+                    color: {
+                        primary: {
+                            icon: "text-primary",
+                            indicator: "bg-transparent",
+                        },
+                        secondary: {
+                            icon: "text-secondary",
+                            indicator: "bg-transparent",
+                        },
+                        success: {
+                            icon: "text-success",
+                            indicator: "bg-transparent",
+                        },
+                        info: {
+                            icon: "text-info",
+                            indicator: "bg-transparent",
+                        },
+                        warning: {
+                            icon: "text-warning",
+                            indicator: "bg-transparent",
+                        },
+                        error: {
+                            icon: "text-error",
+                            indicator: "bg-transparent",
+                        },
+                        neutral: {
+                            icon: "text-neutral-100",
+                            indicator: "bg-transparent",
+                        },
+                    },
+                },
                 compoundVariants: [
                     {
                         size: "md",
@@ -146,9 +191,46 @@ export default function buildConfig(): NuxtUIOptions {
                             root: "p-2",
                         },
                     },
+                    {
+                        size: "xs",
+                        variant: "button",
+                        class: {
+                            root: "px-2 py-1",
+                        },
+                    },
+                    {
+                        size: "sm",
+                        variant: "button",
+                        class: {
+                            root: "px-2.5 py-1.5",
+                        },
+                    },
+                    {
+                        size: "md",
+                        variant: "button",
+                        class: {
+                            root: "px-2.5 py-1.5",
+                        },
+                    },
+                    {
+                        size: "lg",
+                        variant: "button",
+                        class: {
+                            root: "px-3 py-2",
+                        },
+                    },
+                    {
+                        size: "xl",
+                        variant: "button",
+                        class: {
+                            root: "px-3 py-2",
+                        },
+                    },
                 ],
             },
-            icons: {},
+            icons: {
+                check: "modcomp:checkmark",
+            },
         },
     };
 }

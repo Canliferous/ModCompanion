@@ -1,43 +1,37 @@
 <template>
-    <div class="flex bg-neutral-900">
+    <UButtonGroup class="flex bg-neutral-900">
         <UTooltip text="Compile Now">
             <UButton
-                icon="tdesign:play"
-                variant="soft"
+                :icon="AppDesign.Icons.ActionCompileMap"
                 @click="() => compileStore.compileNow(mapPath)"
-                :color="listStore.mapQueue.includes(mapPath) ? 'neutral' : 'success'"
                 :disabled="listStore.mapQueue.includes(mapPath)"
             />
         </UTooltip>
         <UTooltip text="Open in Hammer">
-            <UButton
-                icon="famicons:hammer-sharp"
-                color="info"
-                variant="soft"
-                @click="() => handleOpenInHammer(mapPath)"
-            />
+            <UButton @click="() => handleOpenInHammer(mapPath)">
+                <template #leading>
+                    <MBitmapIcon :name="AppDesign.BitmapIcon.Hammer" />
+                </template>
+            </UButton>
         </UTooltip>
         <UTooltip text="Open in Game">
-            <UButton
-                icon="tdesign:gamepad-1-filled"
-                color="info"
-                variant="soft"
-                @click="() => handleOpenInGame(mapPath)"
-            />
+            <UButton @click="() => handleOpenInGame(mapPath)">
+                <template #leading>
+                    <MBitmapIcon :name="AppDesign.BitmapIcon.Game" />
+                </template>
+            </UButton>
         </UTooltip>
         <UTooltip text="Remove from list">
             <UButton
-                icon="tdesign:minus"
-                variant="soft"
+                :icon="AppDesign.Icons.ActionRemove"
                 @click="() => listStore.removeMap(mapPath)"
-                :color="hasQueue ? 'neutral' : 'error'"
                 :disabled="hasQueue"
             />
         </UTooltip>
         <UDropdownMenu :items="dropdownItems">
-            <UButton icon="tdesign:more" variant="soft" color="neutral" />
+            <UButton :icon="AppDesign.Icons.EllipsisVertical" />
         </UDropdownMenu>
-    </div>
+    </UButtonGroup>
 </template>
 
 <script setup lang="ts">
@@ -48,6 +42,7 @@ import { computed, ref } from "vue";
 import { useMapCompileStore } from "~/store/MapCompileStore.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
+import { AppDesign, BitmapIcon } from "~/design/AppDesign.js";
 
 const compileStore = useMapCompileStore();
 const listStore = useMapListStore();

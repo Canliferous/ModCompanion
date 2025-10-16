@@ -30,7 +30,7 @@
                             size="sm"
                             variant="ghost"
                             color="info"
-                            icon="tdesign:copy"
+                            :icon="AppDesign.Icons.Copy"
                             @click="handleDuplicate"
                         />
                         <UButton
@@ -39,7 +39,7 @@
                             size="sm"
                             variant="ghost"
                             color="error"
-                            icon="tdesign:delete"
+                            :icon="AppDesign.Icons.ActionRemove"
                             @click="handleDelete"
                         />
                     </div>
@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { useWorkspaceStore, WorkspaceId } from "~/store/WorkspaceStore.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ id: WorkspaceId }>();
 const workspaceStore = useWorkspaceStore();
