@@ -1,9 +1,11 @@
 <template>
     <div class="bg-neutral-850 inset-shadow-rim rounded shadow-sm p-1">
-        <div class="flex">
-            <span class="text-xs text-neutral-200 px-3 pb-2 pt-1 select-none">
+        <div class="flex items-start pl-3 pr-1 pb-2 pt-1">
+            <span class="text-xs text-neutral-200 select-none grow">
                 {{ heading }}
             </span>
+
+            <slot name="hint" />
         </div>
         <div class="grid gap-1 content-start">
             <slot name="default" />

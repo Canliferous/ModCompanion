@@ -2,9 +2,12 @@
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start p-1 pr-0">
             <SidebarGroup heading="Workspace">
-                <SidebarAddWorkspaceButton />
                 <SidebarAddPanelsButton />
                 <SidebarWorkspaces />
+
+                <template #hint>
+                    <SidebarAddWorkspaceButton />
+                </template>
             </SidebarGroup>
 
             <SidebarGroup heading="Assets">

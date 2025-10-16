@@ -1,10 +1,9 @@
 <template>
     <UButton
-        label="Add Workspace"
         :icon="AppDesign.Icons.ActionAdd"
-        color="neutral"
-        variant="ghost"
-        size="sm"
+        variant="link"
+        size="xs"
+        class="p-0"
         @click="workspaceStore.createWorkspace()"
     />
 </template>
