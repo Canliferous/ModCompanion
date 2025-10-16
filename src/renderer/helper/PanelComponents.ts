@@ -144,7 +144,7 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _Home: "lucide:home",
     _MapList: "lucide:map",
-    _MapCompileLog: "tdesign:list",
+    _MapCompileLog: "lucide:list",
     _AssetBrowser: AppDesign.Icons.Asset,
     _FileBrowser: "lucide:folder",
     _AssetInspector: "lucide:file",

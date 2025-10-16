@@ -64,7 +64,7 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
     [
         {
             label: "Browse to VMF",
-            icon: "tdesign:file-code-1",
+            icon: AppDesign.Icons.ActionBrowseToFolder,
             onSelect(e: Event) {
                 const filePath = pathe.join(getAppConfig().mapSourcePath, props.mapPath);
                 window.electronAPI.app.browseToFile(filePath);
@@ -72,7 +72,7 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
         },
         {
             label: "Browse to BSP",
-            icon: "tdesign:file-image",
+            icon: AppDesign.Icons.ActionBrowseToFolder,
             onSelect(e: Event) {
                 const bspName = pathe.basename(props.mapPath).replace(".vmf", ".bsp");
                 const filePath = pathe.join(getAppConfig().mapOutputPath, bspName);

@@ -1,5 +1,5 @@
 <template>
-    <UButtonGroup class="w-full group" ref="btnGroup">
+    <div class="flex w-full group" ref="btnGroup">
         <UButton
             :label="label || '(unknown)'"
             :icon="icon || 'nothing'"
@@ -15,7 +15,7 @@
                 size="sm"
                 variant="soft"
                 color="neutral"
-                icon="tdesign:chevron-right"
+                :icon="AppDesign.Icons.ChevronRight"
                 class="hidden group-hover:flex"
             />
 
@@ -46,7 +46,7 @@
                 </div>
             </template>
         </UPopover>
-    </UButtonGroup>
+    </div>
 </template>
 
 <script setup lang="ts">

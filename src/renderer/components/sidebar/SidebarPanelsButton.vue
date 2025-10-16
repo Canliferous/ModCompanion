@@ -1,6 +1,6 @@
 <template>
     <UDropdownMenu :items="items" :content="{ side: 'bottom', align: 'start' }">
-        <UButton variant="ghost" size="sm" color="neutral" label="Add Panel" icon="tdesign:add" />
+        <UButton variant="ghost" size="sm" color="neutral" label="Add Panel" :icon="AppDesign.Icons.ActionAdd" />
     </UDropdownMenu>
 </template>
 
@@ -8,6 +8,7 @@
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { getPanelComponentsArray, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const panelsStore = usePanelsStore();
 
