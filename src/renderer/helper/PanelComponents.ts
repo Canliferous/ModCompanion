@@ -14,6 +14,7 @@ import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.v
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
 import Watermark from "~/components/panels/Watermark.vue";
 import { AppDesign } from "~/design/AppDesign.js";
+import AddPanelAction from "~/components/panels/AddPanelAction.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -106,6 +107,10 @@ export const PanelComponents = {
         watermark: {
             componentId: "_Watermark",
             component: Watermark,
+        },
+        addPanelAction: {
+            componentId: "_AddPanelAction",
+            component: AddPanelAction,
         },
     },
 } as const;

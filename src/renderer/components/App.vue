@@ -5,7 +5,12 @@
                 <TheSidebar />
             </div>
             <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
-                <DockviewVue @ready="panelsStore.handleReady" :theme="themeDark" watermark-component="_Watermark" />
+                <DockviewVue
+                    @ready="panelsStore.handleReady"
+                    :theme="themeDark"
+                    :watermarkComponent="PanelComponents.other.watermark.componentId"
+                    :leftHeaderActionsComponent="PanelComponents.other.addPanelAction.componentId"
+                />
             </div>
             <div class="col-span-full h-full">
                 <TheFooter />
@@ -18,6 +23,7 @@
 import TheSidebar from "./sidebar/TheSidebar.vue";
 import { DockviewVue, themeDark } from "dockview-vue";
 import { usePanelsStore } from "~/store/PanelsStore.js";
+import { PanelComponents } from "~/helper/PanelComponents.js";
 
 const panelsStore = usePanelsStore();
 </script>

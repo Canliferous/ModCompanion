@@ -2,7 +2,6 @@
     <aside class="h-full flex flex-col">
         <div class="grow grid gap-1 content-start p-1 pr-0">
             <SidebarGroup heading="Workspace">
-                <SidebarAddPanelsButton />
                 <SidebarWorkspaces />
 
                 <template #hint>
@@ -51,7 +50,6 @@
 <script setup lang="ts">
 import MBitmapIcon from "../common/MBitmapIcon.vue";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
-import SidebarAddPanelsButton from "~/components/sidebar/SidebarPanelsButton.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
