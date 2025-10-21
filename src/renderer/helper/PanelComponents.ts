@@ -1,4 +1,3 @@
-import HomePanel from "~/components/panels/HomePanel.vue";
 import MapsPanel from "~/components/panels/maps/MapsPanel.vue";
 import FileBrowserPanel from "~/components/panels/fileBrowser/FileBrowserPanel.vue";
 import AssetBrowserPanel from "~/components/panels/assetBrowser/AssetBrowserPanel.vue";
@@ -28,7 +27,6 @@ export const PanelComponentIds = {
     AssetInspectorTextureConvert: "_AssetInspector_TextureConvert",
     AssetInspectorGeneral: "_AssetInspector_General",
     MapList: "_MapList",
-    Home: "_Home",
     MapCompileLog: "_MapCompileLog",
     FileBrowser: "_FileBrowser",
     AssetBrowser: "_AssetBrowser",
@@ -64,10 +62,6 @@ export const PanelComponents = {
         },
     } as const,
     panels: {
-        home: {
-            componentId: "_Home",
-            component: HomePanel,
-        },
         mapList: {
             componentId: "_MapList",
             component: MapsPanel,
@@ -131,7 +125,6 @@ export function getPanelComponentsArray(): ComponentDesc[] {
 }
 
 export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
-    _Home: "Home",
     _MapList: "Maps",
     _MapCompileLog: "Map Compile Log",
     _AssetBrowser: "Asset Browser",
@@ -147,7 +140,6 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
 } as const;
 
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
-    _Home: "lucide:home",
     _MapList: "lucide:map",
     _MapCompileLog: "lucide:list",
     _AssetBrowser: AppDesign.Icons.Asset,
