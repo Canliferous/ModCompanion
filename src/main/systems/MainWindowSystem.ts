@@ -14,28 +14,16 @@ export function getMainWindow(): BrowserWindow | undefined {
     return mainWindow;
 }
 
-export function initWindowSystem(): boolean {
-    app.on("activate", () => {
-        // On OS X it's common to re-create a window in the app when the
-        // dock icon is clicked and there are no other windows open.
-        if (BrowserWindow.getAllWindows().length === 0) {
-            _createWindow();
-        }
-    });
-
-    app.whenReady().then(_handleReady);
-
+export async function initWindowSystem(): Promise<boolean> {
+    await app.whenReady();
+    _createTray();
+    _createWindow();
+    _createShortcuts();
     return true;
 }
 
 export function disablePreventClose(): void {
     preventClose = false;
-}
-
-function _handleReady(): void {
-    _createTray();
-    _createWindow();
-    _createShortcuts();
 }
 
 interface WindowRect {
