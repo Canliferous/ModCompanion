@@ -2,6 +2,7 @@ import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "elect
 import path from "node:path";
 import settings from "electron-settings";
 import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
+import fs from "node:fs";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -16,8 +17,10 @@ export function getMainWindow(): BrowserWindow | undefined {
 
 export async function initWindowSystem(): Promise<boolean> {
     await app.whenReady();
-    _createTray();
-    _createWindow();
+    // If needed, add a way to start the app without tray
+    const noTray = false;
+    const hasTray = noTray || _createTray();
+    _createWindow(noTray ? false : hasTray);
     _createShortcuts();
     return true;
 }
@@ -42,8 +45,14 @@ function _getSettingsBounds(): WindowRect {
     return bounds as WindowRect;
 }
 
-function _createWindow(): void {
+function _getAppIconPath() {
+    return path.join(getMainAssetsDir(), "mod_companion_192.png");
+}
+
+function _createWindow(hasTray: boolean): void {
     const bounds = _getSettingsBounds();
+    const iconPath = _getAppIconPath();
+
     mainWindow = new BrowserWindow({
         width: bounds.width,
         height: bounds.height,
@@ -55,7 +64,7 @@ function _createWindow(): void {
             nodeIntegration: false,
             webSecurity: false,
         },
-        icon: path.join(getMainAssetsDir(), "mod_companion_192.png"),
+        icon: fs.existsSync(iconPath) ? iconPath : undefined,
     });
 
     // Event listeners
@@ -64,15 +73,22 @@ function _createWindow(): void {
         if (preventClose) {
             event.preventDefault();
             mainWindow?.hide();
+        } else {
+            const bounds = mainWindow?.getBounds();
+            if (bounds) {
+                settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
+            }
         }
     });
 
-    app.on("before-quit", (event) => {
-        const bounds = mainWindow?.getBounds();
-        if (bounds) {
-            settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
-        }
-    });
+    if (hasTray) {
+        app.on("before-quit", (event) => {
+            const bounds = mainWindow?.getBounds();
+            if (bounds) {
+                settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
+            }
+        });
+    }
 
     mainWindow.on("maximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, true));
     mainWindow.on("unmaximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, false));
@@ -93,8 +109,15 @@ function _createWindow(): void {
     }
 }
 
-function _createTray(): void {
-    tray = new Tray(path.join(getMainAssetsDir(), "mod_companion_192.png"));
+function _createTray(): boolean {
+    const iconPath = _getAppIconPath();
+    if (!fs.existsSync(iconPath)) {
+        console.warn(`App icon ${iconPath} does not exist. Have to start without tray!`);
+        disablePreventClose();
+        return false;
+    }
+
+    tray = new Tray(iconPath);
 
     tray.setToolTip("Mod Companion");
     tray.setContextMenu(
@@ -107,6 +130,7 @@ function _createTray(): void {
     tray.on("click", (event) => {
         mainWindow?.show();
     });
+    return true;
 }
 
 let zoomFactor = 1;
