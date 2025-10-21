@@ -1,7 +1,7 @@
 <template>
     <div class="h-full flex items-center">
         <UPopover v-model:open="open" :content="{ side: 'bottom', align: 'start' }" arrow>
-            <UButton :icon="AppDesign.Icons.ActionAdd" variant="ghost" />
+            <UButton :icon="AppDesign.Icons.ActionAdd" variant="link" size="xs" />
 
             <template #content>
                 <div class="p-2">

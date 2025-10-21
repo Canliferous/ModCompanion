@@ -1,13 +1,13 @@
 <template>
     <UApp>
-        <div class="grid main-layout h-screen">
+        <div class="grid main-layout h-screen bg-neutral-925">
             <div>
                 <TheSidebar />
             </div>
             <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
                 <DockviewVue
                     @ready="panelsStore.handleReady"
-                    :theme="themeDark"
+                    :theme="themeModcomp"
                     :watermarkComponent="PanelComponents.other.watermark.componentId"
                     :leftHeaderActionsComponent="PanelComponents.other.addPanelAction.componentId"
                 />
@@ -21,9 +21,10 @@
 
 <script setup lang="ts">
 import TheSidebar from "./sidebar/TheSidebar.vue";
-import { DockviewVue, themeDark } from "dockview-vue";
+import { DockviewVue } from "dockview-vue";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { PanelComponents } from "~/helper/PanelComponents.js";
+import { themeModcomp } from "~/design/ModcompDockviewTheme.js";
 
 const panelsStore = usePanelsStore();
 </script>

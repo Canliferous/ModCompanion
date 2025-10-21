@@ -55,7 +55,7 @@ export default function buildConfig(): NuxtUIOptions {
             select: {
                 slots: {
                     base: "cursor-pointer",
-                    content: "shadow-md inset-shadow-rim shadow-md shadow-neutral-950",
+                    content: "shadow-md inset-shadow-rim shadow-neutral-950",
                 },
                 variants: {
                     variant: {
@@ -73,7 +73,7 @@ export default function buildConfig(): NuxtUIOptions {
             popover: {
                 slots: {
                     // Above dockview divider lines which are at 99
-                    content: "z-100",
+                    content: "z-100 ring-0 inset-shadow-rim shadow-md shadow-neutral-950",
                 },
             },
             contextMenu: {
