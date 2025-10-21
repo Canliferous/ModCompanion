@@ -68,7 +68,7 @@ export const Icons = {
     MapCompileInProgress: "lucide:loading",
     MapCompileCompleted: "lucide:check",
 
-    ConversionStateInvalid: "lucide:triangle-alert",
+    ConversionStateInvalid: "tdesign:error-triangle-filled",
     ConversionStateUnknown: "lucide:circle-question-mark",
     ConversionStatePending: "lucide:dot",
     ConversionStateInProgress: "lucide:loading",
