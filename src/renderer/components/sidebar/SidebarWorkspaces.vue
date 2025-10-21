@@ -1,5 +1,5 @@
 <template>
-    <div class="grid w-full gap-1 grid-cols-1">
+    <div class="grid w-full gap-1 grid-cols-1" :class="{ 'pt-1': workspaceStore.workspaces.length >= 1 }">
         <template v-for="id in workspaceStore.workspaces">
             <SidebarWorkspacesItem :id="id" />
         </template>

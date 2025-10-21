@@ -2,9 +2,9 @@
     <UContextMenu :items="items">
         <UButton
             :label="label || '(unknown)'"
-            :variant="workspaceStore.activeWorkspace === id ? 'subtle' : 'soft'"
-            size="sm"
+            variant="soft"
             :color="workspaceStore.activeWorkspace === id ? 'primary' : 'neutral'"
+            size="sm"
             @click="() => workspaceStore.activateWorkspace(id)"
         />
 
