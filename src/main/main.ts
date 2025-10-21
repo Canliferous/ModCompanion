@@ -38,10 +38,15 @@ async function startSystems() {
         const systemResult = system.initFunction();
 
         success = false;
-        if (typeof systemResult === "boolean") {
-            success = systemResult;
-        } else if (typeof systemResult === "object") {
-            success = await systemResult;
+        try {
+            if (typeof systemResult === "boolean") {
+                success = systemResult;
+            } else if (typeof systemResult === "object") {
+                success = await systemResult;
+            }
+        } catch (e) {
+            console.error(e);
+            success = false;
         }
 
         if (!success) {
