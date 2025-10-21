@@ -14,7 +14,7 @@
         <template v-else-if="assetGroupsStore.activeGroup">
             <AssetInspectorGroupPanel :group="assetGroupsStore.activeGroup" />
         </template>
-        <div v-else class="grid h-full place-items-center">Nothing Selected</div>
+        <div v-else class="grid h-full place-items-center text-muted">No Asset Selected</div>
     </TooltipProvider>
 </template>
 
