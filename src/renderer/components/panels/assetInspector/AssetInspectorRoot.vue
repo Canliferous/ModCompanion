@@ -2,8 +2,8 @@
     <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-1 h-full">
         <DockviewVue
             @ready="handleReady"
-            :theme="themeDark"
-            :default-tab-component="PanelComponents.tabComponents.subPanelTabs.componentId"
+            :theme="themeModcomp"
+            :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
         />
     </div>
 </template>
@@ -16,7 +16,7 @@ import {
     SharedAssetTypes,
     SharedTextureAsset,
 } from "Shared/SharedAssetDefinition.js";
-import { DockviewApi, DockviewReadyEvent, DockviewVue, themeDark } from "dockview-vue";
+import { DockviewApi, DockviewReadyEvent, DockviewVue } from "dockview-vue";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import pathe from "pathe";
@@ -24,6 +24,7 @@ import { getAppConfig } from "~/renderer-config.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { fetchImageMeta } from "~/store/ImageCacheStore.js";
+import { themeModcomp } from "~/design/ModcompDockviewTheme.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 const workspaceStore = useWorkspaceStore();
@@ -128,7 +129,7 @@ function setupTabs(type: SharedAssetType, api: DockviewApi) {
                 title: PanelTitles[panel.componentId],
                 id: panel.componentId,
                 component: panel.componentId,
-                tabComponent: PanelComponents.tabComponents.subPanelTabs.componentId,
+                tabComponent: PanelComponents.tabComponents.panelTab.componentId,
                 params: { icon: PanelIcons[panel.componentId] },
             });
         }

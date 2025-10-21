@@ -89,6 +89,9 @@ function start() {
         return;
     }
 
+    console.log("Starting Mod Companion");
+    console.log("App User Data", app.getPath("userData"));
+
     startSystems();
 }
 

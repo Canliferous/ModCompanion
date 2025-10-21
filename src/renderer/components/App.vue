@@ -10,6 +10,7 @@
                     :theme="themeModcomp"
                     :watermarkComponent="PanelComponents.other.watermark.componentId"
                     :leftHeaderActionsComponent="PanelComponents.other.addPanelAction.componentId"
+                    :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
                 />
             </div>
             <div class="col-span-full h-full">

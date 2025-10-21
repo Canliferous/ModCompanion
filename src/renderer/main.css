@@ -83,7 +83,7 @@
         border-top-right-radius: var(--radius-md);
         font-size: var(--text-xs);
 
-        padding-inline: calc(var(--spacing) * 3);
+        padding-inline: calc(var(--spacing) * 2);
         padding-block: 0;
     }
 

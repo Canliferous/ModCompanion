@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { ComponentDesc, PanelTitles } from "~/helper/PanelComponents.js";
+import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 export const usePanelsStore = defineStore("panels", () => {
@@ -46,6 +46,8 @@ export const usePanelsStore = defineStore("panels", () => {
             id: panel.componentId,
             component: panel.componentId,
             title: PanelTitles[panel.componentId] ?? "",
+            tabComponent: PanelComponents.tabComponents.panelTab.componentId,
+            params: { icon: PanelIcons[panel.componentId] },
         };
 
         return api.value?.addPanel(op);

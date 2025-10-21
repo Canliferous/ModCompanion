@@ -8,7 +8,7 @@ import AssetInspectorTextureChannelsPanel from "~/components/panels/assetInspect
 import AssetInspectorTextureMetadataPanel from "~/components/panels/assetInspector/textureMetadataPanel/AssetInspectorTextureMetadataPanel.vue";
 import AssetInspectorTextureConvertPanel from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertPanel.vue";
 import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneralPanel.vue";
-import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
+import PanelTab from "~/components/panelTabs/PanelTab.vue";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
@@ -98,9 +98,9 @@ export const PanelComponents = {
         },
     } as const,
     tabComponents: {
-        subPanelTabs: {
-            componentId: "_SubPanelTab",
-            component: SubPanelTab,
+        panelTab: {
+            componentId: "_PanelTab",
+            component: PanelTab,
         },
     } as const,
     other: {
