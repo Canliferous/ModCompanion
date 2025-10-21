@@ -66,6 +66,7 @@
     --dv-tabs-and-actions-container-background-color: transparent;
     --dv-tabs-and-actions-container-height: 24px;
     --dv-drag-over-background-color: color-mix(in oklab, var(--color-neutral-400), transparent 75%);
+    --dv-overlay-z-index: 10;
 
     --dv-activegroup-visiblepanel-tab-background-color: var(--color-neutral-850);
     --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-neutral-850);
@@ -92,5 +93,16 @@
         box-shadow: var(--inset-shadow-rim);
         border-radius: var(--radius-md);
         border-top-left-radius: 0;
+    }
+
+    .dv-tabs-overflow-dropdown-default {
+        font-size: var(--text-xs);
+    }
+
+    .dv-tabs-overflow-container .dv-tab {
+        padding-block: var(--spacing);
+
+        box-shadow: var(--inset-shadow-rim);
+        border-radius: var(--radius-md);
     }
 }
