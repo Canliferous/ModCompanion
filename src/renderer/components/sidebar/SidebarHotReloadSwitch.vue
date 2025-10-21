@@ -1,5 +1,5 @@
 <template>
-    <UCheckbox label="Auto Hot reload" size="sm" variant="button" v-model="enabled" />
+    <UCheckbox label="Auto Hot Reload" size="sm" variant="button" v-model="enabled" />
 </template>
 
 <script setup lang="ts">
