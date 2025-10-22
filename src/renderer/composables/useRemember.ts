@@ -3,10 +3,10 @@ import { watchDeep } from "@vueuse/core";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 export function useRememberRef<T>(ref: Ref<T>, keyName: string) {
-    watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
+    watch(ref, (r) => localStorage.setItem(keyName, r ? JSON.stringify(r) : r));
 
     const val = localStorage.getItem(keyName);
-    if (val === null) return ref;
+    if (!val) return ref;
 
     ref.value = JSON.parse(val);
     return ref;
