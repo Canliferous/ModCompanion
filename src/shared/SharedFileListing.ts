@@ -17,11 +17,11 @@ interface SharedProjectListFilesReportBase {
 }
 
 export interface SharedProjectListFilesReportSuccess extends SharedProjectListFilesReportBase {
-    type: SharedProjectListFilesReportTypes.Success;
+    type: typeof SharedProjectListFilesReportTypes.Success;
     entries?: SharedProjectFileEntry[];
 }
 export interface SharedProjectListFilesReportInvalid extends SharedProjectListFilesReportBase {
-    type: SharedProjectListFilesReportTypes.Invalid;
+    type: typeof SharedProjectListFilesReportTypes.Invalid;
 }
 
 export type SharedProjectListFilesReport = SharedProjectListFilesReportSuccess | SharedProjectListFilesReportInvalid;
