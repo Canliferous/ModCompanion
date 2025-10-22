@@ -4,10 +4,10 @@
 </template>
 
 <script setup lang="ts">
-import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import { SharedProjectFileEntry } from "Shared/SharedFileListing.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-const props = defineProps<{ entry: SharedFsEntry }>();
+const props = defineProps<{ entry: SharedProjectFileEntry }>();
 </script>
 
 <style scoped></style>

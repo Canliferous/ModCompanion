@@ -1,20 +1,21 @@
 <template>
-    <div>
-        <button @click="handleBgClicked()" class="w-full outline-none">
-            <FileBrowserBreadcrumbs v-if="showBreadcrumbs" />
-            <UInput
-                v-else
-                size="sm"
-                class="w-full"
-                variant="none"
-                @blur="handleBlur()"
-                v-model="inputText"
-                autofocus
-                @keydown.enter="handleEnter"
-                @keydown.down="handleDown"
-            />
-        </button>
-    </div>
+    <button
+        @click="handleBgClicked()"
+        class="w-full h-8 outline-none cursor-text bg-neutral-900 border border-accented rounded inset-shadow-cave"
+    >
+        <FileBrowserLocationBarBreadcrumbs v-if="showBreadcrumbs" />
+        <UInput
+            v-else
+            size="sm"
+            class="w-full"
+            variant="none"
+            autofocus
+            v-model="inputText"
+            @blur="handleBlur()"
+            @keydown.enter="handleEnter"
+            @keydown.down="handleDown"
+        />
+    </button>
 </template>
 
 <script setup lang="ts">

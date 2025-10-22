@@ -1,14 +1,21 @@
 <template>
-    <div class="flex items-center select-none">
-        <UButton size="sm" color="neutral" variant="ghost" :icon="AppDesign.Icons.Home" @click="handleHomeClick" />
+    <div class="flex items-center select-none gap-0.5">
+        <UButton
+            size="sm"
+            color="neutral"
+            variant="ghost"
+            class="text-muted"
+            :icon="AppDesign.Icons.Home"
+            @click="handleHomeClick"
+        />
         <template v-for="(split, index) in pathSplits">
-            <span class="text-xs">/</span>
+            <span class="text-xs text-muted">/</span>
             <UButton
                 :label="split"
                 size="sm"
                 color="neutral"
                 variant="ghost"
-                class="px-1"
+                class="px-0 text-muted"
                 @click="(event: MouseEvent) => handleClick(event, index + 1)"
             />
         </template>

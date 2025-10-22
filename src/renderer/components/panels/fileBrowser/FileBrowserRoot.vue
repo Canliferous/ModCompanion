@@ -1,7 +1,6 @@
 <template>
     <div class="grid grid-rows-[auto_auto_minmax(0,_1fr)] h-full w-full">
-        <div><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
-        <USeparator />
+        <div class="p-1"><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
         <UContextMenu :items="items">
             <MDataTable
                 :columns="columns"
@@ -21,7 +20,7 @@
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
-import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import { SharedProjectFileEntry } from "Shared/SharedFileListing.js";
 import Humanize from "humanize-plus";
 import FileBrowserEntryIcon from "~/components/panels/fileBrowser/FileBrowserEntryIcon.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
@@ -35,8 +34,8 @@ const assetListStore = useAssetListStore();
 
 const entries = computed(() => looseFilesStore.currentEntries ?? []);
 
-const selectedEntries = ref<SharedFsEntry[]>([]);
-const activeEntry = ref<SharedFsEntry>();
+const selectedEntries = ref<SharedProjectFileEntry[]>([]);
+const activeEntry = ref<SharedProjectFileEntry>();
 
 watch(entries, () => {
     dataTable.value?.deselect();
@@ -44,7 +43,7 @@ watch(entries, () => {
 
 const dataTable = useTemplateRef("dataTable");
 
-const columns: DataTableColumn<SharedFsEntry>[] = [
+const columns: DataTableColumn<SharedProjectFileEntry>[] = [
     {
         id: "icon",
         size: "auto",
@@ -117,19 +116,23 @@ function handleFocusList(): void {
     dataTable.value?.focus();
 }
 
-function handleActivated(active: SharedFsEntry): void {
+function handleActivated(active: SharedProjectFileEntry): void {
     looseFilesStore.onEntryActivated(active);
 }
 
-function handleSelectionChanged(entries: SharedFsEntry[]): void {
+function handleSelectionChanged(entries: SharedProjectFileEntry[]): void {
     selectedEntries.value = entries;
 }
 
-function handleActiveChanged(entry: SharedFsEntry | undefined): void {
+function handleActiveChanged(entry: SharedProjectFileEntry | undefined): void {
     activeEntry.value = entry;
 }
 
-function handleDragStart(event: DragEvent, primaryEntry: SharedFsEntry, allEntries: SharedFsEntry[]): void {
+function handleDragStart(
+    event: DragEvent,
+    primaryEntry: SharedProjectFileEntry,
+    allEntries: SharedProjectFileEntry[],
+): void {
     const payload = allEntries.map((e) => e.path).join("\n");
     event.dataTransfer?.setData("text/plain", payload);
 }

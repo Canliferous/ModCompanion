@@ -16,7 +16,7 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
-import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import { SharedProjectFileEntry, SharedProjectListFilesReport } from "Shared/SharedFileListing.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
 import {
     SharedAssetGroup,
@@ -38,7 +38,7 @@ declare global {
                 openFile: (filePath: string) => void;
             };
             project: {
-                listFiles: (dirPath: string) => Promise<SharedFsEntry[]>;
+                listFiles: (dirPath: string) => Promise<SharedProjectListFilesReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 launchFile: (filePath: string | string[]) => void;
             };

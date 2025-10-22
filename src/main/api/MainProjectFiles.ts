@@ -1,6 +1,10 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedFsEntry } from "Shared/SharedFileListing.js";
+import {
+    SharedProjectFileEntry,
+    SharedProjectListFilesReport,
+    SharedProjectListFilesReportTypes,
+} from "Shared/SharedFileListing.js";
 import fs from "fs/promises";
 import { getConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
@@ -8,9 +12,12 @@ import * as child_process from "node:child_process";
 import SharedSourceFs from "Shared/SharedSourceFs.js";
 
 export function registerProjectFilesApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.ProjectListFiles, async (event, dirPath: string): Promise<SharedFsEntry[]> => {
-        return _listFiles(dirPath);
-    });
+    ipcMain.handle(
+        SharedIpcChannels.ProjectListFiles,
+        async (event, dirPath: string): Promise<SharedProjectListFilesReport> => {
+            return _listFiles(dirPath);
+        },
+    );
 
     ipcMain.handle(
         SharedIpcChannels.ProjectCorrectPath,
@@ -69,14 +76,20 @@ function _correctProjectPath(somePath: string) {
     return SharedSourceFs.stripPathStart(somePath, config.rootPath);
 }
 
-async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
+async function _listFiles(dirPath: string): Promise<SharedProjectListFilesReport> {
     const config = getConfig();
     const fullPath = path.join(config.rootPath, dirPath);
 
-    if (!_isProjectPath(fullPath)) return [];
+    if (!_isProjectPath(fullPath)) return { type: SharedProjectListFilesReportTypes.Invalid };
 
-    const paths = await fs.readdir(fullPath);
-    const infos: SharedFsEntry[] = [];
+    let paths: string[] = [];
+    try {
+        paths = await fs.readdir(fullPath);
+    } catch (e) {
+        console.warn(e);
+        return { type: SharedProjectListFilesReportTypes.Invalid };
+    }
+    const entries: SharedProjectFileEntry[] = [];
 
     for (const p of paths) {
         if (p.startsWith(".")) continue;
@@ -84,14 +97,14 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
         try {
             const s = await fs.stat(path.join(fullPath, p));
             if (s.isFile()) {
-                infos.push({
+                entries.push({
                     name: p,
                     path: path.join(dirPath, p).replaceAll("\\", "/"),
                     isFile: true,
                     fileSize: s.size,
                 });
             } else {
-                infos.push({
+                entries.push({
                     name: p,
                     path: path.join(dirPath, p).replaceAll("\\", "/"),
                     isFile: false,
@@ -103,8 +116,13 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
             // Like "System Volume Information", which exists when using the P:/ drive alias on the repo root
         }
     }
+    _sortFileEntries(entries);
 
-    infos.sort((x, y) => {
+    return { entries, type: SharedProjectListFilesReportTypes.Success };
+}
+
+function _sortFileEntries(entries: SharedProjectFileEntry[]) {
+    entries.sort((x, y) => {
         const file1 = x.isFile;
         const file2 = y.isFile;
         if (file1 !== file2) {
@@ -113,7 +131,4 @@ async function _listFiles(dirPath: string): Promise<SharedFsEntry[]> {
             return x.name.localeCompare(y.name);
         }
     });
-    // infos.sort((x, y) => (x.isFile === y.isFile ? 0 : x.isFile ? -1 : 1));
-
-    return infos;
 }
