@@ -139,7 +139,7 @@ export default function buildConfig(): NuxtUIOptions {
                 slots: {
                     root: "cursor-pointer select-none transition-colors",
                     base: "cursor-pointer overflow-visible ring-0 inset-shadow-cave border border-accented bg-neutral-900",
-                    icon: "cursor-pointer  w-7 h-7 translate-x-1 translate-y-0.5",
+                    icon: "cursor-pointer",
                     indicator: "cursor-pointer bg-transparent",
                     label: "cursor-pointer",
                 },
@@ -229,7 +229,7 @@ export default function buildConfig(): NuxtUIOptions {
                 ],
             },
             icons: {
-                check: "modcomp:checkmark",
+                check: "mingcute:check-2-fill",
             },
         },
     };

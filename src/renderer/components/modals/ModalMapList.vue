@@ -7,7 +7,7 @@
                         <div v-if="isMapTreeItem(item)">
                             <UButton
                                 :class="{ invisible: listStore.isMapAdded(item.vmfPath) }"
-                                icon="lucide:arrow-right"
+                                :icon="AppDesign.Icons.ArrowRight"
                                 variant="ghost"
                                 @click="listStore.addMap(item.vmfPath)"
                             />
@@ -26,6 +26,7 @@
 import { useMapDrawerStore } from "~/store/MapDrawerStore.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 import { isMapTreeItem } from "~/model/MapTreeItem.js";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const drawerStore = useMapDrawerStore();
 const listStore = useMapListStore();

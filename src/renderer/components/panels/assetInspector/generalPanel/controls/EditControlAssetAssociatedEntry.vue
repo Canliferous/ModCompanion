@@ -6,7 +6,7 @@
     <div ref="dropZoneRef">
         <div class="flex items-center w-full gap-1">
             <MDropInput v-model="file" placeholder="Enter path" @change="emit('updated', file)" class="grow" />
-            <UButton icon="tdesign:play" @click="handleRun" :disabled="file.length === 0" />
+            <UButton :icon="AppDesign.Icons.ActionPlay" @click="handleRun" :disabled="file.length === 0" />
         </div>
     </div>
 </template>
@@ -16,6 +16,7 @@ import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { SharedAssetDefinitionAssociatedFilesEntry } from "Shared/SharedAssetDefinition.js";
 import { useDropZone } from "@vueuse/core";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ file: string; entry: SharedAssetDefinitionAssociatedFilesEntry }>();
 const file = ref(props.file);

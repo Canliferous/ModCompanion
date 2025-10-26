@@ -140,16 +140,16 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
 } as const;
 
 export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
-    _MapList: "lucide:map",
-    _MapCompileLog: "lucide:list",
-    _AssetBrowser: AppDesign.Icons.Asset,
-    _FileBrowser: "lucide:folder",
-    _AssetInspector: "lucide:file",
-    _AssetInspector_TexturePreview: "lucide:image",
-    _AssetInspector_TextureMetadata: "lucide:list",
-    _AssetInspector_TextureConvert: AppDesign.Icons.Conversion,
-    _AssetInspector_TextureChannels: "lucide:grid-2x2",
-    _AssetInspector_General: "lucide:list",
-    _Conversions: AppDesign.Icons.Conversion,
-    _StrataConsole: "lucide:terminal",
+    _MapList: AppDesign.Icons.Panel_MapList,
+    _MapCompileLog: AppDesign.Icons.Panel_MapCompileLog,
+    _AssetBrowser: AppDesign.Icons.Panel_AssetBrowser,
+    _FileBrowser: AppDesign.Icons.Panel_FileBrowser,
+    _AssetInspector: AppDesign.Icons.Panel_AssetInspector,
+    _AssetInspector_TexturePreview: AppDesign.Icons.Panel_AssetInspector_TexturePreview,
+    _AssetInspector_TextureMetadata: AppDesign.Icons.Panel_AssetInspector_TextureMetadata,
+    _AssetInspector_TextureConvert: AppDesign.Icons.Panel_AssetInspector_TextureConvert,
+    _AssetInspector_TextureChannels: AppDesign.Icons.Panel_AssetInspector_TextureChannels,
+    _AssetInspector_General: AppDesign.Icons.Panel_AssetInspector_General,
+    _Conversions: AppDesign.Icons.Panel_Conversions,
+    _StrataConsole: AppDesign.Icons.Panel_StrataConsole,
 } as const;
