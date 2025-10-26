@@ -1,11 +1,21 @@
 <template>
-    <div class="bg-neutral-800 py-1 px-2 flex items-center gap-1 h-full inset-shadow-rim">
-        <div class="text-sm text-muted select-none">Mod Companion</div>
-        <div class="ml-auto"></div>
-        <FooterInteropStatus />
+    <div class="grid grid-cols-subgrid col-span-full gap-1 bg-neutral-850 py-1 px-2 h-full inset-shadow-rim">
+        <FooterModcompButton />
+        <div class="flex items-center gap-2">
+            <USeparator orientation="vertical" />
+            <FooterLog />
+            <USeparator orientation="vertical" />
+            <FooterConversionStatus />
+            <USeparator orientation="vertical" />
+            <FooterInteropStatus />
+        </div>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import FooterConversionStatus from "~/components/footer/FooterConversionStatus.vue";
+import FooterLog from "~/components/footer/FooterLog.vue";
+import FooterModcompButton from "~/components/footer/FooterModcompButton.vue";
+</script>
 
 <style scoped></style>

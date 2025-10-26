@@ -13,9 +13,7 @@
                     :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
                 />
             </div>
-            <div class="col-span-full h-full">
-                <TheFooter />
-            </div>
+            <TheFooter />
         </div>
     </UApp>
 </template>
@@ -33,6 +31,6 @@ const panelsStore = usePanelsStore();
 <style scoped>
 .main-layout {
     grid-template-columns: 10rem minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) 2rem;
+    grid-template-rows: minmax(0, 1fr) 2.2rem;
 }
 </style>
