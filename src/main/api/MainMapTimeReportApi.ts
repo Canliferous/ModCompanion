@@ -1,14 +1,14 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
-import { SharedMapTimeReport } from "../../shared/SharedMapTimeReport.js";
-import { getConfig } from "../systems/MainConfigSystem.js";
-import { SharedMapPath } from "../../shared/SharedMapPath.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import { SharedMapTimeReport } from "Shared/SharedMapTimeReport.js";
+import { getAppConfig } from "../systems/MainConfigSystem.js";
+import { SharedMapPath } from "Shared/SharedMapPath.js";
 import path from "path";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { SharedSeconds } from "../../shared/SharedTypes.js";
+import { SharedSeconds } from "Shared/SharedTypes.js";
 import * as kv from "@sourcelib/kv";
-import { SharedMapCompileStep } from "../../shared/SharedMapCompile.js";
+import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 
 export function registerMapTimeReportApi(): boolean {
     ipcMain.handle(SharedIpcChannels.MapCreateTimeReport, (e, maps: SharedMapPath[]) => _createTimeReport(maps));
@@ -35,7 +35,7 @@ function _getReportExtension(step: SharedMapCompileStep) {
 }
 
 async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeReport> {
-    const config = getConfig();
+    const config = getAppConfig();
 
     const srcPath = config.mapSourcePath;
 

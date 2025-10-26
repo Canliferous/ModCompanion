@@ -3,14 +3,14 @@ import { SharedAssetGroup, SharedAssetGroupDefinition, SharedAssetGroupId } from
 import path from "path";
 import { existsSync } from "fs";
 import { notifyAssetGroupsUpdated } from "../api/MainAssetGroupsApi.js";
-import { getConfig } from "./MainConfigSystem.js";
+import { getAppConfig } from "./MainConfigSystem.js";
 import { v4 } from "uuid";
 import { filename } from "pathe/utils";
 
 const groups: Map<SharedAssetGroupId, SharedAssetGroup> = new Map<SharedAssetGroupId, SharedAssetGroup>();
 
 export function getAssetGroupDir(): string {
-    return path.join(getConfig().contentPath, "_modcomp_asset_groups");
+    return path.join(getAppConfig().contentPath, "_modcomp_asset_groups");
 }
 
 export async function initAssetGroupsSystem(): Promise<boolean> {

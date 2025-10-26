@@ -6,7 +6,7 @@ import {
     SharedProjectListFilesReportTypes,
 } from "Shared/SharedFileListing.js";
 import fs from "fs/promises";
-import { getConfig } from "../systems/MainConfigSystem.js";
+import { getAppConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
 import * as child_process from "node:child_process";
 import SharedSourceFs from "Shared/SharedSourceFs.js";
@@ -33,7 +33,7 @@ export function registerProjectFilesApi(): boolean {
             if (path.isAbsolute(file)) {
                 p = file;
             } else {
-                const config = getConfig();
+                const config = getAppConfig();
                 p = path.join(config.rootPath, file);
             }
 
@@ -61,12 +61,12 @@ export function registerProjectFilesApi(): boolean {
 }
 
 function _isProjectPath(p: string): boolean {
-    const config = getConfig();
+    const config = getAppConfig();
     return path.resolve(p).startsWith(config.rootPath);
 }
 
 function _correctProjectPath(somePath: string) {
-    const config = getConfig();
+    const config = getAppConfig();
     if (!path.isAbsolute(somePath)) {
         return somePath;
     }
@@ -77,7 +77,7 @@ function _correctProjectPath(somePath: string) {
 }
 
 async function _listFiles(dirPath: string): Promise<SharedProjectListFilesReport> {
-    const config = getConfig();
+    const config = getAppConfig();
     const fullPath = path.join(config.rootPath, dirPath);
 
     if (!_isProjectPath(fullPath)) return { type: SharedProjectListFilesReportTypes.Invalid };

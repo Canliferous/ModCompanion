@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 import * as child_process from "node:child_process";
-import { getConfig } from "../systems/MainConfigSystem.js";
+import { getAppConfig } from "../systems/MainConfigSystem.js";
 import os from "node:os";
 
 export function registerLauncherApi(): boolean {
@@ -13,7 +13,7 @@ export function registerLauncherApi(): boolean {
             return;
         }
 
-        const workingDir = getConfig().gameRootPath;
+        const workingDir = getAppConfig().gameRootPath;
 
         let cmd = exe;
         if (launcherArgs) {
@@ -25,7 +25,7 @@ export function registerLauncherApi(): boolean {
         }
 
         if (!cmd.includes("-game")) {
-            cmd += ` -game ${getConfig().gameName}`;
+            cmd += ` -game ${getAppConfig().gameName}`;
         }
 
         console.log(`Launching '${cmd}' Working Dir '${workingDir}'`);
@@ -42,7 +42,7 @@ export function registerLauncherApi(): boolean {
 }
 
 function _getLauncherExe(launcherType: SharedLaunchers): string | undefined {
-    const config = getConfig();
+    const config = getAppConfig();
     if (launcherType === "game") {
         return config.gameExePath;
     } else if (launcherType === "hammer") {

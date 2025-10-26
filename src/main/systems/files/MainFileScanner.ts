@@ -1,10 +1,10 @@
-import { getConfig } from "../MainConfigSystem.js";
+import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 import { timeMillisAsync } from "../../helpers/MainTiming.js";
 import fs from "fs/promises";
 
 export async function scanContentTree(): Promise<string[]> {
-    const config = getConfig();
+    const config = getAppConfig();
 
     console.log("Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>

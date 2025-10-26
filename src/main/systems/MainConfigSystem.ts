@@ -17,7 +17,7 @@ interface ConfigFile {
 
 let config: SharedAppConfig = null!;
 
-export function getConfig(): SharedAppConfig {
+export function getAppConfig(): SharedAppConfig {
     return config;
 }
 

@@ -11,7 +11,7 @@ import { scanContentTree } from "../files/MainFileScanner.js";
 import { v4 } from "uuid";
 import path from "path";
 import fs from "fs/promises";
-import { getConfig } from "../MainConfigSystem.js";
+import { getAppConfig } from "../MainConfigSystem.js";
 import { AssetCreationInferResults, inferAssetCreationType } from "./MainAssetCreateInferType.js";
 import { createUnknownAssetDefinition } from "./MainAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./MainAssetCreateTexture.js";
@@ -75,7 +75,7 @@ export async function createAssetsFromFiles(
 }
 
 export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: string): Promise<SharedAsset> {
-    const absoluteMcaPath = path.join(getConfig().rootPath, mcaPath);
+    const absoluteMcaPath = path.join(getAppConfig().rootPath, mcaPath);
     const payload = JSON.stringify(assetDef, undefined, 2);
     console.log("Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);

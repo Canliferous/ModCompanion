@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
-import { getConfig } from "../systems/MainConfigSystem.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import { getAppConfig } from "../systems/MainConfigSystem.js";
 import fs from "fs/promises";
 import path from "path";
-import { SharedMapSourceDir } from "../../shared/SharedMapTypes.js";
+import { SharedMapSourceDir } from "Shared/SharedMapTypes.js";
 
 export function registerMapScannerApi(): boolean {
     ipcMain.handle(SharedIpcChannels.MapListSourceDirs, listMapSourceDirs);
@@ -11,7 +11,7 @@ export function registerMapScannerApi(): boolean {
 }
 
 export async function listMapSourceDirs(): Promise<SharedMapSourceDir[]> {
-    const config = getConfig();
+    const config = getAppConfig();
 
     if (config.mapSourceDirs === undefined || config.mapSourceDirs.length === 0) return [];
 

@@ -1,6 +1,5 @@
 import chokidar, { FSWatcher } from "chokidar";
-import { getConfig } from "../MainConfigSystem.js";
-import { SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import { getAppConfig } from "../MainConfigSystem.js";
 import MainAssetRepository from "./MainAssetRepository.js";
 import { notifyAssetsUpdated } from "../../api/MainAssetApi.js";
 import { enqueueConversion } from "../MainConversionAgentSystem.js";
@@ -8,7 +7,7 @@ import MainSourceFs from "../../helpers/MainSourceFs.js";
 
 let watcher: FSWatcher | undefined = undefined;
 export function startFileWatcher(): boolean {
-    const config = getConfig();
+    const config = getAppConfig();
     watcher = chokidar.watch(config.textureSourcePath, { ignoreInitial: true });
 
     watcher.on("add", _handleAdded);

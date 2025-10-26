@@ -16,7 +16,7 @@ import { convertModelAsset, determineModelAssetState } from "./converter/MainMod
 import path from "path";
 import fs from "fs/promises";
 import crypto from "node:crypto";
-import { getConfig } from "./MainConfigSystem.js";
+import { getAppConfig } from "./MainConfigSystem.js";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 
 const MAX_PARALLEL_JOBS = 1;
@@ -255,7 +255,7 @@ async function _hasAssetChanged(asset: SharedAssetDefinition) {
 }
 
 async function _createAssetChecksum(contentFiles: string[]) {
-    const contentPath = getConfig().contentPath;
+    const contentPath = getAppConfig().contentPath;
 
     const promises = contentFiles.map(async (f) => {
         const p = path.join(contentPath, f);
