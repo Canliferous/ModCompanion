@@ -1,6 +1,9 @@
-import { addIcon } from "@iconify/vue";
+import { addIcon, loadIcons } from "@iconify/vue";
+import { AppDesign } from "~/design/AppDesign.js";
 
 export function initIcons(): void {
+    _preloadIcons();
+
     addIcon("substance:designer", {
         width: 240,
         height: 234,
@@ -36,4 +39,9 @@ C 8.0227142,2.4552019 11.419332,1.4438237 11.419332,1.4438237"
        stroke-width="1"
        />`,
     });
+}
+
+function _preloadIcons() {
+    const iconNames = Object.values(AppDesign.Icons);
+    loadIcons(iconNames);
 }
