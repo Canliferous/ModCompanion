@@ -22,20 +22,21 @@ export function getConfig(): SharedAppConfig {
 }
 
 export async function initConfigSystem(): Promise<boolean> {
-    const cfgFile = await loadConfig();
+    let cfgFile = await _loadConfig();
 
-    if (cfgFile === null) {
-        return false;
+    if (cfgFile === undefined) {
+        console.log("Starting with default config");
+        cfgFile = _createDefaultConfig();
     }
 
-    const cfg = createRevolutionStandardConfig(cfgFile);
+    const cfg = _createRevolutionStandardConfig(cfgFile);
     if (!cfg) return false;
 
     config = cfg;
     return true;
 }
 
-export function createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undefined {
+function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undefined {
     if (!c.root) {
         return undefined;
     }
@@ -95,27 +96,34 @@ function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): s
     return path.join(root, binaryName);
 }
 
-export function getConfigPath(): string {
+function _getConfigPath(): string {
     return path.normalize("./appconfig.json");
 }
 
-export async function loadConfig(): Promise<ConfigFile | null> {
+function _createDefaultConfig(): ConfigFile {
+    return {
+        root: "sample",
+        searchPath: "my_game"
+    }
+}
+
+async function _loadConfig(): Promise<ConfigFile | undefined> {
     try {
-        const rawCfg = await fs.readFile(getConfigPath());
+        const rawCfg = await fs.readFile(_getConfigPath());
 
         const cfgAny = JSON.parse(rawCfg.toString("utf-8"));
 
         if (!cfgAny.root || typeof cfgAny.root !== "string") {
-            return null;
+            return undefined;
         }
 
         if (!cfgAny.searchPath || typeof cfgAny.searchPath !== "string") {
-            return null;
+            return undefined;
         }
 
         return cfgAny;
     } catch (e) {
-        console.error(e);
-        return null;
+        console.warn(e);
+        return undefined;
     }
 }
