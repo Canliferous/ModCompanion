@@ -1,13 +1,18 @@
 const fs = require("fs-extra");
 const path = require("path");
 
-const output = "/mnt/m/Git/PortalRevolution2/tools/mod_companion";
+const output = "/home/stefan/Projects/PortalRevolution2/tools/mod_companion";
 
 async function deploy() {
-    await _deployApp();
-    await _deployDocs();
-    await _deployRuntimeWindows();
-    await _deployRuntimeLinux();
+    const steps = [_deployApp, _deployDocs, _deployRuntimeWindows, _deployRuntimeLinux];
+    for (const step of steps) {
+        try {
+            await step();
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+    console.log("DEPLOY DONE!");
 }
 
 async function _deployApp() {

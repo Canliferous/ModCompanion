@@ -117,20 +117,25 @@ function _createTray(): boolean {
         return false;
     }
 
-    tray = new Tray(iconPath);
+    try {
+        tray = new Tray(iconPath);
 
-    tray.setToolTip("Mod Companion");
-    tray.setContextMenu(
-        Menu.buildFromTemplate([
-            { label: "Show", click: () => mainWindow?.show() },
-            { label: "Quit", click: () => app.exit() },
-        ]),
-    );
+        tray.setToolTip("Mod Companion");
+        tray.setContextMenu(
+            Menu.buildFromTemplate([
+                { label: "Show", click: () => mainWindow?.show() },
+                { label: "Quit", click: () => app.exit() },
+            ]),
+        );
 
-    tray.on("click", (event) => {
-        mainWindow?.show();
-    });
-    return true;
+        tray.on("click", (event) => {
+            mainWindow?.show();
+        });
+        return true;
+    } catch (e) {
+        console.warn(e);
+        return false;
+    }
 }
 
 let zoomFactor = 1;
