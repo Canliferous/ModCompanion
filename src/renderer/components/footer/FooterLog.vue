@@ -1,6 +1,6 @@
 <template>
     <div class="grow">
-        <UButton variant="ghost" size="xs" class="text-xs text-muted">Log text goes here</UButton>
+        <UButton variant="ghost" size="xs" class="text-xs text-muted"></UButton>
     </div>
 </template>
 
