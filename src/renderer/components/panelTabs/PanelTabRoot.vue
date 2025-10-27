@@ -2,7 +2,14 @@
     <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose">
         <UIcon :name="params.params.icon" />
         <span>{{ title }}</span>
-        <UButton :icon="AppDesign.Icons.Close" variant="link" size="xs" class="p-0" @click="handleClose" />
+        <UButton
+            v-if="!props.params.params.noClose"
+            :icon="AppDesign.Icons.Close"
+            variant="link"
+            size="xs"
+            class="p-0"
+            @click="handleClose"
+        />
     </div>
 </template>
 
@@ -19,7 +26,9 @@ props.params.api.onDidTitleChange((e) => {
 });
 
 function handleClose() {
-    props.params.api.close();
+    if (!props.params.params.noClose) {
+        props.params.api.close();
+    }
 }
 </script>
 

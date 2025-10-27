@@ -16,7 +16,7 @@ import {
     SharedAssetTypes,
     SharedTextureAsset,
 } from "Shared/SharedAssetDefinition.js";
-import { DockviewApi, DockviewReadyEvent, DockviewVue } from "dockview-vue";
+import { DockviewApi, DockviewReadyEvent, DockviewVue, SerializedDockview } from "dockview-vue";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import pathe from "pathe";
@@ -89,7 +89,7 @@ function serializeLayout(a: DockviewApi) {
     localStorage.setItem(key, JSON.stringify(json));
 }
 
-function deserializeLayout(type: SharedAssetType) {
+function deserializeLayout(type: SharedAssetType): SerializedDockview | undefined {
     const workspace = workspaceStore.activeWorkspace ?? "unknown";
     const key = `asset-inspector-layout-${workspace}-${type}`;
     const itemRaw = localStorage.getItem(key);
@@ -130,7 +130,7 @@ function setupTabs(type: SharedAssetType, api: DockviewApi) {
                 id: panel.componentId,
                 component: panel.componentId,
                 tabComponent: PanelComponents.tabComponents.panelTab.componentId,
-                params: { icon: PanelIcons[panel.componentId] },
+                params: { icon: PanelIcons[panel.componentId], noClose: true },
             });
         }
     }
@@ -150,9 +150,9 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
     const savedPanels = deserializeLayout(type);
     if (savedPanels) {
         api.fromJSON(savedPanels);
-    } else {
-        setupTabs(type, api);
     }
+
+    setupTabs(type, api);
 }
 </script>
 
