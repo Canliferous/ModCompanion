@@ -66,8 +66,9 @@ export const Icons = {
     ConversionStateUnknown: "mingcute:question-fill",
     ConversionStatePending: "lucide:dot",
     ConversionStateInProgress: "mingcute:loading-line",
-    ConversionStateFinished: "mingcute:check-line",
+    ConversionStateFinished: "mingcute:checks-line",
     ConversionStateFailed: "mingcute:close-line",
+    ConversionStateNoChange: "mingcute:check-line",
 
     Panel_MapList: "mingcute:map-2-fill",
     Panel_MapCompileLog: "mingcute:list-check-fill",

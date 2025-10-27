@@ -8,7 +8,8 @@ export function summarizeConversionStates(states: SharedConversionState[]): Shar
         if (state === SharedConversionState.Pending || state === SharedConversionState.PendingForced)
             return SharedConversionState.Pending;
         if (state === SharedConversionState.Unknown) return SharedConversionState.Unknown;
+        if (state === SharedConversionState.Finished) return SharedConversionState.Finished;
     }
 
-    return SharedConversionState.Finished;
+    return SharedConversionState.NoChange;
 }

@@ -12,7 +12,7 @@
     <UIcon
         v-if="state === SharedConversionState.Pending || state === SharedConversionState.PendingForced"
         :name="AppDesign.Icons.ConversionStatePending"
-        class="text-neutral-400"
+        class="text-muted"
     />
     <UIcon
         v-if="state === SharedConversionState.InProgress"
@@ -28,6 +28,11 @@
         v-if="state === SharedConversionState.Failed"
         :name="AppDesign.Icons.ConversionStateFailed"
         class="text-error"
+    />
+    <UIcon
+        v-if="state === SharedConversionState.NoChange"
+        :name="AppDesign.Icons.ConversionStateNoChange"
+        class="text-muted"
     />
 </template>
 
