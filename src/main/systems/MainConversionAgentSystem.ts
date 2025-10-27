@@ -37,16 +37,20 @@ export function initConvertAgentSystem(): boolean {
 }
 
 async function _initializeAssetChecksums(map: SharedAssetMap) {
-    const assets = map.values();
-    const promises = assets.map(async (asset) => {
-        if (!asset.def.contentFiles) return;
+    const startTime = new Date();
+    {
+        const assets = map.values();
+        const promises = assets.map(async (asset) => {
+            if (!asset.def.contentFiles) return;
 
-        const sum = await _createAssetChecksum(asset.def.contentFiles);
-        assetChecksums.set(asset.def.id, sum);
-    });
+            const sum = await _createAssetChecksum(asset.def.contentFiles);
+            assetChecksums.set(asset.def.id, sum);
+        });
 
-    await Promise.allSettled(promises);
-    console.log("Initialized asset checksums");
+        await Promise.allSettled(promises);
+    }
+    const endTime = new Date();
+    console.log(`Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`);
 }
 
 export function startConversionAgent(): void {
