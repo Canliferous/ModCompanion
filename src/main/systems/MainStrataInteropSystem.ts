@@ -17,8 +17,14 @@ export function initStrataInterop(): boolean {
 }
 
 export function sendStrataCommand(command: string) {
-    console.log(`Sending command to strata: '${command}'`);
-    socket?.write(command + "\n");
+    if (socket) {
+        console.log(`Sending command to strata: '${command}'`);
+        socket.write(command + "\n");
+    }
+}
+
+export function _isStrataConnected(): boolean {
+    return socket !== undefined;
 }
 
 function _connect(port: number, timeout: number): Promise<net.Socket | undefined> {

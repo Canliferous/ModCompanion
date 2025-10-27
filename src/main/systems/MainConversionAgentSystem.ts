@@ -18,6 +18,13 @@ import fs from "fs/promises";
 import crypto from "node:crypto";
 import { getAppConfig } from "./MainConfigSystem.js";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
+import { deriveTextureGameFileName } from "./assets/MainAssetCreateTexture.js";
+import {
+    getRootRelativePath,
+    isAbsoluteContentFile,
+    makeContentPathAbsolute,
+    makeGamePathAbsolute,
+} from "../helpers/MainSourceFs.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -25,13 +32,14 @@ type JobResult = string | undefined;
 const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();
 
 let agentInterval: NodeJS.Timeout | undefined;
-const conversions: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
+const conversionsMap: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
 const conversionHistory: SharedConversionHistoryItem[] = [];
 const assetChecksums: Map<SharedAssetId, string> = new Map<SharedAssetId, string>();
 
 export function initConvertAgentSystem(): boolean {
     subscribeAssetsRescanned((event) => {
         _initializeAssetChecksums(event.assets);
+        _enqueueStaleAssets(event.assets);
     });
     return true;
 }
@@ -53,6 +61,15 @@ async function _initializeAssetChecksums(map: SharedAssetMap) {
     console.log(`Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`);
 }
 
+async function _enqueueStaleAssets(map: SharedAssetMap) {
+    for (const asset of map.values()) {
+        const stale = await _isAssetStale(asset.def);
+        if (stale) {
+            enqueueConversion(asset.def.id);
+        }
+    }
+}
+
 export function startConversionAgent(): void {
     if (!agentInterval) {
         agentInterval = setInterval(_runAgent, 500);
@@ -66,12 +83,17 @@ export function stopConversionAgent(): void {
 }
 
 export function getConversionState(): Map<string, SharedConversion> {
-    return conversions;
+    return conversionsMap;
 }
 
-export function enqueueConversion(assetId: string): void {
-    console.log(`Enqueuing ${assetId} for forced conversion`);
-    _setState(assetId, SharedConversionState.PendingForced);
+export function enqueueConversion(assetId: string, force: boolean = false): void {
+    if (force) {
+        console.log(`Enqueuing ${assetId} for forced conversion`);
+        _setState(assetId, SharedConversionState.PendingForced);
+    } else {
+        console.log(`Enqueuing ${assetId} for conversion`);
+        _setState(assetId, SharedConversionState.Pending);
+    }
 }
 
 async function _runAgent(): Promise<void> {
@@ -84,7 +106,7 @@ async function _runAgent(): Promise<void> {
     }
 
     if (updated) {
-        notifyConversionsUpdated({ conversions, history: conversionHistory });
+        notifyConversionsUpdated({ conversions: conversionsMap, history: conversionHistory });
     }
 }
 
@@ -94,7 +116,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
 
     const result: SharedAssetId[] = [];
 
-    for (const conv of conversions.values()) {
+    for (const conv of conversionsMap.values()) {
         if (newJobsCount === 0) break;
 
         const alreadyAdded = conversionJobs.has(conv.assetId);
@@ -109,36 +131,48 @@ function _getAssetsToConvert(): SharedAssetId[] {
     return result;
 }
 
+async function _startConversion(id: SharedAssetId): Promise<string | undefined> {
+    const asset = getAssetFromId(id);
+    const stateBefore = conversionsMap.get(id)?.state ?? SharedConversionState.Unknown;
+    if (!asset) {
+        _setState(id, SharedConversionState.Unknown);
+        return undefined;
+    }
+    _setState(id, SharedConversionState.InProgress);
+
+    const force = stateBefore === SharedConversionState.PendingForced;
+
+    if (!force) {
+        const hasChanged = await _hasAssetChanged(asset.def);
+        if (!hasChanged) {
+            const isStale = await _isAssetStale(asset.def);
+            if (!isStale) {
+                console.log("Has not changed and is not stale");
+                _setState(id, SharedConversionState.NoChange);
+                return undefined;
+            }
+        }
+    }
+
+    console.log("Converting asset", asset.def.displayName, asset.def.id);
+    const startTime = new Date();
+    const timeoutPromise = _convertAsset(asset.def);
+    timeoutPromise.catch((a) => {
+        _onJobPromiseDone(id, startTime, stateBefore, SharedConversionState.Failed, a);
+    });
+    timeoutPromise.then((log) => {
+        const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;
+        _onJobPromiseDone(id, startTime, stateBefore, newState, log ?? "");
+        _touchAsset(asset.def);
+    });
+    conversionJobs.set(id, timeoutPromise);
+    return timeoutPromise;
+}
+
 async function _startConversions(ids: SharedAssetId[]): Promise<void> {
     const promises: Promise<string | undefined>[] = [];
     for (const id of ids) {
-        const asset = getAssetFromId(id);
-        const stateBefore = conversions.get(id)?.state ?? SharedConversionState.Unknown;
-        if (!asset) {
-            _setState(id, SharedConversionState.Unknown);
-            continue;
-        }
-        _setState(id, SharedConversionState.InProgress);
-
-        if (stateBefore !== SharedConversionState.PendingForced) {
-            const hasChanged = await _hasAssetChanged(asset.def);
-            if (!hasChanged) {
-                _setState(id, SharedConversionState.NoChange);
-                return;
-            }
-        }
-
-        const startTime = new Date();
-        const timeoutPromise = _convertAsset(asset.def);
-        promises.push(timeoutPromise);
-        timeoutPromise.catch((a) => {
-            _onJobPromiseDone(id, startTime, stateBefore, SharedConversionState.Failed, a);
-        });
-        timeoutPromise.then((log) => {
-            const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;
-            _onJobPromiseDone(id, startTime, stateBefore, newState, log ?? "");
-        });
-        conversionJobs.set(id, timeoutPromise);
+        promises.push(_startConversion(id));
     }
 
     return Promise.allSettled(promises).then((p) => {
@@ -192,7 +226,7 @@ async function _updateStaleStates(assets: MapIterator<SharedAsset>): Promise<boo
 }
 
 async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean> {
-    const convState = conversions.get(asset.id)?.state ?? SharedConversionState.Unknown;
+    const convState = conversionsMap.get(asset.id)?.state ?? SharedConversionState.Unknown;
     if (convState === SharedConversionState.PendingForced) {
         return false;
     }
@@ -206,7 +240,7 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
 
     if (assetState === AssetStates.NoOutputFiles) {
         if (convState === SharedConversionState.Unknown) {
-            conversions.set(asset.id, { assetId: asset.id, state: SharedConversionState.Pending });
+            conversionsMap.set(asset.id, { assetId: asset.id, state: SharedConversionState.Pending });
             return true;
         }
     }
@@ -237,14 +271,58 @@ export async function determineAssetState(asset: SharedAssetDefinition): Promise
 }
 
 function _setState(id: SharedAssetId, state: SharedConversionState) {
-    if (conversions.has(id)) {
-        conversions.get(id)!.state = state;
+    if (conversionsMap.has(id)) {
+        conversionsMap.get(id)!.state = state;
     } else {
-        conversions.set(id, { assetId: id, state });
+        conversionsMap.set(id, { assetId: id, state });
+    }
+    console.log(conversionsMap);
+}
+
+async function _touchAsset(asset: SharedAssetDefinition) {
+    if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
+    if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
+
+    const time = new Date().getTime();
+    for (const contentFile of asset.contentFiles) {
+        const p = makeContentPathAbsolute(contentFile);
+        await fs.utimes(p, time, time);
+    }
+
+    for (const gameFile of asset.gameFiles) {
+        const p = makeGamePathAbsolute(gameFile);
+        await fs.utimes(p, time, time);
     }
 }
 
-async function _hasAssetChanged(asset: SharedAssetDefinition) {
+async function _isAssetStale(asset: SharedAssetDefinition): Promise<boolean> {
+    if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
+    if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
+
+    const contentTimePromises = asset.contentFiles.map(makeContentPathAbsolute).map(_getModifiedTime);
+    const gameTimePromises = asset.gameFiles.map(makeGamePathAbsolute).map(_getModifiedTime);
+
+    const contentTimes = await Promise.all(contentTimePromises);
+    const gameTimes = await Promise.all(gameTimePromises);
+
+    const allTimes = [...contentTimes, ...gameTimes];
+    const timesSet = new Set(allTimes);
+
+    const isStale = timesSet.size !== 1;
+    return isStale;
+}
+
+async function _getModifiedTime(filePath: string): Promise<number | undefined> {
+    try {
+        const stat = await fs.stat(filePath);
+        return stat.mtimeMs;
+    } catch (e) {
+        // We don't care about the error. If stat fails it probably doesn't exist which is an expected state
+        return undefined;
+    }
+}
+
+async function _hasAssetChanged(asset: SharedAssetDefinition): Promise<boolean> {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
 
     const newSum = await _createAssetChecksum(asset.contentFiles);

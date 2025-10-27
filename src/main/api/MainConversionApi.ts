@@ -18,7 +18,7 @@ export function registerConversionApi(): boolean {
         stopConversionAgent();
     });
     ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
-        enqueueConversion(assetId);
+        enqueueConversion(assetId, true);
     });
     ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateReport> => {
         return { conversions: getConversionState() };
