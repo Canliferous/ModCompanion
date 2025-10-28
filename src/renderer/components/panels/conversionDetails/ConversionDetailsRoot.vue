@@ -1,5 +1,5 @@
 <template>
-    <div class="p-1 pl-0 grid gap-1 grid-rows-[auto_auto_auto_minmax(0,_1fr)] h-full overflow-y-auto">
+    <div class="p-1 grid gap-1 grid-rows-[auto_auto_auto_minmax(0,_1fr)] h-full overflow-y-auto">
         <UButton
             color="neutral"
             variant="ghost"
@@ -32,7 +32,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { SharedConversionHistoryItem } from "Shared/SharedConversion.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";

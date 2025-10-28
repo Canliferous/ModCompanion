@@ -80,7 +80,8 @@ export const Icons = {
     Panel_AssetInspector_TextureConvert: "mingcute:settings-2-fill",
     Panel_AssetInspector_TextureChannels: "mingcute:layout-grid-fill",
     Panel_AssetInspector_General: "mingcute:list-check-fill",
-    Panel_Conversions: "mingcute:lightning-fill",
+    Panel_Conversions: "mingcute:list-check-2-fill",
+    Panel_ConversionDetails: "mingcute:lightning-fill",
     Panel_StrataConsole: "mingcute:terminal-fill",
 } as const;
 

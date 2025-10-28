@@ -14,6 +14,7 @@ import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsoleP
 import Watermark from "~/components/panels/Watermark.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import AddPanelAction from "~/components/panels/AddPanelAction.vue";
+import ConversionDetailsPanel from "~/components/panels/conversionDetails/ConversionDetailsPanel.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -32,6 +33,7 @@ export const PanelComponentIds = {
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
     Conversions: "_Conversions",
+    ConversionDetails: "_ConversionDetails",
     StrataConsole: "_StrataConsole",
     SubPanelTab: "_SubPanelTab",
     Watermark: "_Watermark",
@@ -61,19 +63,9 @@ export const PanelComponents = {
             component: AssetInspectorGeneralPanel,
         },
     } as const,
+
+    // The order here determines the sort order in panel creation dialogs
     panels: {
-        mapList: {
-            componentId: "_MapList",
-            component: MapsPanel,
-        },
-        mapCompileLog: {
-            componentId: "_MapCompileLog",
-            component: MapCompileLogPanel,
-        },
-        fileBrowser: {
-            componentId: "_FileBrowser",
-            component: FileBrowserPanel,
-        },
         assetBrowser: {
             componentId: "_AssetBrowser",
             component: AssetBrowserPanel,
@@ -85,6 +77,22 @@ export const PanelComponents = {
         conversions: {
             componentId: "_Conversions",
             component: ConversionsPanel,
+        },
+        conversionDetails: {
+            componentId: "_ConversionDetails",
+            component: ConversionDetailsPanel,
+        },
+        fileBrowser: {
+            componentId: "_FileBrowser",
+            component: FileBrowserPanel,
+        },
+        mapList: {
+            componentId: "_MapList",
+            component: MapsPanel,
+        },
+        mapCompileLog: {
+            componentId: "_MapCompileLog",
+            component: MapCompileLogPanel,
         },
         strataConsole: {
             componentId: "_StrataConsole",
@@ -135,7 +143,8 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureConvert: "VTF Options",
     _AssetInspector_TextureChannels: "Channels",
     _AssetInspector_General: "General",
-    _Conversions: "Conversions",
+    _Conversions: "Conversions List",
+    _ConversionDetails: "Conversion Details",
     _StrataConsole: "Strata Console",
 } as const;
 
@@ -151,5 +160,6 @@ export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureChannels: AppDesign.Icons.Panel_AssetInspector_TextureChannels,
     _AssetInspector_General: AppDesign.Icons.Panel_AssetInspector_General,
     _Conversions: AppDesign.Icons.Panel_Conversions,
+    _ConversionDetails: AppDesign.Icons.Panel_ConversionDetails,
     _StrataConsole: AppDesign.Icons.Panel_StrataConsole,
 } as const;

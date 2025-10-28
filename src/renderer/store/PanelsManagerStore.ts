@@ -4,12 +4,15 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { PanelComponents } from "~/helper/PanelComponents.js";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { useMapListStore } from "~/store/MapListStore.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 
 export const usePanelsManagerStore = defineStore("panels-manager", () => {
     const assetListStore = useAssetListStore();
     const mapListStore = useMapListStore();
     const panelsStore = usePanelsStore();
+    const conversionStore = useAssetConversionStore();
 
+    // TODO Generalize this????
     watch(
         () => assetListStore.activeAsset,
         (asset) => {
@@ -20,7 +23,7 @@ export const usePanelsManagerStore = defineStore("panels-manager", () => {
                 console.warn("Trying to inspect asset but browser panel cannot be found");
                 return;
             }
-            panelsStore.trySpawnPanel(PanelComponents.panels.assetInspector, {
+            panelsStore.focusOrCreatePanel(PanelComponents.panels.assetInspector, {
                 position: { referencePanel: browser.id, direction: "right" },
             });
         },
@@ -31,13 +34,29 @@ export const usePanelsManagerStore = defineStore("panels-manager", () => {
         (asset) => {
             if (!asset) return;
 
-            const list = panelsStore.findOpenPanel(PanelComponents.panels.mapList.componentId);
-            if (!list) {
+            const listPanel = panelsStore.findOpenPanel(PanelComponents.panels.mapList.componentId);
+            if (!listPanel) {
                 console.warn("Trying to open map compile log but map list panel cannot be found");
                 return;
             }
-            panelsStore.trySpawnPanel(PanelComponents.panels.mapCompileLog, {
-                position: { referencePanel: list.id, direction: "below" },
+            panelsStore.focusOrCreatePanel(PanelComponents.panels.mapCompileLog, {
+                position: { referencePanel: listPanel.id, direction: "below" },
+            });
+        },
+    );
+
+    watch(
+        () => conversionStore.activeHistory,
+        (activeHistory) => {
+            if (!activeHistory) return;
+
+            const conversionsPanel = panelsStore.findOpenPanel(PanelComponents.panels.conversions.componentId);
+            if (!conversionsPanel) {
+                console.warn("Trying to open conversion details but the panel cannot be found");
+                return;
+            }
+            panelsStore.focusOrCreatePanel(PanelComponents.panels.conversionDetails, {
+                position: { referencePanel: conversionsPanel.id, direction: "right" },
             });
         },
     );

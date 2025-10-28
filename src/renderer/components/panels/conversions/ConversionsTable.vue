@@ -24,7 +24,8 @@ import { AppDesign } from "~/design/AppDesign.js";
 const conversionStore = useAssetConversionStore();
 const assetListStore = useAssetListStore();
 
-const entries = computed(() => conversionStore.conversionHistory.toReversed());
+const props = defineProps<{ history: SharedConversionHistoryItem[] }>();
+const entries = computed(() => props.history.toReversed());
 
 const columns: DataTableColumn<SharedConversionHistoryItem>[] = [
     {
