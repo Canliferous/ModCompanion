@@ -1,6 +1,6 @@
 <template>
     <template v-if="conversionStore.conversionHistory.length > 0">
-        <div class="grid grid-cols-2 h-full">
+        <div class="grid grid-cols-[1fr_auto] grid-rows-1 h-full">
             <ConversionsTable />
             <template v-if="conversionStore.activeHistory">
                 <ConversionsDetails :item="conversionStore.activeHistory" />

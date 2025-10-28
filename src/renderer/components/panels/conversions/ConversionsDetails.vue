@@ -1,8 +1,9 @@
 <template>
-    <div class="p-1 grid gap-2 grid-rows-[auto_auto_auto_minmax(0,_1fr)] h-full overflow-y-auto">
+    <div class="p-1 pl-0 grid gap-1 grid-rows-[auto_auto_auto_minmax(0,_1fr)] h-full overflow-y-auto">
         <UButton
             color="neutral"
             variant="ghost"
+            size="sm"
             :label="asset?.def?.displayName ?? '(unknown)'"
             @click="handleClickAsset"
         >
@@ -15,7 +16,7 @@
             <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
             <MConversionStateBadge :state="item.stateAfter" />
         </div>
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-2 items-center text-xs">
             <ConversionsCellTime :date-time="item.startTime" />
             <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
             <ConversionsCellTime :date-time="item.endTime" />
@@ -25,13 +26,12 @@
             </span>
         </div>
 
-        <div class="text-sm bg-neutral-900 border border-accented overflow-y-scroll">
-            <pre>{{ item.log }}</pre>
+        <div class="text-xs bg-neutral-900 border border-accented overflow-y-scroll">
+            <pre class="whitespace-pre-wrap">{{ item.log }}</pre>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { SharedConversionHistoryItem } from "Shared/SharedConversion.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
