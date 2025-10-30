@@ -88,10 +88,8 @@ export function getConversionState(): Map<string, SharedConversion> {
 
 export function enqueueConversion(assetId: string, force: boolean = false): void {
     if (force) {
-        console.log(`Enqueuing ${assetId} for forced conversion`);
         _setState(assetId, SharedConversionState.PendingForced);
     } else {
-        console.log(`Enqueuing ${assetId} for conversion`);
         _setState(assetId, SharedConversionState.Pending);
     }
 }
@@ -281,7 +279,6 @@ function _setState(id: SharedAssetId, state: SharedConversionState) {
     } else {
         conversionsMap.set(id, { assetId: id, state });
     }
-    console.log(conversionsMap);
 }
 
 async function _touchAsset(asset: SharedAssetDefinition) {
