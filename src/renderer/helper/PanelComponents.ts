@@ -143,8 +143,8 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureConvert: "VTF Options",
     _AssetInspector_TextureChannels: "Channels",
     _AssetInspector_General: "General",
-    _Conversions: "Conversions List",
-    _ConversionDetails: "Conversion Details",
+    _Conversions: "Conversion Events",
+    _ConversionDetails: "Conversion Event Details",
     _StrataConsole: "Strata Console",
 } as const;
 

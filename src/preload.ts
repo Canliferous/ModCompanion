@@ -16,7 +16,7 @@ import {
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
 } from "./shared/SharedAssetDefinition.js";
-import { SharedConversionSummaryEvent, SharedConversionUpdateEvent } from "./shared/SharedConversion";
+import { SharedConversionSummary, SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
 import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
 
 contextBridge.exposeInMainWorld("electronAPI", {
@@ -102,17 +102,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
         enqueue: (assetId: SharedAssetId) => ipcRenderer.send(SharedIpcChannels.ConversionEnqueue, assetId),
         startAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStart),
         stopAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStop),
-        subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) =>
+        subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) =>
             ipcRenderer.on(
                 SharedIpcChannels.ConversionUpdated,
-                (e: IpcRendererEvent, event: SharedConversionUpdateEvent) => callback(event),
+                (e: IpcRendererEvent, event: SharedConversionUpdateIpcEvent) => callback(event),
             ),
         getState: () => ipcRenderer.invoke(SharedIpcChannels.ConversionGetState),
-        subscribeSummary: (callback: (event: SharedConversionSummaryEvent) => void) =>
-            ipcRenderer.on(
-                SharedIpcChannels.ConversionSummary,
-                (e: IpcRendererEvent, event: SharedConversionSummaryEvent) => callback(event),
-            ),
     },
 
     hotReload: {

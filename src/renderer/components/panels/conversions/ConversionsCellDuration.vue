@@ -1,7 +1,12 @@
 <template>
-    <UTooltip :text="`Took ${displayTime} to finish`">
-        <div>{{ displayTime }}</div>
-    </UTooltip>
+    <template v-if="props.endTime">
+        <UTooltip :text="`Took ${displayTime} to finish`">
+            <div>{{ displayTime }}</div>
+        </UTooltip>
+    </template>
+    <template v-else>
+        <div>...</div>
+    </template>
 </template>
 
 <script setup lang="ts">
@@ -9,10 +14,11 @@ import { floor } from "lodash";
 
 const props = defineProps<{
     startTime: Date;
-    endTime: Date;
+    endTime?: Date;
 }>();
 
 const displayTime = computed(() => {
+    if (!props.endTime) return undefined;
     const delta = props.endTime.getTime() - props.startTime.getTime();
     return `${floor(delta)}ms`;
 });

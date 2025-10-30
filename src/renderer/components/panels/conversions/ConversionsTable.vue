@@ -4,7 +4,7 @@
             :entries="entries"
             :columns="columns"
             neutral-highlight
-            @on-active-changed="(entry) => (conversionStore.activeHistory = entry)"
+            @on-active-changed="(entry) => (conversionStore.activeEvent = entry)"
             no-header
         />
     </UContextMenu>
@@ -13,31 +13,24 @@
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import { SharedConversionHistoryItem } from "Shared/SharedConversion.js";
+import { SharedConversionEvent } from "Shared/SharedConversion.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
-import ConversionsCellTime from "~/components/panels/conversions/ConversionsCellTime.vue";
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
 import MConversionStateBadge from "~/components/common/MConversionStateBadge.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import ConversionsCellAsset from "~/components/panels/conversions/ConversionsCellAsset.vue";
 
 const conversionStore = useAssetConversionStore();
-const assetListStore = useAssetListStore();
 
-const props = defineProps<{ history: SharedConversionHistoryItem[] }>();
+const props = defineProps<{ history: SharedConversionEvent[] }>();
 const entries = computed(() => props.history.toReversed());
 
-const columns: DataTableColumn<SharedConversionHistoryItem>[] = [
-    {
-        id: "done",
-        label: "",
-        cell: (entry) => h(ConversionsCellTime, { dateTime: entry.endTime }),
-        size: "auto",
-    },
+const columns: DataTableColumn<SharedConversionEvent>[] = [
     {
         id: "asset",
         label: "Asset",
-        cell: (entry) => h("span", assetListStore.assets.get(entry.assetId)?.def.displayName ?? "(unknown)"),
+        cell: (entry) => h(ConversionsCellAsset, { assetId: entry.assetId }),
         size: "1fr",
     },
     {
@@ -49,13 +42,17 @@ const columns: DataTableColumn<SharedConversionHistoryItem>[] = [
     {
         id: "status",
         label: "Status",
-        cell: (entry) => h(MConversionStateBadge, { state: entry.stateAfter, variant: "label" }),
+        cell: (entry) =>
+            h(MConversionStateBadge, {
+                state: entry.stateHistory[Math.max(entry.stateHistory.length - 1, 0)],
+                variant: "label",
+            }),
         size: "auto",
     },
 ];
 
 const items = computed<ContextMenuItem[][]>(() => {
-    const active = conversionStore.activeHistory;
+    const active = conversionStore.activeEvent;
 
     return [
         [

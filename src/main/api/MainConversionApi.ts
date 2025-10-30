@@ -1,10 +1,6 @@
 import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import {
-    SharedConversionGetStateReport,
-    SharedConversionSummaryEvent,
-    SharedConversionUpdateEvent,
-} from "Shared/SharedConversion.js";
+import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
 import {
     enqueueConversion,
@@ -24,15 +20,12 @@ export function registerConversionApi(): boolean {
     ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
         enqueueConversion(assetId, true);
     });
-    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateReport> => {
+    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateIpcReport> => {
         return { conversions: getConversionState() };
     });
     return true;
 }
 
-export function notifyConversionsUpdated(event: SharedConversionUpdateEvent): void {
+export function notifyConversionsUpdated(event: SharedConversionUpdateIpcEvent): void {
     getMainWindow()?.webContents.send(SharedIpcChannels.ConversionUpdated, event);
-}
-export function notifyConversionSummary(event: SharedConversionSummaryEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.ConversionSummary, event);
 }

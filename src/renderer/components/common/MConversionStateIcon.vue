@@ -17,7 +17,8 @@
     <UIcon
         v-if="state === SharedConversionState.InProgress"
         :name="AppDesign.Icons.ConversionStateInProgress"
-        class="text-info animate-spin"
+        class="text-info"
+        :class="{ 'animate-spin': !noAnimation }"
     />
     <UIcon
         v-if="state === SharedConversionState.Finished"
@@ -40,7 +41,7 @@
 import { SharedConversionState } from "Shared/SharedConversion.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-defineProps<{ state: SharedConversionState }>();
+defineProps<{ state: SharedConversionState; noAnimation?: boolean }>();
 </script>
 
 <style scoped></style>

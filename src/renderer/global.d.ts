@@ -16,9 +16,9 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import {
-    SharedConversionGetStateReport,
-    SharedConversionSummaryEvent,
-    SharedConversionUpdateEvent,
+    SharedConversionGetStateIpcReport,
+    SharedConversionSummary,
+    SharedConversionUpdateIpcEvent,
 } from "Shared/SharedConversion.js";
 import { SharedProjectFileEntry, SharedProjectListFilesReport } from "Shared/SharedFileListing.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
@@ -83,9 +83,8 @@ declare global {
                 enqueue: (assetId: SharedAssetId) => void;
                 startAgent: () => void;
                 stopAgent: () => void;
-                subscribeUpdated: (callback: (event: SharedConversionUpdateEvent) => void) => IpcRenderer;
-                getState: () => Promise<SharedConversionGetStateReport>;
-                subscribeSummary: (callback: (event: SharedConversionSummaryEvent) => void) => IpcRenderer;
+                subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) => IpcRenderer;
+                getState: () => Promise<SharedConversionGetStateIpcReport>;
             };
             hotReload: {
                 setEnabled: (enable: boolean) => void;

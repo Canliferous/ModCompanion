@@ -11,36 +11,44 @@
                 <MAssetTypeIcon :type="asset?.def?.type ?? SharedAssetTypes.Unknown" />
             </template>
         </UButton>
-        <div class="flex gap-2 items-center">
-            <MConversionStateBadge :state="item.stateBefore" />
-            <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
-            <MConversionStateBadge :state="item.stateAfter" />
+        <div class="flex gap-2 items-center flex-wrap">
+            <template v-for="(state, i) in event.stateHistory">
+                <MConversionStateBadge :state="state" noAnimation />
+                <UIcon
+                    v-if="i !== event.stateHistory.length - 1"
+                    :name="AppDesign.Icons.ArrowRight"
+                    class="text-neutral-500"
+                />
+            </template>
         </div>
         <div class="flex gap-2 items-center text-xs">
-            <ConversionsCellTime :date-time="item.startTime" />
+            <ConversionsCellTime :date-time="event.startTime" />
             <UIcon :name="AppDesign.Icons.ArrowRight" class="text-neutral-500" />
-            <ConversionsCellTime :date-time="item.endTime" />
-
-            <span class="flex">
-                (<ConversionsCellDuration :start-time="item.startTime" :end-time="item.endTime" />)
-            </span>
+            <template v-if="event.endTime">
+                <ConversionsCellTime :date-time="event.endTime" />
+                <span class="flex">
+                    (<ConversionsCellDuration :start-time="event.startTime" :end-time="event.endTime" />)
+                </span>
+            </template>
+            <template v-else>
+                <span>Ongoing...</span>
+            </template>
         </div>
 
-        <div class="text-xs bg-neutral-900 border border-accented overflow-y-scroll">
-            <pre class="whitespace-pre-wrap">{{ item.log }}</pre>
-        </div>
+        <MLogArea>{{ event.log }}</MLogArea>
     </div>
 </template>
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { SharedConversionEvent } from "Shared/SharedConversion.js";
 
 const assetListStore = useAssetListStore();
 
-const props = defineProps<{ item: SharedConversionHistoryItem }>();
+const props = defineProps<{ event: SharedConversionEvent }>();
 
-const asset = computed(() => assetListStore.getAssetById(props.item.assetId));
+const asset = computed(() => assetListStore.getAssetById(props.event.assetId));
 function handleClickAsset() {
     const id = asset.value?.def.id;
     if (id) {

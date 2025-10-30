@@ -1,10 +1,10 @@
 <template>
     <TooltipProvider>
-        <template v-if="conversionStore.activeHistory">
-            <ConversionDetailsRoot :item="conversionStore.activeHistory" />
+        <template v-if="conversionStore.activeEvent">
+            <ConversionDetailsRoot :event="conversionStore.activeEvent" />
         </template>
         <template v-else>
-            <div class="w-full h-full text-muted grid place-items-center">No conversion selected</div>
+            <div class="w-full h-full text-muted grid place-items-center">No event selected</div>
         </template>
     </TooltipProvider>
 </template>

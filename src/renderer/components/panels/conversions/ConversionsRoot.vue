@@ -1,6 +1,6 @@
 <template>
-    <template v-if="conversionStore.conversionHistory.length > 0">
-        <ConversionsTable :history="conversionStore.conversionHistory" />
+    <template v-if="conversionStore.conversionEvents.length > 0">
+        <ConversionsTable :history="conversionStore.conversionEvents" />
     </template>
 
     <template v-else>

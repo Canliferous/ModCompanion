@@ -1,21 +1,19 @@
 <template>
-    <UTooltip text="Conversion State">
-        <UBadge
-            :label="getConversionStateName(state)"
-            :color="getConversionStateColor(state)"
-            :variant="variant ?? 'subtle'"
-        >
-            <template #leading>
-                <MConversionStateIcon :state="state" />
-            </template>
-        </UBadge>
-    </UTooltip>
+    <UBadge
+        :label="getConversionStateName(state)"
+        :color="getConversionStateColor(state)"
+        :variant="variant ?? 'subtle'"
+    >
+        <template #leading>
+            <MConversionStateIcon :state="state" :noAnimation="noAnimation" />
+        </template>
+    </UBadge>
 </template>
 
 <script setup lang="ts">
 import { getConversionStateColor, getConversionStateName, SharedConversionState } from "Shared/SharedConversion.js";
 
-defineProps<{ state: SharedConversionState; variant?: string }>();
+defineProps<{ state: SharedConversionState; variant?: string; noAnimation?: boolean }>();
 </script>
 
 <style scoped></style>

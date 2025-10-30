@@ -55,29 +55,31 @@ export function getConversionStateColor(state: SharedConversionState): string {
 }
 
 export interface SharedConversion {
-    state: SharedConversionState;
     assetId: SharedAssetId;
+    state: SharedConversionState;
 }
 
-export interface SharedConversionHistoryItem {
+export interface SharedConversionEvent {
     assetId: SharedAssetId;
-    stateBefore: SharedConversionState;
-    stateAfter: SharedConversionState;
+    stateHistory: SharedConversionState[];
     startTime: Date;
-    endTime: Date;
+
+    /** When undefined, this is ongoing */
+    endTime?: Date;
     log: string;
 }
 
-export interface SharedConversionUpdateEvent {
+export interface SharedConversionUpdateIpcEvent {
     conversions: Map<SharedAssetId, SharedConversion>;
-    history: SharedConversionHistoryItem[];
+    events: SharedConversionEvent[];
+    summary: SharedConversionSummary;
 }
 
-export interface SharedConversionGetStateReport {
+export interface SharedConversionGetStateIpcReport {
     conversions: Map<SharedAssetId, SharedConversion>;
 }
 
-export interface SharedConversionSummaryEvent {
+export interface SharedConversionSummary {
     currentStatus: "working" | "idle";
     totalSum: number;
 }
