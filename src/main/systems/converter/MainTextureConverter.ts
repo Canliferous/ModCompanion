@@ -2,8 +2,6 @@ import { SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import { createVtf } from "../MainMaretfSystem.js";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
-import { AssetState, AssetStates } from "../MainConversionAgentSystem.js";
-import fs from "fs/promises";
 
 export async function convertTextureAsset(asset: SharedTextureAssetDefinition): Promise<string | undefined> {
     if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return undefined;
@@ -20,21 +18,4 @@ export async function convertTextureAsset(asset: SharedTextureAssetDefinition): 
     options = { ...options, ...asset.vtfOptions };
     console.log(`Converting texture ${srcFile} -> ${outFile}`, options);
     return createVtf(srcFile, outFile, options);
-}
-
-export async function determineTextureAssetState(asset: SharedTextureAssetDefinition): Promise<AssetState> {
-    if (asset.contentFiles === undefined || asset.contentFiles?.length !== 1) return AssetStates.Invalid;
-    if (asset.gameFiles === undefined || asset.gameFiles?.length !== 1) return AssetStates.Invalid;
-
-    const p = path.join(getAppConfig().gamePath, asset.gameFiles[0]);
-    try {
-        const stat = await fs.stat(p);
-        if (stat.isFile()) {
-            return AssetStates.HasOutputFiles;
-        } else {
-            return AssetStates.NoOutputFiles;
-        }
-    } catch (e) {
-        return AssetStates.NoOutputFiles;
-    }
 }

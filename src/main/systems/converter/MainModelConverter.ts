@@ -1,7 +1,6 @@
 import { SharedModelAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import * as child_process from "node:child_process";
 import { getAppConfig } from "../MainConfigSystem.js";
-import { AssetState, AssetStates } from "../MainConversionAgentSystem.js";
 import path from "path";
 
 export async function convertModelAsset(asset: SharedModelAssetDefinition): Promise<string | undefined> {
@@ -12,14 +11,6 @@ export async function convertModelAsset(asset: SharedModelAssetDefinition): Prom
 
     console.log(`Converting model ${fullQcFile}`);
     return createMdl(fullQcFile);
-}
-
-export async function determineModelAssetState(asset: SharedModelAssetDefinition): Promise<AssetState> {
-    const qcFile = asset.contentFiles?.find((f) => f.endsWith(".qc"));
-    if (!qcFile) return AssetStates.Invalid;
-
-    // TODO: Read mdl files
-    return AssetStates.HasOutputFiles; // Returning this for now so conversion agent doesn't trigger a conversion automatically
 }
 
 export async function createMdl(qcPath: string): Promise<string> {
