@@ -1,15 +1,25 @@
 import { defineStore } from "pinia";
-import { SharedConversion, SharedConversionHistoryItem, SharedConversionState } from "Shared/SharedConversion.js";
+import {
+    SharedConversion,
+    SharedConversionHistoryItem,
+    SharedConversionState,
+    SharedConversionSummaryEvent,
+} from "Shared/SharedConversion.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());
     const conversionHistory = ref<SharedConversionHistoryItem[]>([]);
     const activeHistory = ref<SharedConversionHistoryItem | undefined>();
+    const summary = ref<SharedConversionSummaryEvent>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
         conversions.value = event.conversions;
         conversionHistory.value = event.history;
+    });
+
+    window.electronAPI.conversion.subscribeSummary((event) => {
+        summary.value = event;
     });
 
     function getState(id: SharedAssetId): SharedConversionState {
@@ -28,5 +38,5 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { conversions, conversionHistory, activeHistory, getState, enqueue };
+    return { conversions, conversionHistory, activeHistory, summary, getState, enqueue };
 });

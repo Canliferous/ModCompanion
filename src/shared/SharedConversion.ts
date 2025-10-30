@@ -76,3 +76,8 @@ export interface SharedConversionUpdateEvent {
 export interface SharedConversionGetStateReport {
     conversions: Map<SharedAssetId, SharedConversion>;
 }
+
+export interface SharedConversionSummaryEvent {
+    currentStatus: "working" | "idle";
+    totalSum: number;
+}

@@ -9,7 +9,7 @@ import {
     SharedTextureAssetDefinition,
 } from "Shared/SharedAssetDefinition.js";
 import { SharedConversion, SharedConversionHistoryItem, SharedConversionState } from "Shared/SharedConversion.js";
-import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
+import { notifyConversionSummary, notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { convertTextureAsset, determineTextureAssetState } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 import { convertModelAsset, determineModelAssetState } from "./converter/MainModelConverter.js";
@@ -72,7 +72,7 @@ async function _enqueueStaleAssets(map: SharedAssetMap) {
 
 export function startConversionAgent(): void {
     if (!agentInterval) {
-        agentInterval = setInterval(_runAgent, 500);
+        agentInterval = setInterval(_runAgent, 50);
     }
 }
 
@@ -108,6 +108,11 @@ async function _runAgent(): Promise<void> {
     if (updated) {
         notifyConversionsUpdated({ conversions: conversionsMap, history: conversionHistory });
     }
+
+    notifyConversionSummary({
+        currentStatus: conversionJobs.size === 0 ? "idle" : "working",
+        totalSum: conversionHistory.length,
+    });
 }
 
 function _getAssetsToConvert(): SharedAssetId[] {

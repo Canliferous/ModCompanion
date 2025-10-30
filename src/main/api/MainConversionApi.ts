@@ -1,6 +1,10 @@
 import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedConversionGetStateReport, SharedConversionUpdateEvent } from "Shared/SharedConversion.js";
+import {
+    SharedConversionGetStateReport,
+    SharedConversionSummaryEvent,
+    SharedConversionUpdateEvent,
+} from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
 import {
     enqueueConversion,
@@ -28,4 +32,7 @@ export function registerConversionApi(): boolean {
 
 export function notifyConversionsUpdated(event: SharedConversionUpdateEvent): void {
     getMainWindow()?.webContents.send(SharedIpcChannels.ConversionUpdated, event);
+}
+export function notifyConversionSummary(event: SharedConversionSummaryEvent): void {
+    getMainWindow()?.webContents.send(SharedIpcChannels.ConversionSummary, event);
 }
