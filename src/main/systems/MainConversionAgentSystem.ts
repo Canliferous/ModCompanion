@@ -134,7 +134,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
     return result;
 }
 
-async function _startConversion(id: SharedAssetId): Promise<string | undefined> {
+async function _tryConversion(id: SharedAssetId): Promise<string | undefined> {
     const asset = getAssetFromId(id);
     const stateBefore = conversionsMap.get(id)?.state ?? SharedConversionState.Unknown;
     if (!asset) {
@@ -175,7 +175,7 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
 async function _startConversions(ids: SharedAssetId[]): Promise<void> {
     const promises: Promise<string | undefined>[] = [];
     for (const id of ids) {
-        promises.push(_startConversion(id));
+        promises.push(_tryConversion(id));
     }
 
     return Promise.allSettled(promises).then((p) => {
@@ -248,7 +248,9 @@ async function _updateStaleState(asset: SharedAssetDefinition): Promise<boolean>
         }
     }
 
-    if (assetState == AssetStates.HasOutputFiles && convState !== SharedConversionState.Finished) {
+    const stale = await _isAssetStale(asset);
+
+    if (assetState == AssetStates.HasOutputFiles && !stale && convState !== SharedConversionState.Finished) {
         _setState(asset.id, SharedConversionState.Finished);
         return true;
     }
