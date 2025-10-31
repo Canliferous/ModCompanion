@@ -6,32 +6,27 @@ import {
     SharedAssetGroupId,
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
-import {
-    deleteAssetGroup,
-    generateAssetGroupId,
-    scanAssetGroups,
-    writeAssetGroup,
-} from "../systems/MainAssetGroupsSystem.js";
+import { AssetGroupsSystem } from "../systems/MainAssetGroupsSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerAssetGroupsApi(): boolean {
     ipcMain.handle(
         SharedIpcChannels.AssetGroupsCreate,
         (event, groupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> => {
-            return writeAssetGroup(generateAssetGroupId(), groupDef);
+            return AssetGroupsSystem.write(AssetGroupsSystem.generateId(), groupDef);
         },
     );
     ipcMain.handle(
         SharedIpcChannels.AssetGroupsUpdate,
         (event, id: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> => {
-            return writeAssetGroup(id, groupDef);
+            return AssetGroupsSystem.write(id, groupDef);
         },
     );
     ipcMain.on(SharedIpcChannels.AssetGroupsForceRescan, (event): void => {
-        scanAssetGroups();
+        AssetGroupsSystem.scan();
     });
     ipcMain.on(SharedIpcChannels.AssetGroupsDelete, (event, groupId: SharedAssetGroupId): void => {
-        deleteAssetGroup(groupId);
+        AssetGroupsSystem.delete(groupId);
     });
 
     return true;

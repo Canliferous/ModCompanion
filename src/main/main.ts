@@ -6,7 +6,7 @@ import { MapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { MareTfSystem } from "./systems/MainMaretfSystem.js";
 import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
 import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
-import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
+import { AssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
 import { AssetWatcherSystem } from "./systems/MainAssetWatcherSystem.js";
 
@@ -26,7 +26,7 @@ const systems: System[] = [
     { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
     { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
     { name: "StrataInterop", initFunction: StrataInteropSystem.initSystem },
-    { name: "AssetGroups", initFunction: initAssetGroupsSystem },
+    { name: "AssetGroups", initFunction: AssetGroupsSystem.initSystem },
 ];
 
 async function startSystems() {

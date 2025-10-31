@@ -9,67 +9,62 @@ import { filename } from "pathe/utils";
 
 const groups: Map<SharedAssetGroupId, SharedAssetGroup> = new Map<SharedAssetGroupId, SharedAssetGroup>();
 
-export function getAssetGroupDir(): string {
+export const AssetGroupsSystem = {
+    async initSystem(): Promise<boolean> {
+        const dir = _getAssetGroupDir();
+        if (!existsSync(dir)) {
+            await fs.mkdir(dir);
+        }
+
+        return true;
+    },
+    generateId(): SharedAssetGroupId {
+        return v4();
+    },
+    async write(id: SharedAssetGroupId, assetGroupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> {
+        const filePath = path.join(_getAssetGroupDir(), id + ".json");
+        const contents = JSON.stringify(assetGroupDef);
+        await fs.writeFile(filePath, contents);
+        console.log("Wrote asset group", filePath, assetGroupDef);
+        return { filePath, def: assetGroupDef, id };
+    },
+    delete(id: SharedAssetGroupId) {
+        const filePath = path.join(_getAssetGroupDir(), id + ".json");
+        return fs.rm(filePath);
+    },
+    async scan() {
+        const startTime = new Date().getTime();
+        groups.clear();
+        const dir = _getAssetGroupDir();
+        const dirItems = await fs.readdir(dir);
+        for (const dirItem of dirItems) {
+            if (!dirItem.endsWith(".json")) continue;
+            const dirItemFull = path.join(dir, dirItem);
+            const stat = await fs.stat(dirItemFull);
+            if (!stat.isFile()) continue;
+
+            const id = filename(dirItem);
+            if (id === undefined) {
+                continue;
+            }
+            if (groups.has(id)) {
+                console.warn("Duplicate asset group id", id);
+                continue;
+            }
+
+            const fileContentsString = await fs.readFile(dirItemFull, "utf-8");
+            const fileContentObj = JSON.parse(fileContentsString);
+
+            groups.set(id, { filePath: dirItemFull, def: fileContentObj, id });
+        }
+
+        const endTime = new Date().getTime();
+        console.log(`Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
+
+        notifyAssetGroupsUpdated({ groups });
+    },
+};
+
+function _getAssetGroupDir(): string {
     return path.join(getAppConfig().contentPath, "_modcomp_asset_groups");
-}
-
-export async function initAssetGroupsSystem(): Promise<boolean> {
-    const dir = getAssetGroupDir();
-    if (!existsSync(dir)) {
-        await fs.mkdir(dir);
-    }
-
-    return true;
-}
-
-export function generateAssetGroupId(): SharedAssetGroupId {
-    return v4();
-}
-
-export async function writeAssetGroup(
-    id: SharedAssetGroupId,
-    assetGroupDef: SharedAssetGroupDefinition,
-): Promise<SharedAssetGroup> {
-    const filePath = path.join(getAssetGroupDir(), id + ".json");
-    const contents = JSON.stringify(assetGroupDef);
-    await fs.writeFile(filePath, contents);
-    console.log("Wrote asset group", filePath, assetGroupDef);
-    return { filePath, def: assetGroupDef, id };
-}
-
-export function deleteAssetGroup(id: SharedAssetGroupId) {
-    const filePath = path.join(getAssetGroupDir(), id + ".json");
-    return fs.rm(filePath);
-}
-
-export async function scanAssetGroups() {
-    const startTime = new Date().getTime();
-    groups.clear();
-    const dir = getAssetGroupDir();
-    const dirItems = await fs.readdir(dir);
-    for (const dirItem of dirItems) {
-        if (!dirItem.endsWith(".json")) continue;
-        const dirItemFull = path.join(dir, dirItem);
-        const stat = await fs.stat(dirItemFull);
-        if (!stat.isFile()) continue;
-
-        const id = filename(dirItem);
-        if (id === undefined) {
-            continue;
-        }
-        if (groups.has(id)) {
-            console.warn("Duplicate asset group id", id);
-            continue;
-        }
-
-        const fileContentsString = await fs.readFile(dirItemFull, "utf-8");
-        const fileContentObj = JSON.parse(fileContentsString);
-
-        groups.set(id, { filePath: dirItemFull, def: fileContentObj, id });
-    }
-
-    const endTime = new Date().getTime();
-    console.log(`Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
-
-    notifyAssetGroupsUpdated({ groups });
 }
