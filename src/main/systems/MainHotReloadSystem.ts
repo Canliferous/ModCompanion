@@ -4,38 +4,35 @@ import { StrataInteropSystem } from "./MainStrataInteropSystem.js";
 
 let hotReloadEnabled = false;
 
-export function initHotReloadSystem(): boolean {
-    return true;
-}
+export const HotReloadSystem = {
+    setEnabled(enabled: boolean): void {
+        hotReloadEnabled = enabled;
+    },
+    requestHotReload(assets: SharedAssetId[]): void {
+        if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
 
-export function setHotReloadEnabled(enabled: boolean): void {
-    hotReloadEnabled = enabled;
-}
+        let texturesToReload: string[] = [];
+        for (const assetId of assets) {
+            const asset = getAssetMap().get(assetId);
+            if (asset === undefined) continue;
 
-export function requestHotReload(assets: SharedAssetId[]): void {
-    if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
+            if (isTextureAsset(asset)) {
+                const files = asset.def.gameFiles;
+                if (files === undefined || files.length === 0) continue;
+                const fullVtfPath = files[0];
 
-    let texturesToReload: string[] = [];
-    for (const assetId of assets) {
-        const asset = getAssetMap().get(assetId);
-        if (asset === undefined) continue;
+                const sanitizedVtfPath = fullVtfPath.replace("materials/", "").replace(".vtf", "");
 
-        if (isTextureAsset(asset)) {
-            const files = asset.def.gameFiles;
-            if (files === undefined || files.length === 0) continue;
-            const fullVtfPath = files[0];
-
-            const sanitizedVtfPath = fullVtfPath.replace("materials/", "").replace(".vtf", "");
-
-            texturesToReload.push(sanitizedVtfPath);
+                texturesToReload.push(sanitizedVtfPath);
+            }
         }
-    }
 
-    // Get rid of duplicates
-    texturesToReload = Array.from(new Set(texturesToReload));
+        // Get rid of duplicates
+        texturesToReload = Array.from(new Set(texturesToReload));
 
-    for (const vtf of texturesToReload) {
-        console.log("Reloading texture", vtf);
-        StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
-    }
-}
+        for (const vtf of texturesToReload) {
+            console.log("Reloading texture", vtf);
+            StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
+        }
+    },
+};

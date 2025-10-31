@@ -6,7 +6,6 @@ import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
-import { initHotReloadSystem } from "./systems/MainHotReloadSystem.js";
 import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
 import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
@@ -27,7 +26,6 @@ const systems: System[] = [
     { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
     { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
     { name: "StrataInterop", initFunction: StrataInteropSystem.initSystem },
-    { name: "HotReload", initFunction: initHotReloadSystem },
     { name: "AssetGroups", initFunction: initAssetGroupsSystem },
 ];
 
