@@ -3,12 +3,12 @@ import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
-import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.js";
 import { MareTfSystem } from "./systems/MainMaretfSystem.js";
 import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
 import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
 import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
+import { AssetWatcherSystem } from "./systems/MainAssetWatcherSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -21,7 +21,7 @@ const systems: System[] = [
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
     { name: "MapCompile", initFunction: initMapCompileSystem },
-    { name: "AssetScanner", initFunction: initAssetScannerSystem },
+    { name: "AssetWatcher", initFunction: AssetWatcherSystem.initSystem },
     { name: "MareTf", initFunction: MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
     { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },

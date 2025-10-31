@@ -10,14 +10,14 @@ import {
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { convertTextureAsset } from "./converter/MainTextureConverter.js";
-import { requestHotReload } from "./MainHotReloadSystem.js";
 import { convertModelAsset } from "./converter/MainModelConverter.js";
 import fs from "fs/promises";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
-import MainAssetFileWatcher from "./assets/MainAssetFileWatcher.js";
 import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./ConversionEventSystem.js";
+import { HotReloadSystem } from "./MainHotReloadSystem.js";
+import { AssetWatcherSystem } from "./MainAssetWatcherSystem.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -153,7 +153,7 @@ async function _startConversions(ids: SharedAssetId[]): Promise<void> {
     }
 
     return Promise.allSettled(promises).then((_) => {
-        requestHotReload(ids);
+        HotReloadSystem.requestHotReload(ids);
     });
 }
 
@@ -203,14 +203,14 @@ async function _touchAsset(asset: SharedAssetDefinition) {
     for (const contentFile of asset.contentFiles) {
         const p = makeContentPathAbsolute(contentFile);
 
-        MainAssetFileWatcher.ignore(p);
+        AssetWatcherSystem.ignore(p);
         await fs.utimes(p, time, time);
     }
 
     for (const gameFile of asset.gameFiles) {
         const p = makeGamePathAbsolute(gameFile);
 
-        MainAssetFileWatcher.ignore(p);
+        AssetWatcherSystem.ignore(p);
         await fs.utimes(p, time, time);
     }
 }
