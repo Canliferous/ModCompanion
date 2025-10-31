@@ -4,7 +4,7 @@ import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import { MapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { MareTfSystem } from "./systems/MainMaretfSystem.js";
-import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
+import { ConversionAgentSystem } from "./systems/MainConversionAgentSystem.js";
 import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
 import { AssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";

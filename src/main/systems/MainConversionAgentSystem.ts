@@ -15,7 +15,7 @@ import fs from "fs/promises";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
 import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
-import { ConversionEventSystem } from "./ConversionEventSystem.js";
+import { ConversionEventSystem } from "./MainConversionEventSystem.js";
 import { HotReloadSystem } from "./MainHotReloadSystem.js";
 import { AssetWatcherSystem } from "./MainAssetWatcherSystem.js";
 

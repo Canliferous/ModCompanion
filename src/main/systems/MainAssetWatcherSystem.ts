@@ -2,7 +2,7 @@ import chokidar, { FSWatcher } from "chokidar";
 import MainSourceFs from "../helpers/MainSourceFs.js";
 import MainAssetRepository from "./assets/MainAssetRepository.js";
 import { notifyAssetsUpdated } from "../api/MainAssetApi.js";
-import { ConversionAgentSystem } from "./MainConversionSystems.js";
+import { ConversionAgentSystem } from "./MainConversionAgentSystem.js";
 import { getAppConfig } from "./MainConfigSystem.js";
 
 const ignoreMap: Map<string, number> = new Map<string, number>();
