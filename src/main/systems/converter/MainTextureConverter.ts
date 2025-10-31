@@ -1,5 +1,5 @@
 import { SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import { createVtf } from "../MainMaretfSystem.js";
+import { MareTfSystem } from "../MainMaretfSystem.js";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 
@@ -16,5 +16,5 @@ export async function convertTextureAsset(asset: SharedTextureAssetDefinition): 
 
     let options = config.assetDefaults?.vtfOptions ?? {};
     options = { ...options, ...asset.vtfOptions };
-    return createVtf(srcFile, outFile, options);
+    return MareTfSystem.createVtf(srcFile, outFile, options);
 }
