@@ -18,6 +18,7 @@ import crypto from "node:crypto";
 import { getAppConfig } from "./MainConfigSystem.js";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
+import MainAssetFileWatcher from "./assets/MainAssetFileWatcher.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -153,11 +154,11 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     const timeoutPromise = _convertAsset(asset.def);
     _pushNewEvent(asset.def.id, startTime, previousState, SharedConversionState.InProgress);
     timeoutPromise.catch((a) => {
-        _onJobPromiseDone(id, startTime, SharedConversionState.Failed, a);
+        _onJobPromiseDone(id, SharedConversionState.Failed, a);
     });
     timeoutPromise.then((log) => {
         const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;
-        _onJobPromiseDone(id, startTime, newState, log);
+        _onJobPromiseDone(id, newState, log);
         _touchAsset(asset.def);
     });
     conversionJobs.set(id, timeoutPromise);
@@ -170,7 +171,7 @@ async function _startConversions(ids: SharedAssetId[]): Promise<void> {
         promises.push(_startConversion(id));
     }
 
-    return Promise.allSettled(promises).then((p) => {
+    return Promise.allSettled(promises).then((_) => {
         requestHotReload(ids);
     });
 }
@@ -186,21 +187,11 @@ async function _convertAsset(asset: SharedAssetDefinition): Promise<string | und
     }
 }
 
-function _onJobPromiseDone(
-    id: SharedAssetId,
-    startTime: Date,
-    stateAfter: SharedConversionState,
-    log: string | undefined,
-) {
-    const endTime = new Date();
-    const durationMs = endTime.getTime() - startTime.getTime();
-
-    console.log(`Conversion Job completed as ${stateAfter} ${id} took ${durationMs}ms`);
+function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState, log: string | undefined) {
     conversionJobs.delete(id);
     _setState(id, stateAfter);
     _updateLatestEvent(id, (event) => {
-        event.stateHistory.push(stateAfter);
-        event.endTime = endTime;
+        event.endTime = new Date();
         if (log) {
             event.log += log;
         }
@@ -226,11 +217,15 @@ async function _touchAsset(asset: SharedAssetDefinition) {
     const time = Math.floor(new Date().getTime() / 1000);
     for (const contentFile of asset.contentFiles) {
         const p = makeContentPathAbsolute(contentFile);
+
+        MainAssetFileWatcher.ignore(p);
         await fs.utimes(p, time, time);
     }
 
     for (const gameFile of asset.gameFiles) {
         const p = makeGamePathAbsolute(gameFile);
+
+        MainAssetFileWatcher.ignore(p);
         await fs.utimes(p, time, time);
     }
 }

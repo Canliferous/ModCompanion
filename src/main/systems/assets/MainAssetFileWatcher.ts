@@ -5,6 +5,8 @@ import { notifyAssetsUpdated } from "../../api/MainAssetApi.js";
 import { enqueueConversion } from "../MainConversionAgentSystem.js";
 import MainSourceFs from "../../helpers/MainSourceFs.js";
 
+const ignoreMap: Map<string, number> = new Map<string, number>();
+
 let watcher: FSWatcher | undefined = undefined;
 export function startFileWatcher(): boolean {
     const config = getAppConfig();
@@ -17,9 +19,18 @@ export function startFileWatcher(): boolean {
     return true;
 }
 
+export function ignore(filePath: string, ignoreCount = 1) {
+    ignoreMap.set(filePath, ignoreCount);
+}
+
 function _handleAdded(filePath: string): void {}
 
 function _handleChanged(filePath: string): void {
+    const ignoreCount = ignoreMap.get(filePath);
+    if (ignoreCount !== undefined && ignoreCount > 0) {
+        ignoreMap.set(filePath, ignoreCount - 1);
+        return;
+    }
     const relativePath = MainSourceFs.getContentRelativePath(filePath);
     const asset = MainAssetRepository.getAssetFromFile(relativePath);
     if (!asset) return;
@@ -33,4 +44,5 @@ function _handleDeleted(filePath: string): void {}
 
 export default {
     startFileWatcher,
+    ignore,
 };
