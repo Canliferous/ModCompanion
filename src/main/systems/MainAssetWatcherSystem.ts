@@ -14,7 +14,7 @@ export const AssetWatcherSystem = {
     },
     startFileWatcher(): boolean {
         const config = getAppConfig();
-        watcher = chokidar.watch(config.textureSourcePath, { ignoreInitial: true });
+        watcher = chokidar.watch(config.textureSourcePath, { ignoreInitial: true, awaitWriteFinish: true });
 
         watcher.on("add", _handleAdded);
         watcher.on("change", _handleChanged);
