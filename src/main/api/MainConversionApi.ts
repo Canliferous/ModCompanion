@@ -3,6 +3,7 @@ import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
 import {
+    clearConversionEvents,
     enqueueConversion,
     getConversionState,
     startConversionAgent,
@@ -22,6 +23,9 @@ export function registerConversionApi(): boolean {
     });
     ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateIpcReport> => {
         return { conversions: getConversionState() };
+    });
+    ipcMain.on(SharedIpcChannels.ConversionClearEvents, (event) => {
+        clearConversionEvents();
     });
     return true;
 }

@@ -85,6 +85,7 @@ declare global {
                 stopAgent: () => void;
                 subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) => IpcRenderer;
                 getState: () => Promise<SharedConversionGetStateIpcReport>;
+                clearEvents: () => void;
             };
             hotReload: {
                 setEnabled: (enable: boolean) => void;

@@ -27,7 +27,7 @@ const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAss
 
 let agentInterval: NodeJS.Timeout | undefined;
 const conversionsMap: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
-const conversionEvents: SharedConversionEvent[] = [];
+let conversionEvents: SharedConversionEvent[] = [];
 const assetChecksums: Map<SharedAssetId, string> = new Map<SharedAssetId, string>();
 
 export function initConvertAgentSystem(): boolean {
@@ -36,6 +36,10 @@ export function initConvertAgentSystem(): boolean {
         _initializeAssetStates(event.assets);
     });
     return true;
+}
+
+export function clearConversionEvents() {
+    conversionEvents = [];
 }
 
 async function _initializeAssetChecksums(map: SharedAssetMap) {
@@ -83,6 +87,10 @@ export function getConversionState(): Map<string, SharedConversion> {
 }
 
 export function enqueueConversion(assetId: string, force: boolean = false): void {
+    if (_getState(assetId) === SharedConversionState.InProgress) {
+        return;
+    }
+
     if (force) {
         _setState(assetId, SharedConversionState.PendingForced);
     } else {
@@ -129,7 +137,7 @@ function _getAssetsToConvert(): SharedAssetId[] {
 
 async function _startConversion(id: SharedAssetId): Promise<string | undefined> {
     const asset = getAssetFromId(id);
-    const previousState = conversionsMap.get(id)?.state ?? SharedConversionState.Unknown;
+    const previousState = _getState(id);
     if (!asset) {
         _setState(id, SharedConversionState.Unknown);
         return undefined;
@@ -208,6 +216,10 @@ function _setState(id: SharedAssetId, state: SharedConversionState) {
     _updateLatestEvent(id, (event) => {
         event.stateHistory.push(state);
     });
+}
+
+function _getState(id: SharedAssetId) {
+    return conversionsMap.get(id)?.state ?? SharedConversionState.Unknown;
 }
 
 async function _touchAsset(asset: SharedAssetDefinition) {

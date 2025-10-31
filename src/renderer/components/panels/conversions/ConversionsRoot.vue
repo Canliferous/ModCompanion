@@ -9,6 +9,7 @@
         </template>
         <div class="flex gap-1 items-center p-1">
             <UButton size="xs" label="Convert All" @click="handleConvertAll" />
+            <UButton size="xs" label="Clear" @click="handleClear" />
         </div>
     </div>
 </template>
@@ -23,6 +24,10 @@ function handleConvertAll() {
     for (const assetId of assetIds) {
         conversionStore.enqueue(assetId);
     }
+}
+
+function handleClear() {
+    window.electronAPI.conversion.clearEvents();
 }
 </script>
 
