@@ -6,13 +6,13 @@ import {
     SharedAssetGroupId,
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
-import { getMainWindow } from "../systems/MainWindowSystem.js";
 import {
-    writeAssetGroup,
-    scanAssetGroups,
-    generateAssetGroupId,
     deleteAssetGroup,
+    generateAssetGroupId,
+    scanAssetGroups,
+    writeAssetGroup,
 } from "../systems/MainAssetGroupsSystem.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerAssetGroupsApi(): boolean {
     ipcMain.handle(
@@ -38,5 +38,5 @@ export function registerAssetGroupsApi(): boolean {
 }
 
 export function notifyAssetGroupsUpdated(event: SharedAssetGroupRescanEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.AssetGroupsRescanned, event);
+    IpcHelper.send(SharedIpcChannels.AssetGroupsRescanned, event);
 }

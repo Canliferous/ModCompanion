@@ -11,23 +11,23 @@ let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;
 let preventClose = true;
 
-export function getMainWindow(): BrowserWindow | undefined {
-    return mainWindow;
-}
-
-export async function initWindowSystem(): Promise<boolean> {
-    await app.whenReady();
-    // If needed, add a way to start the app without tray
-    const noTray = false;
-    const hasTray = noTray || _createTray();
-    _createWindow(noTray ? false : hasTray);
-    _createShortcuts();
-    return true;
-}
-
-export function disablePreventClose(): void {
-    preventClose = false;
-}
+export const WindowSystem = {
+    getMainWindow(): BrowserWindow | undefined {
+        return mainWindow;
+    },
+    async initSystem(): Promise<boolean> {
+        await app.whenReady();
+        // If needed, add a way to start the app without tray
+        const noTray = false;
+        const hasTray = noTray || _createTray();
+        _createWindow(noTray ? false : hasTray);
+        _createShortcuts();
+        return true;
+    },
+    disablePreventClose(): void {
+        preventClose = false;
+    },
+};
 
 interface WindowRect {
     x?: number;
@@ -113,7 +113,7 @@ function _createTray(): boolean {
     const iconPath = _getAppIconPath();
     if (!fs.existsSync(iconPath)) {
         console.warn(`App icon ${iconPath} does not exist. Have to start without tray!`);
-        disablePreventClose();
+        WindowSystem.disablePreventClose();
         return false;
     }
 

@@ -1,10 +1,10 @@
-import { ipcMain, app } from "electron";
+import { app, ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { disablePreventClose } from "../systems/MainWindowSystem.js";
+import { WindowSystem } from "../systems/MainWindowSystem.js";
 
 export function registerAppExitApi(): boolean {
-    ipcMain.on(SharedIpcChannels.AppExit, (event) => {
-        disablePreventClose();
+    ipcMain.on(SharedIpcChannels.AppExit, () => {
+        WindowSystem.disablePreventClose();
         app.quit();
     });
 

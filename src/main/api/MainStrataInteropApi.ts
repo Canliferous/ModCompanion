@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { sendStrataCommand } from "../systems/MainStrataInteropSystem.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerStrataInteropApi(): boolean {
     ipcMain.on(SharedIpcChannels.InteropSendCommand, (event, command: string) => {
@@ -12,13 +12,13 @@ export function registerStrataInteropApi(): boolean {
 }
 
 export function notifyStrataInteropConnected(): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.InteropConnected);
+    IpcHelper.send(SharedIpcChannels.InteropConnected);
 }
 
 export function notifyStrataInteropDisconnected(): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.InteropDisconnected);
+    IpcHelper.send(SharedIpcChannels.InteropDisconnected);
 }
 
 export function notifyStrataInteropLog(message: string): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.InteropLog, message);
+    IpcHelper.send(SharedIpcChannels.InteropLog, message);
 }

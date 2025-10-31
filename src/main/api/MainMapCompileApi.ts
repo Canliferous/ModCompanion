@@ -1,9 +1,9 @@
-import { ipcMain, IpcMainInvokeEvent } from "electron";
-import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
-import { getMainWindow } from "../systems/MainWindowSystem.js";
+import { ipcMain } from "electron";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { enqueueMap, getMapQueue } from "../systems/MainMapCompileSystem.js";
-import { SharedMapCompileLogEvent } from "../../shared/SharedMapCompileLogEvent.js";
-import { SharedMapCompileProgressEvent } from "../../shared/SharedMapCompileProgressEvent.js";
+import { SharedMapCompileLogEvent } from "Shared/SharedMapCompileLogEvent.js";
+import { SharedMapCompileProgressEvent } from "Shared/SharedMapCompileProgressEvent.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerMapCompileApi(): boolean {
     ipcMain.on(SharedIpcChannels.MapEnqueue, (event, mapPath: string) => enqueueMap(mapPath));
@@ -11,13 +11,13 @@ export function registerMapCompileApi(): boolean {
 }
 
 export function notifyQueueUpdated(): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.MapQueueUpdated, getMapQueue());
+    IpcHelper.send(SharedIpcChannels.MapQueueUpdated, getMapQueue());
 }
 
 export function notifyCompileLog(event: SharedMapCompileLogEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.MapCompileLog, event);
+    IpcHelper.send(SharedIpcChannels.MapCompileLog, event);
 }
 
 export function notifyCompileProgress(event: SharedMapCompileProgressEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.MapCompileProgress, event);
+    IpcHelper.send(SharedIpcChannels.MapCompileProgress, event);
 }

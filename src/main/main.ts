@@ -1,5 +1,5 @@
 import { app, dialog } from "electron";
-import { initWindowSystem } from "./systems/MainWindowSystem.js";
+import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
@@ -21,7 +21,7 @@ const systems: System[] = [
     { name: "Config", initFunction: initConfigSystem },
     { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
-    { name: "Window", initFunction: initWindowSystem },
+    { name: "Window", initFunction: WindowSystem.initSystem },
     { name: "MapCompile", initFunction: initMapCompileSystem },
     { name: "AssetScanner", initFunction: initAssetScannerSystem },
     { name: "MareTf", initFunction: initMateTfSystem },

@@ -1,4 +1,3 @@
-import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { ipcMain } from "electron";
 import MainAssetRepository from "../systems/assets/MainAssetRepository.js";
@@ -7,11 +6,11 @@ import {
     SharedAssetAddedEvent,
     SharedAssetDefinition,
     SharedAssetId,
-    SharedAssetMap,
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
 } from "Shared/SharedAssetDefinition.js";
 import { SharedCreateAssetReport, SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerAssetApi(): boolean {
     ipcMain.on(SharedIpcChannels.AssetForceRescan, (event) => {
@@ -79,7 +78,7 @@ export function subscribeAssetsRescanned(event: RescannedCallback) {
     rescannedSubscribers.push(event);
 }
 export function notifyAssetsRescanned(event: SharedAssetRescanEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.AssetRescanned, event);
+    IpcHelper.send(SharedIpcChannels.AssetRescanned, event);
 
     for (const rescannedSubscriber of rescannedSubscribers) {
         rescannedSubscriber(event);
@@ -87,13 +86,13 @@ export function notifyAssetsRescanned(event: SharedAssetRescanEvent): void {
 }
 
 export function notifyAssetsAdded(event: SharedAssetAddedEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.AssetAdded, event);
+    IpcHelper.send(SharedIpcChannels.AssetAdded, event);
 }
 
 export function notifyAssetsUpdated(event: SharedAssetUpdatedEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.AssetUpdated, event);
+    IpcHelper.send(SharedIpcChannels.AssetUpdated, event);
 }
 
-export function notifyNavigateToAssetHash(assetHash: string): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.AssetNavigateToHash, assetHash);
+export function notifyNavigateToAssetId(assetId: string): void {
+    IpcHelper.send(SharedIpcChannels.AssetNavigateToId, assetId);
 }

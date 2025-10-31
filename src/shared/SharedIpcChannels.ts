@@ -23,7 +23,7 @@ export const SharedIpcChannels = {
     AssetAdded: "asset_added",
     AssetUpdated: "asset_updated",
     AssetForceRescan: "asset_force_rescan",
-    AssetNavigateToHash: "asset_navigate_to_hash",
+    AssetNavigateToId: "asset_navigate_to_id",
     AssetCreate: "asset_create",
     AssetUpdate: "asset_update",
 
@@ -50,3 +50,4 @@ export const SharedIpcChannels = {
     AssetGroupsUpdate: "assetgroup_update",
     AssetGroupsDelete: "assetgroup_delete",
 } as const;
+export type SharedIpcChannel = (typeof SharedIpcChannels)[keyof typeof SharedIpcChannels];

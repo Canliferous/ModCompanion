@@ -1,10 +1,10 @@
-import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
 import { ConversionAgentSystem } from "../systems/MainConversionSystems.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { ConversionEventSystem } from "../systems/ConversionEventSystem.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerConversionApi(): boolean {
     ipcMain.on(SharedIpcChannels.ConversionAgentStart, (event) => {
@@ -26,5 +26,5 @@ export function registerConversionApi(): boolean {
 }
 
 export function notifyConversionsUpdated(event: SharedConversionUpdateIpcEvent): void {
-    getMainWindow()?.webContents.send(SharedIpcChannels.ConversionUpdated, event);
+    IpcHelper.send(SharedIpcChannels.ConversionUpdated, event);
 }

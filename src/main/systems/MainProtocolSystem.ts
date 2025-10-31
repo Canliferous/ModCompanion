@@ -1,5 +1,5 @@
 import { app, protocol, net } from "electron";
-import { notifyNavigateToAssetHash } from "../api/MainAssetApi.js";
+import { notifyNavigateToAssetId } from "../api/MainAssetApi.js";
 
 export const protocolName = "modcomp";
 export const protocolCommandNavigateToAsset = "asset";
@@ -59,10 +59,10 @@ function _handleProtocolCommand(cmd: Command): Response {
     }
 }
 
-function _cmdNavigateToAsset(assetHash: string | undefined): Response {
-    if (assetHash === undefined) {
+function _cmdNavigateToAsset(assetId: string | undefined): Response {
+    if (assetId === undefined) {
         return Response.error();
     }
-    notifyNavigateToAssetHash(assetHash);
+    notifyNavigateToAssetId(assetId);
     return new Response();
 }
