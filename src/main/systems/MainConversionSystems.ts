@@ -7,18 +7,17 @@ import {
     SharedModelAssetDefinition,
     SharedTextureAssetDefinition,
 } from "Shared/SharedAssetDefinition.js";
-import { SharedConversion, SharedConversionEvent, SharedConversionState } from "Shared/SharedConversion.js";
+import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
 import { convertTextureAsset } from "./converter/MainTextureConverter.js";
 import { requestHotReload } from "./MainHotReloadSystem.js";
 import { convertModelAsset } from "./converter/MainModelConverter.js";
-import path from "path";
 import fs from "fs/promises";
-import crypto from "node:crypto";
-import { getAppConfig } from "./MainConfigSystem.js";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
 import MainAssetFileWatcher from "./assets/MainAssetFileWatcher.js";
+import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
+import { ConversionEventSystem } from "./ConversionEventSystem.js";
 
 const MAX_PARALLEL_JOBS = 1;
 
@@ -27,74 +26,48 @@ const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAss
 
 let agentInterval: NodeJS.Timeout | undefined;
 const conversionsMap: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
-let conversionEvents: SharedConversionEvent[] = [];
-const assetChecksums: Map<SharedAssetId, string> = new Map<SharedAssetId, string>();
 
-export function initConvertAgentSystem(): boolean {
-    subscribeAssetsRescanned((event) => {
-        _initializeAssetChecksums(event.assets);
-        _initializeAssetStates(event.assets);
-    });
-    return true;
-}
-
-export function clearConversionEvents() {
-    conversionEvents = [];
-}
-
-async function _initializeAssetChecksums(map: SharedAssetMap) {
-    const startTime = new Date();
-    {
-        const assets = map.values();
-        const promises = assets.map(async (asset) => {
-            if (!asset.def.contentFiles) return;
-
-            const sum = await _createAssetChecksum(asset.def.contentFiles);
-            assetChecksums.set(asset.def.id, sum);
+export const ConversionAgentSystem = {
+    initSystem(): boolean {
+        subscribeAssetsRescanned((event) => {
+            _initStates(event.assets);
         });
+        return true;
+    },
+    startAgent(): void {
+        if (!agentInterval) {
+            agentInterval = setInterval(_runAgent, 50);
+        }
+    },
+    stopAgent(): void {
+        if (agentInterval) {
+            clearInterval(agentInterval);
+        }
+    },
+    getConversionsMap(): Map<string, SharedConversion> {
+        return conversionsMap;
+    },
+    enqueue(assetId: string, force: boolean = false): void {
+        if (_getState(assetId) === SharedConversionState.InProgress) {
+            return;
+        }
 
-        await Promise.allSettled(promises);
-    }
-    const endTime = new Date();
-    console.log(`Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`);
-}
+        if (force) {
+            _setState(assetId, SharedConversionState.PendingForced);
+        } else {
+            _setState(assetId, SharedConversionState.Pending);
+        }
+    },
+};
 
-async function _initializeAssetStates(map: SharedAssetMap) {
+async function _initStates(map: SharedAssetMap) {
     for (const asset of map.values()) {
         const stale = await _isAssetStale(asset.def);
         if (stale) {
-            enqueueConversion(asset.def.id);
+            ConversionAgentSystem.enqueue(asset.def.id);
         } else {
             _setState(asset.def.id, SharedConversionState.NoChange);
         }
-    }
-}
-
-export function startConversionAgent(): void {
-    if (!agentInterval) {
-        agentInterval = setInterval(_runAgent, 50);
-    }
-}
-
-export function stopConversionAgent(): void {
-    if (agentInterval) {
-        clearInterval(agentInterval);
-    }
-}
-
-export function getConversionState(): Map<string, SharedConversion> {
-    return conversionsMap;
-}
-
-export function enqueueConversion(assetId: string, force: boolean = false): void {
-    if (_getState(assetId) === SharedConversionState.InProgress) {
-        return;
-    }
-
-    if (force) {
-        _setState(assetId, SharedConversionState.PendingForced);
-    } else {
-        _setState(assetId, SharedConversionState.Pending);
     }
 }
 
@@ -106,10 +79,10 @@ async function _runAgent(): Promise<void> {
 
     notifyConversionsUpdated({
         conversions: conversionsMap,
-        events: conversionEvents,
+        events: ConversionEventSystem.conversionEvents,
         summary: {
             currentStatus: conversionJobs.size === 0 ? "idle" : "working",
-            totalSum: conversionEvents.length,
+            totalSum: ConversionEventSystem.conversionEvents.length,
         },
     });
 }
@@ -147,7 +120,7 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     const force = previousState === SharedConversionState.PendingForced;
 
     if (!force) {
-        const hasChanged = await _hasAssetChanged(asset.def);
+        const hasChanged = await ConversionChecksumSystem.hasChanged(asset.def);
         if (!hasChanged) {
             const isStale = await _isAssetStale(asset.def);
             if (!isStale) {
@@ -160,7 +133,7 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     console.log("Converting asset", asset.def.displayName, asset.def.id);
     const startTime = new Date();
     const timeoutPromise = _convertAsset(asset.def);
-    _pushNewEvent(asset.def.id, startTime, previousState, SharedConversionState.InProgress);
+    ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState, SharedConversionState.InProgress);
     timeoutPromise.catch((a) => {
         _onJobPromiseDone(id, SharedConversionState.Failed, a);
     });
@@ -198,7 +171,7 @@ async function _convertAsset(asset: SharedAssetDefinition): Promise<string | und
 function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState, log: string | undefined) {
     conversionJobs.delete(id);
     _setState(id, stateAfter);
-    _updateLatestEvent(id, (event) => {
+    ConversionEventSystem.updateLatestEvent(id, (event) => {
         event.endTime = new Date();
         if (log) {
             event.log += log;
@@ -213,7 +186,7 @@ function _setState(id: SharedAssetId, state: SharedConversionState) {
         conversionsMap.set(id, { assetId: id, state });
     }
 
-    _updateLatestEvent(id, (event) => {
+    ConversionEventSystem.updateLatestEvent(id, (event) => {
         event.stateHistory.push(state);
     });
 }
@@ -266,59 +239,5 @@ async function _getModifiedTime(filePath: string): Promise<number | undefined> {
     } catch (e) {
         // We don't care about the error. If stat fails it probably doesn't exist which is an expected state
         return undefined;
-    }
-}
-
-async function _hasAssetChanged(asset: SharedAssetDefinition): Promise<boolean> {
-    if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
-
-    const newSum = await _createAssetChecksum(asset.contentFiles);
-    const oldSum = assetChecksums.get(asset.id);
-
-    if (newSum !== oldSum) {
-        assetChecksums.set(asset.id, newSum);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-async function _createAssetChecksum(contentFiles: string[]) {
-    const contentPath = getAppConfig().contentPath;
-
-    const promises = contentFiles.map(async (f) => {
-        const p = path.join(contentPath, f);
-        const fileContents = await fs.readFile(p, "base64");
-        const hash = crypto.createHash("sha1").update(fileContents).digest("base64");
-        return hash;
-    });
-
-    const results = await Promise.all(promises);
-    const sum = results.join();
-    return sum;
-}
-
-function _pushNewEvent(
-    assetId: SharedAssetId,
-    startTime: Date,
-    previousState: SharedConversionState,
-    currentState: SharedConversionState,
-) {
-    conversionEvents.push({
-        assetId,
-        stateHistory: [previousState, currentState],
-        startTime,
-        log: "",
-    });
-}
-
-function _getLatestEvent(assetId: SharedAssetId): SharedConversionEvent | undefined {
-    return conversionEvents.findLast((a) => a.assetId === assetId);
-}
-
-function _updateLatestEvent(assetId: SharedAssetId, updatePredicate: (event: SharedConversionEvent) => void): void {
-    const event = _getLatestEvent(assetId);
-    if (event) {
-        updatePredicate(event);
     }
 }

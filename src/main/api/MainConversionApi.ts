@@ -2,30 +2,25 @@ import { getMainWindow } from "../systems/MainWindowSystem.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
-import {
-    clearConversionEvents,
-    enqueueConversion,
-    getConversionState,
-    startConversionAgent,
-    stopConversionAgent,
-} from "../systems/MainConversionAgentSystem.js";
+import { ConversionAgentSystem } from "../systems/MainConversionSystems.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
+import { ConversionEventSystem } from "../systems/ConversionEventSystem.js";
 
 export function registerConversionApi(): boolean {
     ipcMain.on(SharedIpcChannels.ConversionAgentStart, (event) => {
-        startConversionAgent();
+        ConversionAgentSystem.startAgent();
     });
     ipcMain.on(SharedIpcChannels.ConversionAgentStop, (event) => {
-        stopConversionAgent();
+        ConversionAgentSystem.stopAgent();
     });
     ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
-        enqueueConversion(assetId, true);
+        ConversionAgentSystem.enqueue(assetId, true);
     });
     ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateIpcReport> => {
-        return { conversions: getConversionState() };
+        return { conversions: ConversionAgentSystem.getConversionsMap() };
     });
     ipcMain.on(SharedIpcChannels.ConversionClearEvents, (event) => {
-        clearConversionEvents();
+        ConversionEventSystem.clearEvents();
     });
     return true;
 }

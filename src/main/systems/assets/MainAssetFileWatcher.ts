@@ -2,8 +2,8 @@ import chokidar, { FSWatcher } from "chokidar";
 import { getAppConfig } from "../MainConfigSystem.js";
 import MainAssetRepository from "./MainAssetRepository.js";
 import { notifyAssetsUpdated } from "../../api/MainAssetApi.js";
-import { enqueueConversion } from "../MainConversionAgentSystem.js";
 import MainSourceFs from "../../helpers/MainSourceFs.js";
+import { ConversionAgentSystem } from "../MainConversionSystems.js";
 
 const ignoreMap: Map<string, number> = new Map<string, number>();
 
@@ -37,7 +37,7 @@ function _handleChanged(filePath: string): void {
 
     console.log("File watcher: Asset files changed", asset.def.displayName, filePath);
     notifyAssetsUpdated({ assets: [asset] });
-    enqueueConversion(asset.def.id);
+    ConversionAgentSystem.enqueue(asset.def.id);
 }
 
 function _handleDeleted(filePath: string): void {}

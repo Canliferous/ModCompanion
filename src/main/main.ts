@@ -6,10 +6,11 @@ import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.js";
 import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
-import { initConvertAgentSystem } from "./systems/MainConversionAgentSystem.js";
+import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
 import { initHotReloadSystem } from "./systems/MainHotReloadSystem.js";
 import { initStrataInterop } from "./systems/MainStrataInteropSystem.js";
 import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
+import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -24,7 +25,8 @@ const systems: System[] = [
     { name: "MapCompile", initFunction: initMapCompileSystem },
     { name: "AssetScanner", initFunction: initAssetScannerSystem },
     { name: "MareTf", initFunction: initMateTfSystem },
-    { name: "ConversionAgent", initFunction: initConvertAgentSystem },
+    { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
+    { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
     { name: "StrataInterop", initFunction: initStrataInterop },
     { name: "HotReload", initFunction: initHotReloadSystem },
     { name: "AssetGroups", initFunction: initAssetGroupsSystem },
