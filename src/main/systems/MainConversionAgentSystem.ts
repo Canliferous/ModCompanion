@@ -53,9 +53,9 @@ export const ConversionAgentSystem = {
         }
 
         if (force) {
-            _setState(assetId, SharedConversionState.PendingForced);
+            _setState(assetId, SharedConversionState.PendingForced, true);
         } else {
-            _setState(assetId, SharedConversionState.Pending);
+            _setState(assetId, SharedConversionState.Pending, true);
         }
     },
 };
@@ -115,6 +115,8 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
         _setState(id, SharedConversionState.Unknown);
         return undefined;
     }
+    const startTime = new Date();
+    ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState);
     _setState(id, SharedConversionState.InProgress);
 
     const force = previousState === SharedConversionState.PendingForced;
@@ -131,9 +133,7 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     }
 
     console.log("Converting asset", asset.def.displayName, asset.def.id);
-    const startTime = new Date();
     const timeoutPromise = _convertAsset(asset.def);
-    ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState, SharedConversionState.InProgress);
     timeoutPromise.catch((a) => {
         _onJobPromiseDone(id, SharedConversionState.Failed, a);
     });
@@ -179,16 +179,18 @@ function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState,
     });
 }
 
-function _setState(id: SharedAssetId, state: SharedConversionState) {
+function _setState(id: SharedAssetId, state: SharedConversionState, noHistory = false) {
     if (conversionsMap.has(id)) {
         conversionsMap.get(id)!.state = state;
     } else {
         conversionsMap.set(id, { assetId: id, state });
     }
 
-    ConversionEventSystem.updateLatestEvent(id, (event) => {
-        event.stateHistory.push(state);
-    });
+    if (!noHistory) {
+        ConversionEventSystem.updateLatestEvent(id, (event) => {
+            event.stateHistory.push(state);
+        });
+    }
 }
 
 function _getState(id: SharedAssetId) {

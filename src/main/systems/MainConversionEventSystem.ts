@@ -4,15 +4,10 @@ import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 export const ConversionEventSystem = {
     conversionEvents: [] as SharedConversionEvent[],
 
-    pushNewEvent(
-        assetId: SharedAssetId,
-        startTime: Date,
-        previousState: SharedConversionState,
-        currentState: SharedConversionState,
-    ) {
+    pushNewEvent(assetId: SharedAssetId, startTime: Date, initialState: SharedConversionState) {
         this.conversionEvents.push({
             assetId,
-            stateHistory: [previousState, currentState],
+            stateHistory: [initialState],
             startTime,
             log: "",
         });
