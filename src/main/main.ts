@@ -4,11 +4,10 @@ import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { initAssetScannerSystem } from "./systems/assets/MainAssetScannerSystem.js";
-import { initProtocolSystem } from "./systems/MainProtocolSystem.js";
 import { initMateTfSystem } from "./systems/MainMaretfSystem.js";
 import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
 import { initHotReloadSystem } from "./systems/MainHotReloadSystem.js";
-import { initStrataInterop } from "./systems/MainStrataInteropSystem.js";
+import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
 import { initAssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
 
@@ -19,7 +18,7 @@ interface System {
 }
 const systems: System[] = [
     { name: "Config", initFunction: initConfigSystem },
-    { name: "Protocol", initFunction: initProtocolSystem },
+    // { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
     { name: "MapCompile", initFunction: initMapCompileSystem },
@@ -27,7 +26,7 @@ const systems: System[] = [
     { name: "MareTf", initFunction: initMateTfSystem },
     { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
     { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
-    { name: "StrataInterop", initFunction: initStrataInterop },
+    { name: "StrataInterop", initFunction: StrataInteropSystem.initSystem },
     { name: "HotReload", initFunction: initHotReloadSystem },
     { name: "AssetGroups", initFunction: initAssetGroupsSystem },
 ];

@@ -11,21 +11,21 @@ let reconnect = true;
 let healthCheckInterval: NodeJS.Timeout | undefined = undefined;
 const healthCheckIntervalMs = 2000;
 
-export function initStrataInterop(): boolean {
-    _initStrataInteropSocket();
-    return true;
-}
-
-export function sendStrataCommand(command: string) {
-    if (socket) {
-        console.log(`Sending command to strata: '${command}'`);
-        socket.write(command + "\n");
-    }
-}
-
-export function _isStrataConnected(): boolean {
-    return socket !== undefined;
-}
+export const StrataInteropSystem = {
+    initSystem(): boolean {
+        _initStrataInteropSocket();
+        return true;
+    },
+    sendCommand(command: string) {
+        if (socket) {
+            console.log(`Sending command to strata: '${command}'`);
+            socket.write(command + "\n");
+        }
+    },
+    isConnected(): boolean {
+        return socket !== undefined;
+    },
+};
 
 function _connect(port: number, timeout: number): Promise<net.Socket | undefined> {
     const promise = new Promise<net.Socket | undefined>((resolve, reject) => {

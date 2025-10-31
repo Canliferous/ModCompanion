@@ -1,6 +1,6 @@
 import { isTextureAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { _isStrataConnected, sendStrataCommand } from "./MainStrataInteropSystem.js";
 import { getAssetMap } from "./assets/MainAssetRepository.js";
+import { StrataInteropSystem } from "./MainStrataInteropSystem.js";
 
 let hotReloadEnabled = false;
 
@@ -13,7 +13,7 @@ export function setHotReloadEnabled(enabled: boolean): void {
 }
 
 export function requestHotReload(assets: SharedAssetId[]): void {
-    if (!hotReloadEnabled || !_isStrataConnected()) return;
+    if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
 
     let texturesToReload: string[] = [];
     for (const assetId of assets) {
@@ -36,6 +36,6 @@ export function requestHotReload(assets: SharedAssetId[]): void {
 
     for (const vtf of texturesToReload) {
         console.log("Reloading texture", vtf);
-        sendStrataCommand(`mat_reloadtexture ${vtf}`);
+        StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
     }
 }
