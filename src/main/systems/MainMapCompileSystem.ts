@@ -16,31 +16,31 @@ interface Stage {
     action: MapCompilerAction;
 }
 
-const mapQueue: string[] = [];
+const queue: string[] = [];
 let workerInterval: NodeJS.Timeout | undefined = undefined;
 const mapQueueStages = new Map<string, Stage[]>();
 let currentCompilePromise: Promise<boolean> | undefined = undefined;
 
-export function initMapCompileSystem(): boolean {
-    workerInterval = setInterval(_workQueue, 200);
+export const MapCompileSystem = {
+    initSystem(): boolean {
+        workerInterval = setInterval(_workQueue, 200);
 
-    return true;
-}
+        return true;
+    },
+    enqueue(mapPath: string) {
+        if (queue.includes(mapPath)) {
+            console.warn(`Map ${mapPath} is already in queue`);
+            return;
+        }
 
-export function enqueueMap(mapPath: string) {
-    if (mapQueue.includes(mapPath)) {
-        console.warn(`Map ${mapPath} is already in queue`);
-        return;
-    }
-
-    mapQueue.push(mapPath);
-    mapQueueStages.set(mapPath, _createStages());
-    notifyQueueUpdated();
-}
-
-export function getMapQueue(): string[] {
-    return mapQueue;
-}
+        queue.push(mapPath);
+        mapQueueStages.set(mapPath, _createStages());
+        notifyQueueUpdated();
+    },
+    getQueue(): string[] {
+        return queue;
+    },
+};
 
 function _createStages(): Stage[] {
     return [
@@ -73,18 +73,18 @@ function _createStages(): Stage[] {
 }
 
 function _workQueue() {
-    if (mapQueue.length === 0) return;
+    if (queue.length === 0) return;
 
-    for (let i = 0; i < mapQueue.length; i++) {
-        let steps = mapQueueStages.get(mapQueue[i]);
+    for (let i = 0; i < queue.length; i++) {
+        let steps = mapQueueStages.get(queue[i]);
         if (steps === undefined) {
             continue;
         }
 
         if (!_isStepsCompleted(steps)) {
-            _workMap(mapQueue[i], steps);
+            _workMap(queue[i], steps);
         } else {
-            _mapFinished(mapQueue[i]);
+            _mapFinished(queue[i]);
         }
     }
 }
@@ -110,7 +110,7 @@ function _workMap(mapPath: string, steps: Stage[]) {
 }
 
 function _mapFinished(mapPath: string): void {
-    mapQueue.splice(mapQueue.indexOf(mapPath), 1);
+    queue.splice(queue.indexOf(mapPath), 1);
     mapQueueStages.delete(mapPath);
     notifyQueueUpdated();
 }

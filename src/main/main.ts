@@ -2,7 +2,7 @@ import { app, dialog } from "electron";
 import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
-import { initMapCompileSystem } from "./systems/MainMapCompileSystem.js";
+import { MapCompileSystem } from "./systems/MainMapCompileSystem.js";
 import { MareTfSystem } from "./systems/MainMaretfSystem.js";
 import { ConversionAgentSystem } from "./systems/MainConversionSystems.js";
 import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
@@ -20,7 +20,7 @@ const systems: System[] = [
     // { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
-    { name: "MapCompile", initFunction: initMapCompileSystem },
+    { name: "MapCompile", initFunction: MapCompileSystem.initSystem },
     { name: "AssetWatcher", initFunction: AssetWatcherSystem.initSystem },
     { name: "MareTf", initFunction: MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
