@@ -1,8 +1,5 @@
 <template>
-    <div class="flex items-center gap-1" v-if="asset">
-        <MAssetTypeIcon :type="asset.def.type" />
-        <span>{{ asset.def.displayName ?? "(unknown)" }}</span>
-    </div>
+    <AssetBrowserCellAssetName v-if="asset" :name="asset.def.displayName ?? '(unknown)'" :type="asset.def.type" />
     <div v-else>Unknown asset {{ assetId }}</div>
 </template>
 

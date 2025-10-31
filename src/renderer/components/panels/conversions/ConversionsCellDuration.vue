@@ -1,7 +1,10 @@
 <template>
     <template v-if="props.endTime">
         <UTooltip :text="`Took ${displayTime} to finish`">
-            <div>{{ displayTime }}</div>
+            <div class="text-right">
+                <span class="font-mono">{{ displayTime }}</span>
+                <span>ms</span>
+            </div>
         </UTooltip>
     </template>
     <template v-else>
@@ -20,7 +23,7 @@ const props = defineProps<{
 const displayTime = computed(() => {
     if (!props.endTime) return undefined;
     const delta = props.endTime.getTime() - props.startTime.getTime();
-    return `${floor(delta)}ms`;
+    return floor(delta);
 });
 </script>
 

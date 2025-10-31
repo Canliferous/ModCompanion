@@ -31,7 +31,7 @@ const columns: DataTableColumn<SharedConversionEvent>[] = [
         id: "asset",
         label: "Asset",
         cell: (entry) => h(ConversionsCellAsset, { assetId: entry.assetId }),
-        size: "1fr",
+        size: "minmax(0, 1fr)",
     },
     {
         id: "duration",
