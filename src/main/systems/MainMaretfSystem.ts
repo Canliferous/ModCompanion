@@ -45,6 +45,9 @@ export async function createVtf(
             proc.stdout?.on("data", (d) => {
                 log.push(d);
             });
+            if (proc.pid !== undefined) {
+                os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
+            }
             proc.on("exit", (code) => {
                 resolve(log.join("\n"));
             });
