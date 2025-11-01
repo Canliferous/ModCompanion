@@ -34,8 +34,27 @@ function _getBrowseToFileSelectCommand(filePath: string): string | undefined {
     if (platform === "win32") {
         return `explorer.exe /select,"${filePath}"`;
     } else if (platform === "linux") {
-        // TODO: This doesn't actually BROWSE to the file
-        return `xdg-open "${filePath}"`;
+        return _getBrowseToFileSelectCommandLinux(filePath);
+    }
+
+    return undefined;
+}
+
+export function _getBrowseToFileSelectCommandLinux(filePath: string): string | undefined {
+    const fileManagers = [
+        { name: "dolphin", cmd: (p: string) => `dolphin --select "${p}"` },
+        { name: "nautilus", cmd: (p: string) => `nautilus --select "${p}"` },
+        { name: "nemo", cmd: (p: string) => `nemo --select "${p}"` },
+        { name: "caja", cmd: (p: string) => `caja --no-desktop --browser --select "${p}"` },
+        { name: "thunar", cmd: (p: string) => `thunar "${path.dirname(p)}"` },
+        { name: "xdg-open", cmd: (p: string) => `xdg-open "${path.dirname(p)}"` },
+    ];
+
+    for (const fm of fileManagers) {
+        try {
+            child_process.execSync(`command -v ${fm.name}`, { stdio: "ignore" });
+            return fm.cmd(filePath);
+        } catch {}
     }
 
     return undefined;
