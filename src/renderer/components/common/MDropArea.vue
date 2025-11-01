@@ -2,12 +2,9 @@
     <MAcceptDrop @change="(c) => emit('change', c)">
         <template slot="default" v-slot="{ isOverDropZone }">
             <div
-                class="rounded transition-colors grid place-items-center bg-neutral-900 border border-accented inset-shadow-cave _stack"
-                :class="{ 'bg-neutral-700': isOverDropZone }"
+                class="rounded transition-colors grid place-items-center bg-neutral-900 border border-accented inset-shadow-cave overflow-hidden _stack"
             >
-                <div
-                    class="w-full h-full bg-radial from-neutral-700 from-8% to-transparent to-10% bg-size-[9px_9px] bg-center transition-colors"
-                />
+                <MDropAreaBg :class="{ 'bg-neutral-800': isOverDropZone }" />
                 <span class="text-neutral-300 text-center my-1.5 select-none">Drop here</span>
             </div>
         </template>
@@ -15,6 +12,8 @@
 </template>
 
 <script lang="ts" setup>
+import MDropAreaBg from "~/components/common/MDropAreaBg.vue";
+
 const emit = defineEmits<{ change: [string] }>();
 </script>
 

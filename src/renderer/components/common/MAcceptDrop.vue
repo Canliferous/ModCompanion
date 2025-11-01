@@ -1,5 +1,5 @@
 <template>
-    <div ref="dropZoneRef">
+    <div ref="dropZoneRef" @dragover="(e) => e.preventDefault()">
         <slot :isOverDropZone="isOverDropZone" />
     </div>
 </template>
@@ -24,6 +24,12 @@ async function onDrop(files: File[] | null, event: DragEvent) {
 }
 const { isOverDropZone } = useDropZone(dropZoneRef, {
     onDrop,
+    onOver: (files, event) => {
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = "link";
+        }
+        event.preventDefault();
+    },
     preventDefaultForUnhandled: false,
 });
 </script>

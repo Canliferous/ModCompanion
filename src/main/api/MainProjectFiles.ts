@@ -64,7 +64,7 @@ function _isProjectPath(p: string): boolean {
     const config = getAppConfig();
     return path.resolve(p).startsWith(config.rootPath);
 }
-
+// TODO This doesnt strip properly! mod_companion.bat strips to n.bat!!
 function _correctProjectPath(somePath: string) {
     const config = getAppConfig();
     if (!path.isAbsolute(somePath)) {
