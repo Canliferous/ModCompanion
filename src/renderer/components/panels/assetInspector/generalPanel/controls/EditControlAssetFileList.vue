@@ -29,7 +29,7 @@ import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAsset
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import { useDropZone } from "@vueuse/core";
-import { getGameOrContentRelativePath } from "~/helper/SourceFs.js";
+import { getGameOrContentRelativePath, isGameOrContentRelativePath } from "~/helper/SourceFs.js";
 import MDropArea from "~/components/common/MDropArea.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 
@@ -92,19 +92,22 @@ function save(): void {
 
 function handleDrop(plaintext: string) {
     const entriesToAdd: string[] = [];
+    let changed = false;
     if (plaintext) {
         const lines = plaintext.split("\n");
         for (const line of lines) {
-            const relativeLine = getGameOrContentRelativePath(line);
-            entriesToAdd.push(relativeLine);
+            if (isGameOrContentRelativePath(line)) {
+                changed = true;
+                entriesToAdd.push(getGameOrContentRelativePath(line));
+            }
         }
     }
 
-    const combined = new Set([...files.value, ...entriesToAdd]);
-
-    files.value = Array.from(combined);
-
-    save();
+    if (changed) {
+        const combined = new Set([...files.value, ...entriesToAdd]);
+        files.value = Array.from(combined);
+        save();
+    }
 }
 </script>
 

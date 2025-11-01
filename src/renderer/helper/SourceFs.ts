@@ -19,3 +19,7 @@ export function getGameOrContentRelativePath(filePath: string): string {
     const config = getAppConfig();
     return SharedSourceFs.getGameOrContentRelativePath(filePath, config.gameName, config.rootPath);
 }
+
+export function isGameOrContentRelativePath(filePath: string): boolean {
+    return filePath.startsWith("game") || filePath.startsWith("content");
+}
