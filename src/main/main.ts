@@ -9,6 +9,7 @@ import { StrataInteropSystem } from "./systems/MainStrataInteropSystem.js";
 import { AssetGroupsSystem } from "./systems/MainAssetGroupsSystem.js";
 import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem.js";
 import { AssetWatcherSystem } from "./systems/MainAssetWatcherSystem.js";
+import { TeamCityArtifactCloudSystem } from "./systems/MainTeamCityArtifactCloudSystem.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -27,6 +28,7 @@ const systems: System[] = [
     { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
     { name: "StrataInterop", initFunction: StrataInteropSystem.initSystem },
     { name: "AssetGroups", initFunction: AssetGroupsSystem.initSystem },
+    { name: "TeamCityArtifactCloud", initFunction: TeamCityArtifactCloudSystem.initSystem },
 ];
 
 async function startSystems() {

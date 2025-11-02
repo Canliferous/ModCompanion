@@ -1,4 +1,5 @@
 import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
+import { S3ClientConfig } from "@aws-sdk/client-s3";
 
 export interface SharedAppConfig {
     /**
@@ -58,4 +59,6 @@ export interface SharedAppConfig {
     assetDefaults?: {
         vtfOptions?: SharedVtfCreateOptions;
     };
+
+    teamCityArtifactCloud?: S3ClientConfig;
 }

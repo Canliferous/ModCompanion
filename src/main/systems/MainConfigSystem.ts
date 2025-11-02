@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import { SharedAppConfig } from "Shared/SharedAppConfig.js";
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import os from "node:os";
+import { S3ClientConfig } from "@aws-sdk/client-s3";
 
 interface ConfigFile {
     root?: string;
@@ -13,6 +14,8 @@ interface ConfigFile {
     assetDefaults?: {
         vtfOptions?: SharedVtfCreateOptions;
     };
+
+    teamCityArtifactCloud?: S3ClientConfig;
 }
 
 let config: SharedAppConfig = null!;
@@ -71,14 +74,15 @@ function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undef
         vvisExePath: _buildBinaryPath(root, "vvis"),
         vradExePath: _buildBinaryPath(root, "vrad"),
 
-        vbspArgs: `-game ${c.searchPath} -report`,
+        vbspArgs: `-game ${c.searchPath}`,
         postcompilerArgs: "--nopack",
-        vvisArgs: `-game ${c.searchPath} -report`,
-        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -report -game ${c.searchPath}`,
+        vvisArgs: `-game ${c.searchPath}`,
+        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
         mapSourceDirs: c.mapSourceDirs,
         assetDefaults: c.assetDefaults,
+        teamCityArtifactCloud: c.teamCityArtifactCloud,
     };
 }
 
@@ -103,8 +107,8 @@ function _getConfigPath(): string {
 function _createDefaultConfig(): ConfigFile {
     return {
         root: "sample",
-        searchPath: "my_game"
-    }
+        searchPath: "my_game",
+    };
 }
 
 async function _loadConfig(): Promise<ConfigFile | undefined> {
