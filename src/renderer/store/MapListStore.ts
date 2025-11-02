@@ -4,9 +4,9 @@ import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/u
 import { useFilter } from "~/composables/useFilter.js";
 
 export const useMapListStore = defineStore("map-list", () => {
-    const mapPaths = useRememberStringArray(ref<string[]>([]), "map-list");
+    const mapList = useRememberStringArray(ref<string[]>([]), "map-list");
     const searchTerm = useRememberWorkspaceRef(ref<string>(""), "map-search");
-    const filteredMapPaths = useFilter<string>(mapPaths, (item) => item.toLowerCase(), searchTerm);
+    const filteredMapList = useFilter<string>(mapList, (item) => item.toLowerCase(), searchTerm);
     const selectedMap = ref<string | undefined>();
     const mapQueue = ref<string[]>([]);
 
@@ -14,26 +14,36 @@ export const useMapListStore = defineStore("map-list", () => {
         selectedMap.value = mapPath;
     }
 
-    function isMapAdded(mapName: string): boolean {
-        return mapPaths.value.includes(mapName);
+    function isMapInList(mapName: string): boolean {
+        return mapList.value.includes(mapName);
     }
 
     function addMap(mapName: string): void {
-        if (isMapAdded(mapName)) return;
+        if (isMapInList(mapName)) return;
 
-        mapPaths.value.push(mapName);
+        mapList.value.push(mapName);
     }
 
     function removeMap(mapPath: string): void {
-        const idx = mapPaths.value.indexOf(mapPath);
+        const idx = mapList.value.indexOf(mapPath);
         if (idx < 0) return;
 
-        mapPaths.value.splice(idx, 1);
+        mapList.value.splice(idx, 1);
     }
 
     window.electronAPI.map.subscribeQueueUpdated((arg) => {
         mapQueue.value = arg;
     });
 
-    return { mapPaths, filteredMapPaths, addMap, removeMap, isMapAdded, searchTerm, selectedMap, selectMap, mapQueue };
+    return {
+        mapList,
+        filteredMapList,
+        searchTerm,
+        selectedMap,
+        mapQueue,
+        addMap,
+        removeMap,
+        isMapInList,
+        selectMap,
+    };
 });

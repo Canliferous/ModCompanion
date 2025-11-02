@@ -10,15 +10,7 @@ export const useMapTimeReportStore = defineStore("map-time-report", () => {
     const reportChart = ref<Map<SharedMapPath, number> | undefined>();
 
     function createTimeReport(): void {
-        const listStore = useMapListStore();
-
-        // TODO: Why can this array not be structuredClone'd?????
-        const mapPaths = [];
-        for (const mapPath of listStore.mapPaths) {
-            mapPaths.push(mapPath);
-        }
-
-        window.electronAPI.map.createTimeReport(mapPaths).then((r) => {
+        window.electronAPI.map.createTimeReport(toRaw(useMapListStore().mapList)).then((r) => {
             report.value = r;
             reportChart.value = _createReportChart(r);
         });

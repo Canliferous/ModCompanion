@@ -6,7 +6,7 @@
                     <template #item-trailing="{ item }">
                         <div v-if="isMapTreeItem(item)">
                             <UButton
-                                :class="{ invisible: listStore.isMapAdded(item.vmfPath) }"
+                                :class="{ invisible: listStore.isMapInList(item.vmfPath) }"
                                 :icon="AppDesign.Icons.ArrowRight"
                                 variant="ghost"
                                 @click="listStore.addMap(item.vmfPath)"

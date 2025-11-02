@@ -1,6 +1,6 @@
 <template>
     <MDataTable
-        :entries="listStore.filteredMapPaths"
+        :entries="listStore.filteredMapList"
         :columns="columns"
         neutral-highlight
         @onActiveChanged="handleActiveChanged"
@@ -123,10 +123,11 @@ const reportColumns: DataTableColumn<string>[] = [
 // The intent is to not show the map's folder "prefix" if all maps share are in the same folder.
 // Only show it when they're in different folders
 const mapDisplayNames = computed(() => {
+    const list = listStore.mapList;
     let prefix: string | undefined = undefined;
     let addPrefix = false;
 
-    for (const p of listStore.mapPaths) {
+    for (const p of list) {
         const dirName = pathe.dirname(p);
         if (prefix === undefined) {
             prefix = dirName;
@@ -137,7 +138,7 @@ const mapDisplayNames = computed(() => {
     }
 
     const map = new Map<string, string>();
-    for (const p of listStore.mapPaths) {
+    for (const p of list) {
         const fileName = filename(p) ?? "";
         if (addPrefix) {
             const dirName = pathe.dirname(p);
