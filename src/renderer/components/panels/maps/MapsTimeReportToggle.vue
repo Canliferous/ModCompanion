@@ -1,12 +1,5 @@
 <template>
-    <UCheckbox
-        label="Time Report"
-        color="info"
-        variant="card"
-        class="py-1 px-2 items-center"
-        v-model="timeReportStore.showReport"
-        @change="onToggle"
-    />
+    <UCheckbox label="Time Report" variant="button" v-model="timeReportStore.showReport" @change="onToggle" />
 </template>
 
 <script setup lang="ts">

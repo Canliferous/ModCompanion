@@ -1,5 +1,5 @@
 <template>
-    <UButtonGroup class="flex bg-neutral-900">
+    <UButtonGroup class="my-0.5">
         <UTooltip text="Compile Now">
             <UButton
                 :icon="AppDesign.Icons.ActionCompileMap"

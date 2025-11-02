@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-primary-500/30" :class="{ 'text-neutral-500': chartWidth === '0%' }" :style="{ width: chartWidth }">
+    <div class="bg-primary-600" :class="{ 'text-muted': chartWidth === '0%' }" :style="{ width: chartWidth }">
         <!-- Text intentionally overflows the boxes -->
         <span class="font-mono text-sm">
             {{ displayName }}

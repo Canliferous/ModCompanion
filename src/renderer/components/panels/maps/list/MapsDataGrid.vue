@@ -150,13 +150,8 @@ const mapDisplayNames = computed(() => {
     return map;
 });
 
-function handleActiveChanged(idx: number | undefined): void {
-    if (idx === undefined) {
-        listStore.selectMap(undefined);
-    } else {
-        const p = listStore.mapPaths[idx];
-        listStore.selectMap(p);
-    }
+function handleActiveChanged(map: string | undefined): void {
+    listStore.selectMap(map);
 }
 </script>
 

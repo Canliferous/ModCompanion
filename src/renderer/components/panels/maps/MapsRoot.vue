@@ -3,7 +3,7 @@
         <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] grid-cols-1 gap-1 p-1">
             <div class="flex gap-1">
                 <ModalMapList>
-                    <UButton label="Add" :icon="AppDesign.Icons.ActionAdd" color="success" variant="subtle" />
+                    <UButton label="Add" :icon="AppDesign.Icons.ActionAdd" />
                 </ModalMapList>
                 <UInput
                     placeholder="Search"
