@@ -60,6 +60,6 @@ export const MareTfSystem = {
 
 function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: SharedVtfCreateOptions): string {
     const args = buildMareTfCreateArgs(options);
-    const cmd = `${binary} create ${inputPath} --yes --no-pretty-formatting -o ${outputPath} ${args}`;
+    const cmd = `${binary} create ${inputPath} -o ${outputPath} ${args}`;
     return cmd;
 }
