@@ -51,8 +51,10 @@ declare global {
             };
             map: {
                 listSourceDirs: () => Promise<SharedMapSourceDir[]>;
-                enqueue: (mapPath: string) => void;
+                enqueue: (mapPaths: string[]) => void;
                 subscribeQueueUpdated: (callback: (queue: string[]) => void) => IpcRenderer;
+                cancelQueue: () => void;
+                pauseQueue: (paused: boolean) => void;
                 subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) => IpcRenderer;
                 subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) => IpcRenderer;
                 createTimeReport: (maps: SharedMapPath[]) => Promise<SharedMapTimeReport>;

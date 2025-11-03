@@ -18,6 +18,7 @@ import {
 } from "./shared/SharedAssetDefinition.js";
 import { SharedConversionSummary, SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
 import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
+import { SharedPlayPauseStopControlsState } from "./shared/SharedPlayPauseStopState";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -40,9 +41,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     map: {
         listSourceDirs: () => ipcRenderer.invoke(SharedIpcChannels.MapListSourceDirs),
-        enqueue: (mapPath: string) => ipcRenderer.send(SharedIpcChannels.MapEnqueue, mapPath),
+        enqueue: (mapPaths: string[]) => ipcRenderer.send(SharedIpcChannels.MapQueueEnqueue, mapPaths),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
             ipcRenderer.on(SharedIpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
+        cancelQueue: () => ipcRenderer.invoke(SharedIpcChannels.MapQueueCancel),
+        pauseQueue: (paused: boolean) => ipcRenderer.invoke(SharedIpcChannels.MapQueueSetPaused, paused),
         subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) =>
             ipcRenderer.on(SharedIpcChannels.MapCompileLog, (e: IpcRendererEvent, event: SharedMapCompileLogEvent) =>
                 callback(event),

@@ -9,6 +9,7 @@ import {
 } from "../launcher/MainMapCompilerLaunchers.js";
 import { SharedMapCompileLogEventType } from "Shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
 
 interface Stage {
     step: SharedMapCompileStep;
@@ -16,10 +17,12 @@ interface Stage {
     action: MapCompilerAction;
 }
 
-const queue: string[] = [];
+let queue: string[] = [];
 let workerInterval: NodeJS.Timeout | undefined = undefined;
 const mapQueueStages = new Map<string, Stage[]>();
 let currentCompilePromise: Promise<boolean> | undefined = undefined;
+
+let paused = false;
 
 export const MapCompileSystem = {
     initSystem(): boolean {
@@ -27,15 +30,25 @@ export const MapCompileSystem = {
 
         return true;
     },
-    enqueue(mapPath: string) {
-        if (queue.includes(mapPath)) {
-            console.warn(`Map ${mapPath} is already in queue`);
-            return;
+    enqueue(mapPaths: string[]): void {
+        for (const mapPath of mapPaths) {
+            if (queue.includes(mapPath)) {
+                console.warn(`Map ${mapPath} is already in queue`);
+                continue;
+            }
+
+            queue.push(mapPath);
+            mapQueueStages.set(mapPath, _createStages());
         }
 
-        queue.push(mapPath);
-        mapQueueStages.set(mapPath, _createStages());
         notifyQueueUpdated();
+    },
+    cancelQueue(): void {
+        queue = [];
+        mapQueueStages.clear();
+    },
+    setPaused(isPaused: boolean): void {
+        paused = isPaused;
     },
     getQueue(): string[] {
         return queue;
@@ -82,7 +95,9 @@ function _workQueue() {
         }
 
         if (!_isStepsCompleted(steps)) {
-            _workMap(queue[i], steps);
+            if (!paused) {
+                _workMap(queue[i], steps);
+            }
         } else {
             _mapFinished(queue[i]);
         }

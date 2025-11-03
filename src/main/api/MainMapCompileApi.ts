@@ -4,10 +4,17 @@ import { SharedMapCompileLogEvent } from "Shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "Shared/SharedMapCompileProgressEvent.js";
 import { IpcHelper } from "./MainApiHelper.js";
 import { MapCompileSystem } from "../systems/MainMapCompileSystem.js";
+import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
 
 export function registerMapCompileApi(): boolean {
-    ipcMain.on(SharedIpcChannels.MapEnqueue, (event, mapPath: string) => {
-        return MapCompileSystem.enqueue(mapPath);
+    ipcMain.on(SharedIpcChannels.MapQueueEnqueue, (event, mapPaths: string[]) => {
+        MapCompileSystem.enqueue(mapPaths);
+    });
+    ipcMain.on(SharedIpcChannels.MapQueueSetPaused, (event, paused: boolean) => {
+        MapCompileSystem.setPaused(paused);
+    });
+    ipcMain.on(SharedIpcChannels.MapQueueCancel, (event) => {
+        MapCompileSystem.cancelQueue();
     });
     return true;
 }

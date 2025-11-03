@@ -13,8 +13,10 @@ export const SharedIpcChannels = {
     ConfigGet: "config_get",
 
     MapListSourceDirs: "map_list_source_dirs",
-    MapEnqueue: "map_enqueue",
+    MapQueueEnqueue: "map_queue_enqueue",
     MapQueueUpdated: "map_queue_updated",
+    MapQueueSetPaused: "map_queue_set_paused",
+    MapQueueCancel: "map_queue_cancel",
     MapCompileLog: "map_compile_log",
     MapCompileProgress: "map_compile_progress",
     MapCreateTimeReport: "map_create_time_report",
