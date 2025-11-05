@@ -4,9 +4,9 @@
         <span v-if="conversionStore.summary.currentStatus === 'working'" class="text-info flex items-center gap-1">
             <MConversionStateIcon :state="SharedConversionState.InProgress" /> Conversion Agent Busy
         </span>
-        <span class="text-muted"
-            ><span class="font-mono">({{ conversionStore.summary.totalSum }}</span> total)</span
-        >
+        <span class="text-muted">
+            (<span class="font-mono">{{ conversionStore.summary.totalSum }}</span> total)
+        </span>
     </div>
 </template>
 
