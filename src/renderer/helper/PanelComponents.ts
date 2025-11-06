@@ -15,6 +15,7 @@ import Watermark from "~/components/panels/Watermark.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import AddPanelAction from "~/components/panels/AddPanelAction.vue";
 import ConversionDetailsPanel from "~/components/panels/conversionDetails/ConversionDetailsPanel.vue";
+import AssetInspectorTextureHotspotEditorPanel from "~/components/panels/assetInspector/textureHotspotEditor/AssetInspectorTextureHotspotEditorPanel.vue";
 
 export interface ComponentDesc {
     componentId: PanelComponentId;
@@ -26,6 +27,7 @@ export const PanelComponentIds = {
     AssetInspectorTextureChannels: "_AssetInspector_TextureChannels",
     AssetInspectorTextureMetadata: "_AssetInspector_TextureMetadata",
     AssetInspectorTextureConvert: "_AssetInspector_TextureConvert",
+    AssetInspectorTextureHotspotEditor: "_AssetInspector_TextureHotspotEditor",
     AssetInspectorGeneral: "_AssetInspector_General",
     MapList: "_MapList",
     MapCompileLog: "_MapCompileLog",
@@ -57,6 +59,10 @@ export const PanelComponents = {
         assetInspectorTextureConvert: {
             componentId: "_AssetInspector_TextureConvert",
             component: AssetInspectorTextureConvertPanel,
+        },
+        assetInspectorTextureHotspotEditor: {
+            componentId: "_AssetInspector_TextureHotspotEditor",
+            component: AssetInspectorTextureHotspotEditorPanel,
         },
         assetInspectorGeneral: {
             componentId: "_AssetInspector_General",
@@ -142,6 +148,7 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureMetadata: "Meta",
     _AssetInspector_TextureConvert: "VTF Options",
     _AssetInspector_TextureChannels: "Channels",
+    _AssetInspector_TextureHotspotEditor: "Hotspot Editor",
     _AssetInspector_General: "General",
     _Conversions: "Conversion Events",
     _ConversionDetails: "Conversion Event Details",
@@ -158,6 +165,7 @@ export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _AssetInspector_TextureMetadata: AppDesign.Icons.Panel_AssetInspector_TextureMetadata,
     _AssetInspector_TextureConvert: AppDesign.Icons.Panel_AssetInspector_TextureConvert,
     _AssetInspector_TextureChannels: AppDesign.Icons.Panel_AssetInspector_TextureChannels,
+    _AssetInspector_TextureHotspotEditor: AppDesign.Icons.Panel_AssetInspector_TextureHotspotEditor,
     _AssetInspector_General: AppDesign.Icons.Panel_AssetInspector_General,
     _Conversions: AppDesign.Icons.Panel_Conversions,
     _ConversionDetails: AppDesign.Icons.Panel_ConversionDetails,

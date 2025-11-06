@@ -112,6 +112,7 @@ function getPanelsByType(type: SharedAssetType) {
         whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
         whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
         whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
+        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureHotspotEditor);
     }
 
     return whichPanelsShouldExist;
