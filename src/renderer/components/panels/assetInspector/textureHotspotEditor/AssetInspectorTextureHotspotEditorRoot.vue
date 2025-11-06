@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import { createHotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
+import { useMouseInElement } from "@vueuse/core";
 
 const id = useId();
 
@@ -23,14 +24,18 @@ onMounted(() => {
     const editor = createHotspotEditor(ctx, 1000, 1000);
 
     if (props.meta.data && props.meta.width && props.meta.height) {
-        editor.setTexture(props.meta.data, props.meta.width, props.meta.height);
+        editor.updateTexture(props.meta.data, props.meta.width, props.meta.height);
     }
 
-    // watch(props.meta, (m) => {
-    //     if (m.data && m.width && m.height) {
-    //         editor.setTexture(m.data, m.width, m.height);
-    //     }
-    // });
+    const { elementX, elementY, isOutside } = useMouseInElement(canvasRef);
+    watch(elementX, (x) => editor.updateMouseX(x));
+    watch(elementY, (y) => editor.updateMouseY(y));
+
+    watch(props.meta, (m) => {
+        if (m.data && m.width && m.height) {
+            editor.updateTexture(m.data, m.width, m.height);
+        }
+    });
 });
 </script>
 

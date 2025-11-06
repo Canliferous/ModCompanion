@@ -49,8 +49,6 @@ watch(
         if (api.value !== undefined) {
             handleAssetUpdated(a, api.value);
         }
-
-        lastType.value = a.def.type;
     },
 );
 
@@ -147,6 +145,7 @@ function setupTabs(type: SharedAssetType, api: DockviewApi) {
 
 function updateTabs(type: SharedAssetType, api: DockviewApi): void {
     if (type === lastType.value) return;
+    lastType.value = type;
 
     const savedPanels = deserializeLayout(type);
     if (savedPanels) {
