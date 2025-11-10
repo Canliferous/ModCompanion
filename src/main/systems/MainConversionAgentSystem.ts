@@ -20,6 +20,7 @@ import { HotReloadSystem } from "./MainHotReloadSystem.js";
 import { AssetWatcherSystem } from "./MainAssetWatcherSystem.js";
 
 const MAX_PARALLEL_JOBS = 1;
+const CONVERSION_INTERVAL_MS = 100;
 
 type JobResult = string | undefined;
 const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();
@@ -36,7 +37,7 @@ export const ConversionAgentSystem = {
     },
     startAgent(): void {
         if (!agentInterval) {
-            agentInterval = setInterval(_runAgent, 50);
+            agentInterval = setInterval(_runAgent, CONVERSION_INTERVAL_MS);
         }
     },
     stopAgent(): void {
@@ -88,20 +89,20 @@ async function _runAgent(): Promise<void> {
 }
 
 function _getAssetsToConvert(): SharedAssetId[] {
-    let newJobsCount = MAX_PARALLEL_JOBS - conversionJobs.size;
-    if (newJobsCount === 0) return [];
+    let freeJobsCount = MAX_PARALLEL_JOBS - conversionJobs.size;
+    if (freeJobsCount === 0) return [];
 
     const result: SharedAssetId[] = [];
 
     for (const conv of conversionsMap.values()) {
-        if (newJobsCount === 0) break;
+        if (freeJobsCount <= 0) break;
 
         const alreadyAdded = conversionJobs.has(conv.assetId);
         const isPending =
             conv.state === SharedConversionState.Pending || conv.state === SharedConversionState.PendingForced;
         if (isPending && !alreadyAdded) {
             result.push(conv.assetId);
-            newJobsCount--;
+            freeJobsCount--;
         }
     }
 
