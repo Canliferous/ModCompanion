@@ -1,18 +1,25 @@
 <template>
-    <div class="p-1 h-full">
-        <canvas :id="id" width="1000" height="1000" class="w-full aspect-square" ref="canvasRef"></canvas>
+    <div class="p-1 h-full grid grid-cols-1 grid-rows-1">
+        <div class="aspect-square">
+            <canvas :id="id" width="1000" height="1000" class="h-full w-full" ref="canvasRef"></canvas>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
 import { createHotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
-import { useMouseInElement } from "@vueuse/core";
+import { useElementSize, useMouseInElement, useMousePressed } from "@vueuse/core";
 
 const id = useId();
 
 const canvasRef = useTemplateRef("canvasRef");
 
 const props = defineProps<{ meta: SharedImageMetaReport }>();
+
+const { width, height } = useElementSize(canvasRef);
+
+// TODO: Feed this from main process
+const scalingFactor = 2;
 
 onMounted(() => {
     const canvas = canvasRef.value;
@@ -28,8 +35,37 @@ onMounted(() => {
     }
 
     const { elementX, elementY, isOutside } = useMouseInElement(canvasRef);
-    watch(elementX, (x) => editor.updateMouseX(x));
-    watch(elementY, (y) => editor.updateMouseY(y));
+    useMousePressed({
+        target: canvasRef,
+        onPressed: (event) => {
+            if ((event as any).buttons !== undefined) {
+                const mouseEvent = event as MouseEvent;
+                if (mouseEvent.buttons === 1) {
+                    editor.updateMouse1Pressed(true);
+                } else if (mouseEvent.buttons === 2) {
+                    editor.updateMouse2Pressed(true);
+                }
+            }
+        },
+        onReleased: (event) => {
+            editor.updateMouse1Pressed(false);
+            editor.updateMouse2Pressed(false);
+        },
+    });
+    watch(elementX, (x) => editor.updateMouseX(x * scalingFactor));
+    watch(elementY, (y) => editor.updateMouseY(y * scalingFactor));
+    watch(width, (w) => {
+        if (canvasRef.value) {
+            canvasRef.value.width = w * scalingFactor;
+        }
+        editor.updateRealWidth(w * scalingFactor);
+    });
+    watch(height, (h) => {
+        if (canvasRef.value) {
+            canvasRef.value.height = h * scalingFactor;
+        }
+        editor.updateRealHeight(h * scalingFactor);
+    });
 
     watch(props.meta, (m) => {
         if (m.data && m.width && m.height) {
