@@ -149,10 +149,15 @@ function updateTabs(type: SharedAssetType, api: DockviewApi): void {
 
     const savedPanels = deserializeLayout(type);
     if (savedPanels) {
-        api.fromJSON(savedPanels);
+        try {
+            api.fromJSON(savedPanels);
+        } catch (e) {
+            console.warn(e);
+        }
     }
 
     setupTabs(type, api);
+    serializeLayout(api);
 }
 </script>
 
