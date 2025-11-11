@@ -1,6 +1,6 @@
 <template>
     <TextureMetaProvider v-slot="{ meta }">
-        <AssetInspectorTextureChannels :meta="meta" />
+        <AssetInspectorTextureChannelsRoot :meta="meta" />
     </TextureMetaProvider>
 </template>
 

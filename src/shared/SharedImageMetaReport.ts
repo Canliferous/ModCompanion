@@ -1,20 +1,7 @@
-import { ColourspaceEnum } from "sharp";
+import exifreader from "exifreader";
 
 export interface SharedImageMetaReport {
     filePath: string;
-    format: string;
-    width: number;
-    height: number;
-    fileSizeBytes?: number;
-    bitDepth?: number;
-    colorSpace?: keyof ColourspaceEnum;
+    tags?: exifreader.Tags;
     data?: string;
-    channels?: SharedImageChannels;
-}
-
-export interface SharedImageChannels {
-    redData?: string;
-    greenData?: string;
-    blueData?: string;
-    alphaData?: string;
 }

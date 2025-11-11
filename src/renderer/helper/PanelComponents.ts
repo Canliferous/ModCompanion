@@ -37,7 +37,7 @@ export const PanelComponentIds = {
     Conversions: "_Conversions",
     ConversionDetails: "_ConversionDetails",
     StrataConsole: "_StrataConsole",
-    SubPanelTab: "_SubPanelTab",
+    PanelTab: "_PanelTab",
     Watermark: "_Watermark",
 } as const;
 export type PanelComponentId = (typeof PanelComponentIds)[keyof typeof PanelComponentIds];
