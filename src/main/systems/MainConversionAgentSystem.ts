@@ -9,9 +9,10 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
 import { notifyConversionsUpdated } from "../api/MainConversionApi.js";
-import { convertTextureAsset } from "./converter/MainTextureConverter.js";
-import { convertModelAsset } from "./converter/MainModelConverter.js";
+import { TextureConverter } from "./converter/MainTextureConverter.js";
+import { ModelConverter } from "./converter/MainModelConverter.js";
 import fs from "fs/promises";
+import { existsSync } from "fs";
 import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
 import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
@@ -63,6 +64,11 @@ export const ConversionAgentSystem = {
 
 async function _initStates(map: SharedAssetMap) {
     for (const asset of map.values()) {
+        if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
+            _setState(asset.def.id, SharedConversionState.Invalid);
+            continue;
+        }
+
         const stale = await _isAssetStale(asset.def);
         if (stale) {
             ConversionAgentSystem.enqueue(asset.def.id);
@@ -120,6 +126,13 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState);
     _setState(id, SharedConversionState.InProgress);
 
+    console.trace(asset);
+
+    if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
+        _setState(id, SharedConversionState.Invalid);
+        return undefined;
+    }
+
     const force = previousState === SharedConversionState.PendingForced;
 
     if (!force) {
@@ -161,12 +174,32 @@ async function _startConversions(ids: SharedAssetId[]): Promise<void> {
 async function _convertAsset(asset: SharedAssetDefinition): Promise<string | undefined> {
     switch (asset.type) {
         case SharedAssetTypes.Texture:
-            return convertTextureAsset(asset as SharedTextureAssetDefinition);
+            return TextureConverter.convert(asset as SharedTextureAssetDefinition);
         case SharedAssetTypes.Model:
-            return convertModelAsset(asset as SharedModelAssetDefinition);
+            return ModelConverter.convert(asset as SharedModelAssetDefinition);
         default:
             return undefined;
     }
+}
+
+function _isValidAsset(asset: SharedAssetDefinition): boolean {
+    switch (asset.type) {
+        case SharedAssetTypes.Texture:
+            return TextureConverter.isValid(asset as SharedTextureAssetDefinition);
+        case SharedAssetTypes.Model:
+            return ModelConverter.isValid(asset as SharedModelAssetDefinition);
+        default:
+            return false;
+    }
+}
+
+function _doContentFilesExist(asset: SharedAssetDefinition): boolean {
+    return Promise.all(
+        asset.contentFiles?.map((c) => {
+            const fullPath = makeContentPathAbsolute(c);
+            return existsSync(fullPath);
+        }),
+    );
 }
 
 function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState, log: string | undefined) {

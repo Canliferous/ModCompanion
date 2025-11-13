@@ -3,30 +3,33 @@ import * as child_process from "node:child_process";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 
-export async function convertModelAsset(asset: SharedModelAssetDefinition): Promise<string | undefined> {
-    const qcFile = asset.contentFiles?.find((f) => f.endsWith(".qc"));
-    if (!qcFile) return undefined;
+export const ModelConverter = {
+    isValid(asset: SharedModelAssetDefinition): boolean {
+        const qcFile = asset.contentFiles?.find((f) => f.endsWith(".qc"));
+        return qcFile !== undefined;
+    },
+    async convert(asset: SharedModelAssetDefinition): Promise<string | undefined> {
+        if (!this.isValid(asset)) return undefined;
+        const fullQcFile = path.join(getAppConfig().contentPath, qcFile);
 
-    const fullQcFile = path.join(getAppConfig().contentPath, qcFile);
+        console.log(`Converting model ${fullQcFile}`);
+        return this.createMdl(fullQcFile);
+    },
+    async createMdl(qcPath: string): Promise<string> {
+        const config = getAppConfig();
+        const cmd = `${config.studioMdlPath} -game ${config.gamePath} ${qcPath}`;
+        console.log("Creating mdl. cmd:", cmd);
 
-    console.log(`Converting model ${fullQcFile}`);
-    return createMdl(fullQcFile);
-}
+        let log: string[] = [];
 
-export async function createMdl(qcPath: string): Promise<string> {
-    const config = getAppConfig();
-    const cmd = `${config.studioMdlPath} -game ${config.gamePath} ${qcPath}`;
-    console.log("Creating mdl. cmd:", cmd);
-
-    let log: string[] = [];
-
-    return new Promise((resolve, reject) => {
-        const proc = child_process.exec(cmd, { cwd: config.gamePath });
-        proc.stdout?.on("data", (d) => {
-            log.push(d);
+        return new Promise((resolve, reject) => {
+            const proc = child_process.exec(cmd, { cwd: config.gamePath });
+            proc.stdout?.on("data", (d) => {
+                log.push(d);
+            });
+            proc.on("exit", (code) => {
+                resolve(log.join());
+            });
         });
-        proc.on("exit", (code) => {
-            resolve(log.join());
-        });
-    });
-}
+    },
+};
