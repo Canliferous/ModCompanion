@@ -187,19 +187,15 @@ function _isValidAsset(asset: SharedAssetDefinition): boolean {
         case SharedAssetTypes.Texture:
             return TextureConverter.isValid(asset as SharedTextureAssetDefinition);
         case SharedAssetTypes.Model:
-            return ModelConverter.isValid(asset as SharedModelAssetDefinition);
+            return ModelConverter.getQcFile(asset as SharedModelAssetDefinition) !== undefined;
         default:
             return false;
     }
 }
 
 function _doContentFilesExist(asset: SharedAssetDefinition): boolean {
-    return Promise.all(
-        asset.contentFiles?.map((c) => {
-            const fullPath = makeContentPathAbsolute(c);
-            return existsSync(fullPath);
-        }),
-    );
+    if (asset.contentFiles === undefined) return false;
+    return !asset.contentFiles.map((c) => existsSync(makeContentPathAbsolute(c))).some((c) => !c);
 }
 
 function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState, log: string | undefined) {

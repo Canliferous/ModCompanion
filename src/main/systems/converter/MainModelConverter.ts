@@ -4,12 +4,13 @@ import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 
 export const ModelConverter = {
-    isValid(asset: SharedModelAssetDefinition): boolean {
+    getQcFile(asset: SharedModelAssetDefinition): string | undefined {
         const qcFile = asset.contentFiles?.find((f) => f.endsWith(".qc"));
-        return qcFile !== undefined;
+        return qcFile;
     },
     async convert(asset: SharedModelAssetDefinition): Promise<string | undefined> {
-        if (!this.isValid(asset)) return undefined;
+        const qcFile = this.getQcFile(asset);
+        if (!qcFile) return undefined;
         const fullQcFile = path.join(getAppConfig().contentPath, qcFile);
 
         console.log(`Converting model ${fullQcFile}`);
