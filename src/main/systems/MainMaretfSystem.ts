@@ -41,17 +41,25 @@ export const MareTfSystem = {
                 proc.stdout?.on("data", (d) => {
                     log.push(d);
                 });
+                proc.stderr?.on("data", (d) => {
+                    log.push(d);
+                });
                 if (proc.pid !== undefined) {
                     os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
                 }
                 proc.on("exit", (code) => {
-                    resolve(log.join("\n"));
+                    if (code === 0) {
+                        resolve(log.join("\n"));
+                    } else {
+                        log.push(`Maretf exited with error code ${code}`);
+                        reject(log.join("\n"));
+                    }
                 });
             } catch (e) {
                 if (typeof e === "string") {
-                    resolve(e);
+                    reject(e);
                 } else {
-                    resolve("");
+                    reject("");
                 }
             }
         });
