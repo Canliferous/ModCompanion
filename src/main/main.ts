@@ -68,17 +68,17 @@ async function startSystems() {
 function performPreStartChecks(): boolean {
     const lock = app.requestSingleInstanceLock();
     if (!lock) {
-        app.whenReady().then(() => {
-            dialog
-                .showMessageBox({
-                    title: "Mod Companion",
-                    message: "App is already running",
-                })
-                .then(() => {
-                    app.quit();
-                });
-        });
         return false;
+    } else {
+        app.on("second-instance", () => {
+            const mainWindow = WindowSystem.getMainWindow();
+            if (mainWindow) {
+                if (mainWindow.isMinimized()) mainWindow.restore();
+                mainWindow.show();
+                mainWindow.maximize();
+                mainWindow.focus();
+            }
+        });
     }
 
     return true;
