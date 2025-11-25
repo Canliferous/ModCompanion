@@ -104,6 +104,9 @@ declare global {
                 subscribeLog: (callback: (message: string) => void) => IpcRenderer;
                 sendCommand: (command: string) => void;
             };
+            fgd: {
+                build: () => Promise<boolean>;
+            };
         };
     }
 }

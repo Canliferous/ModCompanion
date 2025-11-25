@@ -13,6 +13,7 @@ import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
 import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 import { registerClipboardApi } from "../api/MainClipboardApi.js";
 import { registerStrataInteropApi } from "../api/MainStrataInteropApi.js";
+import { registerFgdApi } from "../api/MainFgdApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -30,6 +31,7 @@ const apis: (() => boolean)[] = [
     registerAssetGroupsApi,
     registerClipboardApi,
     registerStrataInteropApi,
+    registerFgdApi,
 ];
 
 export function initApiSystem(): boolean {

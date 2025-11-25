@@ -136,4 +136,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.on(SharedIpcChannels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
         sendCommand: (command: string) => ipcRenderer.send(SharedIpcChannels.InteropSendCommand, command),
     },
+
+    fgd: {
+        build: () => ipcRenderer.invoke(SharedIpcChannels.FgdBuild),
+    },
 });

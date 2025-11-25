@@ -13,6 +13,10 @@
                 <SidebarCreateAsset />
                 <SidebarHotReloadSwitch />
             </SidebarGroup>
+
+            <SidebarGroup heading="Tools">
+                <SidebarBuildFgdButton />
+            </SidebarGroup>
         </div>
 
         <div class="grid gap-1 content-start p-1 pr-0">
@@ -54,6 +58,7 @@ import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceB
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import SidebarBuildFgdButton from "~/components/sidebar/SidebarBuildFgdButton.vue";
 
 function quit() {
     window.electronAPI.app.exit();

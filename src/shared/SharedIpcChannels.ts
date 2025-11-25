@@ -51,5 +51,7 @@ export const SharedIpcChannels = {
     AssetGroupsCreate: "assetgroup_create",
     AssetGroupsUpdate: "assetgroup_update",
     AssetGroupsDelete: "assetgroup_delete",
+
+    FgdBuild: "fgd_build",
 } as const;
 export type SharedIpcChannel = (typeof SharedIpcChannels)[keyof typeof SharedIpcChannels];
