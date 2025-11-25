@@ -126,8 +126,6 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState);
     _setState(id, SharedConversionState.InProgress);
 
-    console.trace(asset);
-
     if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
         _setState(id, SharedConversionState.Invalid);
         return undefined;

@@ -79,7 +79,10 @@ export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: st
     const payload = JSON.stringify(assetDef, undefined, 2);
     console.log("Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);
-    return { defFilePath: mcaPath, def: assetDef };
+
+    const asset = { defFilePath: mcaPath, def: assetDef };
+    assetMap.set(assetDef.id, asset);
+    return asset;
 }
 
 export function getAssetFromFile(filePath: string): SharedAsset | undefined {
