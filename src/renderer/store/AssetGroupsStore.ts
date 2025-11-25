@@ -146,5 +146,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         deleteGroup,
         collapseAll,
         expandAll,
+        getGroupFromAssetId,
     };
 });

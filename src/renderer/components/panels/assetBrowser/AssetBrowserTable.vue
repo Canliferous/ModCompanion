@@ -53,6 +53,10 @@ listStore.activateEvent.on((assetId) => {
     if (assetId === undefined) {
         table.value?.deactivate();
     } else {
+        const group = assetGroupsStore.getGroupFromAssetId(assetId);
+        if (group) {
+            assetGroupsStore.expand(group.id);
+        }
         table.value?.activate((entry) => isAssetBrowserAssetEntry(entry) && entry.assetDef.id === assetId);
     }
 });
@@ -61,6 +65,12 @@ listStore.selectEvent.on((assetIds) => {
     if (assetIds.length === 0) {
         table.value?.deselect();
     } else {
+        for (const assetId of assetIds) {
+            const group = assetGroupsStore.getGroupFromAssetId(assetId);
+            if (group) {
+                assetGroupsStore.expand(group.id);
+            }
+        }
         table.value?.select((entry) => isAssetBrowserAssetEntry(entry) && assetIds.includes(entry.assetDef.id));
     }
 });
