@@ -29,12 +29,13 @@ export async function rescan() {
     console.log("Rescanning assets...");
 
     const startMillis = new Date().getTime();
-    const contentTree = await scanContentTree();
-    const endMillis = new Date().getTime();
 
+    const contentTree = await scanContentTree();
     assetMap = await buildAssets(contentTree);
     await maintainAssets(assetMap);
     potentialAssets = detectPotentialAssets(contentTree);
+
+    const endMillis = new Date().getTime();
 
     notifyAssetsRescanned({ assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis });
 }
