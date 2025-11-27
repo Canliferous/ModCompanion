@@ -1,7 +1,11 @@
 <template>
     <div class="grid grid-cols-subgrid grid-rows-[1fr_auto] col-span-full items-center gap-x-2">
         <template v-if="asset === undefined">
-            <div class="col-span-full text-center">Unknown asset</div>
+            <div class="col-span-full flex items-center">
+                <UIcon :name="AppDesign.Icons.Question" class="text-warning mx-2.5" />
+                <span class="grow">Unknown asset</span>
+                <UButton variant="ghost" color="error" :icon="AppDesign.Icons.ActionRemove" @click="emit('remove')" />
+            </div>
         </template>
         <template v-else>
             <UButton

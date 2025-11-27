@@ -27,6 +27,7 @@ export const Icons = {
     Close: "mingcute:close-line",
     Copy: "mingcute:copy-2-line",
     Bulb: "mingcute:bulb",
+    Question: "mingcute:question-fill",
 
     Conversion: "mingcute:lightning-fill",
 
