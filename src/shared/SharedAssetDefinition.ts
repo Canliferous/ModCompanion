@@ -36,12 +36,12 @@ export interface SharedAssetDefinitionFileArrays {
 }
 
 export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
-    readonly id: string;
-    readonly type: SharedAssetType;
-    readonly displayName?: string;
+    id: string;
+    type: SharedAssetType;
+    displayName?: string;
 
-    readonly associatedFiles?: SharedAssetDefinitionAssociatedFiles;
-    readonly credits?: string;
+    associatedFiles?: SharedAssetDefinitionAssociatedFiles;
+    credits?: string;
 }
 
 export interface SharedAssetDefinitionAssociatedFiles {

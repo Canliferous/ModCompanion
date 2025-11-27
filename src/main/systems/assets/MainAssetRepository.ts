@@ -16,6 +16,7 @@ import { AssetCreationInferResults, inferAssetCreationType } from "./MainAssetCr
 import { createUnknownAssetDefinition } from "./MainAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./MainAssetCreateTexture.js";
 import { detectPotentialAssets } from "./MainAssetAutoDetect.js";
+import { maintainAssets } from "./MainAssetMaintenance.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
 let potentialAssets: SharedAsset[] = [];
@@ -32,6 +33,7 @@ export async function rescan() {
     const endMillis = new Date().getTime();
 
     assetMap = await buildAssets(contentTree);
+    await maintainAssets(assetMap);
     potentialAssets = detectPotentialAssets(contentTree);
 
     notifyAssetsRescanned({ assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis });
