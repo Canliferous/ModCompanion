@@ -95,6 +95,7 @@ export type SharedAssetId = string;
 
 export interface SharedAssetRescanEvent {
     assets: Map<SharedAssetId, SharedAsset>;
+    potentialAssets: SharedAsset[];
     totalTimeMillis?: number;
 }
 

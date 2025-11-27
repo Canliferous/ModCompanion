@@ -15,8 +15,10 @@ import { getAppConfig } from "../MainConfigSystem.js";
 import { AssetCreationInferResults, inferAssetCreationType } from "./MainAssetCreateInferType.js";
 import { createUnknownAssetDefinition } from "./MainAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./MainAssetCreateTexture.js";
+import { detectPotentialAssets } from "./MainAssetAutoDetect.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
+let potentialAssets: SharedAsset[] = [];
 
 export function getAssetMap(): Readonly<SharedAssetMap> {
     return assetMap;
@@ -30,8 +32,9 @@ export async function rescan() {
     const endMillis = new Date().getTime();
 
     assetMap = await buildAssets(contentTree);
+    potentialAssets = detectPotentialAssets(contentTree);
 
-    notifyAssetsRescanned({ assets: assetMap, totalTimeMillis: endMillis - startMillis });
+    notifyAssetsRescanned({ assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis });
 }
 
 // TODO: Collision check?

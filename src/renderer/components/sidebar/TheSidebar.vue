@@ -11,6 +11,7 @@
 
             <SidebarGroup heading="Assets">
                 <SidebarCreateAsset />
+                <SidebarPotentialAssets />
                 <SidebarHotReloadSwitch />
             </SidebarGroup>
 
@@ -59,6 +60,7 @@ import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
 import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import SidebarBuildFgdButton from "~/components/sidebar/SidebarBuildFgdButton.vue";
+import SidebarPotentialAssets from "~/components/sidebar/SidebarPotentialAssets.vue";
 
 function quit() {
     window.electronAPI.app.exit();

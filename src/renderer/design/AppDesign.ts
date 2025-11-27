@@ -26,6 +26,7 @@ export const Icons = {
     Home: "mingcute:home-3-fill",
     Close: "mingcute:close-line",
     Copy: "mingcute:copy-2-line",
+    Bulb: "mingcute:bulb",
 
     Conversion: "mingcute:lightning-fill",
 

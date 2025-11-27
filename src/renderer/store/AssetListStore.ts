@@ -10,6 +10,7 @@ import { useEvent } from "~/composables/useEvent.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
+    const potentialAssets = ref<SharedAsset[]>([]);
     const refreshing = ref(false);
     const searchTerm = useRememberWorkspaceRef(ref(""), "asset-list-search");
     const assetsEntries = computed(() => [...assets.value.values()]);
@@ -28,6 +29,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
+        potentialAssets.value = event.potentialAssets;
         refreshing.value = false;
     });
 
@@ -47,10 +49,8 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     });
 
-    window.electronAPI.asset.subscribeNavigateToHash((assetHash) => {
-        activeId.value = assetHash;
-        const router = useRouter();
-        router.push("/assets");
+    window.electronAPI.asset.subscribeNavigateToHash((assetId) => {
+        activeId.value = assetId;
     });
 
     async function createAsset(primaryFile: string, otherFiles: string[]): Promise<void> {
@@ -116,6 +116,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     return {
         assets,
+        potentialAssets,
         refreshing,
         searchTerm,
         filteredAssets,
