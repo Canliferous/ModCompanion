@@ -7,11 +7,11 @@ import { getAssetFromFile } from "./MainAssetRepository.js";
 export function detectPotentialAssets(contentTree: string[]): SharedAsset[] {
     const assets: SharedAsset[] = [];
     for (const file of contentTree) {
-        if (!file.startsWith("_hr")) continue;
-        if (getAssetFromFile(file) !== undefined) continue;
-
         const isTexture = SharedConstants.isTextureFileEnding(path.extname(file));
         if (isTexture) {
+            if (!file.includes("_hr")) continue;
+            if (getAssetFromFile(file) !== undefined) continue;
+
             assets.push({
                 defFilePath: file,
                 def: createTextureAssetDefinition(file),
