@@ -119,7 +119,7 @@ provide(DataTableEntryActionInjectKey, {
     onEntryContextMenu: (event: MouseEvent, idx: number) => {
         // Make the right-clicked item active
         activeIdx.value = idx;
-        if (event.ctrlKey) {
+        if (event.ctrlKey || selectedIdx.value.includes(idx)) {
             selectedIdx.value = [...selectedIdx.value, idx].sort();
         } else {
             selectedIdx.value = [idx].sort();
