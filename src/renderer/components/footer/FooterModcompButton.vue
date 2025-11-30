@@ -3,7 +3,7 @@
         <template #leading>
             <MBitmapIcon name="mod_companion_192" class="h-4 w-4" />
         </template>
-        Mod Companion v1
+        Mod Companion
     </UButton>
 </template>
 
