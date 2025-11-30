@@ -42,6 +42,7 @@ import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBro
 import ClipboardHelper from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -130,6 +131,17 @@ function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefine
     return undefined;
 }
 
+const editingGroup = ref<SharedAssetGroupId | undefined>();
+const editingAsset = ref<SharedAssetGroupId | undefined>();
+
+function stopEditing() {
+    editingAsset.value = undefined;
+    editingGroup.value = undefined;
+    nextTick(() => {
+        table.value?.focus();
+    });
+}
+
 const columns: DataTableColumn<AssetBrowserEntry>[] = [
     {
         id: "name",
@@ -137,9 +149,12 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
         cell: (entry, depth) => {
             if (isAssetBrowserAssetEntry(entry)) {
                 return h(AssetBrowserCellAssetName, {
+                    id: entry.assetDef.id,
                     name: entry.assetDef.displayName ?? "(unknown)",
                     type: entry.assetDef.type,
                     depth,
+                    editing: editingAsset.value === entry.assetDef.id,
+                    onStopEditing: stopEditing,
                 });
             } else if (isAssetBrowserGroupEntry(entry)) {
                 return h(AssetBrowserCellGroupName, { name: entry.group.def.displayName, id: entry.group.id });
@@ -338,6 +353,15 @@ function handleKeyDown(event: KeyboardEvent, entry: AssetBrowserEntry | undefine
         }
 
         event.preventDefault();
+    }
+
+    if (event.key === "F2") {
+        if (isAssetBrowserAssetEntry(entry)) {
+            editingAsset.value = entry.assetDef.id;
+        }
+        if (isAssetBrowserGroupEntry(entry)) {
+            console.log(entry.group.id);
+        }
     }
 }
 </script>
