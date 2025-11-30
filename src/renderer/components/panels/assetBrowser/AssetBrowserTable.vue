@@ -182,105 +182,119 @@ function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
 }
 
 const items = computed(() => {
-    const selected = listStore.selectedAssets;
     const options: ContextMenuItem[][] = [];
 
-    if (assetGroupsStore.activeGroupId !== undefined) {
-        options.push([
-            {
-                label: "Copy Name",
-                icon: "empty",
-                onSelect(e: Event) {
-                    ClipboardHelper.writeTextAndToast(assetGroupsStore.activeGroup?.def.displayName!);
+    {
+        const group = assetGroupsStore.activeGroup;
+        if (group) {
+            options.push([
+                {
+                    label: "Convert",
+                    onSelect(e) {
+                        for (const id of group.def.assets) {
+                            conversionStore.enqueue(id);
+                        }
+                    },
+                    icon: AppDesign.Icons.ActionConvertAsset,
+                    color: "success",
                 },
-                disabled: assetGroupsStore.activeGroup?.def.displayName == undefined,
-            },
-        ]);
+                {
+                    label: "Copy Name",
+                    icon: "empty",
+                    onSelect(e: Event) {
+                        ClipboardHelper.writeTextAndToast(group.def.displayName!);
+                    },
+                    disabled: group.def.displayName == undefined,
+                },
+            ]);
+        }
     }
 
-    if (selected.length === 0) return options;
+    {
+        const assets = listStore.selectedAssets;
+        if (assets.length > 0) {
+            const isAnyGrouped = assets.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
+            options.push([
+                {
+                    label: "Convert",
+                    onSelect(e) {
+                        for (const sel of assets) {
+                            conversionStore.enqueue(sel.def.id);
+                        }
+                    },
+                    icon: AppDesign.Icons.ActionConvertAsset,
+                    color: "success",
+                },
+                {
+                    label: "Create Asset Group",
+                    onSelect(e: Event) {
+                        assetGroupsStore.createGroup(assets.map((s) => s.def.id));
+                        table.value?.deselect();
+                    },
+                    icon: AppDesign.Icons.ActionCreateAssetGroup,
+                    color: isAnyGrouped ? "neutral" : "success",
+                    disabled: isAnyGrouped,
+                },
+            ]);
 
-    const isAnyGrouped = selected.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
+            if (assets.length === 1) {
+                const sel = assets[0];
 
-    options.push([
-        {
-            label: "Convert",
-            onSelect(e) {
-                for (const sel of selected) {
-                    conversionStore.enqueue(sel.def.id);
+                if (sel.def.associatedFiles) {
+                    const ass = sel.def.associatedFiles;
+                    for (const assKey in ass) {
+                        const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
+                        const v = ass[key];
+                        if (v) {
+                            const entry = getAssociatedEntryName(key)!;
+                            options.push([
+                                {
+                                    label: `Open ${entry.name}`,
+                                    color: "info",
+                                    onSelect(e: Event) {
+                                        openAssociatedFile(v);
+                                    },
+                                    icon: entry.icon,
+                                },
+                            ]);
+                        }
+                    }
                 }
-            },
-            icon: AppDesign.Icons.ActionConvertAsset,
-            color: "success",
-        },
-        {
-            label: "Create Asset Group",
-            onSelect(e: Event) {
-                assetGroupsStore.createGroup(selected.map((s) => s.def.id));
-                table.value?.deselect();
-            },
-            icon: AppDesign.Icons.ActionCreateAssetGroup,
-            color: isAnyGrouped ? "neutral" : "success",
-            disabled: isAnyGrouped,
-        },
-    ]);
 
-    if (selected.length === 1) {
-        const sel = selected[0];
-
-        if (sel.def.associatedFiles) {
-            const ass = sel.def.associatedFiles;
-            for (const assKey in ass) {
-                const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
-                const v = ass[key];
-                if (v) {
-                    const entry = getAssociatedEntryName(key)!;
-                    options.push([
-                        {
-                            label: `Open ${entry.name}`,
-                            color: "info",
-                            onSelect(e: Event) {
-                                openAssociatedFile(v);
-                            },
-                            icon: entry.icon,
+                options.push([
+                    {
+                        label: "Open .mca",
+                        onSelect(e: Event) {
+                            openMca(sel);
                         },
-                    ]);
-                }
+                        icon: AppDesign.Icons.ActionOpenFileMca,
+                    },
+                    {
+                        label: "Explore to .mca",
+                        onSelect(e: Event) {
+                            exploreToMca(sel);
+                        },
+                        icon: AppDesign.Icons.ActionExploreToMca,
+                    },
+                    {
+                        label: "Copy Name",
+                        icon: "empty",
+                        onSelect(e: Event) {
+                            ClipboardHelper.writeTextAndToast(sel.def.displayName!);
+                        },
+                        disabled: sel.def.displayName == undefined,
+                    },
+                    {
+                        label: "Copy ID",
+                        icon: "empty",
+                        onSelect(e: Event) {
+                            ClipboardHelper.writeTextAndToast(sel.def.id);
+                        },
+                        disabled: sel.def.displayName == undefined,
+                    },
+                ]);
             }
         }
-
-        options.push([
-            {
-                label: "Open .mca",
-                onSelect(e: Event) {
-                    openMca(sel);
-                },
-                icon: AppDesign.Icons.ActionOpenFileMca,
-            },
-            {
-                label: "Explore to .mca",
-                onSelect(e: Event) {
-                    exploreToMca(sel);
-                },
-                icon: AppDesign.Icons.ActionExploreToMca,
-            },
-            {
-                label: "Copy Name",
-                icon: "empty",
-                onSelect(e: Event) {
-                    ClipboardHelper.writeTextAndToast(sel.def.displayName!);
-                },
-                disabled: sel.def.displayName == undefined,
-            },
-            {
-                label: "Copy ID",
-                icon: "empty",
-                onSelect(e: Event) {
-                    ClipboardHelper.writeTextAndToast(sel.def.id);
-                },
-                disabled: sel.def.displayName == undefined,
-            },
-        ]);
     }
 
     return options;
