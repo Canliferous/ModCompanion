@@ -5,6 +5,8 @@
             variant="ghost"
             color="neutral"
             :icon="open ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronDown"
+            block
+            class="justify-start"
         />
 
         <template #content>

@@ -37,6 +37,7 @@ export default function buildConfig(): NuxtUIOptions {
                 variants: {
                     variant: {
                         solid: "inset-shadow-rim",
+                        cave: "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid",
                     },
                 },
                 compoundVariants: [
@@ -133,7 +134,17 @@ export default function buildConfig(): NuxtUIOptions {
                 },
             },
             inputNumber: {
-                slots: { base: "hover:bg-elevated duration-0" },
+                variants: {
+                    variant: {
+                        lowered:
+                            "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid",
+                    },
+                },
+                defaultVariants: {
+                    color: "primary",
+                    variant: "lowered",
+                    size: "md",
+                },
             },
             checkbox: {
                 slots: {
