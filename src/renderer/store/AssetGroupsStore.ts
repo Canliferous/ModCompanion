@@ -80,6 +80,10 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         return undefined;
     }
 
+    function getGroup(groupId: SharedAssetGroupId): SharedAssetGroup | undefined {
+        return groups.value.get(groupId);
+    }
+
     function isExpanded(groupId: SharedAssetGroupId) {
         return expandedState.value.includes(groupId);
     }
@@ -147,5 +151,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         collapseAll,
         expandAll,
         getGroupFromAssetId,
+        getGroup,
     };
 });

@@ -157,7 +157,12 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
                     onStopEditing: stopEditing,
                 });
             } else if (isAssetBrowserGroupEntry(entry)) {
-                return h(AssetBrowserCellGroupName, { name: entry.group.def.displayName, id: entry.group.id });
+                return h(AssetBrowserCellGroupName, {
+                    name: entry.group.def.displayName,
+                    id: entry.group.id,
+                    editing: editingGroup.value === entry.group.id,
+                    onStopEditing: stopEditing,
+                });
             }
 
             return undefined;
@@ -360,7 +365,7 @@ function handleKeyDown(event: KeyboardEvent, entry: AssetBrowserEntry | undefine
             editingAsset.value = entry.assetDef.id;
         }
         if (isAssetBrowserGroupEntry(entry)) {
-            console.log(entry.group.id);
+            editingGroup.value = entry.group.id;
         }
     }
 }

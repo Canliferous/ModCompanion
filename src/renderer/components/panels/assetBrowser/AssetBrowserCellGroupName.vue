@@ -9,8 +9,17 @@
             @click="handleToggleExpanded()"
         />
         <UIcon :name="isExpanded ? AppDesign.Icons.FsFolderOpen : AppDesign.Icons.FsFolder" class="text-yellow-200" />
-        <div class="text-sm text-neutral-300 tracking-wide text-ellipsis overflow-hidden text-left" dir="rtl">
-            &lrm;{{ name }}
+        <div
+            class="text-sm text-neutral-300 tracking-wide text-ellipsis overflow-hidden text-left"
+            :dir="editing ? 'ltr' : 'rtl'"
+        >
+            <span>&lrm;</span>
+            <MInlineEditable
+                :editing="editing"
+                :value="name"
+                @changed="handleNameChanged"
+                @stopEditing="emit('stopEditing')"
+            />
         </div>
     </div>
 </template>
@@ -21,12 +30,17 @@ import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
 
 const groupsStore = useAssetGroupsStore();
 
 const props = defineProps<{
     name: string;
     id: SharedAssetGroupId;
+    editing?: boolean;
+}>();
+const emit = defineEmits<{
+    stopEditing: [void];
 }>();
 
 const isExpanded = computed(() => groupsStore.isExpanded(props.id));
@@ -48,6 +62,15 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 
 function handleToggleExpanded() {
     groupsStore.toggleCollapsed(props.id);
+}
+
+function handleNameChanged(newName: string) {
+    const group = useAssetGroupsStore().getGroup(props.id);
+    if (group) {
+        const newGroup = structuredClone(toRaw(group));
+        newGroup.def.displayName = newName;
+        useAssetGroupsStore().writeGroup(newGroup.id, newGroup.def);
+    }
 }
 </script>
 
