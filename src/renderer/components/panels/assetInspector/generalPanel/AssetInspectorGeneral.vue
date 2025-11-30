@@ -1,38 +1,40 @@
 <template>
-    <div class="p-2 grid grid-cols-2 gap-2 content-start h-full overflow-y-auto">
-        <EditControlAssetDef :asset="asset" />
-        <UFormField label="Type">
-            <EditControlAssetType :asset="asset" />
-        </UFormField>
-        <UFormField label="ID">
-            <UInput disabled v-model="asset.def.id" class="w-full" />
-        </UFormField>
-        <UFormField label="Display Name" class="col-span-2">
-            <EditControlAssetDisplayName :asset="asset" />
-        </UFormField>
+    <div class="p-2 h-full">
+        <div class="grid grid-cols-2 gap-2 content-start h-full overflow-y-auto">
+            <EditControlAssetDef :asset="asset" />
+            <UFormField label="Type">
+                <EditControlAssetType :asset="asset" />
+            </UFormField>
+            <UFormField label="ID">
+                <UInput disabled v-model="asset.def.id" class="w-full" />
+            </UFormField>
+            <UFormField label="Display Name" class="col-span-2">
+                <EditControlAssetDisplayName :asset="asset" />
+            </UFormField>
 
-        <EditControlAssetFileList
-            heading="Content Files"
-            :asset="asset"
-            field="contentFiles"
-            dir="content"
-            :max-items="maxContentFiles"
-        />
-        <EditControlAssetFileList
-            heading="Game Files"
-            :asset="asset"
-            field="gameFiles"
-            dir="game"
-            :max-items="maxGameFiles"
-        />
+            <EditControlAssetFileList
+                heading="Content Files"
+                :asset="asset"
+                field="contentFiles"
+                dir="content"
+                :max-items="maxContentFiles"
+            />
+            <EditControlAssetFileList
+                heading="Game Files"
+                :asset="asset"
+                field="gameFiles"
+                dir="game"
+                :max-items="maxGameFiles"
+            />
 
-        <UFormField label="Associated Files" class="col-span-2">
-            <EditControlAssetAssociated :asset="asset" />
-        </UFormField>
+            <UFormField label="Associated Files" class="col-span-2">
+                <EditControlAssetAssociated :asset="asset" />
+            </UFormField>
 
-        <UFormField label="Credits" class="col-span-2">
-            <EditControlAssetCredits :asset="asset" />
-        </UFormField>
+            <UFormField label="Credits" class="col-span-2">
+                <EditControlAssetCredits :asset="asset" />
+            </UFormField>
+        </div>
     </div>
 </template>
 
