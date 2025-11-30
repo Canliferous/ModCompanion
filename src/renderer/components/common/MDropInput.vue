@@ -1,5 +1,5 @@
 <template>
-    <MAcceptDrop v-model="model">
+    <MAcceptDrop v-model="model" @change="emit('change', model ?? '')">
         <template v-slot="{ isOverDropZone }">
             <template v-if="isDragging">
                 <div class="rounded bg-neutral-900 border border-accented inset-shadow-cave overflow-hidden">
