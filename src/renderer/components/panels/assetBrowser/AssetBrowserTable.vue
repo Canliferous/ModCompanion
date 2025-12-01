@@ -6,6 +6,7 @@
             :columns="columns"
             :tree-child-func="treeChildFunc"
             draggable
+            noScroll
             neutral-highlight
             @onActiveChanged="handleActiveChanged"
             @onSelectionChanged="handleSelectionChanged"

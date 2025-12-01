@@ -1,13 +1,17 @@
 <template>
     <div
-        class="grid content-start p-1 w-full h-full"
+        class="grid content-start w-full h-full"
         :class="noHeader ? 'grid-rows-[minmax(0,_1fr)]' : 'grid-rows-[auto_minmax(0,_1fr)]'"
         :style="`grid-template-columns: ${columnTemplate}`"
         @click="handleClickEmptyArea"
         @keydown="handleKeyDown"
     >
         <MDataTableHeader v-if="!noHeader" :columns="columns" />
-        <div class="grid col-span-full grid-cols-subgrid content-start pr-1 overflow-y-scroll" ref="grid">
+        <div
+            class="grid col-span-full grid-cols-subgrid content-start pr-1"
+            :class="{ 'overflow-y-scroll': !(noScroll ?? false) }"
+            ref="grid"
+        >
             <MDataTableRow
                 v-for="(entry, i) in entriesHierarchy"
                 :idx="i"
@@ -38,6 +42,7 @@ const props = defineProps<{
     draggable?: boolean;
     neutralHighlight?: boolean;
     treeChildFunc?: (entry: T) => T[] | undefined;
+    noScroll?: boolean;
 }>();
 
 interface HierarchyEntry {

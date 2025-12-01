@@ -1,6 +1,8 @@
 <template>
-    <div class="grid grid-rows-[auto_auto_minmax(0,_1fr)] h-full w-full">
-        <div class="p-1"><FileBrowserLocationBar @focus-list="handleFocusList" /></div>
+    <MPanelRoot alwaysShowScroll>
+        <template #header>
+            <FileBrowserLocationBar @focus-list="handleFocusList" />
+        </template>
         <UContextMenu :items="items">
             <MDataTable
                 :columns="columns"
@@ -11,9 +13,10 @@
                 @onDragStart="handleDragStart"
                 ref="dataTable"
                 :draggable="true"
+                noScroll
             />
         </UContextMenu>
-    </div>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-    <AssetInspectorGeneral v-if="assetStore.activeAsset" :asset="assetStore.activeAsset" />
+    <AssetInspectorGeneralRoot v-if="assetStore.activeAsset" :asset="assetStore.activeAsset" />
     <div v-else class="grid place-items-center text-muted">Nothing Selected</div>
 </template>
 

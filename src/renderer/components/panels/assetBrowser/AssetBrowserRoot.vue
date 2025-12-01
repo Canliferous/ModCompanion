@@ -1,17 +1,19 @@
 <template>
-    <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-[auto_minmax(0,_1fr)] gap-1 h-full p-1">
-        <div class="flex gap-1">
-            <AssetBrowserSearchInput />
-            <AssetBrowserTypeSelect />
-            <UButtonGroup>
-                <AssetBrowserCollapseButtons />
-                <AssetBrowserRefreshButton />
-            </UButtonGroup>
-        </div>
+    <MPanelRoot>
+        <template #header>
+            <div class="flex gap-1">
+                <AssetBrowserSearchInput />
+                <AssetBrowserTypeSelect />
+                <UButtonGroup>
+                    <AssetBrowserCollapseButtons />
+                    <AssetBrowserRefreshButton />
+                </UButtonGroup>
+            </div>
+        </template>
         <div>
             <AssetBrowserTable />
         </div>
-    </div>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">

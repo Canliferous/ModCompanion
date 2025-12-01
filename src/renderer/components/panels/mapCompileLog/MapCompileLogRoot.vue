@@ -1,17 +1,9 @@
 <template>
-    <div class="p-1 h-full grid grid-rows-[auto_minmax(0,_1fr)]">
-        <div class="flex">
-            <div class="ml-auto" />
-            <UCheckbox v-model="lineWrap" label="Line Wrap" />
-        </div>
-        <div
-            class="p-2 font-mono text-xs text-neutral-300 overflow-y-scroll text-nowrap wrap-anywhere"
-            :class="{ 'text-wrap': lineWrap }"
-            ref="logOutput"
-        >
+    <MPanelRoot>
+        <MLogArea class="h-full">
             {{ log }}
-        </div>
-    </div>
+        </MLogArea>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +16,7 @@ const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();
 
 const logOutput = useTemplateRef("logOutput");
-const lineWrap = useRememberRef(ref(false), "map-compile-log-line-wrap");
+// const lineWrap = useRememberRef(ref(false), "map-compile-log-line-wrap");
 
 const log = computed(() => {
     if (!listStore.selectedMap) {

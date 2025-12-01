@@ -1,6 +1,6 @@
 <template>
-    <div class="p-2 h-full">
-        <div class="grid grid-cols-2 gap-2 content-start h-full overflow-y-auto">
+    <MPanelRoot>
+        <div class="grid grid-cols-2 gap-2 content-start">
             <EditControlAssetDef :asset="asset" />
             <UFormField label="Type">
                 <EditControlAssetType :asset="asset" />
@@ -35,7 +35,7 @@
                 <EditControlAssetCredits :asset="asset" />
             </UFormField>
         </div>
-    </div>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">

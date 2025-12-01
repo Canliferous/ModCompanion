@@ -4,6 +4,7 @@
         :columns="columns"
         neutral-highlight
         @onActiveChanged="handleActiveChanged"
+        noScroll
     />
 </template>
 

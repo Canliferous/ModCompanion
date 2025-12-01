@@ -1,29 +1,31 @@
 <template>
-    <div class="p-1 h-full grid grid-cols-1 grid-rows-[1fr_auto] gap-2">
-        <div class="overflow-y-scroll" ref="scroller">
+    <MPanelRoot noScroll>
+        <div class="overflow-y-scroll h-full" ref="scroller">
             <pre class="whitespace-pre-wrap text-sm Run windows launchers through wine on linux">{{
                 interopStore.log
             }}</pre>
         </div>
 
-        <div class="flex">
-            <UInput
-                class="grow"
-                :placeholder="interopStore.connected ? 'Enter command' : 'Strata Interop is not connected'"
-                :disabled="!interopStore.connected"
-                @keydown.enter="handleSubmit"
-                v-model="prompt"
-            />
-            <UButton
-                :icon="AppDesign.Icons.ActionSend"
-                color="neutral"
-                variant="ghost"
-                :disabled="!prompt"
-                @click="handleSubmit"
-            />
-            <UButton label="Clear" color="neutral" variant="ghost" @click="handleClear" />
-        </div>
-    </div>
+        <template #footer>
+            <div class="flex">
+                <UInput
+                    class="grow"
+                    :placeholder="interopStore.connected ? 'Enter command' : 'Strata Interop is not connected'"
+                    :disabled="!interopStore.connected"
+                    @keydown.enter="handleSubmit"
+                    v-model="prompt"
+                />
+                <UButton
+                    :icon="AppDesign.Icons.ActionSend"
+                    color="neutral"
+                    variant="ghost"
+                    :disabled="!prompt"
+                    @click="handleSubmit"
+                />
+                <UButton label="Clear" color="neutral" variant="ghost" @click="handleClear" />
+            </div>
+        </template>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">

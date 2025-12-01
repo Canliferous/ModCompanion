@@ -1,14 +1,16 @@
 <template>
-    <div class="p-1 grid grid-cols-2 gap-1 text-xs">
-        <template v-for="item in items">
-            <div class="grid grid-cols-2 bg-elevated px-2.5 py-1.5">
-                <span class="text-muted">
-                    {{ item.name }}
-                </span>
-                <span>{{ item.value.value }}</span>
-            </div>
-        </template>
-    </div>
+    <MPanelRoot>
+        <div class="grid grid-cols-2 gap-1 text-xs">
+            <template v-for="item in items">
+                <div class="grid grid-cols-2 bg-elevated rounded px-2.5 py-1.5">
+                    <span class="text-muted">
+                        {{ item.name }}
+                    </span>
+                    <span>{{ item.value.value }}</span>
+                </div>
+            </template>
+        </div>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">

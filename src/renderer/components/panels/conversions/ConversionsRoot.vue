@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full grid grid-rows-[minmax(0,_1fr)_auto] grid-cols-[minmax(0,_1fr)]">
+    <MPanelRoot alwaysShowScroll>
         <template v-if="conversionStore.conversionEvents.length > 0">
             <ConversionsTable :history="conversionStore.conversionEvents" />
         </template>
@@ -7,11 +7,14 @@
         <template v-else>
             <div class="grid place-items-center h-full text-muted">No conversions yet</div>
         </template>
-        <div class="flex gap-1 items-center p-1">
-            <UButton size="xs" label="Convert All" @click="handleConvertAll" />
-            <UButton size="xs" label="Clear" @click="handleClear" />
-        </div>
-    </div>
+
+        <template #footer>
+            <div class="flex gap-1 items-center">
+                <UButton size="xs" label="Convert All" @click="handleConvertAll" />
+                <UButton size="xs" label="Clear" @click="handleClear" />
+            </div>
+        </template>
+    </MPanelRoot>
 </template>
 <script setup lang="ts">
 import ConversionsTable from "~/components/panels/conversions/ConversionsTable.vue";

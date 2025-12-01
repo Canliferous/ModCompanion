@@ -1,6 +1,6 @@
 <template>
-    <TooltipProvider>
-        <div class="h-full grid grid-rows-[auto_minmax(0,_1fr)] grid-cols-1 gap-1 p-1">
+    <MPanelRoot alwaysShowScroll>
+        <template #header>
             <div class="flex gap-1">
                 <ModalMapList>
                     <UButton label="Add" :icon="AppDesign.Icons.ActionAdd" />
@@ -17,11 +17,11 @@
                 </div>
                 <MapsTimeReportToggle />
             </div>
-            <div class="overflow-x-auto">
-                <MapsDataGrid />
-            </div>
+        </template>
+        <div class="overflow-x-auto">
+            <MapsDataGrid />
         </div>
-    </TooltipProvider>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">
