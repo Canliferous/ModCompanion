@@ -1,5 +1,10 @@
 <template>
-    <AssetBrowserCellAssetName v-if="asset" :name="asset.def.displayName ?? '(unknown)'" :type="asset.def.type" />
+    <AssetBrowserCellAssetName
+        v-if="asset"
+        :name="asset.def.displayName ?? '(unknown)'"
+        :type="asset.def.type"
+        :id="assetId"
+    />
     <div v-else>Unknown asset {{ assetId }}</div>
 </template>
 

@@ -1,7 +1,5 @@
 <template>
-    <MPanelRoot>
-        <AssetInspectorGroupRoot :group="group" />
-    </MPanelRoot>
+    <AssetInspectorGroupRoot :group="group" />
 </template>
 
 <script setup lang="ts">

@@ -1,37 +1,37 @@
 <template>
-    <div class="grid gap-2">
-        <UFormField label="Group Name">
-            <template #hint>
-                <UBadge
-                    label="Saved"
-                    :icon="AppDesign.Icons.Check"
-                    color="success"
-                    class="transition-opacity opacity-0"
-                    :class="{ 'opacity-100': savedIndicatorShown }"
+    <MPanelRoot>
+        <div class="grid gap-2">
+            <UFormField label="Group Name">
+                <template #hint>
+                    <UBadge
+                        label="Saved"
+                        :icon="AppDesign.Icons.Check"
+                        color="success"
+                        class="transition-opacity opacity-0"
+                        :class="{ 'opacity-100': savedIndicatorShown }"
+                    />
+                </template>
+                <UInput
+                    placeholder="Group Name..."
+                    class="w-full"
+                    v-model="displayName"
+                    @change="handleUpdateDisplayName"
                 />
-            </template>
-            <UInput
-                placeholder="Group Name..."
-                class="w-full"
-                v-model="displayName"
-                @change="handleUpdateDisplayName"
-            />
-        </UFormField>
+            </UFormField>
 
-        <UFormField label="Assets">
-            <GroupList :group="group" @remove="handleRemoveAsset" @add="handleAddAsset" />
-        </UFormField>
+            <UFormField label="Assets">
+                <GroupList :group="group" @remove="handleRemoveAsset" @add="handleAddAsset" />
 
-        <div>
-            <UButton
-                label="Delete Group"
-                color="error"
-                variant="subtle"
-                :icon="AppDesign.Icons.ActionRemove"
-                @click="handleDelete"
-            />
+                <div class="flex mt-2">
+                    <UButton label="Convert All" :icon="AppDesign.Icons.ActionConvertAsset" @click="handleConvertAll" />
+                </div>
+            </UFormField>
+
+            <div>
+                <UButton label="Delete Group" :icon="AppDesign.Icons.ActionRemove" @click="handleDelete" />
+            </div>
         </div>
-    </div>
+    </MPanelRoot>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +39,7 @@ import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 
 const groupStore = useAssetGroupsStore();
 
@@ -81,6 +82,12 @@ groupStore.subscribeGroupsWritten(() => {
     }
     savedIndicatorTimeoutHandle.value = setTimeout(() => (savedIndicatorShown.value = false), 2000);
 });
+
+function handleConvertAll() {
+    for (let asset of props.group.def.assets) {
+        useAssetConversionStore().enqueue(asset);
+    }
+}
 </script>
 
 <style scoped></style>
