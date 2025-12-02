@@ -9,7 +9,8 @@ import {
 } from "../launcher/MainMapCompilerLaunchers.js";
 import { SharedMapCompileLogEventType } from "Shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
-import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
+import { getAppConfig } from "./MainConfigSystem.js";
+import child_process from "node:child_process";
 
 interface Stage {
     step: SharedMapCompileStep;
@@ -27,6 +28,14 @@ let paused = false;
 export const MapCompileSystem = {
     initSystem(): boolean {
         workerInterval = setInterval(_workQueue, 200);
+
+        const config = getAppConfig();
+        child_process.spawnSync(
+            `chmod +x ${config.vbspExePath} ${config.postcompilerExePath} ${config.vvisExePath} ${config.vradExePath}`,
+            {
+                shell: true,
+            },
+        );
 
         return true;
     },

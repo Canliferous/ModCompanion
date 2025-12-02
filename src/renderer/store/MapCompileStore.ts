@@ -19,12 +19,19 @@ export const useMapCompileStore = defineStore("map-compile", () => {
         progress.set(key, event.state);
     });
 
-    watch(state, (s) => {
-        if (s === SharedPlayPauseStopControlsState.Stopped) {
+    watch(state, (newState, oldState) => {
+        if (newState === SharedPlayPauseStopControlsState.Stopped) {
             window.electronAPI.map.cancelQueue();
-        } else if (s === SharedPlayPauseStopControlsState.Playing) {
-            const mapList = useMapListStore().mapList;
-            window.electronAPI.map.enqueue(mapList);
+        } else if (newState === SharedPlayPauseStopControlsState.Playing) {
+            if (oldState === SharedPlayPauseStopControlsState.Paused) {
+                window.electronAPI.map.pauseQueue(false);
+            } else {
+                const mapList = useMapListStore().mapList;
+                window.electronAPI.map.enqueue(toRaw(mapList));
+                progress.clear();
+            }
+        } else if (newState === SharedPlayPauseStopControlsState.Paused) {
+            window.electronAPI.map.pauseQueue(true);
         }
     });
 

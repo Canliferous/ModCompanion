@@ -44,8 +44,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
         enqueue: (mapPaths: string[]) => ipcRenderer.send(SharedIpcChannels.MapQueueEnqueue, mapPaths),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
             ipcRenderer.on(SharedIpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
-        cancelQueue: () => ipcRenderer.invoke(SharedIpcChannels.MapQueueCancel),
-        pauseQueue: (paused: boolean) => ipcRenderer.invoke(SharedIpcChannels.MapQueueSetPaused, paused),
+        cancelQueue: () => ipcRenderer.send(SharedIpcChannels.MapQueueCancel),
+        pauseQueue: (paused: boolean) => ipcRenderer.send(SharedIpcChannels.MapQueueSetPaused, paused),
         subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) =>
             ipcRenderer.on(SharedIpcChannels.MapCompileLog, (e: IpcRendererEvent, event: SharedMapCompileLogEvent) =>
                 callback(event),
