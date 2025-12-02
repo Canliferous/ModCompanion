@@ -1,6 +1,6 @@
 <template>
     <div
-        class="border border-accented bg-neutral-900"
+        class="border border-accented rounded bg-neutral-900 inset-shadow-cave"
         :class="{ 'border-primary-400': isOverDropZone }"
         ref="dropZoneRef"
     >
