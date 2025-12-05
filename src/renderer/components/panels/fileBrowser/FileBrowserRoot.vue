@@ -66,7 +66,7 @@ const columns: DataTableColumn<SharedProjectFileEntry>[] = [
         cell: (entry) =>
             h(
                 "span",
-                { class: "text-right font-mono" },
+                { class: "text-right tabular-nums" },
                 entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : "",
             ),
     },

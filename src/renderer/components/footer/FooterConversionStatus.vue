@@ -5,7 +5,7 @@
             <MConversionStateIcon :state="SharedConversionState.InProgress" /> Conversion Agent Busy
         </span>
         <span class="text-muted">
-            (<span class="font-mono">{{ conversionStore.summary.totalSum }}</span> total)
+            (<span class="tabular-nums">{{ conversionStore.summary.totalSum }}</span> total)
         </span>
     </div>
 </template>

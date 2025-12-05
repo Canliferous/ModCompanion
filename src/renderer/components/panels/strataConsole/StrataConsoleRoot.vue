@@ -1,9 +1,7 @@
 <template>
     <MPanelRoot noScroll>
         <div class="overflow-y-scroll h-full" ref="scroller">
-            <pre class="whitespace-pre-wrap text-sm Run windows launchers through wine on linux">{{
-                interopStore.log
-            }}</pre>
+            <pre class="whitespace-pre-wrap text-sm">{{ interopStore.log }}</pre>
         </div>
 
         <template #footer>

@@ -2,7 +2,7 @@
     <template v-if="props.endTime">
         <UTooltip :text="`Took ${displayTime} to finish`">
             <div class="text-right">
-                <span class="font-mono">{{ displayTime }}</span>
+                <span class="tabular-nums">{{ displayTime }}</span>
                 <span>ms</span>
             </div>
         </UTooltip>

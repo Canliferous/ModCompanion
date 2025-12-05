@@ -1,6 +1,6 @@
 <template>
     <UTooltip :text="dateTime.toString()">
-        <span class="font-mono">{{ displayedTime }}</span>
+        <span class="tabular-nums">{{ displayedTime }}</span>
     </UTooltip>
 </template>
 
