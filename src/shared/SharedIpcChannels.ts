@@ -53,5 +53,8 @@ export const SharedIpcChannels = {
     AssetGroupsDelete: "assetgroup_delete",
 
     FgdBuild: "fgd_build",
+
+    TcArtifacts_IsConnected: "tc_artifacts_is_connected",
+    TcArtifacts_ListAllMaps: "tc_artifacts_list_all_maps",
 } as const;
 export type SharedIpcChannel = (typeof SharedIpcChannels)[keyof typeof SharedIpcChannels];

@@ -29,6 +29,7 @@ import {
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js";
 
 export {};
 
@@ -106,6 +107,10 @@ declare global {
             };
             fgd: {
                 build: () => Promise<boolean>;
+            };
+            tcArtifacts: {
+                isConnected: () => Promise<boolean>;
+                listAllMaps: () => Promise<SharedTcArtifactsListAllMapsReport>;
             };
         };
     }

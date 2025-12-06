@@ -16,6 +16,7 @@ interface ConfigFile {
     };
 
     teamCityArtifactCloud?: S3ClientConfig;
+    teamCityArtifactCloudBucket?: string;
 }
 
 let config: SharedAppConfig = null!;
@@ -74,15 +75,16 @@ function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undef
         vvisExePath: _buildBinaryPath(root, "vvis"),
         vradExePath: _buildBinaryPath(root, "vrad"),
 
-        vbspArgs: `-game ${c.searchPath}`,
+        vbspArgs: `-report -game ${c.searchPath}`,
         postcompilerArgs: "--nopack",
-        vvisArgs: `-game ${c.searchPath}`,
-        vradArgs: `-PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
+        vvisArgs: `-report -game ${c.searchPath}`,
+        vradArgs: `-report -PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
         mapSourceDirs: c.mapSourceDirs,
         assetDefaults: c.assetDefaults,
         teamCityArtifactCloud: c.teamCityArtifactCloud,
+        teamCityArtifactCloudBucket: c.teamCityArtifactCloudBucket,
     };
 }
 

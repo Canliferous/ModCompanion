@@ -14,6 +14,7 @@ import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 import { registerClipboardApi } from "../api/MainClipboardApi.js";
 import { registerStrataInteropApi } from "../api/MainStrataInteropApi.js";
 import { registerFgdApi } from "../api/MainFgdApi.js";
+import { registerTcArtifactsApi } from "../api/MainTcArtifactsApi.js";
 
 const apis: (() => boolean)[] = [
     registerAppExitApi,
@@ -32,6 +33,7 @@ const apis: (() => boolean)[] = [
     registerClipboardApi,
     registerStrataInteropApi,
     registerFgdApi,
+    registerTcArtifactsApi,
 ];
 
 export function initApiSystem(): boolean {

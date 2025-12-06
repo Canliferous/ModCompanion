@@ -61,4 +61,5 @@ export interface SharedAppConfig {
     };
 
     teamCityArtifactCloud?: S3ClientConfig;
+    teamCityArtifactCloudBucket?: string;
 }

@@ -28,6 +28,8 @@ export const Icons = {
     Copy: "mingcute:copy-2-line",
     Bulb: "mingcute:bulb",
     Question: "mingcute:question-fill",
+    NetworkConnected: "mingcute:wifi-line",
+    NetworkDisconnected: "mingcute:wifi-off-line",
 
     Conversion: "mingcute:lightning-fill",
 

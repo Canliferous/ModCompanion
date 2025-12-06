@@ -2,13 +2,14 @@ import { ListBucketsCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/cli
 import { getAppConfig } from "./MainConfigSystem.js";
 
 let s3Client: S3Client | undefined = undefined;
-const bucket = "secondface-tc-revo2";
+let s3Bucket: string | undefined = undefined;
+
 const RETRIES = 3;
 
-export const TeamCityArtifactCloudSystem = {
+export const TcArtifactsSystem = {
     async initSystem() {
         const config = getAppConfig();
-        if (!config.teamCityArtifactCloud) {
+        if (!config.teamCityArtifactCloud || !config.teamCityArtifactCloudBucket) {
             console.warn("TeamCity artifact cloud not configured. Disabling system");
             return true;
         }
@@ -16,13 +17,14 @@ export const TeamCityArtifactCloudSystem = {
 
         try {
             const response = await client.send(new ListBucketsCommand());
-            const bucketFound = response.Buckets?.some((b) => b.Name === bucket);
+            const bucketFound = response.Buckets?.some((b) => b.Name === config.teamCityArtifactCloudBucket);
             if (!bucketFound) {
                 console.warn(
-                    `TeamCity artifact cloud system connected but couldn't find bucket ${bucket}. Buckets are: ${response.Buckets?.map((b) => b.Name).join(", ") ?? "<none>"}`,
+                    `TeamCity artifact cloud system connected but couldn't find bucket ${config.teamCityArtifactCloudBucket}. Buckets are: ${response.Buckets?.map((b) => b.Name).join(", ") ?? "<none>"}`,
                 );
             } else {
                 s3Client = client;
+                s3Bucket = config.teamCityArtifactCloudBucket;
             }
         } catch (e) {
             console.warn("Couldn't connect to TeamCity artifact cloud service", e);
@@ -30,12 +32,13 @@ export const TeamCityArtifactCloudSystem = {
 
         return true;
     },
-    isCloudConnected() {
-        return s3Client !== undefined;
+    async isCloudConnected(): Promise<boolean> {
+        const connected = await _useS3(async (client, bucket) => true);
+        return connected ?? false;
     },
     async listAllObjects() {
-        return _useS3(async (client) => {
-            const response = await s3Client?.send(new ListObjectsV2Command({ Bucket: bucket }));
+        return _useS3(async (client, bucket) => {
+            const response = await client.send(new ListObjectsV2Command({ Bucket: bucket }));
             return response?.Contents;
         });
     },
@@ -47,13 +50,13 @@ function _sleep(timeMs: number): Promise<void> {
     });
 }
 
-async function _useS3<T>(callback: (client: S3Client) => Promise<T>): Promise<T | undefined> {
+async function _useS3<T>(callback: (client: S3Client, bucket: string) => Promise<T>): Promise<T | undefined> {
     for (let i = 0; i < RETRIES; i++) {
-        if (s3Client) {
-            return callback(s3Client);
+        if (s3Client && s3Bucket) {
+            return callback(s3Client, s3Bucket);
         }
 
-        await TeamCityArtifactCloudSystem.initSystem();
+        await TcArtifactsSystem.initSystem();
         await _sleep(2000);
     }
 

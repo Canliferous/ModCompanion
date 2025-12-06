@@ -5,6 +5,8 @@
             <USeparator orientation="vertical" />
             <FooterLog />
             <USeparator orientation="vertical" />
+            <FooterTcArtifactsStatus />
+            <USeparator orientation="vertical" />
             <FooterConversionStatus />
             <USeparator orientation="vertical" />
             <FooterInteropStatus />

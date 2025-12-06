@@ -140,4 +140,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
     fgd: {
         build: () => ipcRenderer.invoke(SharedIpcChannels.FgdBuild),
     },
+
+    tcArtifacts: {
+        isConnected: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_IsConnected),
+        listAllMaps: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_ListAllMaps),
+    },
 });
