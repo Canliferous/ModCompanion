@@ -145,13 +145,11 @@ function _startStage(mapPath: string, stageIdx: number): void {
     notifyCompileLog({ type: SharedMapCompileLogEventType.Clear, mapPath });
     currentCompilePromise = stage.action(
         mapPath,
-        (msg: string) => {
-            console.log(msg);
-            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendMessage, mapPath, message: msg });
+        (msg: Uint8Array) => {
+            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendMessage, mapPath, message: String(msg) });
         },
-        (msg: string) => {
-            console.log(msg);
-            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendError, mapPath, message: msg });
+        (msg: Uint8Array) => {
+            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendError, mapPath, message: String(msg) });
         },
     );
     stage.state = SharedMapCompileState.InProgress;
