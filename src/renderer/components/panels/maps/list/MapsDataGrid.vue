@@ -21,6 +21,7 @@ import MapsDataGridActionsCell from "~/components/panels/maps/list/MapsDataGridA
 import MapsDataGridTimeReportTotalCell from "~/components/panels/maps/list/MapsDataGridTimeReportTotalCell.vue";
 import MapsDataGridTimeReportCell from "~/components/panels/maps/list/MapsDataGridTimeReportCell.vue";
 import MapsDataGridTimeReportBarCell from "~/components/panels/maps/list/MapsDataGridTimeReportBarCell.vue";
+import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();
@@ -32,7 +33,7 @@ const listColumns: DataTableColumn<string>[] = [
         id: "name",
         label: "Name",
         size: "1fr",
-        cell: (entry) => h("span", { class: "font-mono text-sm" }, mapDisplayNames.value.get(entry)),
+        cell: (entry) => h("span", { class: "tabular-nums text-sm" }, listStore.mapDisplayList.get(entry)),
     },
     {
         id: "vbsp",
@@ -86,7 +87,7 @@ const reportColumns: DataTableColumn<string>[] = [
         cell: (entry) =>
             h(MapsDataGridTimeReportBarCell, {
                 mapPath: entry,
-                displayName: mapDisplayNames.value.get(entry) ?? entry,
+                displayName: listStore.mapDisplayList.get(entry) ?? entry,
             }),
     },
     {
@@ -120,37 +121,6 @@ const reportColumns: DataTableColumn<string>[] = [
         headerClass: "text-center px-2",
     },
 ];
-
-// The intent is to not show the map's folder "prefix" if all maps share are in the same folder.
-// Only show it when they're in different folders
-const mapDisplayNames = computed(() => {
-    const list = listStore.mapList;
-    let prefix: string | undefined = undefined;
-    let addPrefix = false;
-
-    for (const p of list) {
-        const dirName = pathe.dirname(p);
-        if (prefix === undefined) {
-            prefix = dirName;
-        } else if (prefix !== dirName) {
-            addPrefix = true;
-            break;
-        }
-    }
-
-    const map = new Map<string, string>();
-    for (const p of list) {
-        const fileName = filename(p) ?? "";
-        if (addPrefix) {
-            const dirName = pathe.dirname(p);
-            map.set(p, pathe.join(dirName, fileName));
-        } else {
-            map.set(p, fileName);
-        }
-    }
-
-    return map;
-});
 
 function handleActiveChanged(map: string | undefined): void {
     listStore.selectMap(map);

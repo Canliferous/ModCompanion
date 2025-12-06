@@ -5,14 +5,14 @@ import fs from "fs/promises";
 
 export type MapCompilerAction = (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ) => Promise<boolean>;
 
 export const runVBsp: MapCompilerAction = (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
     return _runMapCompiler(mapPath, config.vbspExePath, config.vbspArgs, onStdOut, onStdErr);
@@ -20,8 +20,8 @@ export const runVBsp: MapCompilerAction = (
 
 export const runVVis: MapCompilerAction = (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
     return _runMapCompiler(mapPath, config.vvisExePath, config.vvisArgs, onStdOut, onStdErr);
@@ -29,8 +29,8 @@ export const runVVis: MapCompilerAction = (
 
 export const runVRad: MapCompilerAction = (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
     return _runMapCompiler(mapPath, config.vradExePath, config.vradArgs, onStdOut, onStdErr);
@@ -38,8 +38,8 @@ export const runVRad: MapCompilerAction = (
 
 export const runPostcompiler: MapCompilerAction = (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
     return _runMapCompiler(mapPath, config.postcompilerExePath, config.postcompilerArgs, onStdOut, onStdErr);
@@ -47,8 +47,8 @@ export const runPostcompiler: MapCompilerAction = (
 
 export const runDone: MapCompilerAction = async (
     mapPath: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
     const sourceBsp = mapPath.replace(".vmf", ".bsp");
@@ -58,10 +58,10 @@ export const runDone: MapCompilerAction = async (
 
     try {
         await fs.copyFile(from, to);
-        onStdOut?.(Uint8Array.from(`Copied file ${from} ${to}`));
+        onStdOut?.(`Copied file ${from} ${to}`);
         return true;
     } catch (e) {
-        onStdErr?.(Uint8Array.from(`Failed to copy file ${from} ${to}`));
+        onStdErr?.(`Failed to copy file ${from} ${to}`);
         return false;
     }
 };
@@ -70,8 +70,8 @@ function _runMapCompiler(
     mapPath: string,
     exePath: string,
     args: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
     const config = getAppConfig();
     const map = path.join(config.mapSourcePath, mapPath);
@@ -84,17 +84,17 @@ function _runCommand(
     binaryPath: string,
     args: string[],
     cwd: string,
-    onStdOut?: (msg: Uint8Array) => void,
-    onStdErr?: (msg: Uint8Array) => void,
+    onStdOut?: (msg: string) => void,
+    onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
     console.log(`Running map command ${binaryPath} ${args} in ${cwd}`);
 
     return new Promise((resolve) => {
         const proc = child_process.spawn(binaryPath, args, { cwd });
 
-        if (onStdOut) proc.stdout.on("data", onStdOut);
-        if (onStdErr) proc.stderr.on("data", onStdErr);
-        if (onStdErr) proc.on("error", onStdErr);
+        if (onStdOut) proc.stdout.on("data", (o) => onStdOut(o.toString()));
+        if (onStdErr) proc.stderr.on("data", (o) => onStdErr(o.toString()));
+        if (onStdErr) proc.on("error", (o) => onStdErr(o.toString()));
 
         proc.on("close", (code: number) => {
             resolve(code === 1);

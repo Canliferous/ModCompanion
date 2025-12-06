@@ -1,7 +1,8 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { useFilter } from "~/composables/useFilter.js";
+import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";
 
 export const useMapListStore = defineStore("map-list", () => {
     const mapList = useRememberStringArray(ref<string[]>([]), "map-list");
@@ -9,6 +10,7 @@ export const useMapListStore = defineStore("map-list", () => {
     const filteredMapList = useFilter<string>(mapList, (item) => item.toLowerCase(), searchTerm);
     const selectedMap = ref<string | undefined>();
     const mapQueue = ref<string[]>([]);
+    const mapDisplayList = computed(() => useMapDisplayNames(mapList.value));
 
     function selectMap(mapPath: string | undefined) {
         selectedMap.value = mapPath;
@@ -45,5 +47,6 @@ export const useMapListStore = defineStore("map-list", () => {
         removeMap,
         isMapInList,
         selectMap,
+        mapDisplayList,
     };
 });

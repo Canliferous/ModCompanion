@@ -7,7 +7,6 @@ import {
     runVRad,
     runVVis,
 } from "../launcher/MainMapCompilerLaunchers.js";
-import { SharedMapCompileLogEventType } from "Shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 import { getAppConfig } from "./MainConfigSystem.js";
 import child_process from "node:child_process";
@@ -142,14 +141,13 @@ function _mapFinished(mapPath: string): void {
 function _startStage(mapPath: string, stageIdx: number): void {
     const stage = mapQueueStages.get(mapPath)![stageIdx];
 
-    notifyCompileLog({ type: SharedMapCompileLogEventType.Clear, mapPath });
     currentCompilePromise = stage.action(
         mapPath,
-        (msg: Uint8Array) => {
-            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendMessage, mapPath, message: String(msg) });
+        (msg: string) => {
+            notifyCompileLog({ mapPath, message: msg, step: stage.step, isError: false });
         },
-        (msg: Uint8Array) => {
-            notifyCompileLog({ type: SharedMapCompileLogEventType.AppendError, mapPath, message: String(msg) });
+        (msg: string) => {
+            notifyCompileLog({ mapPath, message: msg, step: stage.step, isError: true });
         },
     );
     stage.state = SharedMapCompileState.InProgress;
