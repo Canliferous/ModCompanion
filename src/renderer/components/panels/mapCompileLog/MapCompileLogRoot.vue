@@ -1,8 +1,6 @@
 <template>
     <MPanelRoot>
-        <MLogArea class="h-full">
-            {{ log }}
-        </MLogArea>
+        <MLogArea :text="log" />
     </MPanelRoot>
 </template>
 

@@ -1,8 +1,6 @@
 <template>
     <MPanelRoot noScroll>
-        <div class="overflow-y-scroll h-full" ref="scroller">
-            <pre class="whitespace-pre-wrap text-sm">{{ interopStore.log }}</pre>
-        </div>
+        <MLogArea :text="interopStore.log" />
 
         <template #footer>
             <div class="flex">
@@ -31,17 +29,6 @@ import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
 const interopStore = useStrataInteropStore();
-
-const scroller = useTemplateRef("scroller");
-
-watch(
-    () => interopStore.log,
-    (value) => {
-        if (scroller.value) {
-            scroller.value.scrollTop = scroller.value.scrollHeight;
-        }
-    },
-);
 
 const prompt = ref("");
 

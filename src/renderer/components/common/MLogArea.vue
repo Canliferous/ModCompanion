@@ -1,9 +1,27 @@
 <template>
-    <div class="p-1 text-xs bg-neutral-900 border border-accented overflow-y-scroll overflow-x-clip wrap-break-word">
-        <pre class="whitespace-pre-wrap"><slot/></pre>
+    <div
+        class="h-full p-1 bg-neutral-900 border border-accented rounded inset-shadow-cave overflow-y-scroll overflow-x-clip"
+        ref="scroller"
+    >
+        <pre class="whitespace-pre-wrap wrap-break-word text-xs text-neutral-300">{{ text }}</pre>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{ text: string }>();
+
+const scroller = useTemplateRef("scroller");
+
+watch(
+    () => props.text,
+    () => {
+        if (scroller.value) {
+            nextTick(() => {
+                scroller.value.scrollTop = scroller.value.scrollHeight;
+            });
+        }
+    },
+);
+</script>
 
 <style scoped></style>
