@@ -2,7 +2,6 @@ import * as child_process from "node:child_process";
 import { getAppConfig } from "../systems/MainConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
-import process from "node:process";
 
 export type MapCompilerAction = (
     mapPath: string,
@@ -59,10 +58,10 @@ export const runDone: MapCompilerAction = async (
 
     try {
         await fs.copyFile(from, to);
-        onStdOut?.(`Copied file ${from} ${to}`);
+        onStdOut?.(Uint8Array.from(`Copied file ${from} ${to}`));
         return true;
     } catch (e) {
-        onStdErr?.(`Failed to copy file ${from} ${to}`);
+        onStdErr?.(Uint8Array.from(`Failed to copy file ${from} ${to}`));
         return false;
     }
 };
@@ -83,21 +82,21 @@ function _runMapCompiler(
 
 function _runCommand(
     binaryPath: string,
-    args: string,
+    args: string[],
     cwd: string,
     onStdOut?: (msg: Uint8Array) => void,
     onStdErr?: (msg: Uint8Array) => void,
 ): Promise<boolean> {
     console.log(`Running map command ${binaryPath} ${args} in ${cwd}`);
 
-    return new Promise((resolve, reject) => {
-        const proc = child_process.spawn(binaryPath, args, { cwd }, { cwd: args });
+    return new Promise((resolve) => {
+        const proc = child_process.spawn(binaryPath, args, { cwd });
 
-        proc.stdout.on("data", onStdOut);
-        proc.stderr.on("data", onStdErr);
-        proc.on("error", onStdErr);
+        if (onStdOut) proc.stdout.on("data", onStdOut);
+        if (onStdErr) proc.stderr.on("data", onStdErr);
+        if (onStdErr) proc.on("error", onStdErr);
 
-        proc.on("close", (code) => {
+        proc.on("close", (code: number) => {
             resolve(code === 1);
         });
     });
