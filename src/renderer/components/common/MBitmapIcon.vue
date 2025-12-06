@@ -1,5 +1,5 @@
 <template>
-    <img class="size-5" :src="`./icons/${props.name}.png`" />
+    <img class="size-5 shrink-0" :src="`./icons/${props.name}.png`" />
 </template>
 
 <script setup lang="ts">
