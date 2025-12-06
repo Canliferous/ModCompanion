@@ -15,11 +15,11 @@ const scroller = useTemplateRef("scroller");
 watch(
     () => props.text,
     () => {
-        if (scroller.value) {
-            nextTick(() => {
+        nextTick(() => {
+            if (scroller.value) {
                 scroller.value.scrollTop = scroller.value.scrollHeight;
-            });
-        }
+            }
+        });
     },
 );
 </script>
