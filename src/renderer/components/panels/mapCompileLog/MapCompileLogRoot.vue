@@ -1,6 +1,6 @@
 <template>
     <MPanelRoot>
-        <MLogArea :text="log" />
+        <MLogArea :text="log ?? ''" />
     </MPanelRoot>
 </template>
 
@@ -13,7 +13,6 @@ import { useRememberRef } from "~/composables/useRemember.js";
 const listStore = useMapListStore();
 const consoleStore = useMapConsoleStore();
 
-const logOutput = useTemplateRef("logOutput");
 // const lineWrap = useRememberRef(ref(false), "map-compile-log-line-wrap");
 
 const log = computed(() => {
@@ -21,12 +20,6 @@ const log = computed(() => {
         return undefined;
     }
     return consoleStore.logMessageTextMap.get(listStore.selectedMap);
-});
-
-watch(log, () => {
-    if (logOutput.value) {
-        logOutput.value.scrollTo(0, logOutput.value.scrollHeight);
-    }
 });
 </script>
 
