@@ -4,11 +4,11 @@ import { SharedAppConfig } from "Shared/SharedAppConfig.js";
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import os from "node:os";
 import { S3ClientConfig } from "@aws-sdk/client-s3";
+import { SharedMapPresets } from "Shared/SharedMapPreset.js";
 
 interface ConfigFile {
     root?: string;
     searchPath?: string;
-    mapSourceDirs?: string[];
     launcherName?: string;
 
     assetDefaults?: {
@@ -17,6 +17,9 @@ interface ConfigFile {
 
     teamCityArtifactCloud?: S3ClientConfig;
     teamCityArtifactCloudBucket?: string;
+
+    mapSourceDirs?: string[];
+    mapPresets?: SharedMapPresets;
 }
 
 let config: SharedAppConfig = null!;
@@ -82,6 +85,8 @@ function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undef
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
         mapSourceDirs: c.mapSourceDirs,
+        mapPresets: c.mapPresets,
+
         assetDefaults: c.assetDefaults,
         teamCityArtifactCloud: c.teamCityArtifactCloud,
         teamCityArtifactCloudBucket: c.teamCityArtifactCloudBucket,

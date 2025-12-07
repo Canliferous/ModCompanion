@@ -5,6 +5,7 @@
                 <ModalMapList>
                     <UButton label="Add" :icon="AppDesign.Icons.ActionAdd" />
                 </ModalMapList>
+                <MapPresetButton />
                 <UInput
                     placeholder="Search"
                     block
@@ -29,8 +30,8 @@ import MapsDataGrid from "./list/MapsDataGrid.vue";
 import { useMapListStore } from "~/store/MapListStore.js";
 import MapsTimeReportToggle from "./MapsTimeReportToggle.vue";
 import ModalMapList from "~/components/modals/ModalMapList.vue";
-import { TooltipProvider } from "reka-ui";
 import { AppDesign } from "~/design/AppDesign.js";
+import MapPresetButton from "~/components/panels/maps/MapPresetButton.vue";
 
 const listStore = useMapListStore();
 </script>

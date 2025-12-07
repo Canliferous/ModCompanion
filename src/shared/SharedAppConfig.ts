@@ -1,5 +1,6 @@
 import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
 import { S3ClientConfig } from "@aws-sdk/client-s3";
+import { SharedMapPresets } from "./SharedMapPreset.js";
 
 export interface SharedAppConfig {
     /**
@@ -56,6 +57,8 @@ export interface SharedAppConfig {
     gameName: string;
 
     mapSourceDirs?: string[];
+    mapPresets?: SharedMapPresets;
+
     assetDefaults?: {
         vtfOptions?: SharedVtfCreateOptions;
     };
