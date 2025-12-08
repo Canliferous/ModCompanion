@@ -3,6 +3,8 @@ import path from "node:path";
 import settings from "electron-settings";
 import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
 import fs from "node:fs";
+import { registerLauncherApi, runLauncher } from "../api/MainLauncherApi.js";
+import { SharedLauncherOptions } from "Shared/SharedLaunchers.js";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -121,12 +123,7 @@ function _createTray(): boolean {
         tray = new Tray(iconPath);
 
         tray.setToolTip("Mod Companion");
-        tray.setContextMenu(
-            Menu.buildFromTemplate([
-                { label: "Show", click: () => mainWindow?.show() },
-                { label: "Quit", click: () => app.exit() },
-            ]),
-        );
+        tray.setContextMenu(_buildTrayMenu());
 
         tray.on("click", (event) => {
             mainWindow?.show();
@@ -169,4 +166,17 @@ function _changeZoom(delta: number) {
 function _resetZoom() {
     zoomFactor = 1.0;
     mainWindow?.webContents.setZoomFactor(zoomFactor);
+}
+
+function _buildTrayMenu() {
+    const template: (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] = [];
+    template.push({ label: "Show", click: () => mainWindow?.show() });
+    template.push({ type: "separator" });
+
+    for (const option of SharedLauncherOptions) {
+        template.push({ label: `${option.name}`, click: () => runLauncher(option.type, option.args) });
+    }
+    template.push({ type: "separator" });
+    template.push({ label: "Quit", click: () => app.exit() });
+    return Menu.buildFromTemplate(template);
 }

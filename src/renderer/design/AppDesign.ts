@@ -1,4 +1,5 @@
 import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
+import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 
 export const Icons = {
     Asset: "mingcute:traffic-cone-fill",
@@ -91,10 +92,12 @@ export const Icons = {
 } as const;
 
 export const BitmapIcon = {
-    Hammer: "hammer",
-    Game: "revolution",
-    Faceposer: "faceposer",
-    Hlmv: "hlmv",
+    Launchers: {
+        [SharedLaunchers.Game]: "revolution",
+        [SharedLaunchers.Hammer]: "hammer",
+        [SharedLaunchers.Faceposer]: "faceposer",
+        [SharedLaunchers.Hlmv]: "hlmv",
+    },
     ModCompanion: "mod_companion_192",
 } as const;
 

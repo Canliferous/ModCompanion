@@ -7,53 +7,58 @@ import os from "node:os";
 
 export function registerLauncherApi(): boolean {
     ipcMain.on(SharedIpcChannels.AppLaunch, (event, launcherType: SharedLaunchers, launcherArgs?: string) => {
-        const exe = _getLauncherExe(launcherType);
-        if (!exe) {
-            console.warn("Unknown launcher type", launcherType);
-            return;
-        }
-
-        const workingDir = getAppConfig().gameRootPath;
-
-        let cmd = exe;
-        if (launcherArgs) {
-            cmd = `${exe} ${launcherArgs}`;
-        }
-
-        if (_isWine(exe) && os.platform() === "linux") {
-            cmd = `wine ${cmd}`;
-        }
-
-        if (!cmd.includes("-game")) {
-            cmd += ` -game ${getAppConfig().gameName}`;
-        }
-
-        console.log(`Launching '${cmd}' Working Dir '${workingDir}'`);
-        const proc = child_process.spawn(cmd, { cwd: workingDir, shell: true });
-        // proc.stdout.on("data", (message) => {
-        //     console.debug("Launched App: ", String(message));
-        // });
-        proc.on("error", (message) => {
-            console.warn("Launched App: ", message);
-        });
+        runLauncher(launcherType, launcherArgs);
     });
 
     return true;
 }
 
-function _getLauncherExe(launcherType: SharedLaunchers): string | undefined {
-    const config = getAppConfig();
-    if (launcherType === "game") {
-        return config.gameExePath;
-    } else if (launcherType === "hammer") {
-        return config.hammerPath;
-    } else if (launcherType === "hlmv") {
-        return config.hlmvPath;
-    } else if (launcherType === "faceposer") {
-        return config.faceposerPath;
+export function runLauncher(type: SharedLaunchers, args?: string) {
+    const exe = _getLauncherExe(type);
+    if (!exe) {
+        console.warn("Unknown launcher type", type);
+        return;
     }
 
-    return undefined;
+    const workingDir = getAppConfig().gameRootPath;
+
+    let cmd = exe;
+    if (args) {
+        cmd = `${exe} ${args}`;
+    }
+
+    if (_isWine(exe) && os.platform() === "linux") {
+        cmd = `wine ${cmd}`;
+    }
+
+    if (!cmd.includes("-game")) {
+        cmd += ` -game ${getAppConfig().gameName}`;
+    }
+
+    console.log(`Launching '${cmd}' Working Dir '${workingDir}'`);
+    const proc = child_process.spawn(cmd, { cwd: workingDir, shell: true });
+    // proc.stdout.on("data", (message) => {
+    //     console.debug("Launched App: ", String(message));
+    // });
+    proc.on("error", (message) => {
+        console.warn("Launched App: ", message);
+    });
+}
+
+function _getLauncherExe(launcherType: SharedLaunchers): string | undefined {
+    const config = getAppConfig();
+    switch (launcherType) {
+        case SharedLaunchers.Game:
+            return config.gameExePath;
+        case SharedLaunchers.Hammer:
+            return config.hammerPath;
+        case SharedLaunchers.Hlmv:
+            return config.hlmvPath;
+        case SharedLaunchers.Faceposer:
+            return config.faceposerPath;
+        default:
+            return undefined;
+    }
 }
 
 function _isWine(binaryPath: string) {

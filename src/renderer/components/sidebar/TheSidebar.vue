@@ -27,12 +27,12 @@
                     variant="soft"
                     color="neutral"
                     class="bg-neutral-800"
-                    v-for="btn of launcherButtons"
-                    :label="btn.name"
-                    @click="() => launch(btn.launcherType, btn.launcherArgs)"
+                    v-for="option of SharedLauncherOptions"
+                    :label="option.name"
+                    @click="() => launch(option)"
                 >
                     <template #leading>
-                        <MBitmapIcon :name="btn.icon" class="w-4 h-4" />
+                        <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[option.type]" class="w-4 h-4" />
                     </template>
                 </UButton>
 
@@ -57,13 +57,17 @@ import MBitmapIcon from "../common/MBitmapIcon.vue";
 import SidebarHotReloadSwitch from "~/components/sidebar/SidebarHotReloadSwitch.vue";
 import SidebarAddWorkspaceButton from "~/components/sidebar/SidebarAddWorkspaceButton.vue";
 import SidebarCreateAsset from "~/components/sidebar/SidebarCreateAsset.vue";
-import { launch, launcherButtons } from "~/model/LauncherButtons.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import SidebarBuildFgdButton from "~/components/sidebar/SidebarBuildFgdButton.vue";
 import SidebarPotentialAssets from "~/components/sidebar/SidebarPotentialAssets.vue";
+import { SharedLauncherOption, SharedLauncherOptions } from "Shared/SharedLaunchers.js";
 
 function quit() {
     window.electronAPI.app.exit();
+}
+
+function launch(option: SharedLauncherOption) {
+    window.electronAPI.app.launch(option.type, option.args);
 }
 </script>
 
