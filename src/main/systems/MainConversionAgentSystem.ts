@@ -146,8 +146,9 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
 
     console.log("Converting asset", asset.def.displayName, asset.def.id);
     const timeoutPromise = _convertAsset(asset.def);
-    timeoutPromise.catch((a) => {
-        _onJobPromiseDone(id, SharedConversionState.Failed, a);
+    timeoutPromise.catch((log: string | undefined) => {
+        console.log(log);
+        _onJobPromiseDone(id, SharedConversionState.Failed, log);
     });
     timeoutPromise.then((log) => {
         const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;

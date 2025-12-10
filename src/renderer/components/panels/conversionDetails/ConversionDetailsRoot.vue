@@ -36,7 +36,7 @@
                 </template>
             </div>
 
-            <MLogArea>{{ event.log }}</MLogArea>
+            <MLogArea :text="event.log" />
         </div>
     </MPanelRoot>
 </template>

@@ -14,7 +14,7 @@
     "license": "MIT",
     "scripts": {
         "run-dist": "cross-env electron build_dist/main/main.cjs",
-        "run-dev": "cross-env NODE_ENV=development electron build_dev/main/main.js",
+        "run-dev": "cross-env NODE_ENV=development electron --trace-warnings build_dev/main/main.js",
         "dev": "npm run dev:assets && npm run dev:preload && concurrently -k -n MAIN,VITE -c green,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
         "dev:main": "tsc --outDir build_dev --project src/main/tsconfig.json && concurrently \"tsc --watch --outDir build_dev --project src/main/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/main/tsconfig.json\"",
         "dev:renderer": "vite --clearScreen false",

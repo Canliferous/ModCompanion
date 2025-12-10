@@ -4,6 +4,8 @@ import path from "node:path";
 import * as child_process from "node:child_process";
 import { getMainAssetsDir } from "../helpers/MainFilesystem.js";
 import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { runConverter } from "./converter/MainSharedConverter.js";
+import { getAppConfig } from "./MainConfigSystem.js";
 
 let binary = "";
 
@@ -25,9 +27,7 @@ export const MareTfSystem = {
     },
     async createVtf(inputPath: string, outputPath: string, options: SharedVtfCreateOptions = {}): Promise<string> {
         const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
-        console.log("Creating vtf. cmd:", cmd);
 
-        let log: string[] = [`Command: ${cmd}`, ""];
         try {
             const dir = path.dirname(outputPath);
             fs.mkdirSync(dir, { recursive: true });
@@ -35,34 +35,7 @@ export const MareTfSystem = {
             console.log(e);
         } // Nobody cares if the dir already exists
 
-        return new Promise((resolve, reject) => {
-            try {
-                const proc = child_process.spawn(cmd, { shell: true });
-                proc.stdout?.on("data", (d) => {
-                    log.push(d);
-                });
-                proc.stderr?.on("data", (d) => {
-                    log.push(d);
-                });
-                if (proc.pid !== undefined) {
-                    os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
-                }
-                proc.on("exit", (code) => {
-                    if (code === 0) {
-                        resolve(log.join("\n"));
-                    } else {
-                        log.push(`Maretf exited with error code ${code}`);
-                        reject(log.join("\n"));
-                    }
-                });
-            } catch (e) {
-                if (typeof e === "string") {
-                    reject(e);
-                } else {
-                    reject("");
-                }
-            }
-        });
+        return runConverter(cmd, getAppConfig().gamePath, "MareTF");
     },
 };
 

@@ -2,6 +2,7 @@ import { SharedModelAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import * as child_process from "node:child_process";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
+import { runConverter } from "./MainSharedConverter.js";
 
 export const ModelConverter = {
     getQcFile(asset: SharedModelAssetDefinition): string | undefined {
@@ -19,18 +20,7 @@ export const ModelConverter = {
     async createMdl(qcPath: string): Promise<string> {
         const config = getAppConfig();
         const cmd = `${config.studioMdlPath} -game ${config.gamePath} ${qcPath}`;
-        console.log("Creating mdl. cmd:", cmd);
 
-        let log: string[] = [];
-
-        return new Promise((resolve, reject) => {
-            const proc = child_process.exec(cmd, { cwd: config.gamePath });
-            proc.stdout?.on("data", (d) => {
-                log.push(d);
-            });
-            proc.on("exit", (code) => {
-                resolve(log.join());
-            });
-        });
+        return runConverter(cmd, config.gamePath, "StudioMDL");
     },
 };
