@@ -32,12 +32,12 @@ export default function buildConfig(): NuxtUIOptions {
             },
             button: {
                 slots: {
-                    base: "cursor-pointer",
+                    base: "cursor-pointer select-none",
                 },
                 variants: {
                     variant: {
                         solid: "inset-shadow-rim",
-                        cave: "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid",
+                        cave: "bg-neutral-900 hover:bg-neutral-850 inset-shadow-cave shadow-neutral-950 ring-transparent border border-accented outline-primary-500 outline-2 outline-none focus-visible:outline-solid focus-visible:outline-groove",
                     },
                 },
                 compoundVariants: [

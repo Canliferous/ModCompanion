@@ -2,9 +2,7 @@
     <MPanelRoot alwaysShowScroll>
         <template #header>
             <div class="flex gap-1">
-                <ModalMapList>
-                    <UButton label="Add" :icon="AppDesign.Icons.ActionAdd" />
-                </ModalMapList>
+                <MapAddButton />
                 <MapPresetButton />
                 <UInput
                     placeholder="Search"
@@ -29,9 +27,9 @@
 import MapsDataGrid from "./list/MapsDataGrid.vue";
 import { useMapListStore } from "~/store/MapListStore.js";
 import MapsTimeReportToggle from "./MapsTimeReportToggle.vue";
-import ModalMapList from "~/components/modals/ModalMapList.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import MapPresetButton from "~/components/panels/maps/MapPresetButton.vue";
+import MapAddButton from "~/components/panels/maps/MapAddButton.vue";
 
 const listStore = useMapListStore();
 </script>
