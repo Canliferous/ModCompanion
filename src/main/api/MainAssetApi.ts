@@ -72,17 +72,8 @@ export function registerAssetApi(): boolean {
     return true;
 }
 
-type RescannedCallback = (event: SharedAssetRescanEvent) => void;
-const rescannedSubscribers: RescannedCallback[] = [];
-export function subscribeAssetsRescanned(event: RescannedCallback) {
-    rescannedSubscribers.push(event);
-}
 export function notifyAssetsRescanned(event: SharedAssetRescanEvent): void {
     IpcHelper.send(SharedIpcChannels.AssetRescanned, event);
-
-    for (const rescannedSubscriber of rescannedSubscribers) {
-        rescannedSubscriber(event);
-    }
 }
 
 export function notifyAssetsAdded(event: SharedAssetAddedEvent): void {

@@ -1,9 +1,9 @@
-import { app, BrowserWindow, globalShortcut, Menu, Rectangle, Tray } from "electron";
+import { app, BrowserWindow, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
 import settings from "electron-settings";
 import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
 import fs from "node:fs";
-import { registerLauncherApi, runLauncher } from "../api/MainLauncherApi.js";
+import { runLauncher } from "../api/MainLauncherApi.js";
 import { SharedLauncherOptions } from "Shared/SharedLaunchers.js";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";

@@ -13,7 +13,6 @@ import { TextureConverter } from "./converter/MainTextureConverter.js";
 import { ModelConverter } from "./converter/MainModelConverter.js";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../helpers/MainSourceFs.js";
 import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./MainConversionEventSystem.js";
@@ -31,9 +30,6 @@ const conversionsMap: Map<SharedAssetId, SharedConversion> = new Map<SharedAsset
 
 export const ConversionAgentSystem = {
     initSystem(): boolean {
-        subscribeAssetsRescanned((event) => {
-            _initStates(event.assets);
-        });
         return true;
     },
     startAgent(): void {
@@ -44,6 +40,13 @@ export const ConversionAgentSystem = {
     stopAgent(): void {
         if (agentInterval) {
             clearInterval(agentInterval);
+        }
+    },
+    async runAndConvertUntilItIsDone(): Promise<void> {
+        for (const conv of conversionsMap.values()) {
+            if (conv.state === SharedConversionState.Pending) {
+                await _startConversion(conv.assetId);
+            }
         }
     },
     getConversionsMap(): Map<string, SharedConversion> {
@@ -60,28 +63,35 @@ export const ConversionAgentSystem = {
             _setState(assetId, SharedConversionState.Pending, true);
         }
     },
+    async initStates(map: SharedAssetMap) {
+        for (const asset of map.values()) {
+            if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
+                _setState(asset.def.id, SharedConversionState.Invalid);
+                continue;
+            }
+
+            const stale = await _isAssetStale(asset.def);
+            if (stale) {
+                ConversionAgentSystem.enqueue(asset.def.id);
+            } else {
+                _setState(asset.def.id, SharedConversionState.NoChange);
+            }
+        }
+    },
 };
-
-async function _initStates(map: SharedAssetMap) {
-    for (const asset of map.values()) {
-        if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
-            _setState(asset.def.id, SharedConversionState.Invalid);
-            continue;
-        }
-
-        const stale = await _isAssetStale(asset.def);
-        if (stale) {
-            ConversionAgentSystem.enqueue(asset.def.id);
-        } else {
-            _setState(asset.def.id, SharedConversionState.NoChange);
-        }
-    }
-}
 
 async function _runAgent(): Promise<void> {
     const assetsToConvert = _getAssetsToConvert();
     if (assetsToConvert.length > 0) {
-        await _startConversions(assetsToConvert);
+        console.log(`Converting ${assetsToConvert.length} assets`);
+        const promises: Promise<string | undefined>[] = [];
+        for (const id of assetsToConvert) {
+            promises.push(_startConversion(id));
+        }
+
+        return Promise.allSettled(promises).then((_) => {
+            HotReloadSystem.requestHotReload(assetsToConvert);
+        });
     }
 
     notifyConversionsUpdated({
@@ -157,17 +167,6 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     });
     conversionJobs.set(id, timeoutPromise);
     return timeoutPromise;
-}
-
-async function _startConversions(ids: SharedAssetId[]): Promise<void> {
-    const promises: Promise<string | undefined>[] = [];
-    for (const id of ids) {
-        promises.push(_startConversion(id));
-    }
-
-    return Promise.allSettled(promises).then((_) => {
-        HotReloadSystem.requestHotReload(ids);
-    });
 }
 
 async function _convertAsset(asset: SharedAssetDefinition): Promise<string | undefined> {

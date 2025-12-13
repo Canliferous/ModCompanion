@@ -11,17 +11,24 @@ import { ConversionChecksumSystem } from "./systems/MainConversionChecksumSystem
 import { AssetWatcherSystem } from "./systems/MainAssetWatcherSystem.js";
 import { TcArtifactsSystem } from "./systems/MainTcArtifactsSystem.js";
 import { FileBrowserSystem } from "./systems/MainFileBrowserSystem.js";
+import MainAssetRepository from "./systems/assets/MainAssetRepository.js";
+
+let headless = false;
+export function isHeadless() {
+    return headless;
+}
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
     initFunction: SystemFunction;
     name: string;
+    disableForHeadless?: boolean;
 }
 const systems: System[] = [
     { name: "Config", initFunction: initConfigSystem },
     // { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
-    { name: "Window", initFunction: WindowSystem.initSystem },
+    { name: "Window", initFunction: WindowSystem.initSystem, disableForHeadless: true },
     { name: "MapCompile", initFunction: MapCompileSystem.initSystem },
     { name: "AssetWatcher", initFunction: AssetWatcherSystem.initSystem },
     { name: "MareTf", initFunction: MareTfSystem.initSystem },
@@ -34,10 +41,24 @@ const systems: System[] = [
 ];
 
 async function startSystems() {
-    console.log("Starting systems...");
+    const cmdConvert = app.commandLine.hasSwitch("convert");
+    if (cmdConvert) {
+        headless = true;
+    }
+
+    if (isHeadless()) {
+        console.log("Starting systems in headless mode...");
+    } else {
+        console.log("Starting systems...");
+    }
 
     let success = false;
     for (const system of systems) {
+        if (isHeadless() && system.disableForHeadless) {
+            console.log(`Skipping ${system.name} system for headless mode`);
+            continue;
+        }
+
         const systemResult = system.initFunction();
 
         success = false;
@@ -62,9 +83,21 @@ async function startSystems() {
 
     if (success) {
         console.log("All systems started successfully!");
+
+        if (cmdConvert) {
+            await runConvert();
+        }
     } else {
         app.quit();
     }
+}
+
+async function runConvert() {
+    console.log("Running convert command");
+    await MainAssetRepository.rescan();
+    await ConversionAgentSystem.runAndConvertUntilItIsDone();
+    console.log("Convert command done. Goodbye");
+    app.quit();
 }
 
 function performPreStartChecks(): boolean {

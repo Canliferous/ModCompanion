@@ -1,5 +1,4 @@
 import { SharedAssetDefinition, SharedAssetId, SharedAssetMap } from "Shared/SharedAssetDefinition.js";
-import { subscribeAssetsRescanned } from "../api/MainAssetApi.js";
 import { getAppConfig } from "./MainConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
@@ -8,12 +7,9 @@ import crypto from "node:crypto";
 export const ConversionChecksumSystem = {
     checksums: new Map<SharedAssetId, string>(),
     initSystem() {
-        subscribeAssetsRescanned((event) => {
-            ConversionChecksumSystem.initializeChecksums(event.assets);
-        });
         return true;
     },
-    async initializeChecksums(map: SharedAssetMap) {
+    async initChecksums(map: SharedAssetMap) {
         const startTime = new Date();
         {
             const assets = map.values();
