@@ -32,10 +32,10 @@ import pathe from "pathe";
 import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-const looseFilesStore = useFileBrowserStore();
+const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 
-const entries = computed(() => looseFilesStore.currentEntries ?? []);
+const entries = computed(() => fileBrowserStore.currentEntries ?? []);
 
 const selectedEntries = ref<SharedProjectFileEntry[]>([]);
 const activeEntry = ref<SharedProjectFileEntry>();
@@ -88,7 +88,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: allFiles ? AppDesign.Icons.ActionLaunchFile : "nothing",
                 disabled: !allFiles,
                 onSelect(e: Event) {
-                    window.electronAPI.project.launchFile(pathsArray);
+                    window.electronAPI.fileBrowser.launchFile(pathsArray);
                 },
             },
         ],
@@ -120,7 +120,7 @@ function handleFocusList(): void {
 }
 
 function handleActivated(active: SharedProjectFileEntry): void {
-    looseFilesStore.onEntryActivated(active);
+    fileBrowserStore.onEntryActivated(active);
 }
 
 function handleSelectionChanged(entries: SharedProjectFileEntry[]): void {

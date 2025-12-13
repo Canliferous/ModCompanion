@@ -1,14 +1,16 @@
 export const SharedIpcChannels = {
     AppLaunch: "app_launch",
     AppExit: "app_exit",
-    AppBrowseToFile: "app_browse_to_file",
-    AppOpenFile: "app_open_file",
 
     ClipboardWriteText: "clipboard_write_text",
 
-    ProjectListFiles: "project_list_files",
-    ProjectCorrectPath: "project_correct_path",
-    ProjectLaunchFile: "project_launch_file",
+    FileBrowserListFiles: "filebrowser_list_files",
+    FileBrowserCorrectPath: "filebrowser_correct_path",
+    FileBrowserLaunchFile: "filebrowser_launch_file",
+    FileBrowserSetCurrentPath: "filebrowser_set_current_path",
+    FileBrowserCurrentDirUpdated: "filebrowser_current_dir_updated",
+    FileBrowserBrowseToFile: "filebrowser_browse_to_file",
+    FileBrowserOpenFile: "filebrowser_open_file",
 
     ConfigGet: "config_get",
 

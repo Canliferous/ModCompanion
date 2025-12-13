@@ -19,20 +19,28 @@ import {
 import { SharedConversionSummary, SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
 import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
 import { SharedPlayPauseStopControlsState } from "./shared/SharedPlayPauseStopState";
+import { SharedFileBrowserDirectoryUpdatedReport } from "./shared/SharedFileListing";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
         exit: () => ipcRenderer.send(SharedIpcChannels.AppExit),
         launch: (launcherType: SharedLaunchers, launcherArgs: string) =>
             ipcRenderer.send(SharedIpcChannels.AppLaunch, launcherType, launcherArgs),
-        browseToFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.AppBrowseToFile, filePath),
-        openFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.AppOpenFile, filePath),
     },
 
-    project: {
-        listFiles: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectListFiles, dirPath),
-        correctPath: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.ProjectCorrectPath, dirPath),
-        launchFile: (filePath: string | string[]) => ipcRenderer.send(SharedIpcChannels.ProjectLaunchFile, filePath),
+    fileBrowser: {
+        listFiles: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.FileBrowserListFiles, dirPath),
+        correctPath: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.FileBrowserCorrectPath, dirPath),
+        launchFile: (filePath: string | string[]) =>
+            ipcRenderer.send(SharedIpcChannels.FileBrowserLaunchFile, filePath),
+        setCurrentPath: (dirPath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserSetCurrentPath, dirPath),
+        browseToFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserBrowseToFile, filePath),
+        openFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserOpenFile, filePath),
+        subscribeDirectoryChanged: (callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void) =>
+            ipcRenderer.on(
+                SharedIpcChannels.FileBrowserCurrentDirUpdated,
+                (e: IpcRendererEvent, event: SharedFileBrowserDirectoryUpdatedReport) => callback(event),
+            ),
     },
 
     config: {

@@ -32,7 +32,7 @@ export function deserializeAssetDragDropTransferData(transferData: string): Asse
 export async function handleDrop(files: File[] | null, event: DragEvent) {
     if (files !== null && files.length === 1) {
         const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
-        const correctPath = await window.electronAPI.project.correctPath(fullPath);
+        const correctPath = await window.electronAPI.fileBrowser.correctPath(fullPath);
         return correctPath;
     }
 

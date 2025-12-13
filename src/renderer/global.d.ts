@@ -20,7 +20,11 @@ import {
     SharedConversionSummary,
     SharedConversionUpdateIpcEvent,
 } from "Shared/SharedConversion.js";
-import { SharedProjectFileEntry, SharedProjectListFilesReport } from "Shared/SharedFileListing.js";
+import {
+    SharedFileBrowserDirectoryUpdatedReport,
+    SharedProjectFileEntry,
+    SharedProjectListFilesReport,
+} from "Shared/SharedFileListing.js";
 import { SharedCreateAssetReport } from "Shared/SharedCreateAssetReport.js";
 import {
     SharedAssetGroup,
@@ -39,13 +43,17 @@ declare global {
             app: {
                 launch: (launcherType: SharedLaunchers, launcherArgs: string | undefined) => void;
                 exit: () => void;
-                browseToFile: (filePath: string) => void;
-                openFile: (filePath: string) => void;
             };
-            project: {
+            fileBrowser: {
                 listFiles: (dirPath: string) => Promise<SharedProjectListFilesReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 launchFile: (filePath: string | string[]) => void;
+                setCurrentPath: (dirPath: string) => void;
+                browseToFile: (filePath: string) => void;
+                openFile: (filePath: string) => void;
+                subscribeDirectoryChanged: (
+                    callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void,
+                ) => IpcRenderer;
             };
             config: {
                 get: () => Promise<SharedAppConfig>;

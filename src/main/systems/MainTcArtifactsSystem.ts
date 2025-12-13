@@ -3,6 +3,7 @@ import { getAppConfig } from "./MainConfigSystem.js";
 
 let s3Client: S3Client | undefined = undefined;
 let s3Bucket: string | undefined = undefined;
+let unconfigured = false;
 
 const RETRIES = 3;
 
@@ -11,6 +12,7 @@ export const TcArtifactsSystem = {
         const config = getAppConfig();
         if (!config.teamCityArtifactCloud || !config.teamCityArtifactCloudBucket) {
             console.warn("TeamCity artifact cloud not configured. Disabling system");
+            unconfigured = true;
             return true;
         }
         const client = new S3Client(config.teamCityArtifactCloud);
@@ -51,6 +53,8 @@ function _sleep(timeMs: number): Promise<void> {
 }
 
 async function _useS3<T>(callback: (client: S3Client, bucket: string) => Promise<T>): Promise<T | undefined> {
+    if (unconfigured) return undefined;
+
     for (let i = 0; i < RETRIES; i++) {
         if (s3Client && s3Bucket) {
             return callback(s3Client, s3Bucket);

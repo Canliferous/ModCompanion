@@ -8,7 +8,6 @@ import { registerFileBrowserApi } from "../api/MainFileBrowserApi.js";
 import { registerAssetApi } from "../api/MainAssetApi.js";
 import { registerImageMetaApi } from "../api/MainImageMetaApi.js";
 import { registerConversionApi } from "../api/MainConversionApi.js";
-import { registerProjectFilesApi } from "../api/MainProjectFiles.js";
 import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
 import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 import { registerClipboardApi } from "../api/MainClipboardApi.js";
@@ -27,7 +26,6 @@ const apis: (() => boolean)[] = [
     registerAssetApi,
     registerImageMetaApi,
     registerConversionApi,
-    registerProjectFilesApi,
     registerHotReloadApi,
     registerAssetGroupsApi,
     registerClipboardApi,

@@ -6,13 +6,13 @@ import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 export function openMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    window.electronAPI.app.openFile(pathe.join(getAppConfig().rootPath, p));
+    window.electronAPI.fileBrowser.openFile(pathe.join(getAppConfig().rootPath, p));
 }
 
 export function exploreToMca(asset: SharedAsset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    window.electronAPI.app.browseToFile(pathe.join(getAppConfig().rootPath, p));
+    window.electronAPI.fileBrowser.browseToFile(pathe.join(getAppConfig().rootPath, p));
 }
 
 export function browseToMca(asset: SharedAsset): void {
@@ -22,5 +22,5 @@ export function browseToMca(asset: SharedAsset): void {
 }
 
 export function openAssociatedFile(associatedFile: string): void {
-    window.electronAPI.app.openFile(pathe.join(getAppConfig().rootPath, associatedFile));
+    window.electronAPI.fileBrowser.openFile(pathe.join(getAppConfig().rootPath, associatedFile));
 }

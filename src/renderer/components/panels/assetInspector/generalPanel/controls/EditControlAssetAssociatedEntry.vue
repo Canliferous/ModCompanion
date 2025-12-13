@@ -31,7 +31,7 @@ const emit = defineEmits<{ updated: [newText: string] }>();
 
 function handleRun() {
     const p = pathe.join(getAppConfig().rootPath, file.value);
-    window.electronAPI.app.openFile(p);
+    window.electronAPI.fileBrowser.openFile(p);
 }
 </script>
 

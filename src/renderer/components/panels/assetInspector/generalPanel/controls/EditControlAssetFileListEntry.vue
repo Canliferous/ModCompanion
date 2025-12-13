@@ -32,7 +32,7 @@ const placeholder = `Enter path...`;
 
 function handleExplore() {
     const p = pathe.join(getAppConfig().rootPath, props.dir, getAppConfig().gameName, text.value);
-    window.electronAPI.app.browseToFile(p);
+    window.electronAPI.fileBrowser.browseToFile(p);
 }
 </script>
 
