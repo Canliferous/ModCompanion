@@ -26,8 +26,8 @@
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-const looseFilesStore = useFileBrowserStore();
-const pathSplits = computed(() => looseFilesStore.currentDir.split("/"));
+const fileBrowserStore = useFileBrowserStore();
+const pathSplits = computed(() => fileBrowserStore.currentDir.split("/"));
 
 function handleClick(event: MouseEvent, index: number): void {
     event.stopPropagation();
@@ -37,12 +37,12 @@ function handleClick(event: MouseEvent, index: number): void {
         fullPath += pathSplits.value[i];
     }
 
-    looseFilesStore.currentDir = fullPath;
+    fileBrowserStore.currentDir = fullPath;
 }
 
 function handleHomeClick(event: MouseEvent): void {
     event.stopPropagation();
-    looseFilesStore.currentDir = "";
+    fileBrowserStore.updateCurrentDir("");
 }
 </script>
 

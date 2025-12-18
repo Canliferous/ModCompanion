@@ -26,7 +26,8 @@ export function registerFileBrowserApi(): boolean {
         async (event: Electron.IpcMainInvokeEvent, dirPath: string): Promise<SharedProjectListFilesReport> => {
             const config = getAppConfig();
             const fullPath = path.join(config.rootPath, dirPath);
-            return FileBrowserSystem.listFiles(fullPath);
+            const results = await FileBrowserSystem.listFiles(fullPath, dirPath);
+            return results;
         },
     );
 

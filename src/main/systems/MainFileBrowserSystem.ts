@@ -77,7 +77,7 @@ export const FileBrowserSystem = {
         });
     },
 
-    async listFiles(dirPath: string): Promise<SharedProjectListFilesReport> {
+    async listFiles(dirPath: string, resultBaseRoot?: string): Promise<SharedProjectListFilesReport> {
         if (!this.isProjectPath(dirPath)) return { type: SharedProjectListFilesReportTypes.Invalid };
 
         let paths: string[] = [];
@@ -94,17 +94,18 @@ export const FileBrowserSystem = {
 
             try {
                 const s = await fs.stat(path.join(dirPath, p));
+                const entryPath = path.join(resultBaseRoot ?? dirPath, p).replaceAll("\\", "/");
                 if (s.isFile()) {
                     entries.push({
                         name: p,
-                        path: path.join(dirPath, p).replaceAll("\\", "/"),
+                        path: entryPath,
                         isFile: true,
                         fileSize: s.size,
                     });
                 } else {
                     entries.push({
                         name: p,
-                        path: path.join(dirPath, p).replaceAll("\\", "/"),
+                        path: entryPath,
                         isFile: false,
                     });
                 }
