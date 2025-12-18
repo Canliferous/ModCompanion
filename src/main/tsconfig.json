@@ -9,7 +9,9 @@
     "lib": ["ESNext", "DOM"],
     "paths": {
       "Shared/*": ["../shared/*"]
-    }
+    },
+    "inlineSources": true,
+    "sourceMap": true
   },
   "include": ["."]
 }

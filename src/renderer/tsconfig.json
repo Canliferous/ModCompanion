@@ -8,14 +8,15 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "sourceMap": true,
     "outDir": "../../build_dist",
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
       "Shared/*": ["../shared/*"]
-    }
+    },
+    "inlineSources": true,
+    "sourceMap": true
   },
   "include": ["."]
 }
