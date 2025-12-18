@@ -66,7 +66,7 @@ function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undef
         mapSourcePath: path.join(root, "content", c.searchPath, "maps"),
         mapOutputPath: path.join(root, "game", c.searchPath, "maps"),
 
-        studioMdlPath: _buildBinaryPath(root, "studiomdl", true),
+        studioMdlPath: _buildBinaryPath(root, "studiomdl"),
         hlmvPath: _buildBinaryPath(root, "hlmv", true),
         hammerPath: _buildBinaryPath(root, "hammer", true),
         faceposerPath: _buildBinaryPath(root, "hlfaceposer", true),
