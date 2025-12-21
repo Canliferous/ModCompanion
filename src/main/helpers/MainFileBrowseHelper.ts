@@ -5,12 +5,12 @@ import { existsSync } from "fs";
 import { getAppConfig } from "../systems/MainConfigSystem.js";
 
 export function browseToFile(filePath: string): void {
-    const normalizedPath = path.resolve(path.join(getAppConfig().rootPath, filePath));
+    const normalizedPath = path.join(getAppConfig().rootPath, filePath);
 
     let command: string | undefined = undefined;
 
     if (!existsSync(normalizedPath)) {
-        console.log("Browsing to file that doesn't exist, opening folder", filePath);
+        console.log("Browsing to file that doesn't exist, opening folder", normalizedPath);
         command = _getBrowseToDirectoryCommand(path.dirname(normalizedPath));
     } else {
         command = _getBrowseToFileSelectCommand(normalizedPath);
@@ -43,22 +43,22 @@ function _getBrowseToFileSelectCommand(filePath: string): string | undefined {
 
 export function _getBrowseToFileSelectCommandLinux(filePath: string): string | undefined {
     const fileManagers = [
-        { name: "dolphin", cmd: (p: string) => `dolphin --select "${p}"` },
-        { name: "nautilus", cmd: (p: string) => `nautilus --select "${p}"` },
-        { name: "nemo", cmd: (p: string) => `nemo --select "${p}"` },
-        { name: "caja", cmd: (p: string) => `caja --no-desktop --browser --select "${p}"` },
-        { name: "thunar", cmd: (p: string) => `thunar "${path.dirname(p)}"` },
-        { name: "xdg-open", cmd: (p: string) => `xdg-open "${path.dirname(p)}"` },
+        { mime: "org.kde.dolphin.desktop", cmd: (p: string) => `dolphin --select "${p}"` },
+        { mime: "org.gnome.Nautilus.desktop", cmd: (p: string) => `nautilus --select "${p}"` },
+        { mime: "nemo.desktop", cmd: (p: string) => `nemo "${p}"` },
+        { mime: "thunar.desktop", cmd: (p: string) => `thunar "${path.dirname(p)}"` },
     ];
 
+    // get the default file manager
+    const defaultFileManager = child_process.execSync("xdg-mime query default inode/directory").toString().trim();
     for (const fm of fileManagers) {
-        try {
-            child_process.execSync(`command -v ${fm.name}`, { stdio: "ignore" });
+        if (fm.mime === defaultFileManager) {
             return fm.cmd(filePath);
-        } catch {}
+        }
     }
 
-    return undefined;
+    // fallback
+    return `xdg-open "${path.dirname(filePath)}"`
 }
 
 function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {

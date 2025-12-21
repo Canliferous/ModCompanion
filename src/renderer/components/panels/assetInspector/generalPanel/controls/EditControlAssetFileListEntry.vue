@@ -31,7 +31,7 @@ const emit = defineEmits<{
 const placeholder = `Enter path...`;
 
 function handleExplore() {
-    const p = pathe.join(getAppConfig().rootPath, props.dir, getAppConfig().gameName, text.value);
+    const p = pathe.join(props.dir, getAppConfig().gameName, text.value);
     window.electronAPI.fileBrowser.browseToFile(p);
 }
 </script>
