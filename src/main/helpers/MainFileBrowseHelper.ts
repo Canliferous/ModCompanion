@@ -2,9 +2,10 @@ import path from "path";
 import * as os from "node:os";
 import * as child_process from "node:child_process";
 import { existsSync } from "fs";
+import { getAppConfig } from "../systems/MainConfigSystem.js";
 
 export function browseToFile(filePath: string): void {
-    const normalizedPath = path.resolve(filePath);
+    const normalizedPath = path.resolve(path.join(getAppConfig().rootPath, filePath));
 
     let command: string | undefined = undefined;
 
@@ -65,6 +66,9 @@ function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {
 
     if (platform === "win32") {
         return `explorer.exe "${dirPath}"`;
+    }
+    if (platform === "linux") {
+        return `xdg-open "${dirPath}"`;
     }
 
     return undefined;

@@ -25,15 +25,15 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     });
 
     function updateCurrentDir(dir: string): void {
-        if (dir.startsWith("/")) {
-            dir = dir.substring(1);
-        }
         let correctedPath = getRootRelativePath(dir);
         if (correctedPath === undefined) {
             console.warn(`Cannot update path to ${dir} because it's invalid`);
             return;
         }
 
+        if (correctedPath.startsWith("/")) {
+            correctedPath = correctedPath.substring(1);
+        }
         if (pathe.extname(correctedPath) !== "") {
             correctedPath = pathe.dirname(correctedPath);
         }
