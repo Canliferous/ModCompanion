@@ -1,4 +1,5 @@
 export const SharedVtfCompressionMethods = {
+    None: "",
     Deflate: "DEFLATE",
     Zstd: "ZSTD",
     ConsoleLzma: "CONSOLE_LZMA",
@@ -9,6 +10,9 @@ export const SharedVtfDefaultCompressionLevel = 6;
 
 export function getVtfCompressionMethodName(compressionMethod: SharedVtfCompressionMethod): string {
     switch (compressionMethod) {
+        case SharedVtfCompressionMethods.None: {
+            return "None";
+        }
         case SharedVtfCompressionMethods.Deflate: {
             return "Deflate";
         }
