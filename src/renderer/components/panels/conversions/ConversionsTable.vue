@@ -46,6 +46,7 @@ const columns: DataTableColumn<SharedConversionEvent>[] = [
         cell: (entry) =>
             h(MConversionStateBadge, {
                 state: entry.stateHistory[Math.max(entry.stateHistory.length - 1, 0)],
+                class: "min-w-24",
                 variant: "label",
             }),
         size: "auto",
