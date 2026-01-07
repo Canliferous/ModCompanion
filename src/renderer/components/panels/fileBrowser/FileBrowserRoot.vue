@@ -31,9 +31,11 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import pathe from "pathe";
 import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
+const assetGroupsStore = useAssetGroupsStore();
 
 const entries = computed(() => fileBrowserStore.currentEntries ?? []);
 
@@ -108,13 +110,25 @@ const items = computed<ContextMenuItem[][]>(() => {
         ],
         [
             {
-                label: "Create Asset(s)",
+                label: "Create individual Assets",
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect(e) {
                     const primaryPath = activeEntry.value?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore.createAsset(primaryPath, otherPaths);
+                },
+            },
+            {
+                label: "Create grouped Asset",
+                icon: AppDesign.Icons.ActionCreateAsset,
+                disabled: !allFiles,
+                onSelect(e: Event) {
+                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
+                    const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
+                    assetListStore
+                        .createAsset(primaryPath, otherPaths)
+                        .then((assets) => assetGroupsStore.createGroup(assets.map((s) => s.def.id)));
                 },
             },
             {

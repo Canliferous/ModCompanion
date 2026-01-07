@@ -53,13 +53,17 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeId.value = assetId;
     });
 
-    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<void> {
+    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<SharedAsset[]> {
         const result = await window.electronAPI.asset.createAsset(primaryFile, otherFiles);
         if (result.type === SharedCreateAssetReportType.Success) {
             for (const asset of result.assets) {
                 assets.value.set(asset.def.id, asset);
             }
+
+            return result.assets;
         }
+
+        return [];
     }
 
     function refresh(): void {
