@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { SharedAssetGroup, SharedAssetGroupDefinition, SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
+import { getCommonPrefix, removeTrailing } from "~/helper/StringHelper.js";
 
 export const useAssetGroupsStore = defineStore("asset-groups", () => {
     const groups = ref<Map<SharedAssetGroupId, SharedAssetGroup>>(new Map());
@@ -31,8 +33,15 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         }
     }
 
-    async function createGroup(assets: SharedAssetId[]) {
-        const newGroup = { displayName: `New Group (${assets.length} assets)`, assets };
+    async function createGroup(assetIds: SharedAssetId[]) {
+        const assets = useAssetListStore().getAssetsById(assetIds);
+        const displayNames = assets.map((a) => a.def.displayName).filter((n) => n !== undefined);
+        const prefix = removeTrailing(getCommonPrefix(displayNames), "_");
+        let groupName = `New Group (${assetIds.length} assets)`;
+        if (prefix) {
+            groupName = prefix;
+        }
+        const newGroup = { displayName: groupName, assets: assetIds };
 
         const result = await window.electronAPI.assetGroups.create(newGroup);
         groups.value.set(result.id, result);
