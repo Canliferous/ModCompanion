@@ -153,6 +153,7 @@ defineExpose({
 function deselect(): void {
     selectedIdx.value = [];
     selectStartIdx.value = undefined;
+    activeIdx.value = undefined;
 }
 
 function deactivate(): void {
