@@ -83,20 +83,6 @@ const items = computed<ContextMenuItem[][]>(() => {
 
     const mcaFiles = entries.filter((e) => e.isFile && pathe.extname(e.path) === SharedAssetDefinitionFileExtension);
 
-    if (entries.length === 1 && !entries[0].isFile) {
-        return [
-            [
-                {
-                    label: "Explore to",
-                    icon: AppDesign.Icons.ActionBrowseToFolder,
-                    onSelect(e) {
-                        window.electronAPI.fileBrowser.browseToFile(entries[0].path);
-                    },
-                },
-            ],
-        ];
-    }
-
     return [
         [
             {
@@ -105,6 +91,14 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: !allFiles,
                 onSelect(e: Event) {
                     window.electronAPI.fileBrowser.launchFile(pathsArray);
+                },
+            },
+            {
+                label: "Explore to",
+                icon: AppDesign.Icons.ActionBrowseToFolder,
+                disabled: entries.length !== 1,
+                onSelect(e) {
+                    window.electronAPI.fileBrowser.browseToFile(entries[0].path);
                 },
             },
         ],
