@@ -66,6 +66,25 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return [];
     }
 
+    async function deleteAsset(assetId: SharedAssetId): Promise<boolean> {
+        try {
+            await window.electronAPI.asset.delete(assetId);
+        } catch (e) {
+            return false;
+        }
+
+        assets.value.delete(assetId);
+        if (activeId.value === assetId) {
+            activeId.value = undefined;
+        }
+
+        const selectedIdx = selectedIds.value.indexOf(assetId);
+        if (selectedIdx !== -1) {
+            selectedIds.value = selectedIds.value.toSpliced(selectedIdx, 1);
+        }
+        return true;
+    }
+
     function refresh(): void {
         window.electronAPI.asset.forceRescan();
         refreshing.value = true;
@@ -130,6 +149,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         selectedAssets,
         typeFilter,
         createAsset,
+        deleteAsset,
         writeAssets,
         getAssetById,
         getAssetsById,

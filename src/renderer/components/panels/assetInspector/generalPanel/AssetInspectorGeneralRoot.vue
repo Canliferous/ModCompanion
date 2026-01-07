@@ -34,6 +34,10 @@
             <UFormField label="Credits" class="col-span-2">
                 <EditControlAssetCredits :asset="asset" />
             </UFormField>
+
+            <div>
+                <UButton label="Delete Asset" :icon="AppDesign.Icons.ActionRemove" @click="handleDelete" />
+            </div>
         </div>
     </MPanelRoot>
 </template>
@@ -46,6 +50,7 @@ import EditControlAssetType from "~/components/panels/assetInspector/generalPane
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import EditControlAssetDef from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetDef.vue";
 import EditControlAssetAssociated from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetAssociated.vue";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 const waiting = ref(false);
@@ -79,6 +84,10 @@ const maxGameFiles = computed(() => {
         return 1;
     } else return undefined;
 });
+
+function handleDelete() {
+    assetStore.deleteAsset(props.asset.def.id);
+}
 </script>
 
 <style scoped></style>

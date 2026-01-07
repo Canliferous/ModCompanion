@@ -76,6 +76,7 @@ declare global {
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (primaryFile: string, otherFiles: string[]) => Promise<SharedCreateAssetReport>;
                 update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) => Promise<SharedAsset | undefined>;
+                delete: (assetId: SharedAssetId) => Promise<boolean>;
             };
             assetGroups: {
                 forceRescan: () => void;

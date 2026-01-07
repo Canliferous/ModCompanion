@@ -30,6 +30,7 @@ export const SharedIpcChannels = {
     AssetNavigateToId: "asset_navigate_to_id",
     AssetCreate: "asset_create",
     AssetUpdate: "asset_update",
+    AssetDelete: "asset_delete",
 
     ImageGetMeta: "image_get_meta",
 

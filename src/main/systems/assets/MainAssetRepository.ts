@@ -19,6 +19,7 @@ import { detectPotentialAssets } from "./MainAssetAutoDetect.js";
 import { maintainAssets } from "./MainAssetMaintenance.js";
 import { ConversionChecksumSystem } from "../MainConversionChecksumSystem.js";
 import { ConversionAgentSystem } from "../MainConversionAgentSystem.js";
+import { existsSync } from "fs";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
 let potentialAssets: SharedAsset[] = [];
@@ -120,6 +121,27 @@ export function getAssetFromId(hash: SharedAssetId): SharedAsset | undefined {
     return assetMap.get(hash);
 }
 
+export async function deleteAssetDef(assetId: SharedAssetId) {
+    const asset = assetMap.get(assetId);
+    if (!asset) return false;
+
+    if (!asset.defFilePath) return false;
+
+    const exists = existsSync(asset.defFilePath);
+    if (!exists) return false;
+
+    const stat = await fs.stat(asset.defFilePath);
+    if (!stat.isFile()) return false;
+
+    try {
+        await fs.rm(asset.defFilePath);
+        return true;
+    } catch (e) {
+        console.warn("Failed to delete asset", assetId, e);
+        return false;
+    }
+}
+
 export default {
     rescan,
     getAssetFromFile,
@@ -127,4 +149,5 @@ export default {
     createAssetsFromFiles,
     getAssetFromId,
     writeAssetDef,
+    deleteAssetDef,
 };
