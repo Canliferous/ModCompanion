@@ -235,6 +235,7 @@ const items = computed(() => {
         const assets = listStore.selectedAssets;
         if (assets.length > 0) {
             const isAnyGrouped = assets.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
+            const isAllGrouped = assets.every((selected) => assetGroupsStore.isGrouped(selected.def.id));
             options.push([
                 {
                     label: "Convert",
@@ -312,6 +313,14 @@ const items = computed(() => {
                             ClipboardHelper.writeTextAndToast(sel.def.id);
                         },
                         disabled: sel.def.displayName == undefined,
+                    },
+                    {
+                        label: "Remove from group",
+                        icon: AppDesign.Icons.ActionRemove,
+                        onSelect(e: Event) {
+                            assetGroupsStore.writeRemoveAssetsFromTheirGroups(assets.map((a) => a.def.id));
+                        },
+                        disabled: !isAllGrouped,
                     },
                 ]);
             }

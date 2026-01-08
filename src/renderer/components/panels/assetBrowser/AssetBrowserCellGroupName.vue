@@ -31,6 +31,7 @@ import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 const groupsStore = useAssetGroupsStore();
 
@@ -45,13 +46,14 @@ const emit = defineEmits<{
 
 const isExpanded = computed(() => groupsStore.isExpanded(props.id));
 
-function onDrop(files: File[] | null, event: DragEvent) {
+async function onDrop(files: File[] | null, event: DragEvent) {
     const data = event.dataTransfer?.getData("text/plain");
     if (data === undefined) return;
     const deserializedData = deserializeAssetDragDropTransferData(data);
     if (deserializedData.assetIds.length == 0) return;
 
-    return useAssetGroupsStore().writeAddAssetsToGroup(props.id, deserializedData.assetIds);
+    await groupsStore.writeRemoveAssetsFromTheirGroups(deserializedData.assetIds);
+    await groupsStore.writeAddAssetsToGroup(props.id, deserializedData.assetIds);
 }
 
 const dropZoneRef = ref<HTMLDivElement>();
@@ -65,11 +67,11 @@ function handleToggleExpanded() {
 }
 
 function handleNameChanged(newName: string) {
-    const group = useAssetGroupsStore().getGroup(props.id);
+    const group = groupsStore.getGroup(props.id);
     if (group) {
         const newGroup = structuredClone(toRaw(group));
         newGroup.def.displayName = newName;
-        useAssetGroupsStore().writeGroup(newGroup.id, newGroup.def);
+        groupsStore.writeGroup(newGroup.id, newGroup.def);
     }
 }
 </script>

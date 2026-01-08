@@ -60,18 +60,51 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         activeGroupId.value = id;
     }
 
-    async function writeGroup(id: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) {
+    async function writeGroup(id: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition): Promise<void> {
         const result = await window.electronAPI.assetGroups.update(id, groupDef);
         groups.value.set(result.id, result);
         notifyGroupsWritten(id);
     }
 
-    function writeAddAssetsToGroup(groupId: SharedAssetGroupId, assetIds: SharedAssetId[]) {
+    async function writeAddAssetsToGroup(groupId: SharedAssetGroupId, assetIds: SharedAssetId[]): Promise<void> {
         const group = groups.value.get(groupId);
         if (group === undefined) return;
 
         const assets: SharedAssetId[] = Array.from(new Set([...group.def.assets, ...assetIds]));
         return writeGroup(group.id, { ...toRaw(group.def), assets });
+    }
+
+    async function writeRemoveAssetsFromGroup(groupId: SharedAssetGroupId, assetIds: SharedAssetId[]): Promise<void> {
+        const group = groups.value.get(groupId);
+        if (group === undefined) return;
+
+        for (const assetId of assetIds) {
+            const index = group.def.assets.indexOf(assetId);
+            if (index >= 0) {
+                group.def.assets.splice(index, 1);
+            }
+        }
+
+        console.log(group);
+
+        return writeGroup(group.id, group.def);
+    }
+
+    async function writeRemoveAssetsFromTheirGroups(assetIds: SharedAssetId[]): Promise<void> {
+        const groupIds = new Map<SharedAssetGroupId, SharedAssetId[]>();
+        for (const assetId of assetIds) {
+            const groupId = useAssetGroupsStore().getGroupFromAssetId(assetId)?.id;
+            if (groupId) {
+                if (!groupIds.has(groupId)) {
+                    groupIds.set(groupId, [assetId]);
+                } else {
+                    groupIds.get(groupId)?.push(assetId);
+                }
+            }
+        }
+        await Promise.allSettled(
+            groupIds.entries().map(([key, val]) => useAssetGroupsStore().writeRemoveAssetsFromGroup(key, val)),
+        );
     }
 
     function isGrouped(assetId: SharedAssetId) {
@@ -82,7 +115,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         return false;
     }
 
-    function getGroupFromAssetId(assetId: SharedAssetId) {
+    function getGroupFromAssetId(assetId: SharedAssetId): SharedAssetGroup | undefined {
         for (const group of groups.value.values()) {
             if (group.def.assets.includes(assetId)) return group;
         }
@@ -151,6 +184,8 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         activateGroup,
         writeGroup,
         writeAddAssetsToGroup,
+        writeRemoveAssetsFromGroup,
+        writeRemoveAssetsFromTheirGroups,
         isGrouped,
         toggleCollapsed,
         collapse,
