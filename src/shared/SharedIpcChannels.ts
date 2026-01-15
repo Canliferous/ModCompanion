@@ -12,6 +12,8 @@ export const SharedIpcChannels = {
     FileBrowserBrowseToFile: "filebrowser_browse_to_file",
     FileBrowserOpenFile: "filebrowser_open_file",
 
+    FileReadString: "file_read_string",
+
     ConfigGet: "config_get",
 
     MapListSourceDirs: "map_list_source_dirs",

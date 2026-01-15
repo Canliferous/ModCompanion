@@ -55,6 +55,9 @@ declare global {
                     callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void,
                 ) => IpcRenderer;
             };
+            file: {
+                readString: (filePath: string) => Promise<string>;
+            };
             config: {
                 get: () => Promise<SharedAppConfig>;
             };

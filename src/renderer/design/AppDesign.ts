@@ -56,6 +56,7 @@ export const Icons = {
     ActionOpenFileMca: "mingcute:file-star-fill",
 
     ActionLaunchFile: "mingcute:play-fill",
+    ActionEdit: "mingcute:edit-line",
 
     ActionPlay: "mingcute:play-fill",
     ActionPause: "mingcute:pause-fill",

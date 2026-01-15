@@ -43,6 +43,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
     },
 
+    file: {
+        readString: (filePath: string) => ipcRenderer.invoke(SharedIpcChannels.FileReadString, filePath),
+    },
+
     config: {
         get: () => ipcRenderer.invoke(SharedIpcChannels.ConfigGet),
     },

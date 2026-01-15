@@ -1,10 +1,7 @@
 <template>
-    <div
-        class="h-full p-1 bg-neutral-900 border border-accented rounded inset-shadow-cave overflow-y-scroll overflow-x-clip"
-        ref="scroller"
-    >
-        <pre class="whitespace-pre-wrap wrap-break-word text-xs text-neutral-300">{{ text }}</pre>
-    </div>
+    <MTextArea ref="scroller">
+        {{ text }}
+    </MTextArea>
 </template>
 
 <script setup lang="ts">

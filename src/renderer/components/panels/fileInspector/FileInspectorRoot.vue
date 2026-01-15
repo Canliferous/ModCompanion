@@ -5,14 +5,22 @@
                 <UIcon class="size-10 text-blue-300" :name="AppDesign.Icons.FsFile" />
                 <div class="grow shrink select-none">
                     <div>{{ entry.name }}</div>
-                    <div v-if="entry.fileSize !== undefined" class="tabular-nums">
-                        {{ fileSize(entry.fileSize) }}
+                    <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
+                        <span>{{ fileSize(entry.fileSize) }}</span>
+                        <span>{{ getFileTypeName(fileType) }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="flex gap-2">
-                <UButton size="xs" @click="handleOpen" label="Open" :icon="AppDesign.Icons.ActionLaunchFile" />
+                <UButton
+                    v-if="fileInspector === FileInspectors.Text"
+                    size="xs"
+                    @click="handleOpen"
+                    label="Edit"
+                    :icon="AppDesign.Icons.ActionEdit"
+                />
+                <UButton v-else size="xs" @click="handleOpen" label="Open" :icon="AppDesign.Icons.ActionLaunchFile" />
                 <UButton
                     size="xs"
                     @click="handleExplore"
@@ -23,10 +31,12 @@
 
             <USeparator />
 
-            <div>{{ fileType }}</div>
+            <template v-if="fileInspector === FileInspectors.Image">
+                <FileInspectorImagePreview :path="fullPath" />
+            </template>
 
-            <template v-if="fileType === FileType.Image">
-                <FileInspectorImagePreview :path="entry.path" />
+            <template v-if="fileInspector === FileInspectors.Text">
+                <FileInspectorTextPreview :path="fullPath" />
             </template>
         </div>
     </MPanelRoot>
@@ -36,22 +46,32 @@
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { fileSize } from "humanize-plus";
 import { AppDesign } from "~/design/AppDesign.js";
-import { FileType, getFileType } from "~/components/panels/fileInspector/FileInspectorHelper.js";
+import {
+    FileInspectors,
+    FileType,
+    getFileInspectorFromType,
+    getFileType,
+    getFileTypeName,
+} from "~/components/panels/fileInspector/FileInspectorHelper.js";
+import pathe from "pathe";
+import { getAppConfig } from "~/renderer-config.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const entry = computed(() => fileBrowserStore.activeEntry);
+const fullPath = computed(() => (entry.value ? pathe.join(getAppConfig().rootPath, entry.value?.path) : ""));
 
 const fileType = computed(() => (entry.value ? getFileType(entry.value?.name) : FileType.Unknown));
+const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
 
 function handleExplore() {
-    if (entry.value?.path) {
-        window.electronAPI.fileBrowser.browseToFile(entry.value.path);
+    if (fullPath.value) {
+        window.electronAPI.fileBrowser.browseToFile(fullPath.value);
     }
 }
 
 function handleOpen() {
-    if (entry.value?.path) {
-        window.electronAPI.fileBrowser.launchFile(entry.value.path);
+    if (fullPath.value) {
+        window.electronAPI.fileBrowser.openFile(fullPath.value);
     }
 }
 </script>
