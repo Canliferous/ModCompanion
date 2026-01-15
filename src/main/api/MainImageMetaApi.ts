@@ -1,8 +1,9 @@
 import { ipcMain } from "electron";
-import exifreader from "exifreader";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
-import fs from "fs/promises";
+import path from "path";
+import { getRootDir } from "../helpers/MainFilesystem.js";
+import { Worker } from "node:worker_threads";
 
 export function registerImageMetaApi(): boolean {
     ipcMain.handle(
@@ -14,17 +15,10 @@ export function registerImageMetaApi(): boolean {
 }
 
 export async function getImageMeta(imageFilePath: string): Promise<SharedImageMetaReport | undefined> {
-    try {
-        const data = await fs.readFile(imageFilePath);
-        const tags = exifreader.load(data);
-
-        return {
-            filePath: imageFilePath,
-            tags,
-            data: data.toString("base64"),
-        };
-    } catch (e) {
-        console.warn("Failed to read image metadata from", imageFilePath, e);
-        return undefined;
-    }
+    return new Promise((resolve) => {
+        const worker = new Worker(path.join(getRootDir(), "main", "workers", "MainImageMetaWorker.js"), {
+            workerData: imageFilePath,
+        });
+        worker.on("message", (result) => resolve(result));
+    });
 }
