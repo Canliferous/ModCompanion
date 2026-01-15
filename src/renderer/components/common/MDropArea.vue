@@ -5,7 +5,7 @@
                 class="rounded transition-colors grid place-items-center bg-neutral-900 border border-accented inset-shadow-cave overflow-hidden _stack"
             >
                 <MDropAreaBg :class="{ 'bg-neutral-800': isOverDropZone }" />
-                <span class="text-neutral-300 text-center my-1.5 select-none">Drop here</span>
+                <span class="text-neutral-300 text-center my-1.5 select-none"><slot /></span>
             </div>
         </template>
     </MAcceptDrop>

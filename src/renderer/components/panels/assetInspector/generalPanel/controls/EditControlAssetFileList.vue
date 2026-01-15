@@ -1,14 +1,6 @@
 <template>
     <UFormField :label="heading" class="col-span-2" ref="dropZoneRef">
-        <template #hint>
-            <UButton
-                :icon="AppDesign.Icons.ActionAdd"
-                class="justify-self-end"
-                @click="handleAdd"
-                :disabled="reachedMax"
-                size="xs"
-            />
-        </template>
+        <template #hint> </template>
         <div class="grid gap-1">
             <template v-for="(file, i) in files">
                 <EditControlAssetFileListEntry
@@ -19,7 +11,10 @@
                 />
             </template>
 
-            <MDropArea v-if="files.length === 0" @change="handleDrop" />
+            <div class="grid grid-cols-[1fr_auto] gap-1" v-if="files.length < (maxItems ?? Number.MAX_VALUE)">
+                <MDropArea @change="handleDrop"> Drop files to add </MDropArea>
+                <UButton :icon="AppDesign.Icons.ActionAdd" class="justify-self-end" @click="handleAdd" />
+            </div>
         </div>
     </UFormField>
 </template>
@@ -28,7 +23,6 @@
 import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAssetDefinition.js";
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
-import { useDropZone } from "@vueuse/core";
 import { getGameOrContentRelativePath, isGameOrContentRelativePath } from "~/helper/SourceFs.js";
 import MDropArea from "~/components/common/MDropArea.vue";
 import { AppDesign } from "~/design/AppDesign.js";
@@ -50,11 +44,6 @@ watch(
         files.value = f ?? [];
     },
 );
-
-const reachedMax = computed(() => {
-    if (props.maxItems === undefined) return false;
-    return files.value.length >= props.maxItems;
-});
 
 function handleAdd(): void {
     files.value = [...files.value, ""];

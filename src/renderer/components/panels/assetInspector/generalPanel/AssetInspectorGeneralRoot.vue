@@ -12,13 +12,7 @@
                 <EditControlAssetDisplayName :asset="asset" />
             </UFormField>
 
-            <EditControlAssetFileList
-                heading="Content Files"
-                :asset="asset"
-                field="contentFiles"
-                dir="content"
-                :max-items="maxContentFiles"
-            />
+            <EditControlAssetFileList heading="Content Files" :asset="asset" field="contentFiles" dir="content" />
             <EditControlAssetFileList
                 heading="Game Files"
                 :asset="asset"
@@ -72,12 +66,6 @@ async function updateAsset(def: Partial<SharedAssetDefinition>) {
         waiting.value = false;
     }
 }
-
-const maxContentFiles = computed(() => {
-    if (props.asset.def.type === SharedAssetTypes.Texture) {
-        return 1;
-    } else return undefined;
-});
 
 const maxGameFiles = computed(() => {
     if (props.asset.def.type === SharedAssetTypes.Texture) {
