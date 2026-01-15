@@ -61,5 +61,7 @@ export const SharedIpcChannels = {
 
     TcArtifacts_IsConnected: "tc_artifacts_is_connected",
     TcArtifacts_ListAllMaps: "tc_artifacts_list_all_maps",
+
+    MdlInfoGet: "mdlinfo_get",
 } as const;
 export type SharedIpcChannel = (typeof SharedIpcChannels)[keyof typeof SharedIpcChannels];

@@ -39,6 +39,7 @@
                 <FileInspectorTextPreview :path="fullPath" />
             </template>
         </div>
+        <div v-else class="grid h-full place-items-center text-muted">No file selected</div>
     </MPanelRoot>
 </template>
 
@@ -57,7 +58,7 @@ import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 
 const fileBrowserStore = useFileBrowserStore();
-const entry = computed(() => fileBrowserStore.activeEntry);
+const entry = computed(() => (fileBrowserStore.activeEntry?.isFile ? fileBrowserStore.activeEntry : undefined));
 const fullPath = computed(() => (entry.value ? pathe.join(getAppConfig().rootPath, entry.value?.path) : ""));
 
 const fileType = computed(() => (entry.value ? getFileType(entry.value?.name) : FileType.Unknown));
