@@ -1,9 +1,9 @@
-import { Reactive, Ref, watch } from "vue";
+import { Ref, watch } from "vue";
 import { watchDeep } from "@vueuse/core";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 export function useRememberRef<T>(ref: Ref<T>, keyName: string) {
-    watch(ref, (r) => localStorage.setItem(keyName, r ? JSON.stringify(r) : r));
+    watch(ref, (r) => localStorage.setItem(keyName, JSON.stringify(r)));
 
     const val = localStorage.getItem(keyName);
     if (!val) return ref;
@@ -24,7 +24,7 @@ export function useRememberWorkspaceRef<T>(ref: Ref<T>, keyName: string) {
             }
         },
     );
-    watch(ref, (r) => {
+    watch(ref, () => {
         localStorage.setItem(`${keyName}+${workspaceStore.activeWorkspace}`, JSON.stringify(ref.value));
     });
 
