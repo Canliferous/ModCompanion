@@ -79,6 +79,7 @@ export const Icons = {
     Panel_MapCompileLog: "mingcute:list-check-fill",
     Panel_AssetBrowser: "mingcute:document-3-fill",
     Panel_FileBrowser: "mingcute:folder-open-fill",
+    Panel_FileInspector: "mingcute:document-fill",
     Panel_AssetInspector: "mingcute:edit-4-fill",
     Panel_AssetInspector_TexturePreview: "mingcute:pic-fill",
     Panel_AssetInspector_TextureMetadata: "mingcute:layer-fill",

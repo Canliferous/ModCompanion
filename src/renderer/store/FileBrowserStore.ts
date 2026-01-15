@@ -8,6 +8,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
     const fsEntries = reactive(new Map<string, SharedProjectFileEntry[]>());
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
+    const activeEntry = ref<SharedProjectFileEntry | undefined>(undefined);
 
     watch(currentDir, refreshDir);
 
@@ -55,6 +56,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         currentDir,
         fsEntries,
         refreshDir,
+        activeEntry,
         currentEntries,
         updateCurrentDir,
         onEntryActivated,

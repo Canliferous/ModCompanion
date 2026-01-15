@@ -40,7 +40,6 @@ const assetGroupsStore = useAssetGroupsStore();
 const entries = computed(() => fileBrowserStore.currentEntries ?? []);
 
 const selectedEntries = ref<SharedProjectFileEntry[]>([]);
-const activeEntry = ref<SharedProjectFileEntry>();
 
 watch(entries, () => {
     dataTable.value?.deselect();
@@ -108,7 +107,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect(e) {
-                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
+                    const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore.createAsset(primaryPath, otherPaths);
                 },
@@ -118,7 +117,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect(e: Event) {
-                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
+                    const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore
                         .createAsset(primaryPath, otherPaths)
@@ -150,7 +149,7 @@ function handleSelectionChanged(entries: SharedProjectFileEntry[]): void {
 }
 
 function handleActiveChanged(entry: SharedProjectFileEntry | undefined): void {
-    activeEntry.value = entry;
+    fileBrowserStore.activeEntry = entry;
 }
 
 function handleDragStart(

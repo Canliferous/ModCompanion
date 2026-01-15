@@ -1,5 +1,6 @@
 import MapsPanel from "~/components/panels/maps/MapsPanel.vue";
 import FileBrowserPanel from "~/components/panels/fileBrowser/FileBrowserPanel.vue";
+import FileInspectorPanel from "~/components/panels/fileInspector/FileInspectorPanel.vue";
 import AssetBrowserPanel from "~/components/panels/assetBrowser/AssetBrowserPanel.vue";
 import AssetInspectorPanel from "~/components/panels/assetInspector/AssetInspectorPanel.vue";
 import AssetInspectorTexturePreviewPanel from "~/components/panels/assetInspector/texturePreviewPanel/AssetInspectorTexturePreviewPanel.vue";
@@ -32,6 +33,7 @@ export const PanelComponentIds = {
     MapList: "_MapList",
     MapCompileLog: "_MapCompileLog",
     FileBrowser: "_FileBrowser",
+    FileInspector: "_FileInspector",
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
     Conversions: "_Conversions",
@@ -92,6 +94,10 @@ export const PanelComponents = {
             componentId: "_FileBrowser",
             component: FileBrowserPanel,
         },
+        fileInspector: {
+            componentId: "_FileInspector",
+            component: FileInspectorPanel,
+        },
         mapList: {
             componentId: "_MapList",
             component: MapsPanel,
@@ -143,6 +149,7 @@ export const PanelTitles: Partial<Record<PanelComponentId, string>> = {
     _MapCompileLog: "Map Compile Log",
     _AssetBrowser: "Asset Browser",
     _FileBrowser: "File Browser",
+    _FileInspector: "File Inspector",
     _AssetInspector: "Asset Inspector",
     _AssetInspector_TexturePreview: "Preview",
     _AssetInspector_TextureMetadata: "Meta",
@@ -160,6 +167,7 @@ export const PanelIcons: Partial<Record<PanelComponentId, string>> = {
     _MapCompileLog: AppDesign.Icons.Panel_MapCompileLog,
     _AssetBrowser: AppDesign.Icons.Panel_AssetBrowser,
     _FileBrowser: AppDesign.Icons.Panel_FileBrowser,
+    _FileInspector: AppDesign.Icons.Panel_FileInspector,
     _AssetInspector: AppDesign.Icons.Panel_AssetInspector,
     _AssetInspector_TexturePreview: AppDesign.Icons.Panel_AssetInspector_TexturePreview,
     _AssetInspector_TextureMetadata: AppDesign.Icons.Panel_AssetInspector_TextureMetadata,
