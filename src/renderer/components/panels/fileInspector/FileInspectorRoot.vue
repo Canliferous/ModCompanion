@@ -1,36 +1,43 @@
 <template>
-    <MPanelRoot>
-        <div v-if="entry" class="grid gap-2">
-            <div class="flex gap-2 w-full items-center">
-                <UIcon class="size-10 text-blue-300" :name="AppDesign.Icons.FsFile" />
-                <div class="grow shrink select-none">
-                    <div>{{ entry.name }}</div>
-                    <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
-                        <span>{{ fileSize(entry.fileSize) }}</span>
-                        <span>{{ getFileTypeName(fileType) }}</span>
+    <MPanelRoot noScroll>
+        <template #header>
+            <div class="grid gap-2" v-if="entry">
+                <div class="flex gap-2 w-full items-center">
+                    <UIcon class="size-10 text-blue-300" :name="AppDesign.Icons.FsFile" />
+                    <div class="grow shrink select-none">
+                        <div>{{ entry.name }}</div>
+                        <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
+                            <span>{{ fileSize(entry.fileSize) }}</span>
+                            <span>{{ getFileTypeName(fileType) }}</span>
+                        </div>
                     </div>
                 </div>
+
+                <div class="flex gap-2">
+                    <UButton
+                        v-if="fileInspector === FileInspectors.Text"
+                        size="xs"
+                        @click="handleOpen"
+                        label="Edit"
+                        :icon="AppDesign.Icons.ActionEdit"
+                    />
+                    <UButton
+                        v-else
+                        size="xs"
+                        @click="handleOpen"
+                        label="Open"
+                        :icon="AppDesign.Icons.ActionLaunchFile"
+                    />
+                    <UButton
+                        size="xs"
+                        @click="handleExplore"
+                        label="Explore to"
+                        :icon="AppDesign.Icons.ActionBrowseToFolder"
+                    />
+                </div>
             </div>
-
-            <div class="flex gap-2">
-                <UButton
-                    v-if="fileInspector === FileInspectors.Text"
-                    size="xs"
-                    @click="handleOpen"
-                    label="Edit"
-                    :icon="AppDesign.Icons.ActionEdit"
-                />
-                <UButton v-else size="xs" @click="handleOpen" label="Open" :icon="AppDesign.Icons.ActionLaunchFile" />
-                <UButton
-                    size="xs"
-                    @click="handleExplore"
-                    label="Explore to"
-                    :icon="AppDesign.Icons.ActionBrowseToFolder"
-                />
-            </div>
-
-            <USeparator />
-
+        </template>
+        <div v-if="entry" class="grid gap-2 h-full">
             <template v-if="fileInspector === FileInspectors.Image">
                 <FileInspectorImagePreview :path="fullPath" />
             </template>

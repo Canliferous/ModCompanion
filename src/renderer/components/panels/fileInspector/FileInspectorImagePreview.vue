@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <img :src="`file://${path}`" />
-    </div>
+    <MInteractiveImageViewer :src="`file://${path}`" />
 </template>
 
 <script setup lang="ts">
+import MInteractiveImageViewer from "~/components/common/MInteractiveImageViewer.vue";
+
 const props = defineProps<{ path: string }>();
 </script>
 
