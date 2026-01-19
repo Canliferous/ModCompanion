@@ -1,6 +1,6 @@
 <template>
     <UFormField label="MCA File" class="col-span-2">
-        <UInput disabled v-model="asset.defFilePath" class="w-full" size="xs" />
+        <UInput v-model="asset.defFilePath" disabled class="w-full" size="xs" />
         <template #hint>
             <UButtonGroup>
                 <UButton size="xs" label="Open" :icon="AppDesign.Icons.ActionOpenFileMca" @click="handleOpen" />

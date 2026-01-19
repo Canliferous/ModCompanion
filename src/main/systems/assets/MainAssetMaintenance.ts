@@ -11,7 +11,7 @@ export async function maintainAssets(assets: SharedAssetMap) {
     const startTime = new Date();
     console.log("Maintaining assets...");
 
-    for (let asset of assets.values()) {
+    for (const asset of assets.values()) {
         let newAsset: SharedAssetDefinition | undefined = undefined;
         if (isTextureAsset(asset)) {
             newAsset = _maintainTextureAsset(asset.def);

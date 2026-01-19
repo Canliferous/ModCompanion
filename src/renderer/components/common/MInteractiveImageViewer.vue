@@ -1,12 +1,12 @@
 <template>
     <div
+        ref="dragArea"
         class="relative cursor-grab select-none overflow-clip"
         :class="{ 'select-grabbing': pressed }"
-        ref="dragArea"
         @wheel="handleWheel"
     >
         <div class="absolute w-full h-full checkerboard" />
-        <img :src="src" class="origin-top-left" :style="transformStyle" draggable="false" />
+        <img :src="src" class="origin-top-left" :style="transformStyle" draggable="false">
     </div>
 </template>
 

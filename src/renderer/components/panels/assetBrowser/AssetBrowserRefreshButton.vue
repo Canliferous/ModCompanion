@@ -1,6 +1,6 @@
 <template>
     <UTooltip :text="listStore.refreshing ? 'Refreshing' : 'Force Refresh'">
-        <UButton @click="handleRefresh" :disabled="listStore.refreshing">
+        <UButton :disabled="listStore.refreshing" @click="handleRefresh">
             <template #default>
                 <UIcon
                     :name="listStore.refreshing ? AppDesign.Icons.Loading : AppDesign.Icons.ActionRefresh"

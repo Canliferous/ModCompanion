@@ -12,9 +12,9 @@
                     />
                 </template>
                 <UInput
+                    v-model="displayName"
                     placeholder="Group Name..."
                     class="w-full"
-                    v-model="displayName"
                     @change="handleUpdateDisplayName"
                 />
             </UFormField>
@@ -84,7 +84,7 @@ groupStore.subscribeGroupsWritten(() => {
 });
 
 function handleConvertAll() {
-    for (let asset of props.group.def.assets) {
+    for (const asset of props.group.def.assets) {
         useAssetConversionStore().enqueue(asset);
     }
 }

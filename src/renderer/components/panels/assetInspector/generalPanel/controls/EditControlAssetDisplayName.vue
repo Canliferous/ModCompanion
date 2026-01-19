@@ -1,10 +1,10 @@
 <template>
     <UInput
+        v-model="displayName"
         placeholder="(unknown)"
         class="w-full"
-        v-model="displayName"
-        @change="updateDisplayName"
         :disabled="disabled"
+        @change="updateDisplayName"
     />
 </template>
 

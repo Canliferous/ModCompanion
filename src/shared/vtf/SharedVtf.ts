@@ -45,7 +45,7 @@ export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
         a += ` --version ${options.version}`;
     }
     if (options.flags) {
-        for (let flags of options.flags) {
+        for (const flags of options.flags) {
             a += ` --flag ${flags}`;
         }
     }

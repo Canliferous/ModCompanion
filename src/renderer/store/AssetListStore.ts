@@ -44,7 +44,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     window.electronAPI.asset.subscribeUpdated((event) => {
         const newAssets = event.assets;
-        for (let asset of newAssets) {
+        for (const asset of newAssets) {
             assets.value.set(asset.def.id, asset);
         }
     });
@@ -97,7 +97,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     function selectByMca(mcaPaths: string[]): void {
         const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
         const sel: SharedAssetId[] = [];
-        for (let asset of assets.value.values()) {
+        for (const asset of assets.value.values()) {
             if (asset.defFilePath === undefined) continue;
             if (mcaPathsRel.includes(asset.defFilePath)) {
                 sel.push(asset.def.id);
@@ -131,7 +131,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     async function writeAssets(as: SharedAsset[]): Promise<void> {
         const results = as.map((a) => window.electronAPI.asset.update(a.def.id, a.def));
-        let newAssets = await Promise.all(results);
+        const newAssets = await Promise.all(results);
         const filtered = newAssets.filter((n) => n !== undefined);
         updateAssets(filtered);
         writtenEvent.call(as.map((a) => a.def.id));

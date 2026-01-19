@@ -1,6 +1,6 @@
 <template>
     <!--    <div :style="`background-image: url(${base64ImageUrl(data)})`" class="bg-contain bg-no-repeat h-full w-full"></div>-->
-    <img :src="base64ImageUrl(data)" class="max-h-full" />
+    <img :src="base64ImageUrl(data)" class="max-h-full">
 </template>
 
 <script setup lang="ts">

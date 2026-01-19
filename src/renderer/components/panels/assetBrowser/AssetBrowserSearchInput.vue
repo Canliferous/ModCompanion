@@ -1,10 +1,10 @@
 <template>
     <UInput
+        v-model="listStore.searchTerm"
         placeholder="Search"
         :leading-icon="AppDesign.Icons.Search"
         class="grow"
         autofocus
-        v-model="listStore.searchTerm"
     />
 </template>
 

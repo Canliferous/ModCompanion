@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot alwaysShowScroll>
+    <MPanelRoot always-show-scroll>
         <template v-if="conversionStore.conversionEvents.length > 0">
             <ConversionsTable :history="conversionStore.conversionEvents" />
         </template>

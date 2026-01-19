@@ -1,6 +1,6 @@
 <template>
     <MAcceptDrop @change="(c) => emit('change', c)">
-        <template slot="default" v-slot="{ isOverDropZone }">
+        <template #default #default="{ isOverDropZone }">
             <div
                 class="rounded transition-colors grid place-items-center bg-neutral-900 border border-accented inset-shadow-cave overflow-hidden _stack"
             >

@@ -4,9 +4,9 @@
             :entries="entries"
             :columns="columns"
             neutral-highlight
-            @on-active-changed="(entry) => (conversionStore.activeEvent = entry)"
             no-header
-            noScroll
+            no-scroll
+            @on-active-changed="(entry) => (conversionStore.activeEvent = entry)"
         />
     </UContextMenu>
 </template>

@@ -1,5 +1,5 @@
 <template>
-    <UPopover :content="{ side: 'bottom', align: 'start' }" v-model:open="open">
+    <UPopover v-model:open="open" :content="{ side: 'bottom', align: 'start' }">
         <UButton
             :label="labelFunc ? labelFunc(selectedVal.toString()) : selectedVal.toString()"
             variant="cave"
@@ -20,14 +20,14 @@
                     :class="{ 'gap-2': grouping !== undefined }"
                     :style="`grid-template-columns: repeat(${columns ?? 1}, 1fr)`"
                 >
-                    <template v-if="grouping === undefined" v-for="entry in Object.values(props.enum)">
+                    <template v-for="entry in Object.values(props.enum)" v-if="grouping === undefined">
                         <EnumSelectItem
                             :entry="entry"
-                            @click="handleClick"
                             :label-func="labelFunc"
                             :default="props.default"
                             :is-selected="selectedVal === entry"
                             :disabled="disabledFunc ? disabledFunc(entry) : false"
+                            @click="handleClick"
                         />
                     </template>
 
@@ -38,11 +38,11 @@
                                 <template v-for="item in group.items">
                                     <EnumSelectItem
                                         :entry="item"
-                                        @click="handleClick"
                                         :label-func="labelFunc"
                                         :default="props.default"
                                         :is-selected="selectedVal === item"
                                         :disabled="disabledFunc ? disabledFunc(item) : false"
+                                        @click="handleClick"
                                     />
                                 </template>
                             </div>
@@ -56,11 +56,11 @@
                             <template v-for="item in grouping.ungrouped">
                                 <EnumSelectItem
                                     :entry="item"
-                                    @click="handleClick"
                                     :label-func="labelFunc"
                                     :default="props.default"
                                     :is-selected="selectedVal === item"
                                     :disabled="disabledFunc ? disabledFunc(item) : false"
+                                    @click="handleClick"
                                 />
                             </template>
                         </div>

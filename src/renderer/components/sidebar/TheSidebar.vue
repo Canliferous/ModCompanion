@@ -23,11 +23,11 @@
         <div class="grid gap-1 content-start p-1 pr-0">
             <SidebarGroup heading="Launchers">
                 <UButton
+                    v-for="option of SharedLauncherOptions"
                     size="sm"
                     variant="soft"
                     color="neutral"
                     class="bg-neutral-800"
-                    v-for="option of SharedLauncherOptions"
                     :label="option.name"
                     @click="() => launch(option)"
                 >

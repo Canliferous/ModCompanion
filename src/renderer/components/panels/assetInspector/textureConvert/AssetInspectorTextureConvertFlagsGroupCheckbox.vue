@@ -1,5 +1,5 @@
 <template>
-    <UCheckbox :label="flag" v-model="checked" @change="emit('toggle', flag)" />
+    <UCheckbox v-model="checked" :label="flag" @change="emit('toggle', flag)" />
 </template>
 
 <script setup lang="ts">

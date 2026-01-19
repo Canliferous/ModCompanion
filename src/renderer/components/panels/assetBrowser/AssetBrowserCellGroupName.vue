@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center gap-1" :class="{ 'bg-neutral-400/30': isOverDropZone }" ref="dropZoneRef">
+    <div ref="dropZoneRef" class="flex items-center gap-1" :class="{ 'bg-neutral-400/30': isOverDropZone }">
         <UButton
             :icon="isExpanded ? AppDesign.Icons.ChevronDown : AppDesign.Icons.ChevronRight"
             variant="link"
@@ -18,7 +18,7 @@
                 :editing="editing"
                 :value="name"
                 @changed="handleNameChanged"
-                @stopEditing="emit('stopEditing')"
+                @stop-editing="emit('stopEditing')"
             />
         </div>
     </div>

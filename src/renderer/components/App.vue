@@ -6,11 +6,11 @@
             </div>
             <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
                 <DockviewVue
-                    @ready="panelsStore.handleReady"
                     :theme="themeModcomp"
-                    :watermarkComponent="PanelComponents.other.watermark.componentId"
-                    :leftHeaderActionsComponent="PanelComponents.other.addPanelAction.componentId"
+                    :watermark-component="PanelComponents.other.watermark.componentId"
+                    :left-header-actions-component="PanelComponents.other.addPanelAction.componentId"
                     :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
+                    @ready="panelsStore.handleReady"
                 />
             </div>
             <TheFooter />

@@ -1,6 +1,6 @@
 <template>
-    <span class="text-center text-xs text-neutral-400" v-if="seconds !== undefined">{{ seconds }}s</span>
-    <span v-else></span>
+    <span v-if="seconds !== undefined" class="text-center text-xs text-neutral-400">{{ seconds }}s</span>
+    <span v-else />
 </template>
 
 <script setup lang="ts">

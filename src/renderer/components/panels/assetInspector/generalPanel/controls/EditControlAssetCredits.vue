@@ -2,9 +2,9 @@
     <UTextarea
         v-model="credits"
         :disabled="disabled"
-        @change="updateCredits"
         placeholder="Enter credits information..."
         class="w-full"
+        @change="updateCredits"
     />
 </template>
 

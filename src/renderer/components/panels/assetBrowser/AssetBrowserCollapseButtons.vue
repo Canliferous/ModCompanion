@@ -1,9 +1,9 @@
 <template>
     <UTooltip text="Expand All">
-        <UButton @click="assetGroupStore.expandAll()" :icon="AppDesign.Icons.ExpandVertical" />
+        <UButton :icon="AppDesign.Icons.ExpandVertical" @click="assetGroupStore.expandAll()" />
     </UTooltip>
     <UTooltip text="Collapse All">
-        <UButton @click="assetGroupStore.collapseAll" :icon="AppDesign.Icons.CollapseVertical" />
+        <UButton :icon="AppDesign.Icons.CollapseVertical" @click="assetGroupStore.collapseAll" />
     </UTooltip>
 </template>
 

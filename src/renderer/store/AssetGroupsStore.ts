@@ -28,7 +28,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         groupsWrittenSubscribers.push(func);
     }
     function notifyGroupsWritten(groupId: SharedAssetGroupId) {
-        for (let sub of groupsWrittenSubscribers) {
+        for (const sub of groupsWrittenSubscribers) {
             sub(groupId);
         }
     }

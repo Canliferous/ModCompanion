@@ -7,7 +7,7 @@ import {
 import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "Shared/SharedStrataInterop.js";
 
 let socket: net.Socket | undefined = undefined;
-let reconnect = true;
+const reconnect = true;
 let healthCheckInterval: NodeJS.Timeout | undefined = undefined;
 const healthCheckIntervalMs = 2000;
 

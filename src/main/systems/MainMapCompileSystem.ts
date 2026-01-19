@@ -97,7 +97,7 @@ function _workQueue() {
     if (queue.length === 0) return;
 
     for (let i = 0; i < queue.length; i++) {
-        let steps = mapQueueStages.get(queue[i]);
+        const steps = mapQueueStages.get(queue[i]);
         if (steps === undefined) {
             continue;
         }
@@ -124,7 +124,7 @@ function _workMap(mapPath: string, steps: Stage[]) {
 
     // Start next stage
     for (let i = 0; i < steps.length; i++) {
-        let step = steps[i];
+        const step = steps[i];
         if (step.state === SharedMapCompileState.Idle) {
             _startStage(mapPath, i);
             return;

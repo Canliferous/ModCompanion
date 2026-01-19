@@ -4,8 +4,8 @@
         variant="ghost"
         :color="isSelected ? 'primary' : 'neutral'"
         :icon="isSelected ? AppDesign.Icons.Check : 'nothing'"
-        @click="() => emit('click', entry)"
         :disabled="disabled"
+        @click="() => emit('click', entry)"
     />
 </template>
 
@@ -27,7 +27,7 @@ const label = computed(() => {
     if (props.labelFunc) {
         name = props.labelFunc(props.entry);
     } else {
-        name = (props.entry as Object).toString();
+        name = (props.entry as object).toString();
     }
 
     if (props.default === props.entry) {

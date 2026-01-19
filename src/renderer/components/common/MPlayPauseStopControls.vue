@@ -3,20 +3,20 @@
         <UButton
             :icon="AppDesign.Icons.ActionPlay"
             :color="compileStore.state !== SharedPlayPauseStopControlsState.Playing ? 'success' : 'neutral'"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Playing"
             :disabled="compileStore.state === SharedPlayPauseStopControlsState.Playing"
+            @click="compileStore.state = SharedPlayPauseStopControlsState.Playing"
         />
         <UButton
             :icon="AppDesign.Icons.ActionPause"
             :color="compileStore.state === SharedPlayPauseStopControlsState.Playing ? 'warning' : 'neutral'"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Paused"
             :disabled="compileStore.state !== SharedPlayPauseStopControlsState.Playing"
+            @click="compileStore.state = SharedPlayPauseStopControlsState.Paused"
         />
         <UButton
             :icon="AppDesign.Icons.ActionStop"
             :color="compileStore.state !== SharedPlayPauseStopControlsState.Stopped ? 'error' : 'neutral'"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Stopped"
             :disabled="compileStore.state === SharedPlayPauseStopControlsState.Stopped"
+            @click="compileStore.state = SharedPlayPauseStopControlsState.Stopped"
         />
     </UButtonGroup>
 </template>

@@ -1,6 +1,6 @@
 <template>
     <MAcceptDrop v-model="model" @change="emit('change', model ?? '')">
-        <template v-slot="{ isOverDropZone }">
+        <template #default="{ isOverDropZone }">
             <template v-if="isDragging">
                 <div class="rounded bg-neutral-900 border border-accented inset-shadow-cave overflow-hidden">
                     <MDropAreaBg
@@ -14,9 +14,9 @@
             <template v-else>
                 <UInput
                     v-model="model"
-                    @change="emit('change', model ?? '')"
                     :placeholder="placeholder"
                     class="w-full"
+                    @change="emit('change', model ?? '')"
                 />
             </template>
         </template>

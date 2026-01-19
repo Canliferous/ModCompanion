@@ -3,8 +3,8 @@
         :entries="listStore.filteredMapList"
         :columns="columns"
         neutral-highlight
-        @onActiveChanged="handleActiveChanged"
-        noScroll
+        no-scroll
+        @on-active-changed="handleActiveChanged"
     />
 </template>
 
@@ -13,15 +13,12 @@ import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { computed } from "vue";
-import pathe from "pathe";
-import { filename } from "pathe/utils";
 import MapsDataGridProgressCell from "~/components/panels/maps/list/MapsDataGridProgressCell.vue";
 import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 import MapsDataGridActionsCell from "~/components/panels/maps/list/MapsDataGridActionsCell.vue";
 import MapsDataGridTimeReportTotalCell from "~/components/panels/maps/list/MapsDataGridTimeReportTotalCell.vue";
 import MapsDataGridTimeReportCell from "~/components/panels/maps/list/MapsDataGridTimeReportCell.vue";
 import MapsDataGridTimeReportBarCell from "~/components/panels/maps/list/MapsDataGridTimeReportBarCell.vue";
-import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();

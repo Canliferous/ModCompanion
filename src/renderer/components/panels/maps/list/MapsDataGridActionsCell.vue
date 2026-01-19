@@ -3,8 +3,8 @@
         <UTooltip text="Compile Now">
             <UButton
                 :icon="AppDesign.Icons.ActionCompileMap"
-                @click="() => compileStore.compileNow(mapPath)"
                 :disabled="listStore.mapQueue.includes(mapPath)"
+                @click="() => compileStore.compileNow(mapPath)"
             />
         </UTooltip>
         <UTooltip text="Open in Hammer">
@@ -24,8 +24,8 @@
         <UTooltip text="Remove from list">
             <UButton
                 :icon="AppDesign.Icons.ActionRemove"
-                @click="() => listStore.removeMap(mapPath)"
                 :disabled="hasQueue"
+                @click="() => listStore.removeMap(mapPath)"
             />
         </UTooltip>
         <UDropdownMenu :items="dropdownItems">

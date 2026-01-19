@@ -1,5 +1,5 @@
 <template>
-    <UCheckbox label="Time Report" variant="button" v-model="timeReportStore.showReport" @change="onToggle" />
+    <UCheckbox v-model="timeReportStore.showReport" label="Time Report" variant="button" @change="onToggle" />
 </template>
 
 <script setup lang="ts">

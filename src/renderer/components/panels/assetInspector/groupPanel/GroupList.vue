@@ -1,8 +1,8 @@
 <template>
     <div
+        ref="dropZoneRef"
         class="border border-accented rounded bg-neutral-900 inset-shadow-cave"
         :class="{ 'border-primary-400': isOverDropZone }"
-        ref="dropZoneRef"
     >
         <div
             v-for="(assetId, i) in group.def.assets"

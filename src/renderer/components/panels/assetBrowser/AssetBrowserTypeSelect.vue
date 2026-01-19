@@ -1,7 +1,7 @@
 <template>
     <USelect
-        :items="items"
         v-model="selected"
+        :items="items"
         value-key="id"
         multiple
         class="min-w-32"

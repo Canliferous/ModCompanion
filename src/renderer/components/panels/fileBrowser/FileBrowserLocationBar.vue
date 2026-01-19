@@ -1,16 +1,16 @@
 <template>
     <button
-        @click="handleBgClicked()"
         class="w-full h-8 outline-none cursor-text bg-neutral-900 border border-accented rounded inset-shadow-cave"
+        @click="handleBgClicked()"
     >
         <FileBrowserLocationBarBreadcrumbs v-if="showBreadcrumbs" />
         <UInput
             v-else
+            v-model="inputText"
             size="sm"
             class="w-full"
             variant="none"
             autofocus
-            v-model="inputText"
             @blur="handleBlur()"
             @keydown.enter="handleEnter"
             @keydown.down="handleDown"

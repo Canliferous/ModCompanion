@@ -1,5 +1,5 @@
 <template>
-    <UInputNumber class="w-full" v-model="val" :min="min" :max="max" @change="handleChange" :step="step" />
+    <UInputNumber v-model="val" class="w-full" :min="min" :max="max" :step="step" @change="handleChange" />
 </template>
 
 <script setup lang="ts">

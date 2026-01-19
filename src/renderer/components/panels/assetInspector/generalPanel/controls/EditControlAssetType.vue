@@ -1,5 +1,5 @@
 <template>
-    <USelect :items="selectItems" v-model="assetType" value-key="id" :icon="icon" class="w-full" @change="updateType" />
+    <USelect v-model="assetType" :items="selectItems" value-key="id" :icon="icon" class="w-full" @change="updateType" />
 </template>
 
 <script setup lang="ts">

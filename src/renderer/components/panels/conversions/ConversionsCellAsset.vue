@@ -1,9 +1,9 @@
 <template>
     <AssetBrowserCellAssetName
         v-if="asset"
+        :id="assetId"
         :name="asset.def.displayName ?? '(unknown)'"
         :type="asset.def.type"
-        :id="assetId"
     />
     <div v-else>Unknown asset {{ assetId }}</div>
 </template>

@@ -11,7 +11,7 @@
                 :value="name"
                 :editing="editing"
                 @changed="handleNameChanged"
-                @stopEditing="emit('stopEditing')"
+                @stop-editing="emit('stopEditing')"
             />
         </div>
     </div>

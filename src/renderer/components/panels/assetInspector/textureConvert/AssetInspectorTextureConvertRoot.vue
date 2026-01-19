@@ -130,7 +130,7 @@ provide(AssetInspectorTextureConvertInjectKey, {
         const rawOptions = toRaw(options.value);
         const opt: SharedVtfCreateOptions = toRaw({ ...rawOptions, ...op });
 
-        for (let [key, val] of Object.entries(getAppConfig().assetDefaults?.vtfOptions ?? {})) {
+        for (const [key, val] of Object.entries(getAppConfig().assetDefaults?.vtfOptions ?? {})) {
             if ((opt as any)[key] === val) {
                 (opt as any)[key] = undefined;
             }

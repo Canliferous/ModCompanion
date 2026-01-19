@@ -4,7 +4,7 @@ import os from "node:os";
 export async function runConverter(cmd: string, cwd: string, converterName: string): Promise<string> {
     console.log(`Running ${converterName} converter cmd`, cmd);
 
-    let log: string[] = [`Command: ${cmd}`, ""];
+    const log: string[] = [`Command: ${cmd}`, ""];
 
     return new Promise((resolve, reject) => {
         try {

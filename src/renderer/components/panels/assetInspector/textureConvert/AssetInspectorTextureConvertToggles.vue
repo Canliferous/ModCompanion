@@ -1,7 +1,7 @@
 <template>
-    <UCheckbox label="No Mipmaps" v-model="noMips" @change="save" :id="useId()" />
-    <UCheckbox label="No Animation" v-model="noAnim" @change="save" :id="useId()" />
-    <UCheckbox label="No Thumbnail" v-model="noThumb" @change="save" :id="useId()" />
+    <UCheckbox :id="useId()" v-model="noMips" label="No Mipmaps" @change="save" />
+    <UCheckbox :id="useId()" v-model="noAnim" label="No Animation" @change="save" />
+    <UCheckbox :id="useId()" v-model="noThumb" label="No Thumbnail" @change="save" />
 </template>
 
 <script setup lang="ts">

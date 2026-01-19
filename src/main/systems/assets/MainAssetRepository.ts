@@ -97,7 +97,7 @@ export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: st
 }
 
 export function getAssetFromFile(filePath: string): SharedAsset | undefined {
-    for (let asset of assetMap.values()) {
+    for (const asset of assetMap.values()) {
         if (asset.def.gameFiles?.includes(filePath)) return asset;
         if (asset.def.contentFiles?.includes(filePath)) return asset;
         if (asset.defFilePath === filePath) return asset;
@@ -107,7 +107,7 @@ export function getAssetFromFile(filePath: string): SharedAsset | undefined {
 }
 
 export function getAssetFromFiles(filePaths: string[]): SharedAsset | undefined {
-    for (let asset of assetMap.values()) {
+    for (const asset of assetMap.values()) {
         for (const filePath of filePaths) {
             if (asset.def.gameFiles?.includes(filePath)) return asset;
             if (asset.def.contentFiles?.includes(filePath)) return asset;

@@ -8,9 +8,9 @@
     >
         <MDataTableHeader v-if="!noHeader" :columns="columns" />
         <div
+            ref="grid"
             class="grid col-span-full grid-cols-subgrid content-start pr-1"
             :class="{ 'overflow-y-scroll': !(noScroll ?? false) }"
-            ref="grid"
         >
             <MDataTableRow
                 v-for="(entry, i) in entriesHierarchy"
@@ -20,8 +20,8 @@
                 :draggable="draggable"
                 :neutral-highlight="neutralHighlight"
                 :depth="entry.depth"
-                @dragStart="(e) => handleDragEvent(e, i, 'onDragStart')"
-                @dragEnd="(e) => handleDragEvent(e, i, 'onDragEnd')"
+                @drag-start="(e) => handleDragEvent(e, i, 'onDragStart')"
+                @drag-end="(e) => handleDragEvent(e, i, 'onDragEnd')"
             />
         </div>
     </div>
@@ -184,8 +184,8 @@ function endSelect(endIdx: number): void {
     if (entries.length < activeIdx.value) return;
     if (entries.length < startIdx) return;
 
-    let start = startIdx < endIdx ? startIdx : endIdx;
-    let end = startIdx > endIdx ? startIdx : endIdx;
+    const start = startIdx < endIdx ? startIdx : endIdx;
+    const end = startIdx > endIdx ? startIdx : endIdx;
 
     const selectedIdxs: number[] = [];
     for (let i = start; i <= end; i++) {

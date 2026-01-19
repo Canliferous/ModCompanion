@@ -1,15 +1,15 @@
 <template>
-    <MPanelRoot noScroll>
+    <MPanelRoot no-scroll>
         <MLogArea :text="interopStore.log" />
 
         <template #footer>
             <div class="flex">
                 <UInput
+                    v-model="prompt"
                     class="grow"
                     :placeholder="interopStore.connected ? 'Enter command' : 'Strata Interop is not connected'"
                     :disabled="!interopStore.connected"
                     @keydown.enter="handleSubmit"
-                    v-model="prompt"
                 />
                 <UButton
                     :icon="AppDesign.Icons.ActionSend"

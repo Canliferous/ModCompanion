@@ -1,7 +1,7 @@
 <template>
-    <MPanelRoot noScroll>
+    <MPanelRoot no-scroll>
         <template #header>
-            <div class="grid gap-2" v-if="entry">
+            <div v-if="entry" class="grid gap-2">
                 <div class="flex gap-2 w-full items-center">
                     <UIcon class="size-10 text-blue-300" :name="AppDesign.Icons.FsFile" />
                     <div class="grow shrink select-none">
@@ -17,22 +17,22 @@
                     <UButton
                         v-if="fileInspector === FileInspectors.Text"
                         size="xs"
-                        @click="handleOpen"
                         label="Edit"
                         :icon="AppDesign.Icons.ActionEdit"
+                        @click="handleOpen"
                     />
                     <UButton
                         v-else
                         size="xs"
-                        @click="handleOpen"
                         label="Open"
                         :icon="AppDesign.Icons.ActionLaunchFile"
+                        @click="handleOpen"
                     />
                     <UButton
                         size="xs"
-                        @click="handleExplore"
                         label="Explore to"
                         :icon="AppDesign.Icons.ActionBrowseToFolder"
+                        @click="handleExplore"
                     />
                 </div>
             </div>

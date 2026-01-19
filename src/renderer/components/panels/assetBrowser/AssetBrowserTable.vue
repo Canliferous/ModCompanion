@@ -6,13 +6,13 @@
             :columns="columns"
             :tree-child-func="treeChildFunc"
             draggable
-            noScroll
+            no-scroll
             neutral-highlight
-            @onActiveChanged="handleActiveChanged"
-            @onSelectionChanged="handleSelectionChanged"
-            @onDragStart="handleDragStart"
-            @onEntryActivated="handleEntryActivated"
-            @onKeyDown="handleKeyDown"
+            @on-active-changed="handleActiveChanged"
+            @on-selection-changed="handleSelectionChanged"
+            @on-drag-start="handleDragStart"
+            @on-entry-activated="handleEntryActivated"
+            @on-key-down="handleKeyDown"
         />
     </UContextMenu>
 </template>
@@ -101,7 +101,7 @@ const entries = computed(() => {
     }
 
     // Add remaining ungrouped assets
-    for (let assets of listStore.filteredAssets) {
+    for (const assets of listStore.filteredAssets) {
         if (assetIdsInGroups.includes(assets.def.id)) {
             continue;
         }

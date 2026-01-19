@@ -6,7 +6,7 @@
                 <EditControlAssetType :asset="asset" />
             </UFormField>
             <UFormField label="ID">
-                <UInput disabled v-model="asset.def.id" class="w-full" />
+                <UInput v-model="asset.def.id" disabled class="w-full" />
             </UFormField>
             <UFormField label="Display Name" class="col-span-2">
                 <EditControlAssetDisplayName :asset="asset" />

@@ -22,7 +22,7 @@ export function inferAssetCreationType(files: string[]): AssetCreationInferResul
 }
 
 function _allTextureFiles(files: string[]): boolean {
-    for (let file of files) {
+    for (const file of files) {
         if (!_isTextureFile(file)) return false;
     }
 
@@ -30,7 +30,7 @@ function _allTextureFiles(files: string[]): boolean {
 }
 
 function _allModelFiles(files: string[]): boolean {
-    for (let file of files) {
+    for (const file of files) {
         if (!_isModelFile(file)) return false;
     }
 
@@ -38,7 +38,7 @@ function _allModelFiles(files: string[]): boolean {
 }
 
 function _isTextureFile(file: string): boolean {
-    for (let ending of SharedConstants.texturesFileEndings) {
+    for (const ending of SharedConstants.texturesFileEndings) {
         if (file.endsWith(ending)) return true;
     }
 
@@ -46,7 +46,7 @@ function _isTextureFile(file: string): boolean {
 }
 
 function _isModelFile(file: string): boolean {
-    for (let ending of SharedConstants.modelFileEndings) {
+    for (const ending of SharedConstants.modelFileEndings) {
         if (file.endsWith(ending)) return true;
     }
 

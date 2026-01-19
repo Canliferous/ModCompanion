@@ -34,8 +34,8 @@ export function createHotspotEditor(
     let mouseXCanvas = 0;
     let mouseYCanvas = 0;
 
-    let rects: Rect[] = [{ x: 256, y: 256, w: 128, h: 128 }];
-    let selectedRectIdx = 0;
+    const rects: Rect[] = [{ x: 256, y: 256, w: 128, h: 128 }];
+    const selectedRectIdx = 0;
 
     function _drawLoop() {
         if (requestShutdown) return;

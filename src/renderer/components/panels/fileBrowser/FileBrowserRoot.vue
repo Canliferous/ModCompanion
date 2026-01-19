@@ -1,19 +1,19 @@
 <template>
-    <MPanelRoot alwaysShowScroll>
+    <MPanelRoot always-show-scroll>
         <template #header>
             <FileBrowserLocationBar @focus-list="handleFocusList" />
         </template>
         <UContextMenu :items="items">
             <MDataTable
+                ref="dataTable"
                 :columns="columns"
                 :entries="entries"
-                @onEntryActivated="handleActivated"
-                @onSelectionChanged="handleSelectionChanged"
-                @onActiveChanged="handleActiveChanged"
-                @onDragStart="handleDragStart"
-                ref="dataTable"
                 :draggable="true"
-                noScroll
+                no-scroll
+                @on-entry-activated="handleActivated"
+                @on-selection-changed="handleSelectionChanged"
+                @on-active-changed="handleActiveChanged"
+                @on-drag-start="handleDragStart"
             />
         </UContextMenu>
     </MPanelRoot>

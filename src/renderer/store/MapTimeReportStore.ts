@@ -26,7 +26,7 @@ function _createReportChart(report: SharedMapTimeReport): Map<SharedMapPath, num
     let longestTime = 0;
     let shortestTime = Number.MAX_VALUE;
 
-    for (let secs of report.totals.values()) {
+    for (const secs of report.totals.values()) {
         timeSum += secs;
 
         if (secs > longestTime) {

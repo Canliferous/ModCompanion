@@ -28,7 +28,8 @@
         "build:docs": "typedoc --tsconfig src/main/tsconfig.json --entryPointStrategy Expand src/main src/shared",
         "deploy": "npm run build && node scripts/deploy.cjs",
         "test": "vitest",
-        "lint": "eslint src"
+        "lint": "eslint src",
+        "lint-fix": "eslint src --fix"
     },
     "devDependencies": {
         "@electron/fuses": "^1.8.0",

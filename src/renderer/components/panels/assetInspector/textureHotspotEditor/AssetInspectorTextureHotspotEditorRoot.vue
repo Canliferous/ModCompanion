@@ -1,7 +1,7 @@
 <template>
     <div class="p-1 h-full grid grid-cols-1 grid-rows-1">
         <div class="aspect-square">
-            <canvas :id="id" width="1000" height="1000" class="h-full w-full" ref="canvasRef"></canvas>
+            <canvas :id="id" ref="canvasRef" width="1000" height="1000" class="h-full w-full" />
         </div>
     </div>
 </template>

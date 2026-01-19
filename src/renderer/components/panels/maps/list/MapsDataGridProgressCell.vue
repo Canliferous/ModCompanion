@@ -1,15 +1,15 @@
 <template>
     <div class="flex justify-center">
-        <UIcon :name="AppDesign.Icons.MapCompileIdle" v-if="state === SharedMapCompileState.Idle" />
+        <UIcon v-if="state === SharedMapCompileState.Idle" :name="AppDesign.Icons.MapCompileIdle" />
         <UIcon
+            v-if="state === SharedMapCompileState.InProgress"
             :name="AppDesign.Icons.MapCompileInProgress"
             class="text-info animate-spin"
-            v-if="state === SharedMapCompileState.InProgress"
         />
         <UIcon
+            v-if="state === SharedMapCompileState.Completed"
             :name="AppDesign.Icons.MapCompileCompleted"
             class="text-success"
-            v-if="state === SharedMapCompileState.Completed"
         />
     </div>
 </template>

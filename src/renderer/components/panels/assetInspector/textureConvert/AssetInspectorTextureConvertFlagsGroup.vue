@@ -1,5 +1,5 @@
 <template>
-    <UCollapsible class="col-span-2" v-model:open="open">
+    <UCollapsible v-model:open="open" class="col-span-2">
         <UButton
             :label="label"
             variant="ghost"

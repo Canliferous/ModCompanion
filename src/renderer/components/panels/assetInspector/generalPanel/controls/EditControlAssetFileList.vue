@@ -1,17 +1,17 @@
 <template>
-    <UFormField :label="heading" class="col-span-2" ref="dropZoneRef">
-        <template #hint> </template>
+    <UFormField ref="dropZoneRef" :label="heading" class="col-span-2">
+        <template #hint />
         <div class="grid gap-1">
             <template v-for="(file, i) in files">
                 <EditControlAssetFileListEntry
                     :entry="file"
+                    :dir
                     @remove="() => handleRemove(i)"
                     @changed="(newText) => handleChanged(i, newText)"
-                    :dir
                 />
             </template>
 
-            <div class="grid grid-cols-[1fr_auto] gap-1" v-if="files.length < (maxItems ?? Number.MAX_VALUE)">
+            <div v-if="files.length < (maxItems ?? Number.MAX_VALUE)" class="grid grid-cols-[1fr_auto] gap-1">
                 <MDropArea @change="handleDrop"> Drop files to add </MDropArea>
                 <UButton :icon="AppDesign.Icons.ActionAdd" class="justify-self-end" @click="handleAdd" />
             </div>

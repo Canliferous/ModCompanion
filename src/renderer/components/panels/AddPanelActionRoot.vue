@@ -5,7 +5,7 @@
 
             <template #content>
                 <div class="p-2">
-                    <MAddPanelsGrid :spawnOptions="spawnOptions" @buttonClicked="handleClicked" />
+                    <MAddPanelsGrid :spawn-options="spawnOptions" @button-clicked="handleClicked" />
                 </div>
             </template>
         </UPopover>

@@ -14,7 +14,7 @@ export async function buildAssets(contentTree: string[]): Promise<SharedAssetMap
     const assets: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
     const rootPath = getAppConfig().rootPath;
 
-    for (let filePath of contentTree) {
+    for (const filePath of contentTree) {
         if (!_isAssetDefinitionFile(filePath)) continue;
 
         const definition = await _readAssetDefinitionFile(filePath, rootPath);

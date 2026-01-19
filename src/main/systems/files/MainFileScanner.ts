@@ -20,7 +20,7 @@ async function _listFilesRecursive(baseDirLength: number, dir: string): Promise<
     const entries = await fs.readdir(dir);
 
     const files: string[] = [];
-    for (let entry of entries) {
+    for (const entry of entries) {
         const entryPath = path.join(dir, entry);
         const stat = await fs.stat(entryPath);
         if (stat.isDirectory()) {

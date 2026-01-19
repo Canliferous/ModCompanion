@@ -12,7 +12,7 @@
         @dragstart="(e) => emit('dragStart', e)"
         @dragend="(e) => emit('dragEnd', e)"
     >
-        <component v-for="col in columns" :is="col.cell ? (col.cell(entry, depth) ?? 'div') : 'div'" />
+        <component :is="col.cell ? (col.cell(entry, depth) ?? 'div') : 'div'" v-for="col in columns" />
     </button>
 </template>
 

@@ -1,13 +1,13 @@
 <template>
-    <MPanelRoot alwaysShowScroll>
+    <MPanelRoot always-show-scroll>
         <template #header>
             <div class="flex gap-1">
                 <MapAddButton />
                 <MapPresetButton />
                 <UInput
+                    v-model="listStore.searchTerm"
                     placeholder="Search"
                     block
-                    v-model="listStore.searchTerm"
                     :leading-icon="AppDesign.Icons.Search"
                 />
 

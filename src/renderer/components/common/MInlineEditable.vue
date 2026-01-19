@@ -1,7 +1,7 @@
 <template>
     <span
-        :contenteditable="editing ? 'plaintext-only' : 'false'"
         ref="editableRef"
+        :contenteditable="editing ? 'plaintext-only' : 'false'"
         class="outline-0"
         @keydown="handleKeyDown"
         @blur="handleValueChanged"

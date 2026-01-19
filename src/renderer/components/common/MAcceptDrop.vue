@@ -1,6 +1,6 @@
 <template>
     <div ref="dropZoneRef" @dragover="(e) => e.preventDefault()">
-        <slot :isOverDropZone="isOverDropZone" />
+        <slot :is-over-drop-zone="isOverDropZone" />
     </div>
 </template>
 

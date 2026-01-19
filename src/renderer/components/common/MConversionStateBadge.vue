@@ -5,7 +5,7 @@
         :variant="variant ?? 'subtle'"
     >
         <template #leading>
-            <MConversionStateIcon :state="state" :noAnimation="noAnimation" />
+            <MConversionStateIcon :state="state" :no-animation="noAnimation" />
         </template>
     </UBadge>
 </template>

@@ -6,7 +6,7 @@
         <pre
             class="whitespace-pre-wrap text-xs text-neutral-300"
             :class="{ 'wrap-break-word': !horizScroll }"
-        ><slot/></pre>
+        ><slot /></pre>
     </div>
 </template>
 

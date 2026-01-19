@@ -10,7 +10,7 @@
 
         <template #content-top>
             <div class="p-1">
-                <UInput placeholder="Workspace Name..." v-model="label" />
+                <UInput v-model="label" placeholder="Workspace Name..." />
             </div>
         </template>
     </UContextMenu>

@@ -5,8 +5,8 @@
     </div>
     <div ref="dropZoneRef">
         <div class="flex items-center w-full gap-1">
-            <MDropInput v-model="file" placeholder="Enter path" @change="emit('updated', file)" class="grow" />
-            <UButton :icon="AppDesign.Icons.ActionPlay" @click="handleRun" :disabled="file.length === 0" />
+            <MDropInput v-model="file" placeholder="Enter path" class="grow" @change="emit('updated', file)" />
+            <UButton :icon="AppDesign.Icons.ActionPlay" :disabled="file.length === 0" @click="handleRun" />
         </div>
     </div>
 </template>

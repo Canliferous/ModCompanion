@@ -11,13 +11,13 @@
                 />
 
                 <USelect
+                    v-model="mapListStore.selectedMap"
                     :items="mapSelectItems"
                     placeholder="No maps"
                     class="min-w-30"
                     :disabled="mapSelectItems.length === 0"
                     value-key="id"
                     :ui="{ content: 'min-w-fit' }"
-                    v-model="mapListStore.selectedMap"
                 />
             </div>
         </template>
