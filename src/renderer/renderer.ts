@@ -6,7 +6,6 @@ import { initConfig } from "~/renderer-config.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { initIcons } from "~/renderer-icons.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 
 initConfig();
 initVue();

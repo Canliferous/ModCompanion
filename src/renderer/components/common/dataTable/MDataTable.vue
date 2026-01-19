@@ -76,7 +76,7 @@ const entriesHierarchy = computed(() => {
     return result;
 });
 
-watch(entriesHierarchy, (value) => {
+watch(entriesHierarchy, () => {
     deselect();
 });
 

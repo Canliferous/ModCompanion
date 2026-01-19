@@ -34,7 +34,7 @@ onMounted(() => {
         editor.updateTexture(props.meta.data, props.meta.width, props.meta.height);
     }
 
-    const { elementX, elementY, isOutside } = useMouseInElement(canvasRef);
+    const { elementX, elementY } = useMouseInElement(canvasRef);
     useMousePressed({
         target: canvasRef,
         onPressed: (event) => {
@@ -47,7 +47,7 @@ onMounted(() => {
                 }
             }
         },
-        onReleased: (event) => {
+        onReleased: () => {
             editor.updateMouse1Pressed(false);
             editor.updateMouse2Pressed(false);
         },

@@ -88,7 +88,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Open / Run",
                 icon: allFiles ? AppDesign.Icons.ActionLaunchFile : "nothing",
                 disabled: !allFiles,
-                onSelect(e: Event) {
+                onSelect() {
                     window.electronAPI.fileBrowser.launchFile(pathsArray);
                 },
             },
@@ -96,7 +96,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Explore to",
                 icon: AppDesign.Icons.ActionBrowseToFolder,
                 disabled: entries.length !== 1,
-                onSelect(e) {
+                onSelect() {
                     window.electronAPI.fileBrowser.browseToFile(entries[0].path);
                 },
             },
@@ -106,7 +106,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Create individual Assets",
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
-                onSelect(e) {
+                onSelect() {
                     const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore.createAsset(primaryPath, otherPaths);
@@ -116,7 +116,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Create grouped Asset",
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
-                onSelect(e: Event) {
+                onSelect() {
                     const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore
@@ -128,7 +128,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Select Asset in Browser",
                 icon: AppDesign.Icons.Asset,
                 disabled: mcaFiles.length === 0,
-                onSelect(e: Event) {
+                onSelect() {
                     assetListStore.selectByMca(mcaFiles.map((m) => m.path));
                 },
             },

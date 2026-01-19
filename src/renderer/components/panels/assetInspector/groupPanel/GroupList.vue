@@ -20,7 +20,7 @@ import { useDropZone } from "@vueuse/core";
 import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
-const props = defineProps<{
+defineProps<{
     group: SharedAssetGroup;
 }>();
 

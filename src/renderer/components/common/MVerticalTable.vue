@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VerticalTableItem } from "~/components/common/MVerticalTable.model.js";
 
-const props = defineProps<{ items: VerticalTableItem[] }>();
+defineProps<{ items: VerticalTableItem[] }>();
 </script>
 
 <template>

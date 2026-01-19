@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedConversionEvent } from "Shared/SharedConversion.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
@@ -62,7 +61,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Convert again",
                 icon: AppDesign.Icons.ActionConvertAsset,
                 color: "success",
-                onSelect(e: Event) {
+                onSelect() {
                     if (active) {
                         conversionStore.enqueue(active?.assetId);
                     }

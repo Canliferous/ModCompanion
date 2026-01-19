@@ -7,19 +7,19 @@ import { ConversionEventSystem } from "../systems/MainConversionEventSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerConversionApi(): boolean {
-    ipcMain.on(SharedIpcChannels.ConversionAgentStart, (event) => {
+    ipcMain.on(SharedIpcChannels.ConversionAgentStart, () => {
         ConversionAgentSystem.startAgent();
     });
-    ipcMain.on(SharedIpcChannels.ConversionAgentStop, (event) => {
+    ipcMain.on(SharedIpcChannels.ConversionAgentStop, () => {
         ConversionAgentSystem.stopAgent();
     });
     ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
         ConversionAgentSystem.enqueue(assetId, true);
     });
-    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (event): Promise<SharedConversionGetStateIpcReport> => {
+    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (): Promise<SharedConversionGetStateIpcReport> => {
         return { conversions: ConversionAgentSystem.getConversionsMap() };
     });
-    ipcMain.on(SharedIpcChannels.ConversionClearEvents, (event) => {
+    ipcMain.on(SharedIpcChannels.ConversionClearEvents, () => {
         ConversionEventSystem.clearEvents();
     });
     return true;

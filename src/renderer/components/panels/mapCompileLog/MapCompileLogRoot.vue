@@ -28,8 +28,7 @@
 <script setup lang="ts">
 import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
-import { computed, useTemplateRef, watch } from "vue";
-import { useRememberRef } from "~/composables/useRemember.js";
+import { computed } from "vue";
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
 import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
 import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";

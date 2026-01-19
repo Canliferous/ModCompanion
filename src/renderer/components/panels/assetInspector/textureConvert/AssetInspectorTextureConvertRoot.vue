@@ -87,19 +87,17 @@ import { getAppConfig } from "~/renderer-config.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import AssetInspectorTextureConvertToggles from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertToggles.vue";
-import { getVtfVersionName, SharedVtfDefaultVersion, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
-import { getVtfFilterName, SharedVtfDefaultFilter, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
+import { getVtfVersionName, SharedVtfVersions } from "Shared/vtf/SharedVtfVersion.js";
+import { getVtfFilterName, SharedVtfFilters } from "Shared/vtf/SharedVtfFilter.js";
 import {
     getVtfCompressionMethodName,
     isVtfCompressionMethodDisabled,
     SharedVtfCompressionMethods,
-    SharedVtfDefaultCompressionMethod,
 } from "Shared/vtf/SharedVtfCompression.js";
 import {
     getVtfFormatName,
     getVtfImageFormatGrouping,
     isVtfFormatDisabled,
-    SharedVtfDefaultImageFormat,
     SharedVtfImageFormats,
 } from "Shared/vtf/SharedVtfFormat.js";
 import AssetInspectorTextureConvertFlags from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvertFlags.vue";
@@ -144,7 +142,7 @@ provide(AssetInspectorTextureConvertInjectKey, {
 
         const assetDef: SharedTextureAssetDefinition = { ...rawAsset.def, vtfOptions: opt };
         const newAsset: SharedAsset = { ...rawAsset, def: assetDef };
-        const _ = assetStore.writeAssets([newAsset]);
+        assetStore.writeAssets([newAsset]);
     },
 });
 </script>

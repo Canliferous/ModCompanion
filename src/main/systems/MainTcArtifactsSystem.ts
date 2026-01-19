@@ -35,7 +35,7 @@ export const TcArtifactsSystem = {
         return true;
     },
     async isCloudConnected(): Promise<boolean> {
-        const connected = await _useS3(async (client, bucket) => true);
+        const connected = await _useS3(async () => true);
         return connected ?? false;
     },
     async listAllObjects() {

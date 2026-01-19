@@ -13,7 +13,7 @@ import { SharedCreateAssetReport, SharedCreateAssetReportType } from "Shared/Sha
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerAssetApi(): boolean {
-    ipcMain.on(SharedIpcChannels.AssetForceRescan, (event) => {
+    ipcMain.on(SharedIpcChannels.AssetForceRescan, () => {
         MainAssetRepository.rescan();
     });
 
@@ -51,7 +51,7 @@ export function registerAssetApi(): boolean {
                     };
                 }
                 return { type: SharedCreateAssetReportType.Success, assets: result };
-            } catch (e) {
+            } catch {
                 return {
                     type: SharedCreateAssetReportType.ErrorUnknown,
                 };

@@ -1,4 +1,4 @@
-import { SharedAssetType, SharedAssetTypes, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetTypes, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import { generateAssetId } from "./MainAssetRepository.js";
 import { filename } from "pathe/utils";
 import path from "path";

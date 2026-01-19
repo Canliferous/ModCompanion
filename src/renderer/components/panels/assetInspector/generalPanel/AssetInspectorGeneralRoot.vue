@@ -59,7 +59,7 @@ async function updateAsset(def: Partial<SharedAssetDefinition>) {
         const rawAsset = toRaw(props.asset);
         const assetDef: SharedAssetDefinition = { ...rawAsset.def, ...def };
         const newAsset: SharedAsset = { ...rawAsset, def: assetDef };
-        const _ = assetStore.writeAssets([newAsset]);
+        assetStore.writeAssets([newAsset]);
 
         // Toast on failure?
     } finally {

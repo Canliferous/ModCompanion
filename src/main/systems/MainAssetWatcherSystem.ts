@@ -16,7 +16,7 @@ export const AssetWatcherSystem = {
         const config = getAppConfig();
         watcher = chokidar.watch(config.textureSourcePath, { ignoreInitial: true, awaitWriteFinish: true });
 
-        watcher.on("add", _handleAdded);
+        // watcher.on("add", _handleAdded);
         watcher.on("change", _handleChanged);
         watcher.on("unlink", _handleDeleted);
 
@@ -26,8 +26,6 @@ export const AssetWatcherSystem = {
         ignoreMap.set(filePath, ignoreCount);
     },
 };
-
-function _handleAdded(filePath: string): void {}
 
 function _handleChanged(filePath: string): void {
     const ignoreCount = ignoreMap.get(filePath);

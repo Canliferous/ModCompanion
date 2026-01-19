@@ -27,15 +27,15 @@ export const StrataInteropSystem = {
     },
 };
 
-function _connect(port: number, timeout: number): Promise<net.Socket | undefined> {
-    const promise = new Promise<net.Socket | undefined>((resolve, reject) => {
+function _connect(port: number): Promise<net.Socket | undefined> {
+    const promise = new Promise<net.Socket | undefined>((resolve) => {
         const s = new net.Socket();
         s.setTimeout(3000);
         s.connect(port, "localhost", () => {
             resolve(s);
         });
         s.on("timeout", () => resolve(undefined));
-        s.on("error", (err) => resolve(undefined));
+        s.on("error", () => resolve(undefined));
     });
 
     return promise;
@@ -46,7 +46,7 @@ async function _healthcheck() {
         if (reconnect) {
             const s = await _connect(SHARED_STRATA_INTEROP_SOCKET_PORT, healthCheckIntervalMs);
             if (s) {
-                s.on("close", (hadError) => {
+                s.on("close", () => {
                     socket = undefined;
                     notifyStrataInteropDisconnected();
                 });

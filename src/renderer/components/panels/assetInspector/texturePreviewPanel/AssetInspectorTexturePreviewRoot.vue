@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 
-const props = defineProps<{ meta: SharedImageMetaReport }>();
+defineProps<{ meta: SharedImageMetaReport }>();
 </script>
 
 <style scoped></style>

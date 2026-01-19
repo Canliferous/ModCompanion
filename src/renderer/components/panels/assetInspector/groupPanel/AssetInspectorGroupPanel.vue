@@ -6,7 +6,7 @@
 import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
 import AssetInspectorGroupRoot from "~/components/panels/assetInspector/groupPanel/AssetInspectorGroupRoot.vue";
 
-const props = defineProps<{
+defineProps<{
     group: SharedAssetGroup;
 }>();
 </script>

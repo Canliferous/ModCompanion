@@ -16,9 +16,6 @@
 <script setup lang="ts">
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { computed } from "vue";
-import Humanize from "humanize-plus";
-import MVerticalTable from "~/components/common/MVerticalTable.vue";
-import { VerticalTableItem } from "~/components/common/MVerticalTable.model.js";
 
 const props = defineProps<{ meta: SharedImageMetaReport }>();
 

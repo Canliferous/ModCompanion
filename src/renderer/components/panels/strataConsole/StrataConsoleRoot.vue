@@ -38,20 +38,6 @@ function handleSubmit() {
     prompt.value = "";
 }
 
-function handleHistoryUp() {
-    const newPrompt = interopStore.getHistoryUp(prompt.value);
-    if (newPrompt) {
-        prompt.value = newPrompt;
-    }
-}
-
-function handleHistoryDown() {
-    const newPrompt = interopStore.getHistoryDown(prompt.value);
-    if (newPrompt) {
-        prompt.value = newPrompt;
-    }
-}
-
 function handleClear() {
     interopStore.clearLog();
 }

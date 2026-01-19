@@ -30,8 +30,6 @@ import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import { useAssetListStore } from "~/store/AssetListStore.js";
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 const groupsStore = useAssetGroupsStore();
 

@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import MInteractiveImageViewer from "~/components/common/MInteractiveImageViewer.vue";
 
-const props = defineProps<{ path: string }>();
+defineProps<{ path: string }>();
 </script>
 
 <style scoped></style>

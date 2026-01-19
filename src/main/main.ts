@@ -1,4 +1,4 @@
-import { app, dialog } from "electron";
+import { app } from "electron";
 import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initConfigSystem } from "./systems/MainConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";

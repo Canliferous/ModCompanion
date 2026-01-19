@@ -22,13 +22,10 @@ export const useMapTimeReportStore = defineStore("map-time-report", () => {
 function _createReportChart(report: SharedMapTimeReport): Map<SharedMapPath, number> {
     const map = new Map<SharedMapPath, number>();
 
-    let timeSum = 0;
     let longestTime = 0;
     let shortestTime = Number.MAX_VALUE;
 
     for (const secs of report.totals.values()) {
-        timeSum += secs;
-
         if (secs > longestTime) {
             longestTime = secs;
         }

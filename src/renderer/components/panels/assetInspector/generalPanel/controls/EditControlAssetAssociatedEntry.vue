@@ -15,7 +15,6 @@
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { SharedAssetDefinitionAssociatedFilesEntry } from "Shared/SharedAssetDefinition.js";
-import { useDropZone } from "@vueuse/core";
 import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ file: string; entry: SharedAssetDefinitionAssociatedFilesEntry }>();

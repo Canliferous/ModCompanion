@@ -4,7 +4,7 @@
 import { SharedLaunchers } from "./shared/SharedLaunchers.js";
 import { SharedIpcChannels } from "./shared/SharedIpcChannels.js";
 
-import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils, clipboard as electronClipboard } from "electron";
+import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
 import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "./shared/SharedMapCompileProgressEvent.js";
 import { SharedMapPath } from "./shared/SharedMapPath.js";
@@ -16,9 +16,8 @@ import {
     SharedAssetRescanEvent,
     SharedAssetUpdatedEvent,
 } from "./shared/SharedAssetDefinition.js";
-import { SharedConversionSummary, SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
+import { SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
 import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
-import { SharedPlayPauseStopControlsState } from "./shared/SharedPlayPauseStopState";
 import { SharedFileBrowserDirectoryUpdatedReport } from "./shared/SharedFileListing";
 
 contextBridge.exposeInMainWorld("electronAPI", {
@@ -142,9 +141,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     interop: {
         subscribeConnected: (callback: () => void) =>
-            ipcRenderer.on(SharedIpcChannels.InteropConnected, (e: IpcRendererEvent) => callback()),
+            ipcRenderer.on(SharedIpcChannels.InteropConnected, () => callback()),
         subscribeDisconnected: (callback: () => void) =>
-            ipcRenderer.on(SharedIpcChannels.InteropDisconnected, (e: IpcRendererEvent) => callback()),
+            ipcRenderer.on(SharedIpcChannels.InteropDisconnected, () => callback()),
         subscribeLog: (callback: (message: string) => void) =>
             ipcRenderer.on(SharedIpcChannels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
         sendCommand: (command: string) => ipcRenderer.send(SharedIpcChannels.InteropSendCommand, command),

@@ -9,19 +9,14 @@ export const usePanelsStore = defineStore("panels", () => {
     const currentPanels = ref<IDockviewPanel[]>([]);
     const workspaceStore = useWorkspaceStore();
 
-    watch(
-        () => workspaceStore.activeWorkspace,
-        (value) => {
-            deserialize();
-        },
-    );
+    watch(() => workspaceStore.activeWorkspace, deserialize);
 
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
 
         deserialize();
 
-        event.api.onDidLayoutChange((e) => {
+        event.api.onDidLayoutChange(() => {
             serialize();
         });
 

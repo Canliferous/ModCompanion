@@ -22,7 +22,7 @@ export function registerAssetGroupsApi(): boolean {
             return AssetGroupsSystem.write(id, groupDef);
         },
     );
-    ipcMain.on(SharedIpcChannels.AssetGroupsForceRescan, (event): void => {
+    ipcMain.on(SharedIpcChannels.AssetGroupsForceRescan, (): void => {
         AssetGroupsSystem.scan();
     });
     ipcMain.on(SharedIpcChannels.AssetGroupsDelete, (event, groupId: SharedAssetGroupId): void => {

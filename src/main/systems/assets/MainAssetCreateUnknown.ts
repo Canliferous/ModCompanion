@@ -1,4 +1,4 @@
-import { SharedAssetDefinition, SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
+import { SharedAssetDefinition, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { getContentRelativePath, getGameRelativePath } from "../../helpers/MainSourceFs.js";
 import { generateAssetId } from "./MainAssetRepository.js";
 

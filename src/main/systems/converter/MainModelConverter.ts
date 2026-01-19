@@ -1,5 +1,4 @@
 import { SharedModelAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import * as child_process from "node:child_process";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 import { runConverter } from "./MainSharedConverter.js";

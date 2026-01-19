@@ -89,7 +89,7 @@ async function _runAgent(): Promise<void> {
             promises.push(_startConversion(id));
         }
 
-        return Promise.allSettled(promises).then((_) => {
+        return Promise.allSettled(promises).then(() => {
             HotReloadSystem.requestHotReload(assetsToConvert);
         });
     }
@@ -266,7 +266,7 @@ async function _getModifiedTime(filePath: string): Promise<number | undefined> {
     try {
         const stat = await fs.stat(filePath);
         return stat.mtimeMs;
-    } catch (e) {
+    } catch {
         // We don't care about the error. If stat fails it probably doesn't exist which is an expected state
         return undefined;
     }

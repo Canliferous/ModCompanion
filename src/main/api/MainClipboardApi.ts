@@ -1,4 +1,4 @@
-import { ipcMain, clipboard } from "electron";
+import { clipboard, ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export function registerClipboardApi(): boolean {

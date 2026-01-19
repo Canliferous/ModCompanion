@@ -211,7 +211,7 @@ const items = computed(() => {
             options.push([
                 {
                     label: "Convert",
-                    onSelect(e) {
+                    onSelect() {
                         for (const id of group.def.assets) {
                             conversionStore.enqueue(id);
                         }
@@ -222,7 +222,7 @@ const items = computed(() => {
                 {
                     label: "Copy Name",
                     icon: "empty",
-                    onSelect(e: Event) {
+                    onSelect() {
                         ClipboardHelper.writeTextAndToast(group.def.displayName!);
                     },
                     disabled: group.def.displayName == undefined,
@@ -239,7 +239,7 @@ const items = computed(() => {
             options.push([
                 {
                     label: "Convert",
-                    onSelect(e) {
+                    onSelect() {
                         for (const sel of assets) {
                             conversionStore.enqueue(sel.def.id);
                         }
@@ -249,7 +249,7 @@ const items = computed(() => {
                 },
                 {
                     label: "Create Asset Group",
-                    onSelect(e: Event) {
+                    onSelect() {
                         assetGroupsStore.createGroup(assets.map((s) => s.def.id));
                         table.value?.deselect();
                     },
@@ -273,7 +273,7 @@ const items = computed(() => {
                                 {
                                     label: `Open ${entry.name}`,
                                     color: "info",
-                                    onSelect(e: Event) {
+                                    onSelect() {
                                         openAssociatedFile(v);
                                     },
                                     icon: entry.icon,
@@ -286,14 +286,14 @@ const items = computed(() => {
                 options.push([
                     {
                         label: "Open .mca",
-                        onSelect(e: Event) {
+                        onSelect() {
                             openMca(sel);
                         },
                         icon: AppDesign.Icons.ActionOpenFileMca,
                     },
                     {
                         label: "Explore to .mca",
-                        onSelect(e: Event) {
+                        onSelect() {
                             exploreToMca(sel);
                         },
                         icon: AppDesign.Icons.ActionExploreToMca,
@@ -301,7 +301,7 @@ const items = computed(() => {
                     {
                         label: "Copy Name",
                         icon: "empty",
-                        onSelect(e: Event) {
+                        onSelect() {
                             ClipboardHelper.writeTextAndToast(sel.def.displayName!);
                         },
                         disabled: sel.def.displayName == undefined,
@@ -309,7 +309,7 @@ const items = computed(() => {
                     {
                         label: "Copy ID",
                         icon: "empty",
-                        onSelect(e: Event) {
+                        onSelect() {
                             ClipboardHelper.writeTextAndToast(sel.def.id);
                         },
                         disabled: sel.def.displayName == undefined,
@@ -317,7 +317,7 @@ const items = computed(() => {
                     {
                         label: "Remove from group",
                         icon: AppDesign.Icons.ActionRemove,
-                        onSelect(e: Event) {
+                        onSelect() {
                             assetGroupsStore.writeRemoveAssetsFromTheirGroups(assets.map((a) => a.def.id));
                         },
                         disabled: !isAllGrouped,

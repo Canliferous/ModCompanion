@@ -7,7 +7,7 @@
 import { SharedProjectFileEntry } from "Shared/SharedFileListing.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-const props = defineProps<{ entry: SharedProjectFileEntry }>();
+defineProps<{ entry: SharedProjectFileEntry }>();
 </script>
 
 <style scoped></style>

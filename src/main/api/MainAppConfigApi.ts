@@ -3,7 +3,7 @@ import { SharedIpcChannels } from "../../shared/SharedIpcChannels.js";
 import { getAppConfig } from "../systems/MainConfigSystem.js";
 
 export function registerAppConfigApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.ConfigGet, (event) => {
+    ipcMain.handle(SharedIpcChannels.ConfigGet, () => {
         return getAppConfig();
     });
     return true;

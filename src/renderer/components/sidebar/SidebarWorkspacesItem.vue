@@ -33,14 +33,14 @@ const items: ContextMenuItem[] = [
     {
         label: "Duplicate",
         icon: AppDesign.Icons.Copy,
-        onSelect(e: Event) {
+        onSelect() {
             workspaceStore.duplicateWorkspace(props.id);
         },
     },
     {
         label: "Delete",
         icon: AppDesign.Icons.ActionRemove,
-        onSelect(e: Event) {
+        onSelect() {
             workspaceStore.deleteWorkspace(props.id);
         },
     },

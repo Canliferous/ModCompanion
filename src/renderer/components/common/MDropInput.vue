@@ -28,7 +28,7 @@ import { useGlobalDragging } from "~/composables/useGlobalDragging.js";
 
 const model = defineModel<string>({ required: false });
 const emit = defineEmits<{ change: [string] }>();
-const props = defineProps<{ placeholder?: string }>();
+defineProps<{ placeholder?: string }>();
 const { isDragging } = useGlobalDragging();
 </script>
 

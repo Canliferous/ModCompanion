@@ -58,7 +58,7 @@ export function _getBrowseToFileSelectCommandLinux(filePath: string): string | u
     }
 
     // fallback
-    return `xdg-open "${path.dirname(filePath)}"`
+    return `xdg-open "${path.dirname(filePath)}"`;
 }
 
 function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {

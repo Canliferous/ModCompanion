@@ -2,7 +2,6 @@ import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
 import { SharedAsset, SharedAssetId, SharedAssetType } from "Shared/SharedAssetDefinition.js";
-import { useRouter } from "vue-router";
 import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { getContentRelativePath } from "~/helper/SourceFs.js";
 import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
@@ -20,7 +19,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
     const selectedIds = ref<SharedAssetId[]>([]);
     const selectedAssets = computed(() =>
-        filteredAssets.value.filter((value, index) => selectedIds.value.includes(value.def.id)),
+        filteredAssets.value.filter((value) => selectedIds.value.includes(value.def.id)),
     );
 
     const activateEvent = useEvent<SharedAssetId | undefined>();
@@ -69,7 +68,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     async function deleteAsset(assetId: SharedAssetId): Promise<boolean> {
         try {
             await window.electronAPI.asset.delete(assetId);
-        } catch (e) {
+        } catch {
             return false;
         }
 

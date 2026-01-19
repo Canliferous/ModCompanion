@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import { deriveTextureDisplayName, deriveTextureGameFileName } from "./MainAssetCreateTexture.js";
 
 test("Derive texture game file name - 'materialsrc/_hr/tiles/office_tiles_01/office_tile_01_normal.png'", () => {

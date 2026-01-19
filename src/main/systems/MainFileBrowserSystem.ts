@@ -109,7 +109,7 @@ export const FileBrowserSystem = {
                         isFile: false,
                     });
                 }
-            } catch (e) {
+            } catch {
                 // Error is expected so don't print or throw.
                 // Windows returns garbage paths that we can't read so just skip them
                 // Like "System Volume Information", which exists when using the P:/ drive alias on the repo root

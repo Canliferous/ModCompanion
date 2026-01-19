@@ -1,11 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { browseToFile, openFile } from "../helpers/MainFileBrowseHelper.js";
-import {
-    SharedFileBrowserDirectoryUpdatedReport,
-    SharedProjectFileEntry,
-    SharedProjectListFilesReport,
-} from "Shared/SharedFileListing.js";
+import { SharedFileBrowserDirectoryUpdatedReport, SharedProjectListFilesReport } from "Shared/SharedFileListing.js";
 import path from "path";
 import { getAppConfig } from "../systems/MainConfigSystem.js";
 import child_process from "node:child_process";

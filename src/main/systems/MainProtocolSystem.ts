@@ -1,4 +1,4 @@
-import { app, protocol, net } from "electron";
+import { app, protocol } from "electron";
 import { notifyNavigateToAssetId } from "../api/MainAssetApi.js";
 
 export const protocolName = "modcomp";

@@ -84,7 +84,7 @@ function _createWindow(hasTray: boolean): void {
     });
 
     if (hasTray) {
-        app.on("before-quit", (event) => {
+        app.on("before-quit", () => {
             const bounds = mainWindow?.getBounds();
             if (bounds) {
                 settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
@@ -125,7 +125,7 @@ function _createTray(): boolean {
         tray.setToolTip("Mod Companion");
         tray.setContextMenu(_buildTrayMenu());
 
-        tray.on("click", (event) => {
+        tray.on("click", () => {
             mainWindow?.show();
         });
         return true;
