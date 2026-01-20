@@ -5,6 +5,8 @@ import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFil
 import fs from "node:fs";
 import { runLauncher } from "../api/MainLauncherApi.js";
 import { SharedLauncherOptions } from "Shared/SharedLaunchers.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Logger } from "./MainLogSystem.js";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -158,7 +160,7 @@ function _createShortcuts() {
 }
 
 function _changeZoom(delta: number) {
-    console.log("Change zoom", delta);
+    Logger.info(SharedLogChannel.Generic, "Change zoom", delta);
     zoomFactor = Math.max(0.1, zoomFactor + delta);
     mainWindow?.webContents.setZoomFactor(zoomFactor);
 }

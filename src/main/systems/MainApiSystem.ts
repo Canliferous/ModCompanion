@@ -15,8 +15,10 @@ import { registerStrataInteropApi } from "../api/MainStrataInteropApi.js";
 import { registerFgdApi } from "../api/MainFgdApi.js";
 import { registerTcArtifactsApi } from "../api/MainTcArtifactsApi.js";
 import { registerFileApi } from "../api/MainFileApi.js";
+import { registerLoggerApi } from "../api/MainLoggerApi.js";
 
 const apis: (() => boolean)[] = [
+    registerLoggerApi,
     registerAppExitApi,
     registerAppConfigApi,
     registerLauncherApi,

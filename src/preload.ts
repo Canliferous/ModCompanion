@@ -19,6 +19,8 @@ import {
 import { SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
 import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
 import { SharedFileBrowserDirectoryUpdatedReport } from "./shared/SharedFileListing";
+import { LogType } from "vite";
+import { SharedLogEvent } from "./shared/SharedLogger";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -156,5 +158,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     tcArtifacts: {
         isConnected: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_IsConnected),
         listAllMaps: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_ListAllMaps),
+    },
+
+    log: {
+        sendFromRenderer: (event: SharedLogEvent) => ipcRenderer.send(SharedIpcChannels.LogSendFromRenderer, event),
+        subscribeSendFromMain: (callback: (logEvent: SharedLogEvent) => void) =>
+            ipcRenderer.on(SharedIpcChannels.LogSendFromMain, (e: IpcRendererEvent, logEvent: SharedLogEvent) =>
+                callback(logEvent),
+            ),
     },
 });

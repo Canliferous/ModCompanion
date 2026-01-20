@@ -85,8 +85,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
             }
         }
 
-        console.log(group);
-
         return writeGroup(group.id, group.def);
     }
 

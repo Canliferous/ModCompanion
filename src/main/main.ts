@@ -12,6 +12,7 @@ import { AssetWatcherSystem } from "./systems/MainAssetWatcherSystem.js";
 import { TcArtifactsSystem } from "./systems/MainTcArtifactsSystem.js";
 import { FileBrowserSystem } from "./systems/MainFileBrowserSystem.js";
 import MainAssetRepository from "./systems/assets/MainAssetRepository.js";
+import { Logger } from "./systems/MainLogSystem.js";
 
 let headless = false;
 export function isHeadless() {
@@ -25,6 +26,7 @@ interface System {
     disableForHeadless?: boolean;
 }
 const systems: System[] = [
+    { name: "Log", initFunction: Logger.initSystem },
     { name: "Config", initFunction: initConfigSystem },
     // { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },

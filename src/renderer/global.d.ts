@@ -1,6 +1,6 @@
 import { SharedLaunchers } from "../shared/SharedLaunchers.js";
 import { SharedMapSourceDir } from "../shared/SharedMapTypes.js";
-import { IpcRenderer } from "electron";
+import { ipcRenderer, IpcRenderer } from "electron";
 import { SharedAppConfig } from "../shared/SharedAppConfig.js";
 import { SharedMapCompileLogEvent } from "../shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "../shared/SharedMapCompileProgressEvent.js";
@@ -25,6 +25,8 @@ import {
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
 import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js";
+import { SharedLogEvent } from "Shared/SharedLogger.js";
+import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 
 export {};
 
@@ -114,6 +116,10 @@ declare global {
             tcArtifacts: {
                 isConnected: () => Promise<boolean>;
                 listAllMaps: () => Promise<SharedTcArtifactsListAllMapsReport>;
+            };
+            log: {
+                sendFromRenderer: (event: SharedLogEvent) => void;
+                subscribeSendFromMain: (callback: (event: SharedLogEvent) => void) => IpcRenderer;
             };
         };
     }
