@@ -60,7 +60,7 @@ export const runDone: MapCompilerAction = async (
         await fs.copyFile(from, to);
         onStdOut?.(`Copied file ${from} ${to}`);
         return true;
-    } catch () {
+    } catch {
         onStdErr?.(`Failed to copy file ${from} ${to}`);
         return false;
     }
