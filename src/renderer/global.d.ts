@@ -71,6 +71,7 @@ declare global {
                 subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (primaryFile: string, otherFiles: string[]) => Promise<SharedCreateAssetReport>;
+                createEmpty: (mcaFilePath: string) => Promise<SharedCreateAssetReport>;
                 update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) => Promise<SharedAsset | undefined>;
                 delete: (assetId: SharedAssetId) => Promise<boolean>;
             };

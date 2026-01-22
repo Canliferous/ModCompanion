@@ -75,7 +75,19 @@ const columns: DataTableColumn<SharedProjectFileEntry>[] = [
 
 const items = computed<ContextMenuItem[][]>(() => {
     const entries = selectedEntries.value;
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {
+        return [
+            [
+                {
+                    label: "New Empty Asset",
+                    icon: AppDesign.Icons.ActionAdd,
+                    onSelect() {
+                        window.electronAPI.asset.createEmpty(fileBrowserStore.currentDir);
+                    },
+                },
+            ],
+        ] satisfies ContextMenuItem[][];
+    }
 
     const allFiles = !entries.some((e) => !e.isFile);
     const pathsArray = entries.map((e) => e.path);

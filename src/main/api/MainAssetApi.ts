@@ -59,6 +59,10 @@ export function registerAssetApi(): boolean {
         },
     );
 
+    ipcMain.handle(SharedIpcChannels.AssetCreateEmpty, (event, mcaBasePath: string): Promise<SharedAsset> => {
+        return MainAssetRepository.createEmptyAsset(mcaBasePath);
+    });
+
     ipcMain.handle(SharedIpcChannels.AssetDelete, (event, assetId: SharedAssetId): Promise<boolean> => {
         return MainAssetRepository.deleteAssetDef(assetId);
     });

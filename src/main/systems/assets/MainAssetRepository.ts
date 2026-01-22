@@ -4,6 +4,7 @@ import {
     SharedAssetDefinitionFileExtension,
     SharedAssetId,
     SharedAssetMap,
+    SharedAssetTypes,
 } from "Shared/SharedAssetDefinition.js";
 import { notifyAssetsRescanned } from "../../api/MainAssetApi.js";
 import { buildAssets } from "./MainAssetScanner.js";
@@ -20,6 +21,8 @@ import { maintainAssets } from "./MainAssetMaintenance.js";
 import { ConversionChecksumSystem } from "../MainConversionChecksumSystem.js";
 import { ConversionAgentSystem } from "../MainConversionAgentSystem.js";
 import { existsSync } from "fs";
+import { Logger } from "../MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
 let potentialAssets: SharedAsset[] = [];
@@ -29,7 +32,7 @@ export function getAssetMap(): Readonly<SharedAssetMap> {
 }
 
 export async function rescan() {
-    console.log("Rescanning assets...");
+    Logger.info(SharedLogChannel.Generic, "Rescanning assets...");
 
     const startMillis = new Date().getTime();
 
@@ -59,7 +62,7 @@ export async function createAssetsFromFiles(
 
     const inferredType = inferAssetCreationType(files);
 
-    console.log("Inferred asset type", inferredType);
+    Logger.info(SharedLogChannel.Generic, "Inferred asset type", inferredType);
     if (inferredType === AssetCreationInferResults.Unknown) {
         const def = createUnknownAssetDefinition(primaryFile, otherFiles);
         const mca = primaryFile + SharedAssetDefinitionFileExtension;
@@ -85,10 +88,32 @@ export async function createAssetsFromFiles(
     return undefined;
 }
 
+export function createEmptyAsset(mcaBasePath: string): Promise<SharedAsset> {
+    let mcaFilePath = "";
+    let mcaFileName = "";
+
+    Logger.verbose(SharedLogChannel.Generic, mcaBasePath);
+
+    let i = 0;
+    do {
+        mcaFileName = `new_asset_${i++}`;
+        mcaFilePath = path.join(mcaBasePath, `${mcaFileName}.mca`);
+    } while (existsSync(path.join(getAppConfig().rootPath, mcaFilePath)));
+
+    return writeAssetDef(
+        {
+            id: generateAssetId(),
+            displayName: mcaFileName,
+            type: SharedAssetTypes.Unknown,
+        },
+        mcaFilePath,
+    );
+}
+
 export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: string): Promise<SharedAsset> {
     const absoluteMcaPath = path.join(getAppConfig().rootPath, mcaPath);
     const payload = JSON.stringify(assetDef, undefined, 2);
-    console.log("Writing asset", mcaPath, assetDef);
+    Logger.info(SharedLogChannel.Generic, "Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);
 
     const asset = { defFilePath: mcaPath, def: assetDef };
@@ -137,7 +162,7 @@ export async function deleteAssetDef(assetId: SharedAssetId) {
         await fs.rm(asset.defFilePath);
         return true;
     } catch (e) {
-        console.warn("Failed to delete asset", assetId, e);
+        Logger.warning(SharedLogChannel.Generic, "Failed to delete asset", assetId, e);
         return false;
     }
 }
@@ -147,6 +172,7 @@ export default {
     getAssetFromFile,
     getAssetFromFiles,
     createAssetsFromFiles,
+    createEmptyAsset,
     getAssetFromId,
     writeAssetDef,
     deleteAssetDef,

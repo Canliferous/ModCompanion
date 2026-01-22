@@ -31,6 +31,7 @@ export const SharedIpcChannels = {
     AssetForceRescan: "asset_force_rescan",
     AssetNavigateToId: "asset_navigate_to_id",
     AssetCreate: "asset_create",
+    AssetCreateEmpty: "asset_create_empty",
     AssetUpdate: "asset_update",
     AssetDelete: "asset_delete",
 

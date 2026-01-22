@@ -92,6 +92,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
         createAsset: (primaryFile: string, otherFiles: string[]) =>
             ipcRenderer.invoke(SharedIpcChannels.AssetCreate, primaryFile, otherFiles),
+        createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.AssetCreateEmpty, mcaFilePath),
         update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) =>
             ipcRenderer.invoke(SharedIpcChannels.AssetUpdate, assetId, assetDef),
         delete: (assetId: SharedAssetId) => ipcRenderer.invoke(SharedIpcChannels.AssetDelete, assetId),
