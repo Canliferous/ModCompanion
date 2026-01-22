@@ -2,6 +2,7 @@ export enum SharedLogChannel {
     Generic = "Generic",
     GameInterop = "Game",
     ConversionAgent = "Conv Agent",
+    FileBrowser = "File Browser",
 }
 
 export enum SharedLogType {

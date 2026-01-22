@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { getRootRelativePath } from "~/helper/SourceFs.js";
 import pathe from "pathe";
 import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { Logger } from "~/logger.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
@@ -28,7 +30,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     function updateCurrentDir(dir: string): void {
         let correctedPath = getRootRelativePath(dir);
         if (correctedPath === undefined) {
-            console.warn(`Cannot update path to ${dir} because it's invalid`);
+            Logger.warning(SharedLogChannel.Generic, `Cannot update path to ${dir} because it's invalid`);
             return;
         }
 

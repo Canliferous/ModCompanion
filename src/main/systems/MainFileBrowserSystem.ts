@@ -9,15 +9,18 @@ import {
 import fs from "fs/promises";
 import SharedSourceFs from "Shared/SharedSourceFs.js";
 import { notifyFileBrowserDirectoryUpdated } from "../api/MainFileBrowserApi.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
 let currentPathRelative: string | undefined = undefined;
 export const FileBrowserSystem = {
     initSystem() {
-        watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true });
+        watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
-        async function _change() {
+        async function _change(filePath: string) {
+            Logger.verbose(SharedLogChannel.FileBrowser, "File changed", filePath);
             if (!currentPathAbsolute || !currentPathRelative) {
                 return;
             }
@@ -39,7 +42,7 @@ export const FileBrowserSystem = {
         const config = getAppConfig();
         const fullPath = path.join(config.rootPath, currentDir);
 
-        console.log("Watching", fullPath);
+        Logger.info(SharedLogChannel.FileBrowser, "Watching", fullPath);
         if (currentPathAbsolute) {
             watcher?.unwatch(currentPathAbsolute);
         }
