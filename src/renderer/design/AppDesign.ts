@@ -94,6 +94,7 @@ export const Icons = {
     Panel_ConversionDetails: "mingcute:lightning-fill",
     Panel_StrataConsole: "mingcute:terminal-fill",
 
+    Log: "mingcute:list-check-fill",
     LogType_Debug: "mingcute:bug-fill",
     LogType_Info: "mingcute:information-fill",
     LogType_Warning: "mingcute:alert-fill",

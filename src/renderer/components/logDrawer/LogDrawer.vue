@@ -16,10 +16,15 @@
             }"
         >
             <div class="flex items-center gap-2">
-                <span class="pl-1 text-sm select-none">Log</span>
+                <span class="pl-1 text-sm select-none flex gap-1">
+                    <!-- Awkward translate because centering it with flex doesn't center it well optically -->
+                    <UIcon :name="AppDesign.Icons.Log" class="translate-y-0.5" />
+                    <span> Message Log </span>
+                </span>
                 <!--                <UButton size="sm" label="Add test log" @click="handleTestLog" />-->
                 <div class="grow" />
                 <UCheckbox v-model="showTime" label="Show Time" size="sm" />
+                <USeparator orientation="vertical" />
                 <USelect
                     v-model="typeFilter"
                     size="sm"
@@ -29,6 +34,7 @@
                     value-key="id"
                     placeholder="Filter Type"
                 />
+                <USeparator orientation="vertical" />
                 <UButton :icon="AppDesign.Icons.ActionMinimize" variant="ghost" size="sm" />
             </div>
 
@@ -38,8 +44,10 @@
                 <template v-for="event in events" :key="event.time.getTime()">
                     <div class="grid col-span-full grid-cols-subgrid odd:bg-neutral-950/50 p-1">
                         <MLogTypeIcon :type="event.type" />
-                        <div class="text-muted tabular-nums" v-show="showTime">{{ getLogTime(event.time) }}</div>
-                        <div>{{ event.channel }}</div>
+                        <div v-show="showTime" class="whitespace-nowrap text-muted tabular-nums">
+                            {{ getLogTime(event.time) }}
+                        </div>
+                        <div class="whitespace-nowrap">{{ event.channel }}</div>
                         <div :class="getLogTypeTextColorWarnings(event.type)">
                             {{ Logger.dataToString(event.data) }}
                         </div>

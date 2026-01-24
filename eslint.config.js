@@ -10,6 +10,7 @@ export default defineConfigWithVueTs([
             "vue/max-attributes-per-line": "off",
             "vue/html-indent": "off",
             "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-unused-vars": "off",
         },
     },
 ]);

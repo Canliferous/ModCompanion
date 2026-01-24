@@ -1,6 +1,6 @@
 <template>
     <template v-if="props.endTime">
-        <UTooltip :text="`Took ${displayTime} to finish`">
+        <UTooltip :text="`Took ${displayTime}ms to finish`">
             <div class="text-right">
                 <span class="tabular-nums">{{ displayTime }}</span>
                 <span>ms</span>
