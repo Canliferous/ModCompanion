@@ -13,7 +13,7 @@ export const Logger = {
         }
     },
     verbose(channel: SharedLogChannel, ...data: any[]) {
-        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Verbose }, true);
+        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Debug }, true);
     },
     info(channel: SharedLogChannel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Info }, true);

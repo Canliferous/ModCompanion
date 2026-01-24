@@ -9,6 +9,7 @@ export default defineConfigWithVueTs([
             "vue/singleline-html-element-content-newline": "off",
             "vue/max-attributes-per-line": "off",
             "vue/html-indent": "off",
+            "@typescript-eslint/no-explicit-any": "off",
         },
     },
 ]);

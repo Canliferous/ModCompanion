@@ -1,5 +1,6 @@
 import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
+import { SharedLogType } from "Shared/SharedLogger.js";
 
 export const Icons = {
     Asset: "mingcute:traffic-cone-fill",
@@ -63,6 +64,7 @@ export const Icons = {
     ActionStop: "mingcute:stop-fill",
 
     ActionRefresh: "mingcute:refresh-3-line",
+    ActionMinimize: "mingcute:minimize-fill",
 
     MapCompileIdle: "lucide:dot",
     MapCompileInProgress: "mingcute:loading-line",
@@ -91,6 +93,11 @@ export const Icons = {
     Panel_Conversions: "mingcute:list-check-2-fill",
     Panel_ConversionDetails: "mingcute:lightning-fill",
     Panel_StrataConsole: "mingcute:terminal-fill",
+
+    LogType_Debug: "mingcute:bug-fill",
+    LogType_Info: "mingcute:information-fill",
+    LogType_Warning: "mingcute:alert-fill",
+    LogType_Error: "mingcute:alert-fill",
 } as const;
 
 export const BitmapIcon = {
@@ -137,6 +144,55 @@ export function getAssetTypeName(type: SharedAssetType) {
         default:
         case SharedAssetTypes.Unknown: {
             return "Unknown";
+        }
+    }
+}
+
+export function getLogTypeIcon(logType: SharedLogType) {
+    switch (logType) {
+        case SharedLogType.Debug: {
+            return Icons.LogType_Debug;
+        }
+        case SharedLogType.Info: {
+            return Icons.LogType_Info;
+        }
+        case SharedLogType.Warning: {
+            return Icons.LogType_Warning;
+        }
+        case SharedLogType.Error: {
+            return Icons.LogType_Error;
+        }
+    }
+}
+
+export function getLogTypeTextColor(logType: SharedLogType): string {
+    switch (logType) {
+        case SharedLogType.Debug: {
+            return "text-magenta-400";
+        }
+        case SharedLogType.Info: {
+            return "text-info-400";
+        }
+        case SharedLogType.Warning: {
+            return "text-yellow-400";
+        }
+        case SharedLogType.Error: {
+            return "text-red-400";
+        }
+    }
+}
+
+export function getLogTypeTextColorWarnings(logType: SharedLogType): string {
+    switch (logType) {
+        case SharedLogType.Debug:
+        case SharedLogType.Info: {
+            return "";
+        }
+        case SharedLogType.Warning: {
+            return "text-yellow-400";
+        }
+        case SharedLogType.Error: {
+            return "text-red-400";
         }
     }
 }

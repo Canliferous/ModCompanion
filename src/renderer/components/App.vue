@@ -4,7 +4,7 @@
             <div>
                 <TheSidebar />
             </div>
-            <div class="h-full grid grid-cols-1 grid-rows-1 p-1">
+            <div class="h-full grid grid-cols-1 grid-rows-1 p-1 relative">
                 <DockviewVue
                     :theme="themeModcomp"
                     :watermark-component="PanelComponents.other.watermark.componentId"
@@ -12,6 +12,7 @@
                     :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
                     @ready="panelsStore.handleReady"
                 />
+                <LogDrawer />
             </div>
             <TheFooter />
         </div>
