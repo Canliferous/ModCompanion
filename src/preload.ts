@@ -118,6 +118,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     conversion: {
         enqueue: (assetId: SharedAssetId) => ipcRenderer.send(SharedIpcChannels.ConversionEnqueue, assetId),
+        enqueueAll: () => ipcRenderer.send(SharedIpcChannels.ConversionEnqueueAll),
         startAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStart),
         stopAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStop),
         subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) =>

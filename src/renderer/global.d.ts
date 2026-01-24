@@ -90,6 +90,7 @@ declare global {
             };
             conversion: {
                 enqueue: (assetId: SharedAssetId) => void;
+                enqueueAll: () => void;
                 startAgent: () => void;
                 stopAgent: () => void;
                 subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) => IpcRenderer;

@@ -27,6 +27,10 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         window.electronAPI.conversion.enqueue(id);
     }
 
+    function enqueueAll(): void {
+        window.electronAPI.conversion.enqueueAll();
+    }
+
     async function _fetchState() {
         const state = await window.electronAPI.conversion.getState();
         conversions.value = state.conversions;
@@ -35,5 +39,5 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { conversions, conversionEvents, activeEvent, summary, getState, enqueue };
+    return { conversions, conversionEvents, activeEvent, summary, getState, enqueue, enqueueAll };
 });

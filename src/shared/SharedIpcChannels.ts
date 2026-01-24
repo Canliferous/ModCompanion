@@ -38,6 +38,7 @@ export const SharedIpcChannels = {
     ImageGetMeta: "image_get_meta",
 
     ConversionEnqueue: "conversion_enqueue",
+    ConversionEnqueueAll: "conversion_enqueue_all",
     ConversionAgentStart: "conversion_agent_start",
     ConversionAgentStop: "conversion_agent_stop",
     ConversionUpdated: "conversion_updated",

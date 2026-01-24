@@ -13,6 +13,7 @@
                 <SidebarCreateAsset />
                 <SidebarPotentialAssets />
                 <SidebarHotReloadSwitch />
+                <SidebarConvertAllAssetsButton />
             </SidebarGroup>
 
             <SidebarGroup heading="Tools">
@@ -24,6 +25,7 @@
             <SidebarGroup heading="Launchers">
                 <UButton
                     v-for="option of SharedLauncherOptions"
+                    :key="option.name"
                     size="sm"
                     variant="soft"
                     color="neutral"
@@ -61,6 +63,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import SidebarBuildFgdButton from "~/components/sidebar/SidebarBuildFgdButton.vue";
 import SidebarPotentialAssets from "~/components/sidebar/SidebarPotentialAssets.vue";
 import { SharedLauncherOption, SharedLauncherOptions } from "Shared/SharedLaunchers.js";
+import SidebarConvertAllAssetsButton from "~/components/sidebar/SidebarConvertAllAssetsButton.vue";
 
 function quit() {
     window.electronAPI.app.exit();

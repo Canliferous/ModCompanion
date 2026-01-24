@@ -7,13 +7,6 @@
         <template v-else>
             <div class="grid place-items-center h-full text-muted">No conversions yet</div>
         </template>
-
-        <template #footer>
-            <div class="flex gap-1 items-center">
-                <UButton size="xs" label="Convert All" @click="handleConvertAll" />
-                <UButton size="xs" label="Clear" @click="handleClear" />
-            </div>
-        </template>
     </MPanelRoot>
 </template>
 <script setup lang="ts">
@@ -21,17 +14,6 @@ import ConversionsTable from "~/components/panels/conversions/ConversionsTable.v
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 
 const conversionStore = useAssetConversionStore();
-
-function handleConvertAll() {
-    const assetIds = conversionStore.conversions.keys();
-    for (const assetId of assetIds) {
-        conversionStore.enqueue(assetId);
-    }
-}
-
-function handleClear() {
-    window.electronAPI.conversion.clearEvents();
-}
 </script>
 
 <style scoped></style>

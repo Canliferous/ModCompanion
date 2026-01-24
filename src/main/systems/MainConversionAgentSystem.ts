@@ -1,4 +1,4 @@
-import { getAssetFromId } from "./assets/MainAssetRepository.js";
+import MainAssetRepository, { getAssetFromId, getAssetMap } from "./assets/MainAssetRepository.js";
 import {
     SharedAssetDefinition,
     SharedAssetId,
@@ -63,6 +63,11 @@ export const ConversionAgentSystem = {
             _setState(assetId, SharedConversionState.PendingForced, true);
         } else {
             _setState(assetId, SharedConversionState.Pending, true);
+        }
+    },
+    enqueueAll(): void {
+        for (const assetId of getAssetMap().keys()) {
+            ConversionAgentSystem.enqueue(assetId, true);
         }
     },
     async initStates(map: SharedAssetMap) {
