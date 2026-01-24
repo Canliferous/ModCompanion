@@ -3,6 +3,11 @@ export enum SharedLogChannel {
     GameInterop = "Game",
     ConversionAgent = "Conv Agent",
     FileBrowser = "File Browser",
+    Assets = "Assets",
+    Fgd = "FGD",
+    MapCompile = "Map Compile",
+    MareTF = "MareTF",
+    HotReload = "Hot Reload",
 }
 
 export enum SharedLogType {

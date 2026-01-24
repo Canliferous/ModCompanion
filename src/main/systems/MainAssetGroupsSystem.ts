@@ -6,6 +6,8 @@ import { notifyAssetGroupsUpdated } from "../api/MainAssetGroupsApi.js";
 import { getAppConfig } from "./MainConfigSystem.js";
 import { v4 } from "uuid";
 import { filename } from "pathe/utils";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 const groups: Map<SharedAssetGroupId, SharedAssetGroup> = new Map<SharedAssetGroupId, SharedAssetGroup>();
 
@@ -25,7 +27,7 @@ export const AssetGroupsSystem = {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
         const contents = JSON.stringify(assetGroupDef);
         await fs.writeFile(filePath, contents);
-        console.log("Wrote asset group", filePath, assetGroupDef);
+        Logger.info(SharedLogChannel.Assets, "Wrote asset group", filePath, assetGroupDef);
         return { filePath, def: assetGroupDef, id };
     },
     delete(id: SharedAssetGroupId) {
@@ -48,7 +50,7 @@ export const AssetGroupsSystem = {
                 continue;
             }
             if (groups.has(id)) {
-                console.warn("Duplicate asset group id", id);
+                Logger.warning(SharedLogChannel.Assets, "Duplicate asset group id", id);
                 continue;
             }
 
@@ -59,7 +61,7 @@ export const AssetGroupsSystem = {
         }
 
         const endTime = new Date().getTime();
-        console.log(`Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
+        Logger.info(SharedLogChannel.Assets, `Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
 
         notifyAssetGroupsUpdated({ groups });
     },

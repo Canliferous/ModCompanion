@@ -6,10 +6,12 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedVtfFlag, SharedVtfFlags } from "Shared/vtf/SharedVtfFlag.js";
 import { writeAssetDef } from "./MainAssetRepository.js";
+import { Logger } from "../MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export async function maintainAssets(assets: SharedAssetMap) {
     const startTime = new Date();
-    console.log("Maintaining assets...");
+    Logger.info(SharedLogChannel.Assets, `Maintaining assets...`);
 
     for (const asset of assets.values()) {
         let newAsset: SharedAssetDefinition | undefined = undefined;
@@ -24,7 +26,7 @@ export async function maintainAssets(assets: SharedAssetMap) {
     }
 
     const endTime = new Date();
-    console.log(`Asset maintenance done. Took ${endTime.getTime() - startTime.getTime()}ms`);
+    Logger.info(SharedLogChannel.Assets, `Asset maintenance done. Took ${endTime.getTime() - startTime.getTime()}ms`);
 }
 
 function _maintainTextureAsset(asset: SharedTextureAssetDefinition): SharedTextureAssetDefinition | undefined {
@@ -39,7 +41,10 @@ function _maintainTextureAsset(asset: SharedTextureAssetDefinition): SharedTextu
                 const good = realFlags.includes(f);
 
                 if (!good) {
-                    console.log(`Texture Asset ${def.displayName} ${def.id} has bad vtf flag ${f}. Removing...`);
+                    Logger.info(
+                        SharedLogChannel.Assets,
+                        `Texture Asset ${def.displayName} ${def.id} has bad vtf flag ${f}. Removing...`,
+                    );
                 }
 
                 return good;

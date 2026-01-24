@@ -5,6 +5,8 @@ import {
     notifyStrataInteropLog,
 } from "../api/MainStrataInteropApi.js";
 import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "Shared/SharedStrataInterop.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let socket: net.Socket | undefined = undefined;
 const reconnect = true;
@@ -18,7 +20,7 @@ export const StrataInteropSystem = {
     },
     sendCommand(command: string) {
         if (socket) {
-            console.log(`Sending command to strata: '${command}'`);
+            Logger.info(SharedLogChannel.GameInterop, "Sending command to strata", command);
             socket.write(command + "\n");
         }
     },
@@ -48,6 +50,7 @@ async function _healthcheck() {
             if (s) {
                 s.on("close", () => {
                     socket = undefined;
+                    Logger.info(SharedLogChannel.GameInterop, "Strata disconnected");
                     notifyStrataInteropDisconnected();
                 });
 
@@ -56,7 +59,7 @@ async function _healthcheck() {
                 });
 
                 socket = s;
-                console.log("Strata connected");
+                Logger.info(SharedLogChannel.GameInterop, "Strata connected");
                 notifyStrataInteropConnected();
             }
         }

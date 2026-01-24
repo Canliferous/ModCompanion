@@ -6,6 +6,8 @@ import { getMainAssetsDir } from "../helpers/MainFilesystem.js";
 import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import { runConverter } from "./converter/MainSharedConverter.js";
 import { getAppConfig } from "./MainConfigSystem.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let binary = "";
 
@@ -22,7 +24,7 @@ export const MareTfSystem = {
             return true;
         }
 
-        console.error("Cannot determine binary for maretf");
+        Logger.warning(SharedLogChannel.MareTF, "Cannot determine binary for maretf");
         return false;
     },
     async createVtf(inputPath: string, outputPath: string, options: SharedVtfCreateOptions = {}): Promise<string> {
@@ -32,7 +34,7 @@ export const MareTfSystem = {
             const dir = path.dirname(outputPath);
             fs.mkdirSync(dir, { recursive: true });
         } catch (e) {
-            console.log(e);
+            Logger.warning(SharedLogChannel.MareTF, e);
         } // Nobody cares if the dir already exists
 
         return runConverter(cmd, getAppConfig().gamePath, "MareTF");

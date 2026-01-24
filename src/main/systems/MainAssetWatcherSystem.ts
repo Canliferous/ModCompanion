@@ -4,6 +4,8 @@ import MainAssetRepository from "./assets/MainAssetRepository.js";
 import { notifyAssetsUpdated } from "../api/MainAssetApi.js";
 import { ConversionAgentSystem } from "./MainConversionAgentSystem.js";
 import { getAppConfig } from "./MainConfigSystem.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 const ignoreMap: Map<string, number> = new Map<string, number>();
 let watcher: FSWatcher | undefined = undefined;
@@ -18,7 +20,7 @@ export const AssetWatcherSystem = {
 
         // watcher.on("add", _handleAdded);
         watcher.on("change", _handleChanged);
-        watcher.on("unlink", _handleDeleted);
+        // watcher.on("unlink", _handleDeleted);
 
         return true;
     },
@@ -37,9 +39,7 @@ function _handleChanged(filePath: string): void {
     const asset = MainAssetRepository.getAssetFromFile(relativePath);
     if (!asset) return;
 
-    console.log("File watcher: Asset files changed", asset.def.displayName, filePath);
+    Logger.info(SharedLogChannel.Assets, "Asset files changed", asset.def.displayName, filePath);
     notifyAssetsUpdated({ assets: [asset] });
     ConversionAgentSystem.enqueue(asset.def.id);
 }
-
-function _handleDeleted(filePath: string): void {}

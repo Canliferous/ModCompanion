@@ -3,6 +3,8 @@ import { getAppConfig } from "./MainConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
 import crypto from "node:crypto";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export const ConversionChecksumSystem = {
     checksums: new Map<SharedAssetId, string>(),
@@ -23,7 +25,10 @@ export const ConversionChecksumSystem = {
             await Promise.allSettled(promises);
         }
         const endTime = new Date();
-        console.log(`Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`);
+        Logger.info(
+            SharedLogChannel.ConversionAgent,
+            `Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`,
+        );
     },
     async createChecksum(contentFiles: string[]) {
         const contentPath = getAppConfig().contentPath;

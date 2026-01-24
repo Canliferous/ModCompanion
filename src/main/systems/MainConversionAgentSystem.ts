@@ -18,6 +18,8 @@ import { ConversionChecksumSystem } from "./MainConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./MainConversionEventSystem.js";
 import { HotReloadSystem } from "./MainHotReloadSystem.js";
 import { AssetWatcherSystem } from "./MainAssetWatcherSystem.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
@@ -83,7 +85,7 @@ export const ConversionAgentSystem = {
 async function _runAgent(): Promise<void> {
     const assetsToConvert = _getAssetsToConvert();
     if (assetsToConvert.length > 0) {
-        console.log(`Converting ${assetsToConvert.length} assets`);
+        Logger.info(SharedLogChannel.ConversionAgent, `Converting ${assetsToConvert.length} assets`);
         const promises: Promise<string | undefined>[] = [];
         for (const id of assetsToConvert) {
             promises.push(_startConversion(id));
@@ -154,10 +156,10 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
         }
     }
 
-    console.log("Converting asset", asset.def.displayName, asset.def.id);
+    Logger.info(SharedLogChannel.ConversionAgent, "Converting asset", asset.def.displayName, asset.def.id);
     const timeoutPromise = _convertAsset(asset.def);
     timeoutPromise.catch((log: string | undefined) => {
-        console.log(log);
+        Logger.info(SharedLogChannel.ConversionAgent, log);
         _onJobPromiseDone(id, SharedConversionState.Failed, log);
     });
     timeoutPromise.then((log) => {

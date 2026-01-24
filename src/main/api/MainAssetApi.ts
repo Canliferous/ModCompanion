@@ -11,6 +11,8 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedCreateAssetReport, SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { IpcHelper } from "./MainApiHelper.js";
+import { Logger } from "../systems/MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerAssetApi(): boolean {
     ipcMain.on(SharedIpcChannels.AssetForceRescan, () => {
@@ -21,7 +23,7 @@ export function registerAssetApi(): boolean {
         SharedIpcChannels.AssetCreate,
         async (event, primaryFile: string, otherFiles: string[]): Promise<SharedCreateAssetReport> => {
             const files = [primaryFile, ...otherFiles];
-            console.log("Asset API: Creating asset for files", primaryFile, otherFiles);
+            Logger.info(SharedLogChannel.Assets, "Creating asset for files", primaryFile, otherFiles);
             const existingAsset = MainAssetRepository.getAssetFromFiles(files);
             if (existingAsset) {
                 const allAssetFilesSet = new Set([
@@ -30,7 +32,8 @@ export function registerAssetApi(): boolean {
                 ]);
                 const filesAlreadyUsed = Array.from(allAssetFilesSet.intersection(new Set(files)));
 
-                console.debug(
+                Logger.info(
+                    SharedLogChannel.Assets,
                     "Asset API: Files are already used in asset. Used Files: ",
                     filesAlreadyUsed,
                     existingAsset,
@@ -43,7 +46,7 @@ export function registerAssetApi(): boolean {
             }
 
             try {
-                console.debug("Asset API: Files not used in any assets 👍");
+                Logger.info(SharedLogChannel.Assets, "Asset API: Files not used in any assets 👍");
                 const result = await MainAssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
                 if (!result) {
                     return {

@@ -1,6 +1,8 @@
 import { isTextureAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { getAssetMap } from "./assets/MainAssetRepository.js";
 import { StrataInteropSystem } from "./MainStrataInteropSystem.js";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let hotReloadEnabled = false;
 
@@ -31,7 +33,7 @@ export const HotReloadSystem = {
         texturesToReload = Array.from(new Set(texturesToReload));
 
         for (const vtf of texturesToReload) {
-            console.log("Reloading texture", vtf);
+            Logger.info(SharedLogChannel.HotReload, "Reloading texture", vtf);
             StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
         }
     },

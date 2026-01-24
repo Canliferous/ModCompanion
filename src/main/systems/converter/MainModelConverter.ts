@@ -2,6 +2,8 @@ import { SharedModelAssetDefinition } from "Shared/SharedAssetDefinition.js";
 import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 import { runConverter } from "./MainSharedConverter.js";
+import { Logger } from "../MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export const ModelConverter = {
     getQcFile(asset: SharedModelAssetDefinition): string | undefined {
@@ -13,7 +15,7 @@ export const ModelConverter = {
         if (!qcFile) return undefined;
         const fullQcFile = path.join(getAppConfig().contentPath, qcFile);
 
-        console.log(`Converting model ${fullQcFile}`);
+        Logger.info(SharedLogChannel.ConversionAgent, `Converting model ${fullQcFile}`);
         return this.createMdl(fullQcFile);
     },
     async createMdl(qcPath: string): Promise<string> {
