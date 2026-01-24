@@ -7,6 +7,8 @@ import { getAppConfig } from "../systems/MainConfigSystem.js";
 import child_process from "node:child_process";
 import { IpcHelper } from "./MainApiHelper.js";
 import { FileBrowserSystem } from "../systems/MainFileBrowserSystem.js";
+import { Logger } from "../systems/MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerFileBrowserApi(): boolean {
     ipcMain.on(SharedIpcChannels.FileBrowserBrowseToFile, (event: Electron.IpcMainEvent, filePath: string): void => {
@@ -47,22 +49,22 @@ export function registerFileBrowserApi(): boolean {
                     p = path.join(config.rootPath, file);
                 }
 
-                console.log("Launching project file", p);
+                Logger.info(SharedLogChannel.FileBrowser, "Launching file", p);
 
                 try {
                     child_process.execFile(p, { shell: true }, (error, stdout, stderr) => {
                         if (error) {
-                            console.warn(error);
+                            Logger.warning(SharedLogChannel.FileBrowser, error);
                         }
                         if (stdout) {
-                            console.debug(stdout);
+                            Logger.info(SharedLogChannel.FileBrowser, stdout);
                         }
                         if (stderr) {
-                            console.warn(stderr);
+                            Logger.warning(SharedLogChannel.FileBrowser, stderr);
                         }
                     });
                 } catch (e) {
-                    console.warn(e);
+                    Logger.warning(SharedLogChannel.FileBrowser, e);
                 }
             }
         },

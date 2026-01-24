@@ -12,7 +12,7 @@ export const Logger = {
             notifyLogFromMain(logEvent);
         }
     },
-    verbose(channel: SharedLogChannel, ...data: any[]) {
+    debug(channel: SharedLogChannel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Debug }, true);
     },
     info(channel: SharedLogChannel, ...data: any[]) {

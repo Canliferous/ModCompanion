@@ -9,10 +9,8 @@ export const IpcHelper = {
         }
 
         const window = WindowSystem.getMainWindow();
-        if (!window) {
-            console.error("Failed to send through ipc. Main window doesn't exist!");
-            return;
+        if (window) {
+            window.webContents.send(channel, ...args);
         }
-        window.webContents.send(channel, ...args);
     },
 };

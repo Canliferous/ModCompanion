@@ -13,6 +13,7 @@ import { TcArtifactsSystem } from "./systems/MainTcArtifactsSystem.js";
 import { FileBrowserSystem } from "./systems/MainFileBrowserSystem.js";
 import MainAssetRepository from "./systems/assets/MainAssetRepository.js";
 import { Logger } from "./systems/MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 let headless = false;
 export function isHeadless() {
@@ -49,15 +50,15 @@ async function startSystems() {
     }
 
     if (isHeadless()) {
-        console.log("Starting systems in headless mode...");
+        Logger.info(SharedLogChannel.MainSystems, "Starting systems in headless mode...");
     } else {
-        console.log("Starting systems...");
+        Logger.info(SharedLogChannel.MainSystems, "Starting systems...");
     }
 
     let success = false;
     for (const system of systems) {
         if (isHeadless() && system.disableForHeadless) {
-            console.log(`Skipping ${system.name} system for headless mode`);
+            Logger.info(SharedLogChannel.MainSystems, `Skipping ${system.name} system for headless mode`);
             continue;
         }
 
@@ -71,20 +72,20 @@ async function startSystems() {
                 success = await systemResult;
             }
         } catch (e) {
-            console.error(e);
+            Logger.error(SharedLogChannel.MainSystems, e);
             success = false;
         }
 
         if (!success) {
-            console.error(`${system.name} System FAIL`);
+            Logger.info(SharedLogChannel.MainSystems, `${system.name} System FAIL`);
             break;
         } else {
-            console.log(`${system.name} System OK`);
+            Logger.info(SharedLogChannel.MainSystems, `${system.name} System OK`);
         }
     }
 
     if (success) {
-        console.log("All systems started successfully!");
+        Logger.info(SharedLogChannel.MainSystems, "All systems started successfully!");
 
         if (cmdConvert) {
             await runConvert();
@@ -95,10 +96,10 @@ async function startSystems() {
 }
 
 async function runConvert() {
-    console.log("Running convert command");
+    Logger.info(SharedLogChannel.MainSystems, "Running convert command");
     await MainAssetRepository.rescan();
     await ConversionAgentSystem.runAndConvertUntilItIsDone();
-    console.log("Convert command done. Goodbye");
+    Logger.info(SharedLogChannel.MainSystems, "Convert command done. Goodbye");
     app.quit();
 }
 
@@ -127,8 +128,8 @@ function start() {
         return;
     }
 
-    console.log("Starting Mod Companion");
-    console.log("App User Data", app.getPath("userData"));
+    Logger.info(SharedLogChannel.MainSystems, "Starting Mod Companion");
+    Logger.info(SharedLogChannel.MainSystems, "App User Data", app.getPath("userData"));
 
     startSystems();
 }

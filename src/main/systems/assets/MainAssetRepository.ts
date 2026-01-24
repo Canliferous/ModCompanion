@@ -92,7 +92,7 @@ export function createEmptyAsset(mcaBasePath: string): Promise<SharedAsset> {
     let mcaFilePath = "";
     let mcaFileName = "";
 
-    Logger.verbose(SharedLogChannel.Generic, mcaBasePath);
+    Logger.debug(SharedLogChannel.Generic, mcaBasePath);
 
     let i = 0;
     do {

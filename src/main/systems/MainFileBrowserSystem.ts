@@ -20,7 +20,7 @@ export const FileBrowserSystem = {
         watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
         async function _change(filePath: string) {
-            Logger.verbose(SharedLogChannel.FileBrowser, "File changed", filePath);
+            Logger.debug(SharedLogChannel.FileBrowser, "File changed", filePath);
             if (!currentPathAbsolute || !currentPathRelative) {
                 return;
             }

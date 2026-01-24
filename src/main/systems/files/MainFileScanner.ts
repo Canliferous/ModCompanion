@@ -2,15 +2,17 @@ import { getAppConfig } from "../MainConfigSystem.js";
 import path from "path";
 import { timeMillisAsync } from "../../helpers/MainTiming.js";
 import fs from "fs/promises";
+import { Logger } from "../MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export async function scanContentTree(): Promise<string[]> {
     const config = getAppConfig();
 
-    console.log("Scanning content directory...");
+    Logger.info(SharedLogChannel.Generic, "Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>
         _listFilesRecursive(config.rootPath.length + 1, config.contentPath),
     );
-    console.log(`Scanned content directory in ${millisContent}ms`);
+    Logger.info(SharedLogChannel.Generic, `Scanned content directory in ${millisContent}ms`);
     return contentTree;
 }
 

@@ -55,7 +55,9 @@ async function _healthcheck() {
                 });
 
                 s.on("data", (data) => {
-                    notifyStrataInteropLog(String(data));
+                    const message = String(data);
+                    Logger.info(SharedLogChannel.GameInterop, message);
+                    notifyStrataInteropLog(message);
                 });
 
                 socket = s;
