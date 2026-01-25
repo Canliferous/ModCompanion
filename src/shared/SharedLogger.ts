@@ -9,6 +9,7 @@ export enum SharedLogChannel {
     MareTF = "MareTF",
     HotReload = "Hot Reload",
     MainSystems = "Main Systems",
+    Hotspot = "Hotspot",
 }
 
 export enum SharedLogType {

@@ -202,9 +202,9 @@ export function createHotspotEditor(
         return (tY / texture.height) * canvasHeight;
     }
 
-    function updateTexture(base64: string, width: number, height: number) {
+    function updateTexture(src: string, width: number, height: number) {
         const img = new Image(width, height);
-        img.src = base64ImageUrl(base64);
+        img.src = src;
         texture = img;
     }
 
@@ -242,3 +242,5 @@ export function createHotspotEditor(
         updateRealHeight,
     };
 }
+
+export type HotspotEditor = ReturnType<typeof createHotspotEditor>;

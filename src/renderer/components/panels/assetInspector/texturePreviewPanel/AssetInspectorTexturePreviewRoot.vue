@@ -1,6 +1,6 @@
 <template>
     <div class="h-full">
-        <TexturePreview v-if="meta.data" :data="meta.data" />
+        <MInteractiveImageViewer :src="`file://${meta.filePath}`" />
     </div>
 </template>
 

@@ -6,9 +6,11 @@
     </div>
 </template>
 <script setup lang="ts">
-import { createHotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
+import { createHotspotEditor, HotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useElementSize, useMouseInElement, useMousePressed } from "@vueuse/core";
+import { Logger } from "~/logger.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 const id = useId();
 
@@ -30,9 +32,7 @@ onMounted(() => {
     const ctx = canvas.getContext("2d")!;
     const editor = createHotspotEditor(ctx, 1000, 1000);
 
-    if (props.meta.data && props.meta.width && props.meta.height) {
-        editor.updateTexture(props.meta.data, props.meta.width, props.meta.height);
-    }
+    updateEditorTexture(props.meta, editor);
 
     const { elementX, elementY } = useMouseInElement(canvasRef);
     useMousePressed({
@@ -68,11 +68,25 @@ onMounted(() => {
     });
 
     watch(props.meta, (m) => {
-        if (m.data && m.width && m.height) {
-            editor.updateTexture(m.data, m.width, m.height);
-        }
+        updateEditorTexture(m, editor);
     });
 });
+
+function updateEditorTexture(meta: SharedImageMetaReport, editor: HotspotEditor) {
+    if (meta.filePath && meta.tags) {
+        const w = meta.tags["Image Width"]?.value;
+        const h = meta.tags["Image Height"]?.value;
+        if (w && h) {
+            editor.updateTexture(`file://${meta.filePath}`, w, h);
+        }
+    } else {
+        Logger.warning(
+            SharedLogChannel.Hotspot,
+            "Updating hotspot editor texture failed. Image's meta is invalid: ",
+            meta,
+        );
+    }
+}
 </script>
 
 <style scoped></style>
