@@ -1,16 +1,50 @@
 <template>
-    <div class="p-1 h-full grid grid-cols-1 grid-rows-1">
-        <div class="aspect-square">
-            <canvas :id="id" ref="canvasRef" width="1000" height="1000" class="h-full w-full" />
+    <MPanelRoot>
+        <div class="grid grid-cols-1 content-start gap-1">
+            <div class="aspect-square">
+                <canvas :id="id" ref="canvasRef" width="1000" height="1000" class="h-full w-full" />
+            </div>
+
+            <div class="p-1">
+                <div class="grid grid-cols-[auto_1fr] gap-2">
+                    <UFormField label="Mode">
+                        <UButtonGroup>
+                            <UButton
+                                label="Select & Modify"
+                                :icon="AppDesign.Icons.ActionSelectCursor"
+                                :color="editMode === HotspotEditMode.Select ? 'info' : 'neutral'"
+                                @click="editMode = HotspotEditMode.Select"
+                            />
+                            <UButton
+                                label="Draw"
+                                :icon="AppDesign.Icons.ActionEditPencil"
+                                :color="editMode === HotspotEditMode.Draw ? 'info' : 'neutral'"
+                                @click="editMode = HotspotEditMode.Draw"
+                            />
+                            <UButton
+                                label="Delete"
+                                :icon="AppDesign.Icons.ActionDelete"
+                                :color="editMode === HotspotEditMode.Delete ? 'info' : 'neutral'"
+                                @click="editMode = HotspotEditMode.Delete"
+                            />
+                        </UButtonGroup>
+                    </UFormField>
+                    <UFormField label="View">
+                        <UCheckbox label="Show IDs" v-model="showIds" />
+                    </UFormField>
+                </div>
+            </div>
         </div>
-    </div>
+    </MPanelRoot>
 </template>
 <script setup lang="ts">
-import { createHotspotEditor, HotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
+import { createHotspotEditor, HotspotEditMode, HotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useElementSize, useMouseInElement, useMousePressed } from "@vueuse/core";
 import { Logger } from "~/logger.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { AppDesign } from "~/design/AppDesign.js";
+import { useRememberRef } from "~/composables/useRemember.js";
 
 const id = useId();
 
@@ -19,6 +53,8 @@ const canvasRef = useTemplateRef("canvasRef");
 const props = defineProps<{ meta: SharedImageMetaReport }>();
 
 const { width, height } = useElementSize(canvasRef);
+const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
+const showIds = useRememberRef(ref(false), "hotspot-editor-show-ids");
 
 // TODO: Feed this from main process
 const scalingFactor = 2;
@@ -70,6 +106,9 @@ onMounted(() => {
     watch(props.meta, (m) => {
         updateEditorTexture(m, editor);
     });
+
+    watch(editMode, editor.updateEditMode);
+    watch(showIds, editor.updateShowIds);
 });
 
 function updateEditorTexture(meta: SharedImageMetaReport, editor: HotspotEditor) {

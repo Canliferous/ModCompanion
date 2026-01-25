@@ -58,6 +58,9 @@ export const Icons = {
 
     ActionLaunchFile: "mingcute:play-fill",
     ActionEdit: "mingcute:edit-line",
+    ActionEditPencil: "mingcute:edit-2-fill",
+    ActionSelectCursor: "mingcute:cursor-fill",
+    ActionDelete: "mingcute:delete-fill",
 
     ActionPlay: "mingcute:play-fill",
     ActionPause: "mingcute:pause-fill",
