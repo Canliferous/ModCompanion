@@ -1,5 +1,5 @@
 <template>
-    <template v-for="group in grouping.groups">
+    <template v-for="group in grouping.groups" :key="group.label">
         <AssetInspectorTextureConvertFlagsGroup
             :label="group.label"
             :flags="group.items"

@@ -6,6 +6,7 @@
     >
         <div
             v-for="(assetId, i) in group.def.assets"
+            :key="i"
             class="grid grid-cols-[1fr_auto_auto] not-last:border-b border-accented"
         >
             <GroupListEntry :asset-id="assetId" :group-id="group.id" @remove="() => remove(i)" />

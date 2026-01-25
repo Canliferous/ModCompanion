@@ -2,7 +2,7 @@
     <UFormField ref="dropZoneRef" :label="heading" class="col-span-2">
         <template #hint />
         <div class="grid gap-1">
-            <template v-for="(file, i) in files">
+            <template v-for="(file, i) in files" :key="i">
                 <EditControlAssetFileListEntry
                     :entry="file"
                     :dir

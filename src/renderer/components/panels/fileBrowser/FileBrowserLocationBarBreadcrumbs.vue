@@ -8,7 +8,7 @@
             :icon="AppDesign.Icons.Home"
             @click="handleHomeClick"
         />
-        <template v-for="(split, index) in pathSplits">
+        <template v-for="(split, index) in pathSplits" :key="index">
             <span class="text-xs text-muted">/</span>
             <UButton
                 :label="split"

@@ -14,6 +14,7 @@
         >
             <MDataTableRow
                 v-for="(entry, i) in entriesHierarchy"
+                :key="i"
                 :idx="i"
                 :entry="entry.entry"
                 :columns="props.columns"
@@ -274,10 +275,10 @@ function handleDragEvent(event: DragEvent, idx: number, emitEvent: "onDragStart"
     if (selection.includes(idx)) {
         const entries = entriesHierarchy.value.filter((value, index) => selection.includes(index)).map((e) => e.entry);
         const orderedEntries = new Set([primarySelected, ...entries]);
-        // @ts-ignore
+        // @ts-expect-error No idea why this errors. The typings are really weird and complicated here. But it seems isolated to this function so no bad types leak out
         emit(emitEvent, event, primarySelected, Array.from(orderedEntries));
     } else {
-        // @ts-ignore
+        // @ts-expect-error No idea why this errors
         emit(emitEvent, event, primarySelected, [primarySelected]);
     }
 }

@@ -12,7 +12,7 @@ import PanelTab from "~/components/panelTabs/PanelTab.vue";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
-import Watermark from "~/components/panels/Watermark.vue";
+import WaterMark from "~/components/panels/WaterMark.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import AddPanelAction from "~/components/panels/AddPanelAction.vue";
 import ConversionDetailsPanel from "~/components/panels/conversionDetails/ConversionDetailsPanel.vue";
@@ -120,7 +120,7 @@ export const PanelComponents = {
     other: {
         watermark: {
             componentId: "_Watermark",
-            component: Watermark,
+            component: WaterMark,
         },
         addPanelAction: {
             componentId: "_AddPanelAction",

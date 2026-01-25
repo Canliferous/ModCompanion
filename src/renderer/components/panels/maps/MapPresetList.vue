@@ -1,5 +1,5 @@
 <template>
-    <div v-for="[key, name] in displayNames.entries()" class="text-xs text-muted">{{ name }}</div>
+    <div v-for="[key, name] in displayNames.entries()" :key="key" class="text-xs text-muted">{{ name }}</div>
 </template>
 <script setup lang="ts">
 import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";

@@ -20,22 +20,24 @@
                     :class="{ 'gap-2': grouping !== undefined }"
                     :style="`grid-template-columns: repeat(${columns ?? 1}, 1fr)`"
                 >
-                    <template v-for="entry in Object.values(props.enum)" v-if="grouping === undefined">
-                        <EnumSelectItem
-                            :entry="entry"
-                            :label-func="labelFunc"
-                            :default="props.default"
-                            :is-selected="selectedVal === entry"
-                            :disabled="disabledFunc ? disabledFunc(entry) : false"
-                            @click="handleClick"
-                        />
+                    <template v-if="grouping === undefined">
+                        <template v-for="(entry, i) in Object.values(props.enum)" :key="i">
+                            <EnumSelectItem
+                                :entry="entry"
+                                :label-func="labelFunc"
+                                :default="props.default"
+                                :is-selected="selectedVal === entry"
+                                :disabled="disabledFunc ? disabledFunc(entry) : false"
+                                @click="handleClick"
+                            />
+                        </template>
                     </template>
 
                     <template v-else>
-                        <template v-for="group in grouping.groups">
+                        <template v-for="group in grouping.groups" :key="group.label">
                             <div class="grid grid-cols-subgrid col-span-full p-2 gap-1 bg-neutral-850 rounded">
                                 <span class="col-span-full text-sm">{{ group.label }}</span>
-                                <template v-for="item in group.items">
+                                <template v-for="(item, i) in group.items" :key="i">
                                     <EnumSelectItem
                                         :entry="item"
                                         :label-func="labelFunc"
@@ -53,7 +55,7 @@
                             class="grid grid-cols-subgrid col-span-full p-2 gap-1 bg-neutral-850 rounded"
                         >
                             <span class="col-span-full text-sm">Other</span>
-                            <template v-for="item in grouping.ungrouped">
+                            <template v-for="(item, i) in grouping.ungrouped" :key="i">
                                 <EnumSelectItem
                                     :entry="item"
                                     :label-func="labelFunc"

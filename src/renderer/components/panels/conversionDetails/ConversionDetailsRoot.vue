@@ -13,7 +13,7 @@
                 </template>
             </UButton>
             <div class="flex gap-2 items-center flex-wrap">
-                <template v-for="(state, i) in event.stateHistory">
+                <template v-for="(state, i) in event.stateHistory" :key="i">
                     <MConversionStateBadge :state="state" no-animation />
                     <UIcon
                         v-if="i !== event.stateHistory.length - 1"

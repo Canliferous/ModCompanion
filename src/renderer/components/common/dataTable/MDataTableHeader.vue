@@ -1,6 +1,6 @@
 <template>
     <div class="grid col-span-full grid-cols-subgrid gap-x-1 text-sm text-neutral-400 select-none">
-        <div v-for="column in columns" :class="column.headerClass">
+        <div v-for="column in columns" :key="column.id" :class="column.headerClass">
             {{ column.label }}
         </div>
     </div>

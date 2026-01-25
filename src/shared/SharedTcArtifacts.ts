@@ -1,5 +1,3 @@
 export interface SharedTcArtifactsListAllMapsReport {
-    maps: Record<string, SharedTcArtifactsMap>;
+    maps: Record<string, string>;
 }
-
-export interface SharedTcArtifactsMap {}

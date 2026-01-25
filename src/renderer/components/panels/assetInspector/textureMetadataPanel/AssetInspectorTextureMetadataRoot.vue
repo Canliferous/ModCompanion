@@ -1,7 +1,7 @@
 <template>
     <MPanelRoot>
         <div class="grid grid-cols-2 gap-1 text-xs">
-            <template v-for="item in items">
+            <template v-for="item in items" :key="item.name">
                 <div class="grid grid-cols-2 bg-elevated rounded px-2.5 py-1.5">
                     <span class="text-muted">
                         {{ item.name }}
@@ -22,7 +22,7 @@ const props = defineProps<{ meta: SharedImageMetaReport }>();
 const items = computed(() =>
     Object.entries(props.meta.tags ?? {})
         .map((entry) => ({ name: entry[0], value: entry[1] }))
-        .sort((a, b) => a.name.localeCompare(b)),
+        .sort((a, b) => a.name.localeCompare(b.name)),
 );
 </script>
 

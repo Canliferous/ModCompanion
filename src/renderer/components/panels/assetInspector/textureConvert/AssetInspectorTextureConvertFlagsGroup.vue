@@ -11,7 +11,7 @@
 
         <template #content>
             <div class="grid grid-cols-2 gap-2 p-2">
-                <template v-for="flag in flags">
+                <template v-for="flag in flags" :key="flag">
                     <AssetInspectorTextureConvertFlagsGroupCheckbox
                         :checked="values.includes(flag)"
                         :flag="flag"

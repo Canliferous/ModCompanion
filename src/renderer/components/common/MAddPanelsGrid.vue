@@ -1,6 +1,6 @@
 <template>
     <div class="grid grid-cols-3 gap-2">
-        <template v-for="panel in panels">
+        <template v-for="panel in panels" :key="panel.componentId">
             <UButton
                 :label="PanelTitles[panel.componentId]"
                 :icon="PanelIcons[panel.componentId]"

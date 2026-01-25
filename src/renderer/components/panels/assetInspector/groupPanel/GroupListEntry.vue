@@ -25,7 +25,7 @@
 
             <div class="col-span-full">
                 <template v-if="asset.def.associatedFiles">
-                    <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries">
+                    <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries" :key="entry.field">
                         <template v-if="asset.def.associatedFiles[entry.field]">
                             <UButton color="neutral" variant="ghost" :icon="entry.icon" size="sm">
                                 Open {{ entry.name }}

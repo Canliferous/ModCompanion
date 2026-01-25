@@ -1,6 +1,6 @@
 <template>
     <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 items-center">
-        <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries">
+        <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries" :key="entry.field">
             <EditControlAssetAssociatedEntry
                 :file="associated[entry.field] ?? ''"
                 :entry="entry"

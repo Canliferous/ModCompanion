@@ -6,6 +6,7 @@
             <div class="p-2 grid gap-1">
                 <UButton
                     v-for="(maps, name) in presetsStore.presets"
+                    :key="name"
                     class="grid grid-cols-3 items-start text-start"
                     @click="handleClickPreset(maps)"
                 >
