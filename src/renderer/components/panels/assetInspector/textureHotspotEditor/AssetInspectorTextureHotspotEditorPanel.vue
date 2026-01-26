@@ -1,6 +1,6 @@
 <template>
-    <TextureMetaProvider v-slot="{ meta }">
-        <AssetInspectorTextureHotspotEditorRoot :meta="meta" />
+    <TextureMetaProvider v-slot="{ meta, asset }">
+        <AssetInspectorTextureHotspotEditorRoot :meta="meta" :asset="asset" />
     </TextureMetaProvider>
 </template>
 <script setup lang="ts">

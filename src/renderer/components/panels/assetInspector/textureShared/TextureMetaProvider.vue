@@ -2,7 +2,7 @@
     <div class="h-full">
         <template v-if="isTextureAsset(assetStore.activeAsset)">
             <template v-if="myMeta !== undefined">
-                <slot :meta="toValue(myMeta)" />
+                <slot :meta="toValue(myMeta)" :asset="assetStore.activeAsset" />
             </template>
             <div v-else class="grid place-items-center h-full">Asset has no texture</div>
         </template>
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { isTextureAsset } from "Shared/SharedAssetDefinition.js";
+import { isTextureAsset, SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
@@ -22,7 +22,7 @@ const inj = inject(AssetInspectorTextureInjectKey);
 const myMeta = computed(() => (inj !== undefined ? toValue(inj.meta) : undefined));
 
 defineSlots<{
-    default(props: { meta: SharedImageMetaReport }): any;
+    default(props: { meta: SharedImageMetaReport; asset: SharedTextureAsset }): any;
 }>();
 </script>
 

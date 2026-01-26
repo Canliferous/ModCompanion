@@ -30,7 +30,7 @@
                         </UButtonGroup>
                     </UFormField>
                     <UFormField label="View">
-                        <UCheckbox label="Show IDs" v-model="showIds" />
+                        <UCheckbox v-model="showIds" label="Show IDs" />
                     </UFormField>
                 </div>
             </div>
@@ -38,19 +38,22 @@
     </MPanelRoot>
 </template>
 <script setup lang="ts">
-import { createHotspotEditor, HotspotEditMode, HotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
+import createHotspotEditor, { HotspotEditMode, HotspotEditor } from "~/canvas/hotspotEditor/HotspotEditor.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useElementSize, useMouseInElement, useMousePressed } from "@vueuse/core";
 import { Logger } from "~/logger.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useRememberRef } from "~/composables/useRemember.js";
+import { SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
+import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 
 const id = useId();
 
 const canvasRef = useTemplateRef("canvasRef");
 
-const props = defineProps<{ meta: SharedImageMetaReport }>();
+const props = defineProps<{ meta: SharedImageMetaReport; asset: SharedTextureAsset }>();
 
 const { width, height } = useElementSize(canvasRef);
 const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
@@ -58,6 +61,7 @@ const showIds = useRememberRef(ref(false), "hotspot-editor-show-ids");
 
 // TODO: Feed this from main process
 const scalingFactor = 2;
+const assetStore = useAssetListStore();
 
 onMounted(() => {
     const canvas = canvasRef.value;
@@ -67,6 +71,8 @@ onMounted(() => {
 
     const ctx = canvas.getContext("2d")!;
     const editor = createHotspotEditor(ctx, 1000, 1000);
+    editor.updateEditMode(editMode.value);
+    editor.updateShowIds(showIds.value);
 
     updateEditorTexture(props.meta, editor);
 
@@ -103,12 +109,40 @@ onMounted(() => {
         editor.updateRealHeight(h * scalingFactor);
     });
 
-    watch(props.meta, (m) => {
-        updateEditorTexture(m, editor);
-    });
+    watch(
+        () => props.meta,
+        (m) => {
+            updateEditorTexture(m, editor);
+        },
+    );
+
+    watch(
+        () => props.asset,
+        (asset) => {
+            // Logger.debug(SharedLogChannel.Generic, "Updated asset", props.asset.def.displayName);
+            if (asset.def.vtfOptions?.hotspot) {
+                editor.updateRects(toRaw(asset.def.vtfOptions.hotspot));
+            } else {
+                editor.updateRects([]);
+            }
+        },
+    );
+    if (props.asset.def.vtfOptions?.hotspot) {
+        editor.updateRects(toRaw(props.asset.def.vtfOptions.hotspot));
+    }
 
     watch(editMode, editor.updateEditMode);
     watch(showIds, editor.updateShowIds);
+
+    editor.changedEvent.on((rects) => {
+        const options: SharedVtfCreateOptions = { ...toRaw(props.asset.def.vtfOptions), hotspot: rects };
+
+        const asset: SharedTextureAsset = {
+            ...toRaw(props.asset),
+            def: { ...toRaw(props.asset.def), vtfOptions: options },
+        };
+        assetStore.writeAssets([asset]);
+    });
 });
 
 function updateEditorTexture(meta: SharedImageMetaReport, editor: HotspotEditor) {

@@ -3,6 +3,7 @@ import { SharedVtfFilter, SharedVtfFilters } from "./SharedVtfFilter.js";
 import { SharedVtfFlag } from "./SharedVtfFlag.js";
 import { SharedVtfCompressionMethod, SharedVtfCompressionMethods } from "./SharedVtfCompression.js";
 import { SharedVtfImageFormat, SharedVtfImageFormats } from "./SharedVtfFormat.js";
+import { SharedVtfHotspotRect } from "./SharedVtfHotspotRect.js";
 
 export interface SharedVtfCreateOptions {
     version?: SharedVtfVersion;
@@ -28,6 +29,8 @@ export interface SharedVtfCreateOptions {
      * Default: 2.2. This is a string and not a number because of floating point precision
      */
     gammaCorrectAmount?: string;
+
+    hotspot?: SharedVtfHotspotRect[];
 }
 
 export type SharedVtfCreateEnumOptions =

@@ -1,27 +1,16 @@
-import { Logger } from "~/logger.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { useEvent } from "~/composables/useEvent.js";
+import { SharedVtfHotspotRect } from "Shared/vtf/SharedVtfHotspotRect.js";
 
-interface Rect {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-}
+function createRect(pos1: Vector2, pos2: Vector2): SharedVtfHotspotRect {
+    const biggerX1 = pos1.x > pos2.x;
+    const biggerY1 = pos1.y > pos2.y;
 
-function createRect(pos1: Vector2, pos2: Vector2): Rect {
-    const x = Math.min(pos1.x, pos2.x);
-    const y = Math.min(pos1.y, pos2.y);
-    const w = Math.max(pos1.x, pos2.x) - x;
-    const h = Math.max(pos1.y, pos2.y) - y;
-
-    return { x, y, w, h };
-}
-
-enum Edge {
-    Top,
-    Bottom,
-    Left,
-    Right,
+    return {
+        x0: biggerX1 ? pos2.x : pos1.x,
+        y0: biggerY1 ? pos2.y : pos1.y,
+        x1: biggerX1 ? pos1.x : pos2.x,
+        y1: biggerY1 ? pos1.y : pos2.y,
+    };
 }
 
 export enum HotspotEditMode {
@@ -57,11 +46,7 @@ class Vector2 {
     }
 }
 
-export function createHotspotEditor(
-    ctx: CanvasRenderingContext2D,
-    initialCanvasWidth: number,
-    initialCanvasHeight: number,
-) {
+function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: number, initialCanvasHeight: number) {
     let requestShutdown = false;
     let mouseX = 0;
     let mouseY = 0;
@@ -72,23 +57,30 @@ export function createHotspotEditor(
     let mouse2Pressed = false;
     let mouseXTexture = 0;
     let mouseYTexture = 0;
+    let pendingSave = false;
 
     let drawStartPos: Vector2 | undefined = undefined;
     let drawEndPos: Vector2 | undefined = undefined;
 
-    const rects: Rect[] = [{ x: 256, y: 256, w: 128, h: 128 }];
+    let rects: SharedVtfHotspotRect[] = [];
 
     // Edge id is rect index * 4 (because 4 edges) + edge index.
     // Edge index is top bottom left right.
     // Makes it easier to group vertical and horizontal
     let hoveredEdge: number | undefined = undefined;
     let grabbedEdge: number | undefined = undefined;
-    const selectedRectIdx = 0;
+    let selectedRectIdx: undefined | number = undefined;
 
     let editMode = HotspotEditMode.Select;
     let showIds = false;
 
+    const changedEvent = useEvent<SharedVtfHotspotRect[]>();
+
     function _drawLoop(): void {
+        if (pendingSave) {
+            changedEvent.call(rects);
+            pendingSave = false;
+        }
         if (requestShutdown) return;
         requestAnimationFrame(_drawLoop);
 
@@ -100,6 +92,8 @@ export function createHotspotEditor(
         mouseXTexture = _canvasToTextureSpaceX(mouseX);
         mouseYTexture = _canvasToTextureSpaceY(mouseY);
 
+        _updateFixupFlippedRects();
+
         if (editMode === HotspotEditMode.Select) {
             _updateSelect();
         } else if (editMode === HotspotEditMode.Draw) {
@@ -109,12 +103,42 @@ export function createHotspotEditor(
         }
     }
 
+    function _updateFixupFlippedRects(): void {
+        for (const rect of rects) {
+            if (rect.x0 > rect.x1) {
+                const max = rect.x0;
+                rect.x0 = rect.x1;
+                rect.x1 = max;
+            }
+            if (rect.y0 > rect.y1) {
+                const max = rect.y0;
+                rect.y0 = rect.y1;
+                rect.y1 = max;
+            }
+        }
+    }
+
+    function _updateSelectRects(): void {
+        if (mouse1Pressed) {
+            for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
+                if (_isPointInRect(mouseXTexture, mouseYTexture, rects[rectIdx])) {
+                    selectedRectIdx = rectIdx;
+                    return;
+                }
+            }
+            selectedRectIdx = undefined;
+        }
+    }
+
     function _updateSelect(): void {
         _updateGrabbedEdge();
-        if (grabbedEdge !== undefined) {
+        if (grabbedEdge === undefined) {
+            _updateSelectRects();
+        } else {
             _updateGrab(grabbedEdge);
         }
     }
+
     function _updateDraw(): void {
         if (mouse1Pressed) {
             if (!drawStartPos) {
@@ -124,19 +148,21 @@ export function createHotspotEditor(
             }
         } else if (drawStartPos && drawEndPos) {
             const newRect = createRect(drawStartPos, drawEndPos);
-            if (newRect.w < 0 || newRect.h < 0) return;
+            if (newRect.x0 === newRect.x1 || newRect.y0 === newRect.y1) return;
 
             rects.push(newRect);
             drawStartPos = undefined;
             drawEndPos = undefined;
+            pendingSave = true;
         }
     }
     function _updateDelete(): void {
         for (let i = 0; i < rects.length; i++) {
             const rect = rects[i];
-            const hovered = _isPointInAabb(mouseXTexture, mouseYTexture, rect.x, rect.y, rect.w, rect.h);
+            const hovered = _isPointInRect(mouseXTexture, mouseYTexture, rect);
             if (hovered && mouse1Pressed) {
                 rects.splice(i, 1);
+                pendingSave = true;
                 break;
             }
         }
@@ -150,20 +176,13 @@ export function createHotspotEditor(
         const my = snapNumber(Math.max(0, Math.min(mouseYTexture, texture?.height ?? canvasHeight)));
 
         if (edgeIdx === 0) {
-            const bottomEdgeY = rects[rectIdx].h + rects[rectIdx].y;
-            rects[rectIdx].y = my;
-            rects[rectIdx].h = bottomEdgeY - my;
-        }
-        if (edgeIdx === 1) {
-            rects[rectIdx].h = my - rects[rectIdx].y;
-        }
-        if (edgeIdx === 2) {
-            const rightEdgeX = rects[rectIdx].w + rects[rectIdx].x;
-            rects[rectIdx].x = mx;
-            rects[rectIdx].w = rightEdgeX - mx;
-        }
-        if (edgeIdx === 3) {
-            rects[rectIdx].w = mx - rects[rectIdx].x;
+            rects[rectIdx].y0 = my;
+        } else if (edgeIdx === 1) {
+            rects[rectIdx].y1 = my;
+        } else if (edgeIdx === 2) {
+            rects[rectIdx].x0 = mx;
+        } else if (edgeIdx === 3) {
+            rects[rectIdx].x1 = mx;
         }
     }
 
@@ -173,64 +192,64 @@ export function createHotspotEditor(
             grabbedEdge = undefined;
         }
 
-        for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
-            const rect = rects[rectIdx];
-            const edgeBase = rectIdx * EDGE_COUNT;
-            const hoveredTop = _isPointInAabb(
-                mouseXTexture,
-                mouseYTexture,
-                rect.x + _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT),
-                rect.y - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT / 2),
-                rect.w - _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT * 2),
-                _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-            );
-            if (hoveredTop) {
-                hoveredEdge = edgeBase;
-                if (mouse1Pressed) grabbedEdge = hoveredEdge;
-                return;
-            }
+        if (selectedRectIdx === undefined) return;
 
-            const hoveredBottom = _isPointInAabb(
-                mouseXTexture,
-                mouseYTexture,
-                rect.x + _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-                rect.y + rect.h - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT / 2),
-                rect.w - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT * 2),
-                _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-            );
-            if (hoveredBottom) {
-                hoveredEdge = edgeBase + 1;
-                if (mouse1Pressed) grabbedEdge = hoveredEdge;
-                return;
-            }
+        const rect = rects[selectedRectIdx];
+        const edgeBase = selectedRectIdx * EDGE_COUNT;
+        const hoveredTop = _isPointInAabb(
+            mouseXTexture,
+            mouseYTexture,
+            rect.x0,
+            rect.y0 - EDGE_SELECT_WEIGHT,
+            rect.x1,
+            rect.y0,
+        );
+        if (hoveredTop) {
+            hoveredEdge = edgeBase;
+            if (mouse1Pressed) grabbedEdge = hoveredEdge;
+            return;
+        }
 
-            const hoveredLeft = _isPointInAabb(
-                mouseXTexture,
-                mouseYTexture,
-                rect.x - _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT / 2),
-                rect.y + _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-                _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT),
-                rect.h - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT * 2),
-            );
-            if (hoveredLeft) {
-                hoveredEdge = edgeBase + 2;
-                if (mouse1Pressed) grabbedEdge = hoveredEdge;
-                return;
-            }
+        const hoveredBottom = _isPointInAabb(
+            mouseXTexture,
+            mouseYTexture,
+            rect.x0,
+            rect.y1,
+            rect.x1,
+            rect.y1 + EDGE_SELECT_WEIGHT,
+        );
+        if (hoveredBottom) {
+            hoveredEdge = edgeBase + 1;
+            if (mouse1Pressed) grabbedEdge = hoveredEdge;
+            return;
+        }
 
-            const hoveredRight = _isPointInAabb(
-                mouseXTexture,
-                mouseYTexture,
-                rect.x + rect.w - _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT / 2),
-                rect.y + _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-                _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
-                rect.h - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT * 2),
-            );
-            if (hoveredRight) {
-                hoveredEdge = edgeBase + 3;
-                if (mouse1Pressed) grabbedEdge = hoveredEdge;
-                return;
-            }
+        const hoveredLeft = _isPointInAabb(
+            mouseXTexture,
+            mouseYTexture,
+            rect.x0 - EDGE_SELECT_WEIGHT,
+            rect.y0,
+            rect.x0,
+            rect.y1,
+        );
+        if (hoveredLeft) {
+            hoveredEdge = edgeBase + 2;
+            if (mouse1Pressed) grabbedEdge = hoveredEdge;
+            return;
+        }
+
+        const hoveredRight = _isPointInAabb(
+            mouseXTexture,
+            mouseYTexture,
+            rect.x1,
+            rect.y0,
+            rect.x1 + EDGE_SELECT_WEIGHT,
+            rect.y1,
+        );
+        if (hoveredRight) {
+            hoveredEdge = edgeBase + 3;
+            if (mouse1Pressed) grabbedEdge = hoveredEdge;
+            return;
         }
     }
 
@@ -248,35 +267,45 @@ export function createHotspotEditor(
         for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
             _drawRect(rects[rectIdx], rectIdx);
         }
+
+        if (editMode === HotspotEditMode.Draw) {
+            if (mouse1Pressed && drawStartPos && drawEndPos) {
+                ctx.fillStyle = "transparent";
+                ctx.strokeStyle = "rgb(255 255 255 / 0.8)";
+                ctx.strokeRect(
+                    _textureToCanvasSpaceX(drawStartPos.x),
+                    _textureToCanvasSpaceY(drawStartPos.y),
+                    _textureToCanvasSpaceX(drawEndPos.x - drawStartPos.x),
+                    _textureToCanvasSpaceY(drawEndPos.y - drawStartPos.y),
+                );
+            }
+        }
     }
 
-    function _drawRect(rect: Rect, rectIdx: number): void {
-        const hoveredMiddle = _isPointInAabb(mouseXTexture, mouseYTexture, rect.x, rect.y, rect.w, rect.h);
+    function _drawRect(rect: SharedVtfHotspotRect, rectIdx: number): void {
+        const hoveredMiddle = _isPointInRect(mouseXTexture, mouseYTexture, rect);
 
-        if (hoveredMiddle || hoveredEdge !== undefined) {
-            if (editMode === HotspotEditMode.Select) {
-                if (mouse1Pressed) {
-                    ctx.fillStyle = "rgb(255 205 255 / 0.1)";
-                } else {
-                    ctx.fillStyle = "rgb(255 255 255 / 0.05)";
-                }
-            } else if (editMode === HotspotEditMode.Delete) {
-                ctx.fillStyle = "rgb(255 100 100 / 0.5)";
+        // ctx.strokeStyle = "rgb(255 255 255 / 0.2)";
+        ctx.fillStyle = "transparent";
+        if (editMode === HotspotEditMode.Delete && hoveredMiddle) {
+            ctx.fillStyle = "rgb(255 100 100 / 0.5)";
+        } else if (editMode === HotspotEditMode.Select) {
+            if (selectedRectIdx === rectIdx) {
+                ctx.fillStyle = "rgb(255 205 255 / 0.2)";
             }
-        } else {
-            ctx.strokeStyle = "rgb(255 255 255 / 0.2)";
-            ctx.fillStyle = "transparent";
         }
+
         ctx.rect(
-            _textureToCanvasSpaceX(rect.x),
-            _textureToCanvasSpaceY(rect.y),
-            _textureToCanvasSpaceX(rect.w),
-            _textureToCanvasSpaceY(rect.h),
+            _textureToCanvasSpaceX(rect.x0),
+            _textureToCanvasSpaceY(rect.y0),
+            _textureToCanvasSpaceX(rect.x1 - rect.x0),
+            _textureToCanvasSpaceY(rect.y1 - rect.y0),
         );
         ctx.fill();
 
         _drawRectEdges(
             rect,
+            rectIdx,
             hoveredEdge == rectIdx * EDGE_COUNT,
             hoveredEdge == rectIdx * EDGE_COUNT + 1,
             hoveredEdge == rectIdx * EDGE_COUNT + 2,
@@ -288,36 +317,37 @@ export function createHotspotEditor(
         }
     }
 
-    function _drawRectId(rect: Rect, rectIdx: number): void {
+    function _drawRectId(rect: SharedVtfHotspotRect, rectIdx: number): void {
         // Logger.debug(SharedLogChannel.Hotspot, "Drawing rect id", rectIdx);
 
-        const rectMinSize = Math.min(
-            70,
-            rect.w > rect.h ? _textureToCanvasSpaceX(rect.w) : _textureToCanvasSpaceY(rect.h),
-        );
+        const w = rect.x1 - rect.x0;
+        const h = rect.y1 - rect.y0;
+        const rectMinSize = Math.min(70, w > h ? _textureToCanvasSpaceX(w) : _textureToCanvasSpaceY(h));
         ctx.textAlign = "center";
         ctx.font = `${rectMinSize}px Inter`;
         ctx.textBaseline = "middle";
         ctx.fillStyle = "rgb(255 100 255 / 0.7)";
-        const rectCenterX = _textureToCanvasSpaceX(rect.x + rect.w * 0.5);
-        const rectCenterY = _textureToCanvasSpaceY(rect.y + rect.h * 0.5);
+        const rectCenterX = _textureToCanvasSpaceX(rect.x0 + w * 0.5);
+        const rectCenterY = _textureToCanvasSpaceY(rect.y0 + h * 0.5);
         ctx.fillText(`${rectIdx}`, rectCenterX, rectCenterY);
     }
 
     function _drawRectEdges(
-        rect: Rect,
+        rect: SharedVtfHotspotRect,
+        rectIdx: number,
         hoveredTop: boolean,
         hoveredBottom: boolean,
         hoveredLeft: boolean,
         hoveredRight: boolean,
     ) {
+        const selected = selectedRectIdx === rectIdx && editMode === HotspotEditMode.Select;
         function applyEdgeDrawStyles(edgeHovered: boolean) {
-            if (edgeHovered && editMode === HotspotEditMode.Select) {
+            if (selected) {
                 ctx.strokeStyle = "rgb(255 255 255 / 0.7)";
-                if (mouse1Pressed) {
+                if (edgeHovered && mouse1Pressed) {
                     ctx.strokeStyle = "rgb(255 100 255 / 0.7)";
                 }
-                ctx.lineCap = "round";
+                ctx.lineCap = "butt";
                 ctx.lineWidth = EDGE_SELECT_WEIGHT;
             } else {
                 ctx.strokeStyle = "rgb(255 255 255 / 0.3)";
@@ -328,8 +358,13 @@ export function createHotspotEditor(
         {
             // Top
             ctx.beginPath();
-            ctx.moveTo(_textureToCanvasSpaceX(rect.x), _textureToCanvasSpaceY(rect.y));
-            ctx.lineTo(_textureToCanvasSpaceX(rect.x + rect.w), _textureToCanvasSpaceY(rect.y));
+            if (selected) {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y0) - EDGE_SELECT_WEIGHT * 0.5);
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y0) - EDGE_SELECT_WEIGHT * 0.5);
+            } else {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y0));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y0));
+            }
 
             applyEdgeDrawStyles(hoveredTop);
             ctx.stroke();
@@ -338,8 +373,13 @@ export function createHotspotEditor(
         {
             // Bottom
             ctx.beginPath();
-            ctx.moveTo(_textureToCanvasSpaceX(rect.x), _textureToCanvasSpaceY(rect.y + rect.h));
-            ctx.lineTo(_textureToCanvasSpaceX(rect.x + rect.w), _textureToCanvasSpaceY(rect.y + rect.h));
+            if (selected) {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y1) + EDGE_SELECT_WEIGHT * 0.5);
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y1) + EDGE_SELECT_WEIGHT * 0.5);
+            } else {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y1));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y1));
+            }
 
             applyEdgeDrawStyles(hoveredBottom);
             ctx.stroke();
@@ -348,26 +388,40 @@ export function createHotspotEditor(
         {
             // Left
             ctx.beginPath();
-            ctx.moveTo(_textureToCanvasSpaceX(rect.x), _textureToCanvasSpaceY(rect.y));
-            ctx.lineTo(_textureToCanvasSpaceX(rect.x), _textureToCanvasSpaceY(rect.y + rect.h));
+            if (selected) {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0) - EDGE_SELECT_WEIGHT * 0.5, _textureToCanvasSpaceY(rect.y0));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x0) - EDGE_SELECT_WEIGHT * 0.5, _textureToCanvasSpaceY(rect.y1));
+            } else {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y0));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x0), _textureToCanvasSpaceY(rect.y1));
+            }
 
             applyEdgeDrawStyles(hoveredLeft);
             ctx.stroke();
         }
 
         {
-            // Left
+            // Right
             ctx.beginPath();
-            ctx.moveTo(_textureToCanvasSpaceX(rect.x + rect.w), _textureToCanvasSpaceY(rect.y));
-            ctx.lineTo(_textureToCanvasSpaceX(rect.x + rect.w), _textureToCanvasSpaceY(rect.y + rect.h));
+            if (selected) {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x1) + EDGE_SELECT_WEIGHT * 0.5, _textureToCanvasSpaceY(rect.y0));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1) + EDGE_SELECT_WEIGHT * 0.5, _textureToCanvasSpaceY(rect.y1));
+            } else {
+                ctx.moveTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y0));
+                ctx.lineTo(_textureToCanvasSpaceX(rect.x1), _textureToCanvasSpaceY(rect.y1));
+            }
 
             applyEdgeDrawStyles(hoveredRight);
             ctx.stroke();
         }
     }
 
-    function _isPointInAabb(pointX: number, pointY: number, x: number, y: number, w: number, h: number) {
-        return pointX >= x && pointX <= x + w && pointY >= y && pointY <= y + h;
+    function _isPointInAabb(pointX: number, pointY: number, x0: number, y0: number, x1: number, y1: number) {
+        return pointX >= x0 && pointX <= x1 && pointY >= y0 && pointY <= y1;
+    }
+
+    function _isPointInRect(pointX: number, pointY: number, rect: SharedVtfHotspotRect) {
+        return pointX >= rect.x0 && pointX <= rect.x1 && pointY >= rect.y0 && pointY <= rect.y1;
     }
 
     function _canvasToTextureSpaceX(cX: number) {
@@ -417,6 +471,14 @@ export function createHotspotEditor(
     function updateShowIds(shouldShowIds: boolean): void {
         showIds = shouldShowIds;
     }
+    function updateRects(newRects: SharedVtfHotspotRect[]): void {
+        rects = newRects;
+        grabbedEdge = undefined;
+        selectedRectIdx = undefined;
+        drawStartPos = undefined;
+        drawEndPos = undefined;
+        pendingSave = false;
+    }
 
     onScopeDispose(() => {
         requestShutdown = true;
@@ -433,7 +495,11 @@ export function createHotspotEditor(
         updateRealHeight,
         updateEditMode,
         updateShowIds,
+        updateRects,
+        changedEvent,
     };
 }
+
+export default createHotspotEditor;
 
 export type HotspotEditor = ReturnType<typeof createHotspotEditor>;
