@@ -85,6 +85,29 @@ export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     if (options.quality) {
         a += ` --quality ${options.quality}`;
     }
+    if (options.hotspot) {
+        for (const hotspot of options.hotspot) {
+            a += ` --hotspot-rect ${hotspot.x0} ${hotspot.y0} ${hotspot.x1} ${hotspot.y1}`;
+
+            const flagsArr: string[] = [];
+            if (hotspot.flags?.randomRotation) {
+                flagsArr.push("RANDOM_ROTATION");
+            }
+            if (hotspot.flags?.randomReflection) {
+                flagsArr.push("RANDOM_REFLECTION");
+            }
+            if (hotspot.flags?.isAlternative) {
+                flagsArr.push("IS_ALTERNATIVE");
+            }
+
+            if (flagsArr.length > 0) {
+                const flagsStr = flagsArr.join(",");
+                a += " " + flagsStr;
+            } else {
+                a += " NONE";
+            }
+        }
+    }
 
     return a;
 }
