@@ -6,7 +6,7 @@
             neutral-highlight
             no-header
             no-scroll
-            @on-active-changed="(entry) => (conversionStore.activeEvent = entry)"
+            @on-active-changed="conversionStore.setActive"
         />
     </UContextMenu>
 </template>

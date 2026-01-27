@@ -14,8 +14,12 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const summary = ref<SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
-        conversions.value = event.conversions;
-        conversionEvents.value = event.events;
+        if (event.conversions.size !== conversions.value.size) {
+            conversions.value = event.conversions;
+        }
+        if (event.events.length !== conversionEvents.value.length) {
+            conversionEvents.value = event.events;
+        }
         summary.value = event.summary;
     });
 
@@ -36,8 +40,12 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         conversions.value = state.conversions;
     }
 
+    function setActive(event: SharedConversionEvent | undefined): void {
+        activeEvent.value = event;
+    }
+
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { conversions, conversionEvents, activeEvent, summary, getState, enqueue, enqueueAll };
+    return { conversions, conversionEvents, activeEvent, summary, getState, enqueue, enqueueAll, setActive };
 });
