@@ -1,5 +1,10 @@
 import { useEvent } from "~/composables/useEvent.js";
-import { SharedVtfHotspotRect } from "Shared/vtf/SharedVtfHotspotRect.js";
+import { SharedVtfHotspotRect, SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
+
+export interface RectAndIdx {
+    idx: number;
+    rect: SharedVtfHotspotRect;
+}
 
 function createRect(pos1: Vector2, pos2: Vector2): SharedVtfHotspotRect {
     const biggerX1 = pos1.x > pos2.x;
@@ -75,6 +80,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     let showIds = false;
 
     const changedEvent = useEvent<SharedVtfHotspotRect[]>();
+    const selectedEvent = useEvent<RectAndIdx | undefined>();
 
     function _drawLoop(): void {
         if (pendingSave) {
@@ -92,7 +98,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         mouseXTexture = _canvasToTextureSpaceX(mouseX);
         mouseYTexture = _canvasToTextureSpaceY(mouseY);
 
-        _updateFixupFlippedRects();
+        _updateFixupRects();
 
         if (editMode === HotspotEditMode.Select) {
             _updateSelect();
@@ -103,7 +109,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         }
     }
 
-    function _updateFixupFlippedRects(): void {
+    function _updateFixupRects(): void {
         for (const rect of rects) {
             if (rect.x0 > rect.x1) {
                 const max = rect.x0;
@@ -122,11 +128,14 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         if (mouse1Pressed) {
             for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
                 if (_isPointInRect(mouseXTexture, mouseYTexture, rects[rectIdx])) {
+                    if (selectedRectIdx === rectIdx) return;
                     selectedRectIdx = rectIdx;
+                    selectedEvent.call({ idx: rectIdx, rect: rects[rectIdx] });
                     return;
                 }
             }
             selectedRectIdx = undefined;
+            selectedEvent.call(undefined);
         }
     }
 
@@ -472,12 +481,21 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         showIds = shouldShowIds;
     }
     function updateRects(newRects: SharedVtfHotspotRect[]): void {
-        rects = newRects;
         grabbedEdge = undefined;
-        selectedRectIdx = undefined;
         drawStartPos = undefined;
         drawEndPos = undefined;
         pendingSave = false;
+
+        if (rects.length !== newRects.length) {
+            selectedEvent.call(undefined);
+            selectedRectIdx = undefined;
+        }
+
+        rects = newRects;
+    }
+    function updateRectFlags(rectIdx: number, flags: SharedVtfHotspotRectFlags | undefined): void {
+        rects[rectIdx].flags = flags;
+        pendingSave = true;
     }
 
     onScopeDispose(() => {
@@ -496,7 +514,9 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         updateEditMode,
         updateShowIds,
         updateRects,
+        updateRectFlags,
         changedEvent,
+        selectedEvent,
     };
 }
 

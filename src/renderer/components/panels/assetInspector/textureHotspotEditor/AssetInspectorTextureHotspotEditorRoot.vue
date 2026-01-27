@@ -32,6 +32,12 @@
                     <UFormField label="View">
                         <UCheckbox v-model="showIds" label="Show IDs" />
                     </UFormField>
+                    <UFormField
+                        v-if="editMode === HotspotEditMode.Select && selectedRectIdx !== undefined"
+                        label="Selected Rect"
+                    >
+                        <AssetInspectorTextureHotspotEditorFlags :flags="selectedRectFlags" @changed="handleChanged" />
+                    </UFormField>
                 </div>
             </div>
         </div>
@@ -48,6 +54,7 @@ import { useRememberRef } from "~/composables/useRemember.js";
 import { SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
 
 const id = useId();
 
@@ -59,10 +66,20 @@ const { width, height } = useElementSize(canvasRef);
 const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
 const showIds = useRememberRef(ref(false), "hotspot-editor-show-ids");
 
+const selectedRectIdx = ref<number | undefined>(undefined);
+const selectedRectFlags = ref<SharedVtfHotspotRectFlags | undefined>(undefined);
+
+function handleChanged(flags: SharedVtfHotspotRectFlags) {
+    if (selectedRectIdx.value) {
+        editor.value?.updateRectFlags(selectedRectIdx.value, toRaw(flags));
+    }
+}
+
 // TODO: Feed this from main process
 const scalingFactor = 2;
 const assetStore = useAssetListStore();
 
+const editor = ref<HotspotEditor | undefined>(undefined);
 onMounted(() => {
     const canvas = canvasRef.value;
     if (!canvas) {
@@ -70,11 +87,11 @@ onMounted(() => {
     }
 
     const ctx = canvas.getContext("2d")!;
-    const editor = createHotspotEditor(ctx, 1000, 1000);
-    editor.updateEditMode(editMode.value);
-    editor.updateShowIds(showIds.value);
+    editor.value = createHotspotEditor(ctx, 1000, 1000);
+    editor.value.updateEditMode(editMode.value);
+    editor.value.updateShowIds(showIds.value);
 
-    updateEditorTexture(props.meta, editor);
+    updateEditorTexture(props.meta, editor.value);
 
     const { elementX, elementY } = useMouseInElement(canvasRef);
     useMousePressed({
@@ -83,65 +100,69 @@ onMounted(() => {
             if ((event as any).buttons !== undefined) {
                 const mouseEvent = event as MouseEvent;
                 if (mouseEvent.buttons === 1) {
-                    editor.updateMouse1Pressed(true);
+                    editor.value?.updateMouse1Pressed(true);
                 } else if (mouseEvent.buttons === 2) {
-                    editor.updateMouse2Pressed(true);
+                    editor.value?.updateMouse2Pressed(true);
                 }
             }
         },
         onReleased: () => {
-            editor.updateMouse1Pressed(false);
-            editor.updateMouse2Pressed(false);
+            editor.value?.updateMouse1Pressed(false);
+            editor.value?.updateMouse2Pressed(false);
         },
     });
-    watch(elementX, (x) => editor.updateMouseX(x * scalingFactor));
-    watch(elementY, (y) => editor.updateMouseY(y * scalingFactor));
+    watch(elementX, (x) => editor.value?.updateMouseX(x * scalingFactor));
+    watch(elementY, (y) => editor.value?.updateMouseY(y * scalingFactor));
     watch(width, (w) => {
         if (canvasRef.value) {
             canvasRef.value.width = w * scalingFactor;
         }
-        editor.updateRealWidth(w * scalingFactor);
+        editor.value?.updateRealWidth(w * scalingFactor);
     });
     watch(height, (h) => {
         if (canvasRef.value) {
             canvasRef.value.height = h * scalingFactor;
         }
-        editor.updateRealHeight(h * scalingFactor);
+        editor.value?.updateRealHeight(h * scalingFactor);
     });
 
     watch(
         () => props.meta,
         (m) => {
-            updateEditorTexture(m, editor);
+            updateEditorTexture(m, editor.value!);
         },
     );
 
     watch(
         () => props.asset,
         (asset) => {
-            // Logger.debug(SharedLogChannel.Generic, "Updated asset", props.asset.def.displayName);
             if (asset.def.vtfOptions?.hotspot) {
-                editor.updateRects(toRaw(asset.def.vtfOptions.hotspot));
+                editor.value?.updateRects(toRaw(asset.def.vtfOptions.hotspot));
             } else {
-                editor.updateRects([]);
+                editor.value?.updateRects([]);
             }
         },
     );
     if (props.asset.def.vtfOptions?.hotspot) {
-        editor.updateRects(toRaw(props.asset.def.vtfOptions.hotspot));
+        editor.value.updateRects(toRaw(props.asset.def.vtfOptions.hotspot));
     }
 
-    watch(editMode, editor.updateEditMode);
-    watch(showIds, editor.updateShowIds);
+    watch(editMode, editor.value.updateEditMode);
+    watch(showIds, editor.value.updateShowIds);
 
-    editor.changedEvent.on((rects) => {
-        const options: SharedVtfCreateOptions = { ...toRaw(props.asset.def.vtfOptions), hotspot: rects };
+    editor.value.changedEvent.on((r) => {
+        const options: SharedVtfCreateOptions = { ...toRaw(props.asset.def.vtfOptions), hotspot: r };
 
         const asset: SharedTextureAsset = {
             ...toRaw(props.asset),
             def: { ...toRaw(props.asset.def), vtfOptions: options },
         };
         assetStore.writeAssets([asset]);
+    });
+
+    editor.value.selectedEvent.on((rectAndIdx) => {
+        selectedRectIdx.value = toRaw(rectAndIdx?.idx);
+        selectedRectFlags.value = structuredClone(toRaw(rectAndIdx?.rect.flags));
     });
 });
 

@@ -3,12 +3,23 @@ export interface SharedVtfHotspotRect {
     y0: number;
     x1: number;
     y1: number;
-    flags?: SharedVtfHotspotFlag[];
+    flags?: SharedVtfHotspotRectFlags;
 }
 
-export const SharedVtfHotspotFlags = {
-    RandomRotation: "RANDOM_ROTATION",
-    RandomReflection: "RANDOM_REFLECTION",
-    IsAlternate: "IS_ALTERNATE",
-} as const;
-export type SharedVtfHotspotFlag = (typeof SharedVtfHotspotFlags)[keyof typeof SharedVtfHotspotFlags];
+export interface SharedVtfHotspotRectFlags {
+    randomRotation?: boolean;
+    randomReflection?: boolean;
+    isAlternative?: boolean;
+}
+
+export function isVtfHotspotRectFlagsEqual(
+    flags1: SharedVtfHotspotRectFlags | undefined,
+    flags2: SharedVtfHotspotRectFlags | undefined,
+): boolean {
+    return (
+        (flags1 === undefined) === (flags2 === undefined) &&
+        flags1?.randomRotation === flags2?.randomRotation &&
+        flags1?.randomReflection === flags2?.randomReflection &&
+        flags1?.isAlternative === flags2?.isAlternative
+    );
+}
