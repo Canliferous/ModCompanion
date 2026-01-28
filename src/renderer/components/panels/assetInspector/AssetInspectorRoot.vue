@@ -3,6 +3,7 @@
         <DockviewVue
             :theme="themeModcomp"
             :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
+            default-renderer="onlyWhenVisible"
             @ready="handleReady"
         />
     </div>
@@ -17,7 +18,10 @@ import {
     SharedTextureAsset,
 } from "Shared/SharedAssetDefinition.js";
 import { DockviewApi, DockviewReadyEvent, DockviewVue, SerializedDockview } from "dockview-vue";
-import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
+import {
+    AssetInspectorPanelsInjectKey,
+    AssetInspectorTextureInjectKey,
+} from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
@@ -33,6 +37,7 @@ const api = ref<DockviewApi>();
 const lastType = ref<SharedAssetType | undefined>();
 
 const textureMeta = ref<SharedImageMetaReport | undefined>(undefined);
+const visiblePanels = reactive<Map<string, boolean>>(new Map());
 
 function handleReady(e: DockviewReadyEvent): void {
     api.value = e.api;
@@ -40,7 +45,13 @@ function handleReady(e: DockviewReadyEvent): void {
 
     handleAssetUpdated(props.asset, api.value);
 
-    e.api.onDidLayoutChange(() => serializeLayout(e.api));
+    e.api.onDidLayoutChange(() => {
+        serializeLayout(e.api);
+
+        for (const panel of e.api.panels) {
+            visiblePanels.set(panel.id, panel.api.isVisible);
+        }
+    });
 }
 
 watch(
@@ -54,6 +65,10 @@ watch(
 
 provide(AssetInspectorTextureInjectKey, {
     meta: textureMeta,
+});
+
+provide(AssetInspectorPanelsInjectKey, {
+    visiblePanels,
 });
 
 function handleAssetUpdated(asset: SharedAsset, api: DockviewApi): void {

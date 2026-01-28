@@ -46,7 +46,7 @@ export const usePanelsManagerStore = defineStore("panels-manager", () => {
     );
 
     watch(
-        () => conversionStore.activeHistory,
+        () => conversionStore.activeEvent,
         (activeHistory) => {
             if (!activeHistory) return;
 

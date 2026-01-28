@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot alwaysShowScroll>
+    <MPanelRoot always-show-scroll>
         <div class="grid grid-cols-1 content-start gap-1">
             <div class="aspect-square">
                 <canvas :id="id" ref="canvasRef" width="1000" height="1000" class="h-full w-full" />

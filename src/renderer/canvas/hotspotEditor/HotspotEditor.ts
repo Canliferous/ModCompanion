@@ -497,6 +497,9 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         rects[rectIdx].flags = flags;
         pendingSave = true;
     }
+    function shutdown(): void {
+        requestShutdown = true;
+    }
 
     onScopeDispose(() => {
         requestShutdown = true;
@@ -515,6 +518,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         updateShowIds,
         updateRects,
         updateRectFlags,
+        shutdown,
         changedEvent,
         selectedEvent,
     };

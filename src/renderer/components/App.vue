@@ -10,6 +10,7 @@
                     :watermark-component="PanelComponents.other.watermark.componentId"
                     :left-header-actions-component="PanelComponents.other.addPanelAction.componentId"
                     :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
+                    default-renderer="onlyWhenVisible"
                     @ready="panelsStore.handleReady"
                 />
                 <LogDrawer />
