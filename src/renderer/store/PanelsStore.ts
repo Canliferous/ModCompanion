@@ -61,8 +61,8 @@ export const usePanelsStore = defineStore("panels", () => {
         return api.value?.panels.find((p) => p.id.startsWith(panelId));
     }
 
-    function focusOrCreatePanel(panel: ComponentDesc): void {
-        const p = trySpawnPanel(panel);
+    function focusOrCreatePanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): void {
+        const p = trySpawnPanel(panel, options);
         p?.focus();
     }
 
