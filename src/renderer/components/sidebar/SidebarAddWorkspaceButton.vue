@@ -1,11 +1,13 @@
 <template>
-    <UButton
-        :icon="AppDesign.Icons.ActionAdd"
-        variant="link"
-        size="xs"
-        class="p-0"
-        @click="workspaceStore.createWorkspace()"
-    />
+    <UTooltip text="New Workspace">
+        <UButton
+            :icon="AppDesign.Icons.ActionAdd"
+            variant="link"
+            size="xs"
+            class="p-0"
+            @click="workspaceStore.createWorkspace()"
+        />
+    </UTooltip>
 </template>
 
 <script setup lang="ts">

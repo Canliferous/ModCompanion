@@ -29,10 +29,10 @@ export const useWorkspaceStore = defineStore("workspace", () => {
         activeWorkspace.value = newId;
     });
 
-    function createWorkspace() {
+    function createWorkspace(name: string = "New Workspace"): WorkspaceId {
         const id = generateWorkspaceId();
         workspaces.value = [...workspaces.value, id];
-        workspaceLabels.value = { ...workspaceLabels.value, [id]: "New Workspace" };
+        workspaceLabels.value = { ...workspaceLabels.value, [id]: name };
         activeWorkspace.value = id;
         return id;
     }
