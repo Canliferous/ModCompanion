@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-1 h-full">
         <DockviewVue
-            :theme="themeModcomp"
+            :theme="themeModcompNested"
             :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
             default-renderer="onlyWhenVisible"
             @ready="handleReady"
@@ -28,7 +28,7 @@ import { getAppConfig } from "~/renderer-config.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { fetchImageMeta } from "~/store/ImageCacheStore.js";
-import { themeModcomp } from "~/design/ModcompDockviewTheme.js";
+import { themeModcompNested } from "~/design/ModcompDockviewTheme.js";
 
 const props = defineProps<{ asset: SharedAsset }>();
 const workspaceStore = useWorkspaceStore();
