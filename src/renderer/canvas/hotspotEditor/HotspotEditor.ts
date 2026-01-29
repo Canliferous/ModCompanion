@@ -279,8 +279,8 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
             return;
         }
 
-        ctx.fillStyle = "black";
-        ctx.fillRect(mouseX - 4, mouseY - 4, 4, 4);
+        // ctx.fillStyle = "black";
+        // ctx.fillRect(mouseX - 4, mouseY - 4, 4, 4);
 
         for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
             _drawRect(rects[rectIdx], rectIdx);
