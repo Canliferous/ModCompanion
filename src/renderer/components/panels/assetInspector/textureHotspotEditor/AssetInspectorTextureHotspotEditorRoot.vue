@@ -1,16 +1,16 @@
 <template>
-    <MPanelRoot always-show-scroll>
-        <div class="grid grid-cols-1 content-start gap-1">
+    <MPanelRoot always-show-scroll class="@container">
+        <div class="grid grid-cols-1 @3xl:grid-cols-[3fr_2fr] content-start gap-1">
             <div class="aspect-square">
                 <canvas :id="id" ref="canvasRef" width="1000" height="1000" class="h-full w-full" />
             </div>
 
             <div class="p-1">
-                <div class="grid grid-cols-[auto_1fr] gap-2">
+                <div class="grid grid-cols-1 gap-2">
                     <UFormField label="Mode">
                         <UButtonGroup>
                             <UButton
-                                label="Select & Modify"
+                                label="Select"
                                 :icon="AppDesign.Icons.ActionSelectCursor"
                                 :color="editMode === HotspotEditMode.Select ? 'info' : 'neutral'"
                                 @click="editMode = HotspotEditMode.Select"
@@ -29,14 +29,14 @@
                             />
                         </UButtonGroup>
                     </UFormField>
-                    <UFormField label="View">
-                        <UCheckbox v-model="showIds" label="Show IDs" />
-                    </UFormField>
                     <UFormField
                         v-if="editMode === HotspotEditMode.Select && selectedRectIdx !== undefined"
                         label="Selected Rect"
                     >
                         <AssetInspectorTextureHotspotEditorFlags :flags="selectedRectFlags" @changed="handleChanged" />
+                    </UFormField>
+                    <UFormField label="View">
+                        <UCheckbox v-model="showIds" label="Show IDs" />
                     </UFormField>
                 </div>
             </div>
