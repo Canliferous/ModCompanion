@@ -1,7 +1,7 @@
 <template>
     <div
         ref="dragArea"
-        class="relative cursor-grab select-none overflow-clip"
+        class="relative cursor-grab select-none overflow-clip h-full"
         :class="{ 'select-grabbing': pressed }"
         @wheel="handleWheel"
     >
