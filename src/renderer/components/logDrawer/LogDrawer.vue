@@ -6,7 +6,7 @@
             'opacity-100 pointer-events-auto': logStore.drawerOpen,
             'opacity-0 pointer-events-none': !logStore.drawerOpen,
         }"
-        @click.self="handleBackdropClick"
+        @click.self="handleClose"
     >
         <div
             class="bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] p-1 gap-1 transition-transform"
@@ -35,7 +35,7 @@
                     placeholder="Filter Type"
                 />
                 <USeparator orientation="vertical" />
-                <UButton :icon="AppDesign.Icons.ActionMinimize" variant="ghost" size="sm" />
+                <UButton :icon="AppDesign.Icons.ActionMinimize" variant="ghost" size="sm" @click="handleClose" />
             </div>
 
             <USeparator />
@@ -73,7 +73,7 @@ import { useRememberRef } from "~/composables/useRemember.js";
 
 const logStore = useLogStore();
 
-function handleBackdropClick() {
+function handleClose() {
     logStore.drawerOpen = false;
 }
 
