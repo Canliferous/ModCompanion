@@ -31,6 +31,8 @@ const EDGE_COUNT = 4;
 
 const SNAP_SIZE = 16;
 
+const ZOOM = 0.98;
+
 function snapNumber(n: number): number {
     return Math.round(n / SNAP_SIZE) * SNAP_SIZE;
 }
@@ -263,15 +265,22 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     }
 
     function _draw() {
+        ctx.resetTransform();
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        const translW = canvasWidth * (1 - ZOOM) * 0.5;
+        const translH = canvasHeight * (1 - ZOOM) * 0.5;
+        ctx.translate(translW, translH);
+        ctx.scale(ZOOM, ZOOM);
+
         if (texture) {
             ctx.drawImage(texture, 0, 0, canvasWidth, canvasHeight);
         } else {
-            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        }
-
-        if (!texture) {
             return;
         }
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(mouseX - 4, mouseY - 4, 4, 4);
 
         for (let rectIdx = 0; rectIdx < rects.length; rectIdx++) {
             _drawRect(rects[rectIdx], rectIdx);
@@ -457,10 +466,12 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     }
 
     function updateMouseX(x: number): void {
-        mouseX = x;
+        const translW = canvasWidth * (1 - ZOOM) * 0.5;
+        mouseX = x / ZOOM - translW;
     }
     function updateMouseY(y: number): void {
-        mouseY = y;
+        const translH = canvasHeight * (1 - ZOOM) * 0.5;
+        mouseY = y / ZOOM - translH;
     }
     function updateMouse1Pressed(pressed: boolean): void {
         mouse1Pressed = pressed;
