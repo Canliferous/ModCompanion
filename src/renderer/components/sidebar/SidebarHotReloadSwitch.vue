@@ -1,5 +1,7 @@
 <template>
-    <UCheckbox v-model="enabled" label="Auto Hot Reload" size="sm" variant="button" />
+    <UTooltip text="Automatically signal the game to reload assets when they are converted">
+        <UCheckbox v-model="enabled" label="Auto Hot Reload" size="sm" variant="button" />
+    </UTooltip>
 </template>
 
 <script setup lang="ts">
