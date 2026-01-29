@@ -11,8 +11,13 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
+import { TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
 
-function handleClick(): void {}
+const takeOverStore = useTakeOverStore();
+
+function handleClick(): void {
+    takeOverStore.open(TakeOverId.AssetWizard);
+}
 </script>
 
 <style scoped></style>

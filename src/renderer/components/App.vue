@@ -13,7 +13,10 @@
                     default-renderer="onlyWhenVisible"
                     @ready="panelsStore.handleReady"
                 />
+
+                <!-- Register takeovers here -->
                 <MessageLogTakeOver />
+                <AssetWizardTakeOver />
             </div>
             <TheFooter />
         </div>

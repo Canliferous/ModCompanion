@@ -1,10 +1,5 @@
 <template>
-    <TakeOver
-        :open="takeOverStore.isOpen(TakeOverId.MessageLog)"
-        :icon="AppDesign.Icons.Log"
-        label="Message Log"
-        @close="takeOverStore.close()"
-    >
+    <TakeOver :id="TakeOverId.MessageLog">
         <template #toolbar>
             <UCheckbox v-model="showTime" label="Show Time" size="sm" />
             <USeparator orientation="vertical" />
@@ -38,7 +33,7 @@
 
 <script setup lang="ts">
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
-import { AppDesign, getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
+import { getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
 import { Logger } from "~/logger.js";
 import {
     getLogTime,
@@ -48,10 +43,9 @@ import {
     SharedLogTypesArray,
 } from "Shared/SharedLogger.js";
 import { useRememberRef } from "~/composables/useRemember.js";
-import { TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
+import { TakeOverId } from "~/store/TakeOverStore.js";
 
 const logStore = useMessageLogStore();
-const takeOverStore = useTakeOverStore();
 
 function handleTestLog() {
     Logger.debug(SharedLogChannel.Generic, "Hello world! Test log debug");

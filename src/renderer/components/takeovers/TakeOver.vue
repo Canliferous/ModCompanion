@@ -3,29 +3,38 @@
     <div
         class="bg-neutral-950/50 backdrop-blur-md absolute inset-0 p-1 flex flex-col justify-end transition-opacity z-100 overflow-y-clip"
         :class="{
-            'opacity-100 pointer-events-auto': open,
-            'opacity-0 pointer-events-none': !open,
+            'opacity-100 pointer-events-auto': isOpen,
+            'opacity-0 pointer-events-none': !isOpen,
         }"
-        @click.self="emit('close')"
+        @click.self="takeOverStore.close()"
     >
         <div
-            class="bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] p-1 gap-1 transition-transform"
+            class="bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] content-start p-1 gap-1 transition-transform"
             :class="{
-                'translate-y-0': open,
-                'translate-y-50': !open,
+                'translate-y-0': isOpen,
+                'translate-y-50': !isOpen,
+                grow: full,
             }"
         >
             <div class="flex items-center gap-2">
                 <span class="pl-1 text-sm select-none flex gap-1">
-                    <UIcon :name="icon" />
-                    <span>{{ label }}</span>
+                    <!-- Awkward transform because items-center doesn't center these icons optically -->
+                    <UIcon :name="TakeOverConfig[id].icon" class="translate-y-0.5" />
+                    <span>{{ TakeOverConfig[id].name }}</span>
                 </span>
 
                 <div class="grow" />
 
                 <slot name="toolbar" />
-                <UButton :icon="AppDesign.Icons.ActionMinimize" variant="ghost" size="sm" @click="emit('close')" />
+                <UButton
+                    :icon="AppDesign.Icons.ActionMinimize"
+                    variant="ghost"
+                    size="sm"
+                    @click="takeOverStore.close()"
+                />
             </div>
+
+            <USeparator />
 
             <slot name="default" />
         </div>
@@ -34,15 +43,18 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
+import { TakeOverConfig, TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
 
-const props = defineProps<{ open: boolean; label: string; icon: string }>();
+const takeOverStore = useTakeOverStore();
+
+const props = defineProps<{ id: TakeOverId; full?: boolean }>();
 
 defineSlots<{
     toolbar: any;
     default: any;
 }>();
 
-const emit = defineEmits<{ close: [void] }>();
+const isOpen = computed(() => takeOverStore.isOpen(props.id));
 </script>
 
 <style scoped></style>
