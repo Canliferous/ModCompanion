@@ -7,7 +7,7 @@
                         class="flex justify-start items-center gap-1 text-nowrap w-full"
                         :class="getLogTypeTextColorWarnings(logStore.latestEvent.type)"
                     >
-                        <UIcon :name="logStore.drawerOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight" />
+                        <UIcon :name="isOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight" />
                         <MLogTypeIcon :type="logStore.latestEvent.type" />
                         <span>
                             {{ getLogPrefix(logStore.latestEvent, true, true) }}
@@ -23,15 +23,23 @@
 </template>
 
 <script setup lang="ts">
-import { useLogStore } from "~/store/LogStore.js";
+import { useMessageLogStore } from "~/store/MessageLogStore.js";
 import { Logger } from "~/logger.js";
 import { getLogPrefix } from "Shared/SharedLogger.js";
 import { AppDesign, getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
+import { TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
 
-const logStore = useLogStore();
+const logStore = useMessageLogStore();
+const takeOverStore = useTakeOverStore();
 
-function handleClick() {
-    logStore.toggleDrawer();
+const isOpen = computed(() => takeOverStore.isOpen(TakeOverId.MessageLog));
+
+function handleClick(): void {
+    if (takeOverStore.isOpen(TakeOverId.MessageLog)) {
+        takeOverStore.close();
+    } else {
+        takeOverStore.open(TakeOverId.MessageLog);
+    }
 }
 </script>
 

@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import { SharedLogEvent } from "Shared/SharedLogger.js";
 
-export const useLogStore = defineStore("logs", () => {
+export const useMessageLogStore = defineStore("logs", () => {
     const logEvents = reactive<SharedLogEvent[]>([]);
-    const drawerOpen = ref(false);
 
     const latestEvent = computed(() => (logEvents.length > 0 ? logEvents[logEvents.length - 1] : undefined));
 
@@ -11,9 +10,5 @@ export const useLogStore = defineStore("logs", () => {
         logEvents.push(logEvent);
     }
 
-    function toggleDrawer(): void {
-        drawerOpen.value = !drawerOpen.value;
-    }
-
-    return { logEvents, latestEvent, drawerOpen, add, toggleDrawer };
+    return { logEvents, latestEvent, add };
 });

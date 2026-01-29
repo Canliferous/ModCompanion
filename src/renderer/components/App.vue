@@ -13,7 +13,7 @@
                     default-renderer="onlyWhenVisible"
                     @ready="panelsStore.handleReady"
                 />
-                <LogDrawer />
+                <MessageLogTakeOver />
             </div>
             <TheFooter />
         </div>

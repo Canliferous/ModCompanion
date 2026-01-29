@@ -9,7 +9,7 @@ import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { createMemoryHistory, createRouter } from "vue-router";
 import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
-import { useLogStore } from "~/store/LogStore.js";
+import { useMessageLogStore } from "~/store/MessageLogStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -29,7 +29,7 @@ export function initVue() {
 
 // These stores need to be initialized on app startup
 function _initSystemStores() {
-    useLogStore();
+    useMessageLogStore();
     usePanelsManagerStore();
     useMapConsoleStore();
     useAssetConversionStore();

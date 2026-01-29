@@ -1,11 +1,11 @@
 import { printLogEvent, SharedLogChannel, SharedLogEvent, SharedLogType } from "Shared/SharedLogger.js";
-import { useLogStore } from "~/store/LogStore.js";
+import { useMessageLogStore } from "~/store/MessageLogStore.js";
 
 export const Logger = {
     processLog(logEvent: SharedLogEvent, replicateToMain: boolean = false): void {
         printLogEvent(logEvent);
 
-        useLogStore().add(logEvent);
+        useMessageLogStore().add(logEvent);
 
         if (replicateToMain) {
             window.electronAPI.log.sendFromRenderer(logEvent);
