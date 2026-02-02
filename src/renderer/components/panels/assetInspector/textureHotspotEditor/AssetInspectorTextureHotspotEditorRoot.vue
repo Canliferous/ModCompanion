@@ -35,8 +35,45 @@
                     >
                         <AssetInspectorTextureHotspotEditorFlags :flags="selectedRectFlags" @changed="handleChanged" />
                     </UFormField>
-                    <UFormField label="View">
-                        <UCheckbox v-model="showIds" label="Show IDs" />
+                    <UFormField label="Grid">
+                        <div class="flex gap-4 items-start">
+                            <UButtonGroup>
+                                <UButton
+                                    label="8"
+                                    :color="gridSnapSize === 8 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 8"
+                                />
+                                <UButton
+                                    label="16"
+                                    :color="gridSnapSize === 16 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 16"
+                                />
+                                <UButton
+                                    label="32"
+                                    :color="gridSnapSize === 32 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 32"
+                                />
+                                <UButton
+                                    label="64"
+                                    :color="gridSnapSize === 64 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 64"
+                                />
+                                <UButton
+                                    label="128"
+                                    :color="gridSnapSize === 128 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 128"
+                                />
+                                <UButton
+                                    label="256"
+                                    :color="gridSnapSize === 256 ? 'info' : 'neutral'"
+                                    @click="gridSnapSize = 256"
+                                />
+                            </UButtonGroup>
+
+                            <UCheckbox :id="useId()" v-model="gridShow" label="Show Snap Grid" />
+                            <UCheckbox :id="useId()" v-model="showRectTiles" label="Show Rect Tiles" />
+                            <UCheckbox :id="useId()" v-model="showIds" label="Show IDs" />
+                        </div>
                     </UFormField>
                 </div>
             </div>
@@ -65,6 +102,9 @@ const props = defineProps<{ meta: SharedImageMetaReport; asset: SharedTextureAss
 const { width, height } = useElementSize(canvasRef);
 const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
 const showIds = useRememberRef(ref(false), "hotspot-editor-show-ids");
+const showRectTiles = useRememberRef(ref(false), "hotspot-editor-show-rect-tiles");
+const gridSnapSize = useRememberRef(ref(16), "hotspot-editor-snap-size");
+const gridShow = useRememberRef(ref(false), "hotspot-editor-snap-show");
 
 const selectedRectIdx = ref<number | undefined>(undefined);
 const selectedRectFlags = ref<SharedVtfHotspotRectFlags | undefined>(undefined);
@@ -90,6 +130,9 @@ onMounted(() => {
     editor.value = createHotspotEditor(ctx, 1000, 1000);
     editor.value.updateEditMode(editMode.value);
     editor.value.updateShowIds(showIds.value);
+    editor.value.updateGridShow(gridShow.value);
+    editor.value.updateGridSnap(gridSnapSize.value);
+    editor.value.updateRectTiles(showRectTiles.value);
 
     updateEditorTexture(props.meta, editor.value);
 
@@ -147,8 +190,11 @@ onMounted(() => {
         editor.value.updateRects(toRaw(props.asset.def.vtfOptions.hotspot));
     }
 
+    watch(gridSnapSize, editor.value.updateGridSnap);
+    watch(gridShow, editor.value.updateGridShow);
     watch(editMode, editor.value.updateEditMode);
     watch(showIds, editor.value.updateShowIds);
+    watch(showRectTiles, editor.value.updateRectTiles);
 
     editor.value.changedEvent.on((r) => {
         const options: SharedVtfCreateOptions = { ...toRaw(props.asset.def.vtfOptions), hotspot: r };

@@ -1,5 +1,7 @@
 import { useEvent } from "~/composables/useEvent.js";
 import { SharedVtfHotspotRect, SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
+import { Logger } from "~/logger.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export interface RectAndIdx {
     idx: number;
@@ -26,16 +28,18 @@ export enum HotspotEditMode {
 
 const EDGE_WEIGHT = 4;
 const EDGE_SELECT_WEIGHT = 20;
-const HALF_EDGE_WIDTH = EDGE_WEIGHT / 2;
 const EDGE_COUNT = 4;
-
-const SNAP_SIZE = 16;
 
 const ZOOM = 0.98;
 
-function snapNumber(n: number): number {
-    return Math.round(n / SNAP_SIZE) * SNAP_SIZE;
-}
+const tileColors = Array.from({ length: 128 }, (_, i) => {
+    const hue = Math.round((i * 360) / 32 + Math.random() * 6 - 3);
+
+    const saturation = Math.round(55 + Math.random() * 15);
+    const lightness = Math.round(45 + Math.random() * 12);
+
+    return `hsl(${hue} ${saturation}% ${lightness}% / 0.5)`;
+});
 
 class Vector2 {
     x: number;
@@ -44,12 +48,6 @@ class Vector2 {
     constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-    }
-
-    snapToGrid(): Vector2 {
-        this.x = snapNumber(this.x);
-        this.y = snapNumber(this.y);
-        return this;
     }
 }
 
@@ -65,6 +63,9 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     let mouseXTexture = 0;
     let mouseYTexture = 0;
     let pendingSave = false;
+    let gridSnap = 16;
+    let gridShow = false;
+    let rectTiles = false;
 
     let drawStartPos: Vector2 | undefined = undefined;
     let drawEndPos: Vector2 | undefined = undefined;
@@ -83,6 +84,10 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
 
     const changedEvent = useEvent<SharedVtfHotspotRect[]>();
     const selectedEvent = useEvent<RectAndIdx | undefined>();
+
+    function _snapToGrid(n: number): number {
+        return Math.round(Math.round(n) / gridSnap) * gridSnap;
+    }
 
     function _drawLoop(): void {
         if (pendingSave) {
@@ -153,9 +158,13 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     function _updateDraw(): void {
         if (mouse1Pressed) {
             if (!drawStartPos) {
-                drawStartPos = new Vector2(mouseXTexture, mouseYTexture).snapToGrid();
+                drawStartPos = new Vector2(mouseXTexture, mouseYTexture);
+                drawStartPos.x = _snapToGrid(drawStartPos.x);
+                drawStartPos.y = _snapToGrid(drawStartPos.y);
             } else {
-                drawEndPos = new Vector2(mouseXTexture, mouseYTexture).snapToGrid();
+                drawEndPos = new Vector2(mouseXTexture, mouseYTexture);
+                drawEndPos.x = _snapToGrid(drawEndPos.x);
+                drawEndPos.y = _snapToGrid(drawEndPos.y);
             }
         } else if (drawStartPos && drawEndPos) {
             const newRect = createRect(drawStartPos, drawEndPos);
@@ -183,8 +192,8 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         const edgeIdx = edge % EDGE_COUNT;
 
         const rectIdx = Math.floor(edge / EDGE_COUNT);
-        const mx = snapNumber(Math.max(0, Math.min(mouseXTexture, texture?.width ?? canvasWidth)));
-        const my = snapNumber(Math.max(0, Math.min(mouseYTexture, texture?.height ?? canvasHeight)));
+        const mx = _snapToGrid(Math.max(0, Math.min(mouseXTexture, texture?.width ?? canvasWidth)));
+        const my = _snapToGrid(Math.max(0, Math.min(mouseYTexture, texture?.height ?? canvasHeight)));
 
         if (edgeIdx === 0) {
             rects[rectIdx].y0 = my;
@@ -211,7 +220,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
             mouseXTexture,
             mouseYTexture,
             rect.x0,
-            rect.y0 - EDGE_SELECT_WEIGHT,
+            rect.y0 - _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
             rect.x1,
             rect.y0,
         );
@@ -227,7 +236,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
             rect.x0,
             rect.y1,
             rect.x1,
-            rect.y1 + EDGE_SELECT_WEIGHT,
+            rect.y1 + _canvasToTextureSpaceY(EDGE_SELECT_WEIGHT),
         );
         if (hoveredBottom) {
             hoveredEdge = edgeBase + 1;
@@ -238,7 +247,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         const hoveredLeft = _isPointInAabb(
             mouseXTexture,
             mouseYTexture,
-            rect.x0 - EDGE_SELECT_WEIGHT,
+            rect.x0 - _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT),
             rect.y0,
             rect.x0,
             rect.y1,
@@ -254,7 +263,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
             mouseYTexture,
             rect.x1,
             rect.y0,
-            rect.x1 + EDGE_SELECT_WEIGHT,
+            rect.x1 + _canvasToTextureSpaceX(EDGE_SELECT_WEIGHT),
             rect.y1,
         );
         if (hoveredRight) {
@@ -279,6 +288,8 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
             return;
         }
 
+        _drawGrid();
+
         // ctx.fillStyle = "black";
         // ctx.fillRect(mouseX - 4, mouseY - 4, 4, 4);
 
@@ -300,11 +311,33 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         }
     }
 
+    function _drawGrid(): void {
+        if (!gridShow) return;
+
+        const texWidth = texture?.width;
+        const texHeight = texture?.height;
+        if (texWidth === undefined || texHeight === undefined) return;
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgb(255 255 255 / 0.5)";
+        for (let x = 0; x <= texWidth; x += gridSnap) {
+            ctx.moveTo(_textureToCanvasSpaceX(x), 0);
+            ctx.lineTo(_textureToCanvasSpaceX(x), _textureToCanvasSpaceY(texHeight));
+            // Logger.debug(SharedLogChannel.Hotspot, "x: ", x);
+        }
+        for (let y = 0; y <= texHeight; y += gridSnap) {
+            ctx.moveTo(0, _textureToCanvasSpaceY(y));
+            ctx.lineTo(_textureToCanvasSpaceX(texWidth), _textureToCanvasSpaceY(y));
+        }
+
+        ctx.stroke();
+    }
+
     function _drawRect(rect: SharedVtfHotspotRect, rectIdx: number): void {
         const hoveredMiddle = _isPointInRect(mouseXTexture, mouseYTexture, rect);
 
         // ctx.strokeStyle = "rgb(255 255 255 / 0.2)";
-        ctx.fillStyle = "transparent";
+        ctx.fillStyle = rectTiles ? tileColors[rectIdx] : "transparent";
         if (editMode === HotspotEditMode.Delete && hoveredMiddle) {
             ctx.fillStyle = "rgb(255 100 100 / 0.5)";
         } else if (editMode === HotspotEditMode.Select) {
@@ -508,6 +541,15 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         rects[rectIdx].flags = flags;
         pendingSave = true;
     }
+    function updateGridSnap(gridSnapSize: number): void {
+        gridSnap = gridSnapSize;
+    }
+    function updateGridShow(show: boolean): void {
+        gridShow = show;
+    }
+    function updateRectTiles(tiles: boolean): void {
+        rectTiles = tiles;
+    }
     function shutdown(): void {
         requestShutdown = true;
     }
@@ -529,6 +571,9 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         updateShowIds,
         updateRects,
         updateRectFlags,
+        updateGridSnap,
+        updateGridShow,
+        updateRectTiles,
         shutdown,
         changedEvent,
         selectedEvent,
