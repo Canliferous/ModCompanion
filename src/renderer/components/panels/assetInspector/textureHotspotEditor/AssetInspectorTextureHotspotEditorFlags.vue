@@ -1,6 +1,11 @@
 <template>
     <UCheckbox :id="useId()" v-model="randomRotation" label="Random Rotation" @change="handleChanged" />
-    <UCheckbox :id="useId()" v-model="randomReflection" label="Random Reflection" @change="handleChanged" />
+    <UCheckbox
+        :id="useId()"
+        v-model="randomReflection"
+        label="Random Reflection (Not implemented in the engine)"
+        @change="handleChanged"
+    />
     <UCheckbox :id="useId()" v-model="isAlternative" label="Is Alternate" @change="handleChanged" />
 </template>
 
