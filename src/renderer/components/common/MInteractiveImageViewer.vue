@@ -73,11 +73,7 @@ function handleWheel(event: WheelEvent) {
 
 <style scoped>
 .checkerboard {
-    background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'>\
-  <rect width='32' height='32' fill='white'/>\
-  <rect x='32' y='32' width='32' height='32' fill='white'/>\
-</svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><rect width='32' height='32' fill='white'/><rect x='32' y='32' width='32' height='32' fill='white'/></svg>");
     opacity: 0.02;
 }
 </style>
