@@ -32,6 +32,8 @@ import pathe from "pathe";
 import { SharedAssetDefinitionFileExtension } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
+import { getAppConfig } from "~/renderer-config.js";
+import clipboardHelper from "~/helper/ClipboardHelper.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -97,11 +99,12 @@ const items = computed<ContextMenuItem[][]>(() => {
     return [
         [
             {
-                label: "Open / Run",
-                icon: allFiles ? AppDesign.Icons.ActionLaunchFile : "nothing",
+                label: "Open",
+                icon: AppDesign.Icons.ActionLaunchFile,
                 disabled: !allFiles,
                 onSelect() {
-                    window.electronAPI.fileBrowser.launchFile(pathsArray);
+                    const fullPaths = pathsArray.map((p) => pathe.join(getAppConfig().rootPath, p));
+                    window.electronAPI.fileBrowser.openFile(fullPaths);
                 },
             },
             {
@@ -142,6 +145,25 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: mcaFiles.length === 0,
                 onSelect() {
                     assetListStore.selectByMca(mcaFiles.map((m) => m.path));
+                },
+            },
+        ],
+        [
+            {
+                label: "Copy relative path",
+                icon: AppDesign.Icons.Copy,
+                disabled: entries.length !== 1,
+                onSelect(e: Event) {
+                    clipboardHelper.writeTextAndToast(entries[0].path);
+                },
+            },
+            {
+                label: "Copy full path",
+                icon: AppDesign.Icons.Copy,
+                disabled: entries.length !== 1,
+                onSelect(e: Event) {
+                    const fullPath = pathe.join(getAppConfig().rootPath, entries[0].path);
+                    clipboardHelper.writeTextAndToast(fullPath);
                 },
             },
         ],

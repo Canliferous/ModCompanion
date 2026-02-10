@@ -43,7 +43,7 @@ declare global {
                 launchFile: (filePath: string | string[]) => void;
                 setCurrentPath: (dirPath: string) => void;
                 browseToFile: (filePath: string) => void;
-                openFile: (filePath: string) => void;
+                openFile: (filePath: string | string[]) => void;
                 subscribeDirectoryChanged: (
                     callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void,
                 ) => IpcRenderer;

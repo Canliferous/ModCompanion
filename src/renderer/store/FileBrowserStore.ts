@@ -5,6 +5,7 @@ import pathe from "pathe";
 import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { Logger } from "~/logger.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { getAppConfig } from "~/renderer-config.js";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
@@ -46,7 +47,8 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
 
     function onEntryActivated(entry: SharedProjectFileEntry): void {
         if (entry.isFile) {
-            window.electronAPI.fileBrowser.launchFile(entry.path);
+            const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
+            window.electronAPI.fileBrowser.openFile(fullPath);
         } else {
             updateCurrentDir(entry.path);
         }

@@ -15,9 +15,18 @@ export function registerFileBrowserApi(): boolean {
         browseToFile(filePath);
     });
 
-    ipcMain.on(SharedIpcChannels.FileBrowserOpenFile, (event: Electron.IpcMainEvent, filePath: string): void => {
-        openFile(filePath);
-    });
+    ipcMain.on(
+        SharedIpcChannels.FileBrowserOpenFile,
+        (event: Electron.IpcMainEvent, filePath: string | string[]): void => {
+            if (Array.isArray(filePath)) {
+                for (const p of filePath) {
+                    openFile(p);
+                }
+            } else {
+                openFile(filePath);
+            }
+        },
+    );
 
     ipcMain.handle(
         SharedIpcChannels.FileBrowserListFiles,
