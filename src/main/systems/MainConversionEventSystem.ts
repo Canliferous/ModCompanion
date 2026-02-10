@@ -3,6 +3,7 @@ import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const ConversionEventSystem = {
     conversionEvents: [] as SharedConversionEvent[],
+    lastChangeTime: undefined as Date | undefined,
 
     pushNewEvent(assetId: SharedAssetId, startTime: Date, initialState: SharedConversionState) {
         this.conversionEvents.push({
@@ -11,6 +12,8 @@ export const ConversionEventSystem = {
             startTime,
             log: "",
         });
+
+        this.lastChangeTime = new Date();
     },
     getLatestEvent(assetId: SharedAssetId): SharedConversionEvent | undefined {
         return this.conversionEvents.findLast((a) => a.assetId === assetId);
@@ -20,8 +23,10 @@ export const ConversionEventSystem = {
         if (event) {
             updatePredicate(event);
         }
+        this.lastChangeTime = new Date();
     },
     clearEvents(): void {
         ConversionEventSystem.conversionEvents = [];
+        this.lastChangeTime = new Date();
     },
 };

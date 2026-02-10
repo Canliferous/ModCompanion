@@ -9,16 +9,18 @@ import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());
-    const conversionEvents = ref<SharedConversionEvent[]>([]);
+    const conversionsLastChangeTime = ref<Date | undefined>(undefined);
+    const events = ref<SharedConversionEvent[]>([]);
+    const eventsLastChangeTime = ref<Date | undefined>(undefined);
     const activeEvent = ref<SharedConversionEvent | undefined>();
     const summary = ref<SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
-        if (event.conversions.size !== conversions.value.size) {
+        if (conversionsLastChangeTime.value !== event.conversionsLastChangeTime) {
             conversions.value = event.conversions;
         }
-        if (event.events.length !== conversionEvents.value.length) {
-            conversionEvents.value = event.events;
+        if (eventsLastChangeTime.value !== event.eventsLastChangeTime) {
+            events.value = event.events;
         }
         summary.value = event.summary;
     });
@@ -47,5 +49,5 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     _fetchState();
     window.electronAPI.conversion.startAgent();
 
-    return { conversions, conversionEvents, activeEvent, summary, getState, enqueue, enqueueAll, setActive };
+    return { conversions, conversionEvents: events, activeEvent, summary, getState, enqueue, enqueueAll, setActive };
 });

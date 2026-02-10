@@ -1,4 +1,4 @@
-import MainAssetRepository, { getAssetFromId, getAssetMap } from "./assets/MainAssetRepository.js";
+import { getAssetFromId, getAssetMap } from "./assets/MainAssetRepository.js";
 import {
     SharedAssetDefinition,
     SharedAssetId,
@@ -23,6 +23,8 @@ import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
+
+let lastChangeTime: Date | undefined = undefined;
 
 type JobResult = string | undefined;
 const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();
@@ -103,7 +105,9 @@ async function _runAgent(): Promise<void> {
 
     notifyConversionsUpdated({
         conversions: conversionsMap,
+        conversionsLastChangeTime: lastChangeTime,
         events: ConversionEventSystem.conversionEvents,
+        eventsLastChangeTime: ConversionEventSystem.lastChangeTime,
         summary: {
             currentStatus: conversionJobs.size === 0 ? "idle" : "working",
             totalSum: ConversionEventSystem.conversionEvents.length,
@@ -219,6 +223,7 @@ function _setState(id: SharedAssetId, state: SharedConversionState, noHistory = 
         conversionsMap.get(id)!.state = state;
     } else {
         conversionsMap.set(id, { assetId: id, state });
+        lastChangeTime = new Date();
     }
 
     if (!noHistory) {

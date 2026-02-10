@@ -34,8 +34,8 @@ export const MareTfSystem = {
             const dir = path.dirname(outputPath);
             fs.mkdirSync(dir, { recursive: true });
         } catch (e) {
-            Logger.warning(SharedLogChannel.MareTF, e);
-        } // Nobody cares if the dir already exists
+            // Nobody cares if the dir already exists
+        }
 
         return runConverter(cmd, getAppConfig().gamePath, "MareTF");
     },
@@ -43,6 +43,6 @@ export const MareTfSystem = {
 
 function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: SharedVtfCreateOptions): string {
     const args = buildMareTfCreateArgs(options);
-    const cmd = `${binary} create ${inputPath} -o ${outputPath} ${args}`;
+    const cmd = `${binary} -y create ${inputPath} -o ${outputPath} ${args}`;
     return cmd;
 }

@@ -71,7 +71,9 @@ export interface SharedConversionEvent {
 
 export interface SharedConversionUpdateIpcEvent {
     conversions: Map<SharedAssetId, SharedConversion>;
+    conversionsLastChangeTime: Date | undefined;
     events: SharedConversionEvent[];
+    eventsLastChangeTime: Date | undefined;
     summary: SharedConversionSummary;
 }
 
