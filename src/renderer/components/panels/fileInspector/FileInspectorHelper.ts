@@ -38,6 +38,9 @@ export function getFileType(fileName: string): FileType {
     const ext = pathe.extname(fileName);
     if (ext === ".mca") return FileType.TextMca;
     if (ext === ".txt") return FileType.TextGeneric;
+    if (ext === ".json") return FileType.TextGeneric;
+    if (ext === ".yml") return FileType.TextGeneric;
+    if (ext === ".log") return FileType.TextGeneric;
     if (ext === ".vmt") return FileType.TextVmt;
     if (ext === ".png") return FileType.ImagePng;
     if (ext === ".jpg") return FileType.ImageJpg;
