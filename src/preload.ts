@@ -169,4 +169,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 callback(logEvent),
             ),
     },
+
+    mdl: {
+        info: (filePath: string) => ipcRenderer.invoke(SharedIpcChannels.MdlInfoGet, filePath),
+    },
 });

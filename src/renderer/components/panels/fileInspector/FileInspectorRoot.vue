@@ -45,6 +45,10 @@
             <template v-if="fileInspector === FileInspectors.Text">
                 <FileInspectorTextPreview :path="fullPath" />
             </template>
+
+            <template v-if="fileInspector === FileInspectors.Model">
+                <FileInspectorModelPreview :path="fullPath" />
+            </template>
         </div>
         <div v-else class="grid h-full place-items-center text-muted">No file selected</div>
     </MPanelRoot>
@@ -63,6 +67,7 @@ import {
 } from "~/components/panels/fileInspector/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";
 
 const fileBrowserStore = useFileBrowserStore();
 const entry = computed(() => (fileBrowserStore.activeEntry?.isFile ? fileBrowserStore.activeEntry : undefined));

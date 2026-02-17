@@ -27,6 +27,7 @@ import {
 import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js";
 import { SharedLogEvent } from "Shared/SharedLogger.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import { SharedMdlInfoReport } from "Shared/SharedMdlInfoReport.js";
 
 export {};
 
@@ -122,6 +123,10 @@ declare global {
             log: {
                 sendFromRenderer: (event: SharedLogEvent) => void;
                 subscribeSendFromMain: (callback: (event: SharedLogEvent) => void) => IpcRenderer;
+            };
+
+            mdl: {
+                info: (filePath: string) => Promise<SharedMdlInfoReport>;
             };
         };
     }

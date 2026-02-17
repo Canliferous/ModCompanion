@@ -16,6 +16,7 @@ import { registerFgdApi } from "../api/MainFgdApi.js";
 import { registerTcArtifactsApi } from "../api/MainTcArtifactsApi.js";
 import { registerFileApi } from "../api/MainFileApi.js";
 import { registerLoggerApi } from "../api/MainLoggerApi.js";
+import { registerMdlInfoApi } from "../api/MainMdlInfoApi.js";
 
 const apis: (() => boolean)[] = [
     registerLoggerApi,
@@ -36,6 +37,7 @@ const apis: (() => boolean)[] = [
     registerFgdApi,
     registerTcArtifactsApi,
     registerFileApi,
+    registerMdlInfoApi,
 ];
 
 export function initApiSystem(): boolean {
