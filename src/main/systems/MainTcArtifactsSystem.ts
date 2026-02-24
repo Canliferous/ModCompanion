@@ -1,5 +1,8 @@
 import { ListBucketsCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { getAppConfig } from "./MainConfigSystem.js";
+import { SharedTcArtifactsListAllMapsReport, SharedTcArtifactsListAllMapsReportMap } from "Shared/SharedTcArtifacts.js";
+import { filename } from "pathe/utils";
+import { forEach } from "lodash";
 
 let s3Client: S3Client | undefined = undefined;
 let s3Bucket: string | undefined = undefined;
@@ -42,6 +45,44 @@ export const TcArtifactsSystem = {
         return _useS3(async (client, bucket) => {
             const response = await client.send(new ListObjectsV2Command({ Bucket: bucket }));
             return response?.Contents;
+        });
+    },
+    async listMaps(): Promise<SharedTcArtifactsListAllMapsReport | undefined> {
+        return _useS3(async (client, bucket): Promise<SharedTcArtifactsListAllMapsReport | undefined> => {
+            const response = await client.send(
+                new ListObjectsV2Command({ Bucket: bucket, Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/" }),
+            );
+            const contents = response?.Contents;
+            if (contents === undefined || contents.length === 0) {
+                return undefined;
+            }
+
+            const mapsMap = new Map<string, SharedTcArtifactsListAllMapsReportMap[]>();
+            for (const content of contents) {
+                if (content.Size === undefined || content.LastModified === undefined || content.Key === undefined)
+                    continue;
+
+                const mapName = filename(content.Key);
+                if (mapName === undefined) continue;
+
+                const entry: SharedTcArtifactsListAllMapsReportMap = {
+                    size: content.Size,
+                    dateModified: content.LastModified,
+                    objectKey: content.Key,
+                };
+
+                if (!mapsMap.has(mapName)) {
+                    mapsMap.set(mapName, [entry]);
+                } else {
+                    mapsMap.get(mapName)?.push(entry);
+                }
+            }
+
+            for (const arr of mapsMap.values()) {
+                arr.sort((a, b) => b.dateModified.getTime() - a.dateModified.getTime());
+            }
+
+            return { maps: mapsMap };
         });
     },
 };

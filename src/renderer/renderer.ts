@@ -7,6 +7,7 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { initIcons } from "~/renderer-icons.js";
 import { Logger } from "~/logger.js";
+import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 
 Logger.init();
 initConfig();
@@ -16,6 +17,7 @@ initIcons();
 function postInit() {
     useAssetListStore().refresh();
     useAssetGroupsStore().refresh();
+    useTcArtifactsStore().refresh();
 }
 
 postInit();

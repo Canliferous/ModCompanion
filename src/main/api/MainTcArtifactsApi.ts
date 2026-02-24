@@ -7,11 +7,12 @@ export function registerTcArtifactsApi(): boolean {
     ipcMain.handle(SharedIpcChannels.TcArtifacts_IsConnected, (): Promise<boolean> => {
         return TcArtifactsSystem.isCloudConnected();
     });
-    ipcMain.handle(SharedIpcChannels.TcArtifacts_ListAllMaps, (): SharedTcArtifactsListAllMapsReport => {
-        return {
-            maps: {},
-        };
-    });
+    ipcMain.handle(
+        SharedIpcChannels.TcArtifacts_ListAllMaps,
+        (): Promise<SharedTcArtifactsListAllMapsReport | undefined> => {
+            return TcArtifactsSystem.listMaps();
+        },
+    );
 
     return true;
 }

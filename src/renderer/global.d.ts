@@ -118,7 +118,7 @@ declare global {
             };
             tcArtifacts: {
                 isConnected: () => Promise<boolean>;
-                listAllMaps: () => Promise<SharedTcArtifactsListAllMapsReport>;
+                listAllMaps: () => Promise<SharedTcArtifactsListAllMapsReport | undefined>;
             };
             log: {
                 sendFromRenderer: (event: SharedLogEvent) => void;

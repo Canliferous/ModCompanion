@@ -32,6 +32,7 @@ export const Icons = {
     Question: "mingcute:question-fill",
     NetworkConnected: "mingcute:wifi-line",
     NetworkDisconnected: "mingcute:wifi-off-line",
+    Cloud: "mingcute:cloud-fill",
 
     Conversion: "mingcute:lightning-fill",
 
@@ -68,6 +69,7 @@ export const Icons = {
 
     ActionRefresh: "mingcute:refresh-3-line",
     ActionMinimize: "mingcute:minimize-fill",
+    ActionDownload: "mingcute:download-2-line",
 
     MapCompileIdle: "lucide:dot",
     MapCompileInProgress: "mingcute:loading-line",
