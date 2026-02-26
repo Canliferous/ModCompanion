@@ -1,9 +1,9 @@
 <template>
-    <UTooltip :text="maps ? 'Download latest from Cloud' : 'No artifacts available'">
+    <UTooltip :text="tooltip">
         <!--        <UPopover>-->
-        <UButton :disabled="downloadPromise || !maps" @click="handleDownload">
+        <UButton :disabled="downloadPromise !== undefined || maps.length === 0" @click="handleDownloadLatest">
             <template #leading>
-                <template v-if="downloadPromise">
+                <template v-if="downloadPromise !== undefined">
                     <UIcon :name="AppDesign.Icons.Loading" class="size-5 animate-spin" />
                 </template>
                 <template v-else>
@@ -41,12 +41,13 @@
 import { AppDesign } from "~/design/AppDesign.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import { filename } from "pathe/utils";
+import { fileSize } from "humanize-plus";
 
 const props = defineProps<{ mapPath: string }>();
 
 const tcArtifactsStore = useTcArtifactsStore();
 
-const downloadPromise = ref<Promise<boolean> | undefined>(undefined);
+const downloadPromise = computed(() => tcArtifactsStore.activeDownloads.get(props.mapPath));
 
 const maps = computed(() => {
     const n = filename(props.mapPath);
@@ -56,11 +57,12 @@ const maps = computed(() => {
         return [];
     }
 });
+const tooltip = computed(() =>
+    maps.value.length > 0 ? `Download latest (${fileSize(maps.value[0].size)})` : "No artifacts available",
+);
 
-function handleDownload() {
-    downloadPromise.value = tcArtifactsStore
-        .downloadMap(props.mapPath, maps.value[0].objectKey)
-        .finally(() => (downloadPromise.value = undefined));
+function handleDownloadLatest() {
+    tcArtifactsStore.downloadMap(props.mapPath, maps.value[0].objectKey);
 }
 </script>
 

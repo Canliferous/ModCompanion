@@ -14,6 +14,7 @@
                 <div class="mx-auto">
                     <MPlayPauseStopControls />
                 </div>
+                <MapsDownloadAllButton />
                 <MapsTimeReportToggle />
             </div>
         </template>
@@ -30,6 +31,7 @@ import MapsTimeReportToggle from "./MapsTimeReportToggle.vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import MapPresetButton from "~/components/panels/maps/MapPresetButton.vue";
 import MapAddButton from "~/components/panels/maps/MapAddButton.vue";
+import MapsDownloadAllButton from "~/components/panels/maps/MapsDownloadAllButton.vue";
 
 const listStore = useMapListStore();
 </script>

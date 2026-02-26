@@ -13,7 +13,7 @@ export function registerTcArtifactsApi(): boolean {
             return TcArtifactsSystem.listMaps();
         },
     );
-    ipcMain.on(
+    ipcMain.handle(
         SharedIpcChannels.TcArtifacts_DownloadMap,
         async (e, artifactKey: string, mapPath: string): Promise<boolean> => {
             return await TcArtifactsSystem.downloadMap(artifactKey, mapPath);

@@ -6,6 +6,9 @@ import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "path";
 import { pipeline } from "node:stream/promises";
+import { Logger } from "./MainLogSystem.js";
+import { SharedLogChannel } from "Shared/SharedLogger.js";
+import humanizePlus from "humanize-plus";
 
 let s3Client: AWS.S3 | undefined = undefined;
 let s3Bucket: string | undefined = undefined;
@@ -91,16 +94,29 @@ export const TcArtifactsSystem = {
     },
     async downloadMap(objectKey: string, mapName: string): Promise<boolean> {
         const result = await _useS3(async (client, bucket): Promise<boolean> => {
+            Logger.info(SharedLogChannel.TcArtifacts, `Downloading map object ${objectKey} to ${mapName}`);
             const a = await client.getObject({ Bucket: bucket, Key: objectKey });
             const s3Stream = a.Body as NodeJS.ReadableStream;
             if (!s3Stream) {
+                Logger.warning(SharedLogChannel.TcArtifacts, "Failed to establish S3 stream");
                 return false;
             }
 
-            const p = path.join(getAppConfig().mapOutputPath, mapName + ".bsp");
-            await fs.rm(p);
-            const writeStream = createWriteStream(p);
+            if (a.ContentLength) {
+                Logger.info(SharedLogChannel.TcArtifacts, `Map file is ${humanizePlus.fileSize(a.ContentLength)}`);
+            }
+
+            const fullPath = path.join(getAppConfig().mapOutputPath, path.basename(mapName).replace(".vmf", ".bsp"));
+            try {
+                await fs.rm(fullPath);
+            } catch (e) {
+                Logger.warning(SharedLogChannel.TcArtifacts, `Failed to delete`, fullPath, e);
+                return false;
+            }
+
+            const writeStream = createWriteStream(fullPath);
             await pipeline(s3Stream, writeStream);
+            Logger.info(SharedLogChannel.TcArtifacts, `Download complete`);
             return true;
         });
         return result ?? false;

@@ -10,6 +10,7 @@ export enum SharedLogChannel {
     HotReload = "Hot Reload",
     MainSystems = "Main Systems",
     Hotspot = "Hotspot",
+    TcArtifacts = "TcArtifacts",
 }
 
 export enum SharedLogType {

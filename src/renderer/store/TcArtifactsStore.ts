@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { SharedTcArtifactsListAllMapsReportMap } from "Shared/SharedTcArtifacts.js";
+import { useMapListStore } from "~/store/MapListStore.js";
+import { filename } from "pathe/utils";
 
 export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
     const connected = ref(false);
     const mapsList = ref<Map<string, SharedTcArtifactsListAllMapsReportMap[]>>(new Map());
+    const activeDownloads = reactive<Map<string, Promise<boolean>>>(new Map());
 
     async function checkAlive() {
         connected.value = await window.electronAPI.tcArtifacts.isConnected();
@@ -24,8 +27,23 @@ export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
     }
 
     async function downloadMap(mapPath: string, objectKey: string): Promise<boolean> {
-        return window.electronAPI.tcArtifacts.downloadMap(objectKey, mapPath);
+        const promise = window.electronAPI.tcArtifacts
+            .downloadMap(objectKey, mapPath)
+            .finally(() => activeDownloads.delete(mapPath));
+        activeDownloads.set(mapPath, promise);
+        return promise;
     }
 
-    return { connected, downloadMap, refresh, mapsList };
+    function downloadAll(): void {
+        for (const map of useMapListStore().mapList) {
+            const m = filename(map);
+            if (!m) continue;
+            const meta = mapsList.value.get(m);
+            if (!meta || meta.length === 0) continue;
+
+            downloadMap(map, meta[0].objectKey);
+        }
+    }
+
+    return { connected, downloadMap, downloadAll, refresh, mapsList, activeDownloads };
 });
