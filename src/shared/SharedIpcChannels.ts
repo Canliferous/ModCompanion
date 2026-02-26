@@ -63,6 +63,7 @@ export const SharedIpcChannels = {
 
     TcArtifacts_IsConnected: "tc_artifacts_is_connected",
     TcArtifacts_ListAllMaps: "tc_artifacts_list_all_maps",
+    TcArtifacts_DownloadMap: "tc_artifacts_download_map",
 
     MdlInfoGet: "mdlinfo_get",
 

@@ -1,10 +1,13 @@
-import { ListBucketsCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import * as AWS from "@aws-sdk/client-s3";
 import { getAppConfig } from "./MainConfigSystem.js";
 import { SharedTcArtifactsListAllMapsReport, SharedTcArtifactsListAllMapsReportMap } from "Shared/SharedTcArtifacts.js";
 import { filename } from "pathe/utils";
-import { forEach } from "lodash";
+import { createWriteStream } from "node:fs";
+import fs from "node:fs/promises";
+import path from "path";
+import { pipeline } from "node:stream/promises";
 
-let s3Client: S3Client | undefined = undefined;
+let s3Client: AWS.S3 | undefined = undefined;
 let s3Bucket: string | undefined = undefined;
 let unconfigured = false;
 
@@ -18,10 +21,10 @@ export const TcArtifactsSystem = {
             unconfigured = true;
             return true;
         }
-        const client = new S3Client(config.teamCityArtifactCloud);
+        const client = new AWS.S3(config.teamCityArtifactCloud);
 
         try {
-            const response = await client.send(new ListBucketsCommand());
+            const response = await client.listBuckets();
             const bucketFound = response.Buckets?.some((b) => b.Name === config.teamCityArtifactCloudBucket);
             if (!bucketFound) {
                 console.warn(
@@ -43,15 +46,16 @@ export const TcArtifactsSystem = {
     },
     async listAllObjects() {
         return _useS3(async (client, bucket) => {
-            const response = await client.send(new ListObjectsV2Command({ Bucket: bucket }));
+            const response = await client.listObjectsV2({ Bucket: bucket });
             return response?.Contents;
         });
     },
     async listMaps(): Promise<SharedTcArtifactsListAllMapsReport | undefined> {
         return _useS3(async (client, bucket): Promise<SharedTcArtifactsListAllMapsReport | undefined> => {
-            const response = await client.send(
-                new ListObjectsV2Command({ Bucket: bucket, Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/" }),
-            );
+            const response = await client.listObjectsV2({
+                Bucket: bucket,
+                Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/",
+            });
             const contents = response?.Contents;
             if (contents === undefined || contents.length === 0) {
                 return undefined;
@@ -85,6 +89,22 @@ export const TcArtifactsSystem = {
             return { maps: mapsMap };
         });
     },
+    async downloadMap(objectKey: string, mapName: string): Promise<boolean> {
+        const result = await _useS3(async (client, bucket): Promise<boolean> => {
+            const a = await client.getObject({ Bucket: bucket, Key: objectKey });
+            const s3Stream = a.Body as NodeJS.ReadableStream;
+            if (!s3Stream) {
+                return false;
+            }
+
+            const p = path.join(getAppConfig().mapOutputPath, mapName + ".bsp");
+            await fs.rm(p);
+            const writeStream = createWriteStream(p);
+            await pipeline(s3Stream, writeStream);
+            return true;
+        });
+        return result ?? false;
+    },
 };
 
 function _sleep(timeMs: number): Promise<void> {
@@ -93,7 +113,7 @@ function _sleep(timeMs: number): Promise<void> {
     });
 }
 
-async function _useS3<T>(callback: (client: S3Client, bucket: string) => Promise<T>): Promise<T | undefined> {
+async function _useS3<T>(callback: (client: AWS.S3, bucket: string) => Promise<T>): Promise<T | undefined> {
     if (unconfigured) return undefined;
 
     for (let i = 0; i < RETRIES; i++) {

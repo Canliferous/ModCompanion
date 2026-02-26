@@ -160,6 +160,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     tcArtifacts: {
         isConnected: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_IsConnected),
         listAllMaps: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_ListAllMaps),
+        downloadMap: (artifactKey: string, mapPath: string) =>
+            ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_DownloadMap, artifactKey, mapPath),
     },
 
     log: {

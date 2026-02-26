@@ -18,18 +18,13 @@ export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
 
     async function refresh(): Promise<void> {
         const result = await window.electronAPI.tcArtifacts.listAllMaps();
-        console.log(result);
         if (result?.maps) {
             mapsList.value = result?.maps;
         }
     }
-    //
-    // function getArtifacts(): Promise<> {}
 
-    async function downloadMap(mapPath: string): Promise<void> {
-        return new Promise((resolve) => {
-            setTimeout(resolve, 2000);
-        });
+    async function downloadMap(mapPath: string, objectKey: string): Promise<boolean> {
+        return window.electronAPI.tcArtifacts.downloadMap(objectKey, mapPath);
     }
 
     return { connected, downloadMap, refresh, mapsList };

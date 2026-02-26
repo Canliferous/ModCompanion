@@ -38,6 +38,7 @@ declare global {
                 launch: (launcherType: SharedLaunchers, launcherArgs: string | undefined) => void;
                 exit: () => void;
             };
+
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<SharedProjectListFilesReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
@@ -49,12 +50,15 @@ declare global {
                     callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void,
                 ) => IpcRenderer;
             };
+
             file: {
                 readString: (filePath: string) => Promise<string>;
             };
+
             config: {
                 get: () => Promise<SharedAppConfig>;
             };
+
             map: {
                 listSourceDirs: () => Promise<SharedMapSourceDir[]>;
                 enqueue: (mapPaths: string[]) => void;
@@ -65,6 +69,7 @@ declare global {
                 subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) => IpcRenderer;
                 createTimeReport: (maps: SharedMapPath[]) => Promise<SharedMapTimeReport>;
             };
+
             asset: {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) => IpcRenderer;
@@ -76,6 +81,7 @@ declare global {
                 update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) => Promise<SharedAsset | undefined>;
                 delete: (assetId: SharedAssetId) => Promise<boolean>;
             };
+
             assetGroups: {
                 forceRescan: () => void;
                 subscribeRescanned: (callback: (event: SharedAssetGroupRescanEvent) => void) => IpcRenderer;
@@ -86,9 +92,11 @@ declare global {
                 ) => Promise<SharedAssetGroup>;
                 delete: (groupId: SharedAssetGroupId) => void;
             };
+
             image: {
                 getMeta: (imageFilePath: string) => Promise<SharedImageMetaReport | undefined>;
             };
+
             conversion: {
                 enqueue: (assetId: SharedAssetId) => void;
                 enqueueAll: () => void;
@@ -98,28 +106,36 @@ declare global {
                 getState: () => Promise<SharedConversionGetStateIpcReport>;
                 clearEvents: () => void;
             };
+
             hotReload: {
                 setEnabled: (enable: boolean) => void;
             };
+
             webUtils: {
                 getPathForFile: (file: File) => string;
             };
+
             clipboard: {
                 writeText: (text: string, type?: "selection" | "clipboard") => void;
             };
+
             interop: {
                 subscribeConnected: (callback: () => void) => IpcRenderer;
                 subscribeDisconnected: (callback: () => void) => IpcRenderer;
                 subscribeLog: (callback: (message: string) => void) => IpcRenderer;
                 sendCommand: (command: string) => void;
             };
+
             fgd: {
                 build: () => Promise<boolean>;
             };
+
             tcArtifacts: {
                 isConnected: () => Promise<boolean>;
                 listAllMaps: () => Promise<SharedTcArtifactsListAllMapsReport | undefined>;
+                downloadMap: (artifactKey: string, mapPath: string) => Promise<boolean>;
             };
+
             log: {
                 sendFromRenderer: (event: SharedLogEvent) => void;
                 subscribeSendFromMain: (callback: (event: SharedLogEvent) => void) => IpcRenderer;

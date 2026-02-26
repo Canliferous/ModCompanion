@@ -46,12 +46,12 @@ const props = defineProps<{ mapPath: string }>();
 
 const tcArtifactsStore = useTcArtifactsStore();
 
-const downloadPromise = ref<Promise<void> | undefined>(undefined);
+const downloadPromise = ref<Promise<boolean> | undefined>(undefined);
 
 const maps = computed(() => {
     const n = filename(props.mapPath);
     if (n) {
-        return tcArtifactsStore.mapsList.get(n);
+        return tcArtifactsStore.mapsList.get(n) ?? [];
     } else {
         return [];
     }
@@ -59,7 +59,7 @@ const maps = computed(() => {
 
 function handleDownload() {
     downloadPromise.value = tcArtifactsStore
-        .downloadMap(props.mapPath)
+        .downloadMap(props.mapPath, maps.value[0].objectKey)
         .finally(() => (downloadPromise.value = undefined));
 }
 </script>
