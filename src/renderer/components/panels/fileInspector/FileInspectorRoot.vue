@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot no-scroll>
+    <MPanelRoot>
         <template #header>
             <div v-if="entry" class="grid gap-2">
                 <div class="flex gap-2 w-full items-center">
