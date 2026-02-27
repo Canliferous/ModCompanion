@@ -9,18 +9,23 @@ import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());
-    const conversionsLastChangeTime = ref<Date | undefined>(undefined);
+    const conversionsLastChangeTime = ref<number>(0);
     const events = ref<SharedConversionEvent[]>([]);
-    const eventsLastChangeTime = ref<Date | undefined>(undefined);
+    const eventsLastChangeTime = ref<number>(0);
     const activeEvent = ref<SharedConversionEvent | undefined>();
     const summary = ref<SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
-        if (conversionsLastChangeTime.value !== event.conversionsLastChangeTime) {
+        const time1 = event.conversionsLastChangeTime?.getTime();
+        if (time1 !== undefined && conversionsLastChangeTime.value !== time1) {
             conversions.value = event.conversions;
+            conversionsLastChangeTime.value = time1;
         }
-        if (eventsLastChangeTime.value !== event.eventsLastChangeTime) {
+
+        const time2 = event.eventsLastChangeTime?.getTime();
+        if (time2 !== undefined && eventsLastChangeTime.value !== time2) {
             events.value = event.events;
+            eventsLastChangeTime.value = time2;
         }
         summary.value = event.summary;
     });
