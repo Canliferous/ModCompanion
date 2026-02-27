@@ -1,3 +1,5 @@
+export const MAX_MESSAGES = 500;
+
 export enum SharedLogChannel {
     Generic = "Generic",
     GameInterop = "Game",

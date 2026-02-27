@@ -56,7 +56,6 @@ async function _healthcheck() {
 
                 s.on("data", (data) => {
                     const message = String(data);
-                    Logger.info(SharedLogChannel.GameInterop, message);
                     notifyStrataInteropLog(message);
                 });
 

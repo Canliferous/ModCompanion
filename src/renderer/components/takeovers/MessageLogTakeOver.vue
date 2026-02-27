@@ -12,10 +12,17 @@
                 value-key="id"
                 placeholder="Filter Type"
             />
+            <UButton
+                variant="soft"
+                size="sm"
+                label="Clear"
+                :icon="AppDesign.Icons.ActionDelete"
+                @click="logStore.clear()"
+            />
             <USeparator orientation="vertical" />
         </template>
         <div ref="scroller" class="grid grid-cols-[auto_auto_auto_1fr] text-xs gap-x-1 overflow-y-scroll">
-            <template v-for="event in events" :key="event.time.getTime()">
+            <template v-for="(event, i) in events" :key="i">
                 <div class="grid col-span-full grid-cols-subgrid odd:bg-neutral-950/50 p-1">
                     <MLogTypeIcon :type="event.type" />
                     <div v-show="showTime" class="whitespace-nowrap text-muted tabular-nums">
@@ -33,7 +40,7 @@
 
 <script setup lang="ts">
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
-import { getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
+import { AppDesign, getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
 import { Logger } from "~/logger.js";
 import {
     getLogTime,
