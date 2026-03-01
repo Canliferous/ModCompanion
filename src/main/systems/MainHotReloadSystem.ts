@@ -37,4 +37,9 @@ export const HotReloadSystem = {
             StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
         }
     },
+    reloadChamberSignConfig(): void {
+        if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
+
+        StrataInteropSystem.sendCommand("portal_reload_chamber_signs");
+    },
 };

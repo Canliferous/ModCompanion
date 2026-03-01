@@ -20,9 +20,10 @@ export const useChamberSignConfigStore = defineStore("chamber-sign-config", () =
         suppressWatch.value = false;
     }
 
-    const save = debounce((c: SharedChamberSignConfig) => {
+    const save = debounce(async (c: SharedChamberSignConfig) => {
         const data = JSON.stringify(toRaw(c), undefined, 4);
-        window.electronAPI.file.writeString(getAppConfig().chamberSignConfigJson, data);
+        await window.electronAPI.file.writeString(getAppConfig().chamberSignConfigJson, data);
+        window.electronAPI.hotReload.reloadChamberSignConfig();
     }, 300);
 
     watch(config, (value, oldValue) => {

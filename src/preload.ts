@@ -142,6 +142,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     hotReload: {
         setEnabled: (enable: boolean) => ipcRenderer.send(SharedIpcChannels.HotReloadSetEnabled, enable),
+        reloadChamberSignConfig: () => ipcRenderer.send(SharedIpcChannels.HotReloadChamberSignConfig),
     },
 
     webUtils: {

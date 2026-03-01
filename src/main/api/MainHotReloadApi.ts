@@ -7,5 +7,9 @@ export function registerHotReloadApi(): boolean {
         HotReloadSystem.setEnabled(enable);
     });
 
+    ipcMain.on(SharedIpcChannels.HotReloadChamberSignConfig, (event) => {
+        HotReloadSystem.reloadChamberSignConfig();
+    });
+
     return true;
 }
