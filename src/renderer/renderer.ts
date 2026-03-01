@@ -8,6 +8,7 @@ import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { initIcons } from "~/renderer-icons.js";
 import { Logger } from "~/logger.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
+import { useChamberSignConfigStore } from "~/store/ChamberSignConfigStore.js";
 
 Logger.init();
 initConfig();

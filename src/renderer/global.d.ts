@@ -28,6 +28,7 @@ import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js"
 import { SharedLogEvent } from "Shared/SharedLogger.js";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedMdlInfoReport } from "Shared/SharedMdlInfoReport.js";
+import { Stream } from "node:stream";
 
 export {};
 
@@ -53,6 +54,15 @@ declare global {
 
             file: {
                 readString: (filePath: string) => Promise<string>;
+                writeString: (
+                    filePath: string,
+                    data:
+                        | string
+                        | NodeJS.ArrayBufferView
+                        | Iterable<string | NodeJS.ArrayBufferView>
+                        | AsyncIterable<string | NodeJS.ArrayBufferView>
+                        | Stream,
+                ) => Promise<void>;
             };
 
             config: {

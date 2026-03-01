@@ -54,6 +54,8 @@ export interface SharedAppConfig {
     postcompilerArgs: string;
     cubemapArgs: string;
 
+    chamberSignConfigJson: string;
+
     gameName: string;
 
     mapSourceDirs?: string[];

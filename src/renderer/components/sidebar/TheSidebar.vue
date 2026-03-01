@@ -18,6 +18,7 @@
 
             <SidebarGroup heading="Tools">
                 <SidebarBuildFgdButton />
+                <SidebarChamberSignConfigButton />
             </SidebarGroup>
         </div>
 
@@ -64,6 +65,7 @@ import SidebarBuildFgdButton from "~/components/sidebar/SidebarBuildFgdButton.vu
 import SidebarPotentialAssets from "~/components/sidebar/SidebarPotentialAssets.vue";
 import { SharedLauncherOption, SharedLauncherOptions } from "Shared/SharedLaunchers.js";
 import SidebarConvertAllAssetsButton from "~/components/sidebar/SidebarConvertAllAssetsButton.vue";
+import SidebarChamberSignConfigButton from "~/components/sidebar/SidebarChamberSignConfigButton.vue";
 
 function quit() {
     window.electronAPI.app.exit();

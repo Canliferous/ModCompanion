@@ -1,7 +1,7 @@
 <template>
     <!-- Dockview has z-index of 99 so we must be above it -->
     <div
-        class="bg-neutral-950/50 backdrop-blur-md absolute inset-0 p-1 flex flex-col justify-end transition-opacity z-100 overflow-y-clip"
+        class="bg-neutral-950/50 backdrop-blur-md absolute inset-0 p-1 flex flex-col justify-end transition-opacity overflow-y-clip"
         :class="{
             'opacity-100 pointer-events-auto': isOpen,
             'opacity-0 pointer-events-none': !isOpen,

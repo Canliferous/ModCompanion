@@ -74,25 +74,25 @@ export default function buildConfig(): NuxtUIOptions {
             popover: {
                 slots: {
                     // Above dockview divider lines which are at 99
-                    content: "z-100 ring-0 inset-shadow-rim shadow-md shadow-neutral-950",
+                    content: "z-200 ring-0 inset-shadow-rim shadow-md shadow-neutral-950",
                 },
             },
             contextMenu: {
                 slots: {
                     // Above dockview divider lines which are at 99
-                    content: "z-100",
+                    content: "z-200",
                 },
             },
             tooltip: {
                 slots: {
                     // Above dockview divider lines which are at 99
-                    content: "z-100",
+                    content: "z-200",
                 },
             },
             modal: {
                 slots: {
                     // Above dockview divider lines which are at 99
-                    content: "z-100",
+                    content: "z-200",
                 },
             },
             formField: {

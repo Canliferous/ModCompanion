@@ -21,6 +21,7 @@ import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanE
 import { SharedFileBrowserDirectoryUpdatedReport } from "./shared/SharedFileListing";
 import { LogType } from "vite";
 import { SharedLogEvent } from "./shared/SharedLogger";
+import { Stream } from "node:stream";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -46,6 +47,15 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     file: {
         readString: (filePath: string) => ipcRenderer.invoke(SharedIpcChannels.FileReadString, filePath),
+        writeString: (
+            filePath: string,
+            data:
+                | string
+                | NodeJS.ArrayBufferView
+                | Iterable<string | NodeJS.ArrayBufferView>
+                | AsyncIterable<string | NodeJS.ArrayBufferView>
+                | Stream,
+        ) => ipcRenderer.invoke(SharedIpcChannels.FileWriteString, filePath, data),
     },
 
     config: {

@@ -10,6 +10,7 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
+import { useChamberSignConfigStore } from "~/store/ChamberSignConfigStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -35,4 +36,5 @@ function _initSystemStores() {
     useAssetConversionStore();
     useStrataInteropStore();
     useTcArtifactsStore();
+    useChamberSignConfigStore();
 }

@@ -13,6 +13,7 @@ export const SharedIpcChannels = {
     FileBrowserOpenFile: "filebrowser_open_file",
 
     FileReadString: "file_read_string",
+    FileWriteString: "file_write_string",
 
     ConfigGet: "config_get",
 

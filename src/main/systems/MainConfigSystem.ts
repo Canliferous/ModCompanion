@@ -86,6 +86,8 @@ function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undef
         vradArgs: `-report -PortalTraversalLighting -textureshadows -StaticPropLighting -StaticPropPolys -game ${c.searchPath}`,
         cubemapArgs: "-buildcubemaps -novid -windowed -w 800 -h 600 -condebug -bordered",
 
+        chamberSignConfigJson: path.join(root, "game", c.searchPath, "scripts", "chamber_sign_config.json"),
+
         mapSourceDirs: c.mapSourceDirs,
         mapPresets: c.mapPresets,
 

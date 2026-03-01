@@ -4,6 +4,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 export enum TakeOverId {
     MessageLog,
     AssetWizard,
+    ChamberSignConfig,
 }
 
 interface TakeOverDef {
@@ -14,11 +15,15 @@ interface TakeOverDef {
 export const TakeOverConfig: Record<TakeOverId, TakeOverDef> = {
     [TakeOverId.MessageLog]: {
         name: "Message Log",
-        icon: AppDesign.Icons.Log,
+        icon: AppDesign.Icons.TakeOver_Log,
     },
     [TakeOverId.AssetWizard]: {
         name: "Create Asset",
-        icon: AppDesign.Icons.Asset,
+        icon: AppDesign.Icons.TakeOver_AssetWizard,
+    },
+    [TakeOverId.ChamberSignConfig]: {
+        name: "Chamber Sign Config",
+        icon: AppDesign.Icons.TakeOver_ChamberSign,
     },
 } as const;
 

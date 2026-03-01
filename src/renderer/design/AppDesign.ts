@@ -99,6 +99,10 @@ export const Icons = {
     Panel_ConversionDetails: "mingcute:lightning-fill",
     Panel_StrataConsole: "mingcute:terminal-fill",
 
+    TakeOver_ChamberSign: "mingcute:layers-fill",
+    TakeOver_AssetWizard: "mingcute:traffic-cone-fill",
+    TakeOver_Log: "mingcute:list-check-fill",
+
     Log: "mingcute:list-check-fill",
     LogType_Debug: "mingcute:bug-fill",
     LogType_Info: "mingcute:information-fill",
