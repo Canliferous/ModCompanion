@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedMapTimeReport } from "Shared/SharedMapTimeReport.js";
-import { getAppConfig } from "../systems/MainConfigSystem.js";
+import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
 import { SharedMapPath } from "Shared/SharedMapPath.js";
 import path from "path";
 import fs from "fs/promises";

@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "outDir": "../../build_dist",
+        "target": "ES2020",
+        "module": "NodeNext",
+        "esModuleInterop": true,
+        "moduleResolution": "nodenext",
+        "strict": true,
+        "lib": ["ESNext", "DOM"],
+        "paths": {
+            "Shared/*": ["../shared/*"],
+            "Core/*": ["../core/*"]
+        },
+        "inlineSources": true,
+        "sourceMap": true
+    },
+    "include": ["."]
+}

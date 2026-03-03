@@ -1,17 +1,28 @@
 {
-  "compilerOptions": {
-    "outDir": "../../build_dist",
-    "target": "ES2020",
-    "module": "NodeNext",
-    "esModuleInterop": true,
-    "moduleResolution": "nodenext",
-    "strict": true,
-    "lib": ["ESNext", "DOM"],
-    "paths": {
-      "Shared/*": ["../shared/*"]
+    "compilerOptions": {
+        "outDir": "../../build_dist",
+        "target": "ES2020",
+        "module": "NodeNext",
+        "esModuleInterop": true,
+        "moduleResolution": "nodenext",
+        "strict": true,
+        "lib": ["ESNext", "DOM"],
+        "composite": true,
+        "paths": {
+            "~/*": ["./*"],
+            "Shared/*": ["../shared/*"],
+            "Core/*": ["../core/*"]
+        },
+        "inlineSources": true,
+        "sourceMap": true
     },
-    "inlineSources": true,
-    "sourceMap": true
-  },
-  "include": ["."]
+    "include": ["."],
+    "references": [
+        {
+            "path": "../core"
+        },
+        {
+            "path": "../shared"
+        }
+    ]
 }

@@ -1,12 +1,12 @@
 import { app, BrowserWindow, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
 import settings from "electron-settings";
-import { getMainAssetsDir, getRendererDir, getRootDir } from "../helpers/MainFilesystem.js";
+import { getMainAssetsDir, getRendererDir, getRootDir } from "Core/helpers/CoreFilesystem.js";
 import fs from "node:fs";
 import { runLauncher } from "../api/MainLauncherApi.js";
 import { SharedLauncherOptions } from "Shared/SharedLaunchers.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
-import { Logger } from "./MainLogSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";

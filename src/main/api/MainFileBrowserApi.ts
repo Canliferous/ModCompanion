@@ -1,13 +1,13 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { browseToFile, openFile } from "../helpers/MainFileBrowseHelper.js";
+import { browseToFile, openFile } from "Core/helpers/CoreFileBrowseHelper.js";
 import { SharedFileBrowserDirectoryUpdatedReport, SharedProjectListFilesReport } from "Shared/SharedFileListing.js";
 import path from "path";
-import { getAppConfig } from "../systems/MainConfigSystem.js";
+import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
 import child_process from "node:child_process";
 import { IpcHelper } from "./MainApiHelper.js";
-import { FileBrowserSystem } from "../systems/MainFileBrowserSystem.js";
-import { Logger } from "../systems/MainLogSystem.js";
+import { FileBrowserSystem } from "Core/systems/CoreFileBrowserSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerFileBrowserApi(): boolean {

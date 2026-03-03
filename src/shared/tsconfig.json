@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "nodenext",
+        "lib": ["ESNext"],
+        "strict": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "outDir": "../../build_dist",
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "inlineSources": true,
+        "sourceMap": true,
+        "composite": true
+    },
+    "include": ["."]
+}

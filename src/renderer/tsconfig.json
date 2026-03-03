@@ -1,22 +1,24 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "nodenext",
-    "lib": ["DOM", "ESNext"],
-    "strict": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "outDir": "../../build_dist",
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"],
-      "Shared/*": ["../shared/*"]
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "nodenext",
+        "lib": ["DOM", "ESNext"],
+        "strict": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "outDir": "../../build_dist",
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "composite": true,
+        "paths": {
+            "~/*": ["./*"],
+            "Shared/*": ["../shared/*"]
+        },
+        "inlineSources": true,
+        "sourceMap": true
     },
-    "inlineSources": true,
-    "sourceMap": true
-  },
-  "include": ["."]
+    "include": ["."],
+    "references": ["../shared"]
 }

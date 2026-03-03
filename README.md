@@ -63,5 +63,5 @@ npm run deploy
 Mod Companion can be run in headless modes to do work without opening a window
 
 ```bash
---convert  # Convert all stale assets
+--convert  # Convert all stale asset
 ```

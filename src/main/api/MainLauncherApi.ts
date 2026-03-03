@@ -2,9 +2,9 @@ import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedLaunchers } from "Shared/SharedLaunchers.js";
 import * as child_process from "node:child_process";
-import { getAppConfig } from "../systems/MainConfigSystem.js";
+import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
 import os from "node:os";
-import { Logger } from "../systems/MainLogSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerLauncherApi(): boolean {

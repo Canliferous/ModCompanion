@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedLogEvent } from "Shared/SharedLogger.js";
-import { Logger } from "../systems/MainLogSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerLoggerApi(): boolean {

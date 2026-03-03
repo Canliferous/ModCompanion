@@ -1,9 +1,9 @@
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
-import { ConversionAgentSystem } from "../systems/MainConversionAgentSystem.js";
+import { ConversionAgentSystem } from "Core/systems/conversion/CoreConversionAgentSystem.js";
 import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { ConversionEventSystem } from "../systems/MainConversionEventSystem.js";
+import { ConversionEventSystem } from "Core/systems/conversion/CoreConversionEventSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerConversionApi(): boolean {

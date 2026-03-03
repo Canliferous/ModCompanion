@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import path from "path";
-import { getRootDir } from "../helpers/MainFilesystem.js";
+import { getRootDir } from "Core/helpers/CoreFilesystem.js";
 import { Worker } from "node:worker_threads";
 
 export function registerImageMetaApi(): boolean {

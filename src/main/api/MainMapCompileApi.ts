@@ -3,7 +3,7 @@ import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedMapCompileLogEvent } from "Shared/SharedMapCompileLogEvent.js";
 import { SharedMapCompileProgressEvent } from "Shared/SharedMapCompileProgressEvent.js";
 import { IpcHelper } from "./MainApiHelper.js";
-import { MapCompileSystem } from "../systems/MainMapCompileSystem.js";
+import { MapCompileSystem } from "Core/systems/CoreMapCompileSystem.js";
 
 export function registerMapCompileApi(): boolean {
     ipcMain.on(SharedIpcChannels.MapQueueEnqueue, (event, mapPaths: string[]) => {

@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import * as child_process from "node:child_process";
-import { getAppConfig } from "../systems/MainConfigSystem.js";
-import { Logger } from "../systems/MainLogSystem.js";
+import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerFgdApi(): boolean {

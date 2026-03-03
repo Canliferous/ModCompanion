@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js";
-import { TcArtifactsSystem } from "../systems/MainTcArtifactsSystem.js";
+import { TcArtifactsSystem } from "Core/systems/CoreTcArtifactsSystem.js";
 
 export function registerTcArtifactsApi(): boolean {
     ipcMain.handle(SharedIpcChannels.TcArtifacts_IsConnected, (): Promise<boolean> => {

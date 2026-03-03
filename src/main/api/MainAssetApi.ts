@@ -1,6 +1,6 @@
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { ipcMain } from "electron";
-import MainAssetRepository from "../systems/assets/MainAssetRepository.js";
+import MainAssetRepository from "Core/systems/asset/CoreAssetRepository.js";
 import {
     SharedAsset,
     SharedAssetAddedEvent,
@@ -11,7 +11,7 @@ import {
 } from "Shared/SharedAssetDefinition.js";
 import { SharedCreateAssetReport, SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { IpcHelper } from "./MainApiHelper.js";
-import { Logger } from "../systems/MainLogSystem.js";
+import { Logger } from "Core/systems/CoreLogSystem.js";
 import { SharedLogChannel } from "Shared/SharedLogger.js";
 
 export function registerAssetApi(): boolean {
@@ -46,7 +46,7 @@ export function registerAssetApi(): boolean {
             }
 
             try {
-                Logger.info(SharedLogChannel.Assets, "Asset API: Files not used in any assets 👍");
+                Logger.info(SharedLogChannel.Assets, "Asset API: Files not used in any asset 👍");
                 const result = await MainAssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
                 if (!result) {
                     return {

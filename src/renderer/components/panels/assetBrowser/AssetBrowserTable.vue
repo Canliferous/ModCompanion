@@ -100,7 +100,7 @@ const entries = computed(() => {
         assetIdsInGroups.push(...assetGroup.def.assets);
     }
 
-    // Add remaining ungrouped assets
+    // Add remaining ungrouped asset
     for (const assets of listStore.filteredAssets) {
         if (assetIdsInGroups.includes(assets.def.id)) {
             continue;

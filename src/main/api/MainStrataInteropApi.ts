@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { IpcHelper } from "./MainApiHelper.js";
-import { StrataInteropSystem } from "../systems/MainStrataInteropSystem.js";
+import { StrataInteropSystem } from "Core/systems/CoreStrataInteropSystem.js";
 
 export function registerStrataInteropApi(): boolean {
     ipcMain.on(SharedIpcChannels.InteropSendCommand, (event, command: string) => {

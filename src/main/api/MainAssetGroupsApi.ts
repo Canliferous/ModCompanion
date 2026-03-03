@@ -6,7 +6,7 @@ import {
     SharedAssetGroupId,
     SharedAssetGroupRescanEvent,
 } from "Shared/SharedAssetGroup.js";
-import { AssetGroupsSystem } from "../systems/MainAssetGroupsSystem.js";
+import { AssetGroupsSystem } from "Core/systems/CoreAssetGroupsSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
 export function registerAssetGroupsApi(): boolean {
