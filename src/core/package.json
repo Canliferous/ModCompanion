@@ -1,0 +1,21 @@
+{
+    "name": "mod_companion_shared",
+    "version": "1.0.0",
+    "type": "module",
+    "keywords": [],
+    "private": true,
+    "author": {
+        "name": "Second Face Software",
+        "email": "hello@secondfacesoftware.com"
+    },
+    "scripts": {
+        "dev": "tsc --watch"
+    },
+    "devDependencies": {},
+    "dependencies": {
+        "mod_companion_shared": "../shared",
+        "@aws-sdk/client-s3": "^3.922.0",
+        "@sourcelib/kv": "^0.9.1",
+        "chokidar": "^4.0.3"
+    }
+}

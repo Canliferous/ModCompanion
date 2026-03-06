@@ -8,7 +8,7 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "noImplicitAny": true,
-        "outDir": "../../build_dist",
+        "outDir": "../../build_dev/shared",
         "resolveJsonModule": true,
         "baseUrl": ".",
         "inlineSources": true,

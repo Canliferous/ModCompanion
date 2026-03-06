@@ -1,12 +1,12 @@
 import chokidar, { FSWatcher } from "chokidar";
-import MainAssetRepository from "~/systems/asset/CoreAssetRepository.js";
 import { ConversionAgentSystem } from "./conversion/CoreConversionAgentSystem.js";
 import { getAppConfig } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
-import MainSourceFs from "~/helpers/CoreSourceFs.js";
+import * as Shared from "mod_companion_shared";
+import CoreSourceFs from "../helpers/CoreSourceFs.js";
+import { getAssetFromFile } from "./asset/CoreAssetRepository.js";
 
-const ignoreMap: Map<string, number> = new Map<string, number>();
+const ignoreMap: Map<string, number> = new Map();
 let watcher: FSWatcher | undefined = undefined;
 
 export const AssetWatcherSystem = {
@@ -34,11 +34,11 @@ function _handleChanged(filePath: string): void {
         ignoreMap.set(filePath, ignoreCount - 1);
         return;
     }
-    const relativePath = MainSourceFs.getContentRelativePath(filePath);
-    const asset = MainAssetRepository.getAssetFromFile(relativePath);
+    const relativePath = CoreSourceFs.getContentRelativePath(filePath);
+    const asset = getAssetFromFile(relativePath);
     if (!asset) return;
 
-    Logger.info(SharedLogChannel.Assets, "Asset files changed", asset.def.displayName, filePath);
+    Logger.info(Shared.Log.Channel.Assets, "Asset files changed", asset.def.displayName, filePath);
     // notifyAssetsUpdated({ asset: [asset] }); // todo
     ConversionAgentSystem.enqueue(asset.def.id);
 }

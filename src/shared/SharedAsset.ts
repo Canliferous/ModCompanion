@@ -1,34 +1,34 @@
-import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "./SharedVtf.js";
 
 export const SharedAssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
 
-export const SharedAssetTypes = {
+export const Types = {
     Unknown: "unknown",
     Texture: "texture",
     Model: "model",
 } as const;
-export type SharedAssetType = (typeof SharedAssetTypes)[keyof typeof SharedAssetTypes];
+export type SharedAssetType = (typeof Types)[keyof typeof Types];
 
 export function isValidAssetType(str: string): str is SharedAssetType {
-    return (Object.values(SharedAssetTypes) as string[]).includes(str);
+    return (Object.values(Types) as string[]).includes(str);
 }
 
 export function getAssetTypeName(type: SharedAssetType): string {
     switch (type) {
-        case SharedAssetTypes.Texture: {
+        case Types.Texture: {
             return "Texture";
         }
-        case SharedAssetTypes.Model: {
+        case Types.Model: {
             return "Model";
         }
-        case SharedAssetTypes.Unknown:
+        case Types.Unknown:
         default: {
             return "Unknown";
         }
     }
 }
 
-export const SharedAssetTypesValid = [SharedAssetTypes.Texture, SharedAssetTypes.Model];
+export const SharedAssetTypesValid = [Types.Texture, Types.Model];
 
 export interface SharedAssetDefinitionFileArrays {
     readonly contentFiles?: string[];
@@ -91,10 +91,10 @@ export interface SharedTextureAsset extends SharedAsset {
     readonly def: SharedTextureAssetDefinition;
 }
 
-export type SharedAssetId = string;
+export type AssetId = string;
 
 export interface SharedAssetRescanEvent {
-    assets: Map<SharedAssetId, SharedAsset>;
+    assets: Map<AssetId, SharedAsset>;
     potentialAssets: SharedAsset[];
     totalTimeMillis?: number;
 }
@@ -107,17 +107,17 @@ export interface SharedAssetUpdatedEvent {
     assets: SharedAsset[];
 }
 
-export type SharedAssetMap = Map<SharedAssetId, SharedAsset>;
+export type SharedAssetMap = Map<AssetId, SharedAsset>;
 
 export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
-    type: typeof SharedAssetTypes.Texture;
+    type: typeof Types.Texture;
     vtfOptions?: SharedVtfCreateOptions;
 }
 
 export function isTextureAssetDefinition(
     asset: SharedAssetDefinition | undefined,
 ): asset is SharedTextureAssetDefinition {
-    return asset?.type === SharedAssetTypes.Texture;
+    return asset?.type === Types.Texture;
 }
 
 export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedTextureAsset {
@@ -125,9 +125,38 @@ export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedT
 }
 
 export interface SharedModelAssetDefinition extends SharedAssetDefinition {
-    type: typeof SharedAssetTypes.Model;
+    type: typeof Types.Model;
 }
 
 export function isModelAssetDefinition(asset: SharedAssetDefinition | undefined): asset is SharedModelAssetDefinition {
-    return asset?.type === SharedAssetTypes.Model;
+    return asset?.type === Types.Model;
 }
+
+// ------------------------
+
+export enum SharedCreateAssetReportType {
+    ErrorUnknown,
+    ErrorFileAlreadyUsedInAsset,
+    Success,
+}
+
+interface BaseSharedCreateAssetReport {
+    type: SharedCreateAssetReportType;
+}
+
+interface UnknownError extends BaseSharedCreateAssetReport {
+    type: SharedCreateAssetReportType.ErrorUnknown;
+}
+
+interface FilesAlreadyUsedInAssetError extends BaseSharedCreateAssetReport {
+    type: SharedCreateAssetReportType.ErrorFileAlreadyUsedInAsset;
+    filesAlreadyUsed: string[];
+    asset: AssetId;
+}
+
+interface Success extends BaseSharedCreateAssetReport {
+    type: SharedCreateAssetReportType.Success;
+    assets: SharedAsset[];
+}
+
+export type SharedCreateAssetReport = UnknownError | FilesAlreadyUsedInAssetError | Success;

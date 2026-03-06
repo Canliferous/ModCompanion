@@ -1,10 +1,10 @@
-import { SharedMdlInfoReport } from "Shared/SharedMdlInfoReport.js";
 import child_process from "node:child_process";
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
 import { KvSerializer, parseText } from "@sourcelib/kv";
+import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import * as Shared from "mod_companion_shared";
 
 export const MdlInfoHelper = {
-    async run(mdlFilePath: string): Promise<SharedMdlInfoReport> {
+    async run(mdlFilePath: string): Promise<Shared.MdlInfo.SharedMdlInfoReport> {
         return new Promise((resolve, reject) => {
             const cmd = `${getAppConfig().mdlInfoPath} -game ${getAppConfig().gamePath} ${mdlFilePath}`;
 
@@ -22,7 +22,7 @@ export const MdlInfoHelper = {
                         reject();
                     }
 
-                    resolve(result[0] as unknown as SharedMdlInfoReport);
+                    resolve(result[0] as unknown as Shared.MdlInfo.SharedMdlInfoReport);
                 }
             });
         });

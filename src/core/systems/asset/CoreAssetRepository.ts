@@ -1,18 +1,10 @@
-import {
-    SharedAsset,
-    SharedAssetDefinition,
-    SharedAssetDefinitionFileExtension,
-    SharedAssetId,
-    SharedAssetMap,
-    SharedAssetTypes,
-} from "Shared/SharedAssetDefinition.js";
 // import { notifyAssetsRescanned } from "../../../main/api/MainAssetApi.js";
 import { buildAssets } from "./CoreAssetScanner.js";
 import { scanContentTree } from "../files/CoreFileScanner.js";
 import { v4 } from "uuid";
 import path from "path";
 import fs from "fs/promises";
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
+import { getAppConfig } from "../CoreConfigSystem.js";
 import { AssetCreationInferResults, inferAssetCreationType } from "./CoreAssetCreateInferType.js";
 import { createUnknownAssetDefinition } from "./CoreAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./CoreAssetCreateTexture.js";
@@ -22,17 +14,17 @@ import { ConversionChecksumSystem } from "../conversion/CoreConversionChecksumSy
 import { ConversionAgentSystem } from "../conversion/CoreConversionAgentSystem.js";
 import { existsSync } from "fs";
 import { Logger } from "../CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
-let assetMap: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
-let potentialAssets: SharedAsset[] = [];
+let assetMap: Shared.Asset.SharedAssetMap = new Map();
+let potentialAssets: Shared.Asset.SharedAsset[] = [];
 
-export function getAssetMap(): Readonly<SharedAssetMap> {
+export function getAssetMap(): Readonly<Shared.Asset.SharedAssetMap> {
     return assetMap;
 }
 
 export async function rescan() {
-    Logger.info(SharedLogChannel.Generic, "Rescanning asset...");
+    Logger.info(Shared.Log.Channel.Generic, "Rescanning asset...");
 
     const startMillis = new Date().getTime();
 
@@ -56,16 +48,16 @@ export function generateAssetId(): string {
 export async function createAssetsFromFiles(
     primaryFile: string,
     otherFiles: string[],
-): Promise<SharedAsset[] | undefined> {
+): Promise<Shared.Asset.SharedAsset[] | undefined> {
     const files = [primaryFile, ...otherFiles];
     if (files.length === 0) return undefined;
 
     const inferredType = inferAssetCreationType(files);
 
-    Logger.info(SharedLogChannel.Generic, "Inferred asset type", inferredType);
+    Logger.info(Shared.Log.Channel.Generic, "Inferred asset type", inferredType);
     if (inferredType === AssetCreationInferResults.Unknown) {
         const def = createUnknownAssetDefinition(primaryFile, otherFiles);
-        const mca = primaryFile + SharedAssetDefinitionFileExtension;
+        const mca = primaryFile + Shared.Asset.SharedAssetDefinitionFileExtension;
 
         const newAsset = await writeAssetDef(def, mca);
         assetMap.set(def.id, newAsset);
@@ -73,10 +65,10 @@ export async function createAssetsFromFiles(
     }
 
     if (inferredType === AssetCreationInferResults.Texture) {
-        const newAssets: SharedAsset[] = [];
+        const newAssets: Shared.Asset.SharedAsset[] = [];
         for (const file of files) {
             const def = createTextureAssetDefinition(file);
-            const mca = file + SharedAssetDefinitionFileExtension;
+            const mca = file + Shared.Asset.SharedAssetDefinitionFileExtension;
 
             const newAsset = await writeAssetDef(def, mca);
             assetMap.set(def.id, newAsset);
@@ -88,11 +80,11 @@ export async function createAssetsFromFiles(
     return undefined;
 }
 
-export function createEmptyAsset(mcaBasePath: string): Promise<SharedAsset> {
+export function createEmptyAsset(mcaBasePath: string): Promise<Shared.Asset.SharedAsset> {
     let mcaFilePath = "";
     let mcaFileName = "";
 
-    Logger.debug(SharedLogChannel.Generic, mcaBasePath);
+    Logger.debug(Shared.Log.Channel.Generic, mcaBasePath);
 
     let i = 0;
     do {
@@ -104,16 +96,19 @@ export function createEmptyAsset(mcaBasePath: string): Promise<SharedAsset> {
         {
             id: generateAssetId(),
             displayName: mcaFileName,
-            type: SharedAssetTypes.Unknown,
+            type: Shared.Asset.Types.Unknown,
         },
         mcaFilePath,
     );
 }
 
-export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: string): Promise<SharedAsset> {
+export async function writeAssetDef(
+    assetDef: Shared.Asset.SharedAssetDefinition,
+    mcaPath: string,
+): Promise<Shared.Asset.SharedAsset> {
     const absoluteMcaPath = path.join(getAppConfig().rootPath, mcaPath);
     const payload = JSON.stringify(assetDef, undefined, 2);
-    Logger.info(SharedLogChannel.Generic, "Writing asset", mcaPath, assetDef);
+    Logger.info(Shared.Log.Channel.Generic, "Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);
 
     const asset = { defFilePath: mcaPath, def: assetDef };
@@ -121,7 +116,7 @@ export async function writeAssetDef(assetDef: SharedAssetDefinition, mcaPath: st
     return asset;
 }
 
-export function getAssetFromFile(filePath: string): SharedAsset | undefined {
+export function getAssetFromFile(filePath: string): Shared.Asset.SharedAsset | undefined {
     for (const asset of assetMap.values()) {
         if (asset.def.gameFiles?.includes(filePath)) return asset;
         if (asset.def.contentFiles?.includes(filePath)) return asset;
@@ -131,7 +126,7 @@ export function getAssetFromFile(filePath: string): SharedAsset | undefined {
     return undefined;
 }
 
-export function getAssetFromFiles(filePaths: string[]): SharedAsset | undefined {
+export function getAssetFromFiles(filePaths: string[]): Shared.Asset.SharedAsset | undefined {
     for (const asset of assetMap.values()) {
         for (const filePath of filePaths) {
             if (asset.def.gameFiles?.includes(filePath)) return asset;
@@ -142,11 +137,11 @@ export function getAssetFromFiles(filePaths: string[]): SharedAsset | undefined 
     return undefined;
 }
 
-export function getAssetFromId(hash: SharedAssetId): SharedAsset | undefined {
+export function getAssetFromId(hash: Shared.Asset.AssetId): Shared.Asset.SharedAsset | undefined {
     return assetMap.get(hash);
 }
 
-export async function deleteAssetDef(assetId: SharedAssetId) {
+export async function deleteAssetDef(assetId: Shared.Asset.AssetId): Promise<boolean> {
     const asset = assetMap.get(assetId);
     if (!asset) return false;
 
@@ -162,18 +157,7 @@ export async function deleteAssetDef(assetId: SharedAssetId) {
         await fs.rm(asset.defFilePath);
         return true;
     } catch (e) {
-        Logger.warning(SharedLogChannel.Generic, "Failed to delete asset", assetId, e);
+        Logger.warning(Shared.Log.Channel.Generic, "Failed to delete asset", assetId, e);
         return false;
     }
 }
-
-export default {
-    rescan,
-    getAssetFromFile,
-    getAssetFromFiles,
-    createAssetsFromFiles,
-    createEmptyAsset,
-    getAssetFromId,
-    writeAssetDef,
-    deleteAssetDef,
-};

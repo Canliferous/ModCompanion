@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { SharedMapCompileStep } from "Shared/SharedMap.js";
 import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
 import { computed } from "vue";
 

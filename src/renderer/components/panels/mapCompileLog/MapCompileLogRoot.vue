@@ -30,7 +30,7 @@ import { useMapListStore } from "~/store/MapListStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { computed } from "vue";
 import { TabsItem } from "@nuxt/ui/components/Tabs.vue.js";
-import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { SharedMapCompileStep } from "Shared/SharedMap.js";
 import { useMapDisplayNames } from "~/composables/useMapDisplayNames.js";
 
 const mapListStore = useMapListStore();

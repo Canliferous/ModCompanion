@@ -1,9 +1,9 @@
 import { parentPort, workerData } from "worker_threads";
 import fs from "fs/promises";
 import exifreader from "exifreader";
-import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
+import * as Shared from "mod_companion_shared";
 
-async function runImageMetaWorker(input: any): Promise<SharedImageMetaReport | undefined> {
+async function runImageMetaWorker(input: any): Promise<Shared.ImageMeta.SharedImageMetaReport | undefined> {
     if (typeof input !== "string") {
         return undefined;
     }
@@ -11,7 +11,7 @@ async function runImageMetaWorker(input: any): Promise<SharedImageMetaReport | u
     try {
         const data = await fs.readFile(input);
         const tags = exifreader.load(data);
-        const result: SharedImageMetaReport = {
+        const result: Shared.ImageMeta.SharedImageMetaReport = {
             filePath: input,
             tags,
         };

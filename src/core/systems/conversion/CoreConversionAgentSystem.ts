@@ -1,24 +1,15 @@
-import { getAssetFromId, getAssetMap } from "~/systems/asset/CoreAssetRepository.js";
-import {
-    SharedAssetDefinition,
-    SharedAssetId,
-    SharedAssetMap,
-    SharedAssetTypes,
-    SharedModelAssetDefinition,
-    SharedTextureAssetDefinition,
-} from "Shared/SharedAssetDefinition.js";
-import { SharedConversion, SharedConversionState } from "Shared/SharedConversion.js";
-import { TextureConverter } from "~/helpers/converter/CoreTextureConverter.js";
-import { ModelConverter } from "~/helpers/converter/CoreModelConverter.js";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { makeContentPathAbsolute, makeGamePathAbsolute } from "~/helpers/CoreSourceFs.js";
+import { getAssetFromId, getAssetMap } from "../asset/CoreAssetRepository.js";
+import { TextureConverter } from "../../helpers/converter/CoreTextureConverter.js";
+import { ModelConverter } from "../../helpers/converter/CoreModelConverter.js";
+import { makeContentPathAbsolute, makeGamePathAbsolute } from "../../helpers/CoreSourceFs.js";
 import { ConversionChecksumSystem } from "./CoreConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./CoreConversionEventSystem.js";
 import { HotReloadSystem } from "../CoreHotReloadSystem.js";
 import { AssetWatcherSystem } from "../CoreAssetWatcherSystem.js";
 import { Logger } from "../CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
@@ -26,10 +17,10 @@ const CONVERSION_INTERVAL_MS = 100;
 let lastChangeTime: Date | undefined = undefined;
 
 type JobResult = string | undefined;
-const conversionJobs: Map<SharedAssetId, Promise<JobResult>> = new Map<SharedAssetId, Promise<JobResult>>();
+const conversionJobs: Map<Shared.Asset.AssetId, Promise<JobResult>> = new Map();
 
 let agentInterval: NodeJS.Timeout | undefined;
-const conversionsMap: Map<SharedAssetId, SharedConversion> = new Map<SharedAssetId, SharedConversion>();
+const conversionsMap: Map<Shared.Asset.AssetId, Shared.Conversion.SharedConversion> = new Map();
 
 export const ConversionAgentSystem = {
     initSystem(): boolean {
@@ -47,23 +38,23 @@ export const ConversionAgentSystem = {
     },
     async runAndConvertUntilItIsDone(): Promise<void> {
         for (const conv of conversionsMap.values()) {
-            if (conv.state === SharedConversionState.Pending) {
+            if (conv.state === Shared.Conversion.State.Pending) {
                 await _startConversion(conv.assetId);
             }
         }
     },
-    getConversionsMap(): Map<string, SharedConversion> {
+    getConversionsMap(): Map<string, Shared.Conversion.SharedConversion> {
         return conversionsMap;
     },
     enqueue(assetId: string, force: boolean = false): void {
-        if (_getState(assetId) === SharedConversionState.InProgress) {
+        if (_getState(assetId) === Shared.Conversion.State.InProgress) {
             return;
         }
 
         if (force) {
-            _setState(assetId, SharedConversionState.PendingForced, true);
+            _setState(assetId, Shared.Conversion.State.PendingForced, true);
         } else {
-            _setState(assetId, SharedConversionState.Pending, true);
+            _setState(assetId, Shared.Conversion.State.Pending, true);
         }
     },
     enqueueAll(): void {
@@ -71,10 +62,10 @@ export const ConversionAgentSystem = {
             ConversionAgentSystem.enqueue(assetId, true);
         }
     },
-    async initStates(map: SharedAssetMap) {
+    async initStates(map: Shared.Asset.SharedAssetMap) {
         for (const asset of map.values()) {
             if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
-                _setState(asset.def.id, SharedConversionState.Invalid);
+                _setState(asset.def.id, Shared.Conversion.State.Invalid);
                 continue;
             }
 
@@ -82,7 +73,7 @@ export const ConversionAgentSystem = {
             if (stale) {
                 ConversionAgentSystem.enqueue(asset.def.id);
             } else {
-                _setState(asset.def.id, SharedConversionState.NoChange);
+                _setState(asset.def.id, Shared.Conversion.State.NoChange);
             }
         }
     },
@@ -115,18 +106,18 @@ async function _runAgent(): Promise<void> {
     // });
 }
 
-function _getAssetsToConvert(): SharedAssetId[] {
+function _getAssetsToConvert(): Shared.Asset.AssetId[] {
     let freeJobsCount = MAX_PARALLEL_JOBS - conversionJobs.size;
     if (freeJobsCount === 0) return [];
 
-    const result: SharedAssetId[] = [];
+    const result: Shared.Asset.AssetId[] = [];
 
     for (const conv of conversionsMap.values()) {
         if (freeJobsCount <= 0) break;
 
         const alreadyAdded = conversionJobs.has(conv.assetId);
         const isPending =
-            conv.state === SharedConversionState.Pending || conv.state === SharedConversionState.PendingForced;
+            conv.state === Shared.Conversion.State.Pending || conv.state === Shared.Conversion.State.PendingForced;
         if (isPending && !alreadyAdded) {
             result.push(conv.assetId);
             freeJobsCount--;
@@ -136,43 +127,43 @@ function _getAssetsToConvert(): SharedAssetId[] {
     return result;
 }
 
-async function _startConversion(id: SharedAssetId): Promise<string | undefined> {
+async function _startConversion(id: Shared.Asset.AssetId): Promise<string | undefined> {
     const asset = getAssetFromId(id);
     const previousState = _getState(id);
     if (!asset) {
-        _setState(id, SharedConversionState.Unknown);
+        _setState(id, Shared.Conversion.State.Unknown);
         return undefined;
     }
     const startTime = new Date();
     ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState);
-    _setState(id, SharedConversionState.InProgress);
+    _setState(id, Shared.Conversion.State.InProgress);
 
     if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
-        _setState(id, SharedConversionState.Invalid);
+        _setState(id, Shared.Conversion.State.Invalid);
         return undefined;
     }
 
-    const force = previousState === SharedConversionState.PendingForced;
+    const force = previousState === Shared.Conversion.State.PendingForced;
 
     if (!force) {
         const hasChanged = await ConversionChecksumSystem.hasChanged(asset.def);
         if (!hasChanged) {
             const isStale = await _isAssetStale(asset.def);
             if (!isStale) {
-                _setState(id, SharedConversionState.NoChange);
+                _setState(id, Shared.Conversion.State.NoChange);
                 return undefined;
             }
         }
     }
 
-    Logger.info(SharedLogChannel.ConversionAgent, "Converting asset", asset.def.displayName, asset.def.id);
+    Logger.info(Shared.Log.Channel.ConversionAgent, "Converting asset", asset.def.displayName, asset.def.id);
     const timeoutPromise = _convertAsset(asset.def);
     timeoutPromise.catch((log: string | undefined) => {
-        Logger.info(SharedLogChannel.ConversionAgent, log);
-        _onJobPromiseDone(id, SharedConversionState.Failed, log);
+        Logger.info(Shared.Log.Channel.ConversionAgent, log);
+        _onJobPromiseDone(id, Shared.Conversion.State.Failed, log);
     });
     timeoutPromise.then((log) => {
-        const newState = log === undefined ? SharedConversionState.Failed : SharedConversionState.Finished;
+        const newState = log === undefined ? Shared.Conversion.State.Failed : Shared.Conversion.State.Finished;
         _onJobPromiseDone(id, newState, log);
         _touchAsset(asset.def);
     });
@@ -180,34 +171,34 @@ async function _startConversion(id: SharedAssetId): Promise<string | undefined> 
     return timeoutPromise;
 }
 
-async function _convertAsset(asset: SharedAssetDefinition): Promise<string | undefined> {
+async function _convertAsset(asset: Shared.Asset.SharedAssetDefinition): Promise<string | undefined> {
     switch (asset.type) {
-        case SharedAssetTypes.Texture:
-            return TextureConverter.convert(asset as SharedTextureAssetDefinition);
-        case SharedAssetTypes.Model:
-            return ModelConverter.convert(asset as SharedModelAssetDefinition);
+        case Shared.Asset.Types.Texture:
+            return TextureConverter.convert(asset as Shared.Asset.SharedTextureAssetDefinition);
+        case Shared.Asset.Types.Model:
+            return ModelConverter.convert(asset as Shared.Asset.SharedModelAssetDefinition);
         default:
             return undefined;
     }
 }
 
-function _isValidAsset(asset: SharedAssetDefinition): boolean {
+function _isValidAsset(asset: Shared.Asset.SharedAssetDefinition): boolean {
     switch (asset.type) {
-        case SharedAssetTypes.Texture:
-            return TextureConverter.isValid(asset as SharedTextureAssetDefinition);
-        case SharedAssetTypes.Model:
-            return ModelConverter.getQcFile(asset as SharedModelAssetDefinition) !== undefined;
+        case Shared.Asset.Types.Texture:
+            return TextureConverter.isValid(asset as Shared.Asset.SharedTextureAssetDefinition);
+        case Shared.Asset.Types.Model:
+            return ModelConverter.getQcFile(asset as Shared.Asset.SharedModelAssetDefinition) !== undefined;
         default:
             return false;
     }
 }
 
-function _doContentFilesExist(asset: SharedAssetDefinition): boolean {
+function _doContentFilesExist(asset: Shared.Asset.SharedAssetDefinition): boolean {
     if (asset.contentFiles === undefined) return false;
     return !asset.contentFiles.map((c) => existsSync(makeContentPathAbsolute(c))).some((c) => !c);
 }
 
-function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState, log: string | undefined) {
+function _onJobPromiseDone(id: Shared.Asset.AssetId, stateAfter: Shared.Conversion.State, log: string | undefined) {
     conversionJobs.delete(id);
     _setState(id, stateAfter);
     ConversionEventSystem.updateLatestEvent(id, (event) => {
@@ -218,7 +209,7 @@ function _onJobPromiseDone(id: SharedAssetId, stateAfter: SharedConversionState,
     });
 }
 
-function _setState(id: SharedAssetId, state: SharedConversionState, noHistory = false) {
+function _setState(id: Shared.Asset.AssetId, state: Shared.Conversion.State, noHistory = false) {
     if (conversionsMap.has(id)) {
         conversionsMap.get(id)!.state = state;
     } else {
@@ -233,11 +224,11 @@ function _setState(id: SharedAssetId, state: SharedConversionState, noHistory = 
     }
 }
 
-function _getState(id: SharedAssetId) {
-    return conversionsMap.get(id)?.state ?? SharedConversionState.Unknown;
+function _getState(id: Shared.Asset.AssetId) {
+    return conversionsMap.get(id)?.state ?? Shared.Conversion.State.Unknown;
 }
 
-async function _touchAsset(asset: SharedAssetDefinition) {
+async function _touchAsset(asset: Shared.Asset.SharedAssetDefinition) {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
     if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
 
@@ -257,7 +248,7 @@ async function _touchAsset(asset: SharedAssetDefinition) {
     }
 }
 
-async function _isAssetStale(asset: SharedAssetDefinition): Promise<boolean> {
+async function _isAssetStale(asset: Shared.Asset.SharedAssetDefinition): Promise<boolean> {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
     if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
 

@@ -1,11 +1,10 @@
-import { SharedConversionEvent, SharedConversionState } from "Shared/SharedConversion.js";
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
+import * as Shared from "mod_companion_shared";
 
 export const ConversionEventSystem = {
-    conversionEvents: [] as SharedConversionEvent[],
+    conversionEvents: [] as Shared.Conversion.ConversionEvent[],
     lastChangeTime: undefined as Date | undefined,
 
-    pushNewEvent(assetId: SharedAssetId, startTime: Date, initialState: SharedConversionState) {
+    pushNewEvent(assetId: Shared.Asset.AssetId, startTime: Date, initialState: Shared.Conversion.State) {
         this.conversionEvents.push({
             assetId,
             stateHistory: [initialState],
@@ -15,10 +14,13 @@ export const ConversionEventSystem = {
 
         this.lastChangeTime = new Date();
     },
-    getLatestEvent(assetId: SharedAssetId): SharedConversionEvent | undefined {
+    getLatestEvent(assetId: Shared.Asset.AssetId): Shared.Conversion.ConversionEvent | undefined {
         return this.conversionEvents.findLast((a) => a.assetId === assetId);
     },
-    updateLatestEvent(assetId: SharedAssetId, updatePredicate: (event: SharedConversionEvent) => void): void {
+    updateLatestEvent(
+        assetId: Shared.Asset.AssetId,
+        updatePredicate: (event: Shared.Conversion.ConversionEvent) => void,
+    ): void {
         const event = this.getLatestEvent(assetId);
         if (event) {
             updatePredicate(event);

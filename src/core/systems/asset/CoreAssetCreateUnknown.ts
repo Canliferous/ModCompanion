@@ -1,8 +1,11 @@
-import { SharedAssetDefinition, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
-import { getContentRelativePath, getGameRelativePath } from "~/helpers/CoreSourceFs.js";
+import { getContentRelativePath, getGameRelativePath } from "../../helpers/CoreSourceFs.js";
 import { generateAssetId } from "./CoreAssetRepository.js";
+import * as Shared from "mod_companion_shared";
 
-export function createUnknownAssetDefinition(primaryFile: string, otherFiles: string[]): SharedAssetDefinition {
+export function createUnknownAssetDefinition(
+    primaryFile: string,
+    otherFiles: string[],
+): Shared.Asset.SharedAssetDefinition {
     const files = [primaryFile, ...otherFiles];
     const contentFiles: string[] = [];
     const gameFiles: string[] = [];
@@ -18,8 +21,8 @@ export function createUnknownAssetDefinition(primaryFile: string, otherFiles: st
     const fileCount = contentFiles.length + gameFiles.length;
 
     const id = generateAssetId();
-    const assetDef: SharedAssetDefinition = {
-        type: SharedAssetTypes.Unknown,
+    const assetDef: Shared.Asset.SharedAssetDefinition = {
+        type: Shared.Asset.Types.Unknown,
         id: id,
         contentFiles,
         gameFiles,

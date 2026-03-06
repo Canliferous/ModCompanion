@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { getVtfFlagGrouping, SharedVtfFlag } from "Shared/vtf/SharedVtfFlag.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 

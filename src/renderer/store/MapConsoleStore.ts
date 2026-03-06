@@ -2,7 +2,7 @@ import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { useRememberRef } from "~/composables/useRemember.js";
 import { SharedMapCompileLogEvent } from "Shared/SharedMapCompileLogEvent.js";
-import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { CompileState, SharedMapCompileStep } from "Shared/SharedMap.js";
 
 export const useMapConsoleStore = defineStore("map-console", () => {
     const isOpen = useRememberRef(ref(false), "map-console-open");
@@ -15,7 +15,7 @@ export const useMapConsoleStore = defineStore("map-console", () => {
     }
 
     window.electronAPI.map.subscribeCompileProgress((event) => {
-        if (event.state === SharedMapCompileState.InProgress) {
+        if (event.state === CompileState.InProgress) {
             currentStep.value = event.step;
         }
     });

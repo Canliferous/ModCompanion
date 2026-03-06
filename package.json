@@ -11,12 +11,11 @@
         "name": "Second Face Software",
         "email": "hello@secondfacesoftware.com"
     },
-    "license": "MIT",
     "scripts": {
         "run-dist": "cross-env electron build_dist/main/main.cjs",
         "run-dev": "cross-env NODE_ENV=development electron --inspect=9229 --trace-warnings build_dev/main/main.js",
         "dev": "npm run dev:assets && npm run dev:preload && concurrently -k -n MAIN,VITE -c green,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
-        "dev:main": "tsc-alias --outDir build_dev --project src/core/tsconfig.json && tsc --outDir build_dev --project src/main/tsconfig.json && concurrently \"tsc --watch --outDir build_dev --project src/main/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/core/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/main/tsconfig.json\"",
+        "dev:main": "tsc --outDir build_dev/shared --project src/shared/tsconfig.json && tsc --outDir build_dev/core --project src/core/tsconfig.json && tsc --outDir build_dev/main --project src/main/tsconfig.json && concurrently \"tsc --watch --outDir build_dev --project src/main/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/core/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/main/tsconfig.json\"",
         "dev:renderer": "vite --clearScreen false",
         "dev:assets": "copyfiles -u 1 main_assets/* build_dev/main_assets && copyfiles -u 1 main_assets/**/* build_dev/main_assets",
         "dev:preload": "esbuild ./src/preload.ts --bundle --platform=node --packages=external --outfile=./build_dev/preload.js",

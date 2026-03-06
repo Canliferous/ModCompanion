@@ -1,28 +1,28 @@
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
-import SharedSourceFs from "Shared/SharedSourceFs.js";
 import path from "path";
+import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import * as Shared from "mod_companion_shared";
 
 export function getContentRelativePath(filePath: string): string {
     const config = getAppConfig();
-    return SharedSourceFs.getRelativePath(filePath, config.contentPath, "content", config.gameName);
+    return Shared.SourceFs.getRelativePath(filePath, config.contentPath, "content", config.gameName);
 }
 
 export function getGameRelativePath(filePath: string): string {
     const config = getAppConfig();
-    return SharedSourceFs.getRelativePath(filePath, config.gamePath, "game", config.gameName);
+    return Shared.SourceFs.getRelativePath(filePath, config.gamePath, "game", config.gameName);
 }
 
 export function getGameOrContentRelativePath(filePath: string): string {
     const config = getAppConfig();
-    return SharedSourceFs.getGameOrContentRelativePath(filePath, config.gameName, config.rootPath);
+    return Shared.SourceFs.getGameOrContentRelativePath(filePath, config.gameName, config.rootPath);
 }
 
 export function isRelativeToRoot(filePath: string): boolean {
-    return SharedSourceFs.isRelativeToRoot(filePath, getAppConfig().gameName);
+    return Shared.SourceFs.isRelativeToRoot(filePath, getAppConfig().gameName);
 }
 
 export function getRootRelativePath(filePath: string): string {
-    return SharedSourceFs.getRootRelativePath(filePath, getAppConfig().rootPath);
+    return Shared.SourceFs.getRootRelativePath(filePath, getAppConfig().rootPath);
 }
 
 export function isAbsoluteContentFile(filePath: string): boolean {

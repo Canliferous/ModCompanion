@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts" generic="E extends Object, T = E[keyof E]">
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { SharedVtfEnumGrouping } from "Shared/vtf/SharedVtfEnumGrouping.js";
 import { AppDesign } from "~/design/AppDesign.js";

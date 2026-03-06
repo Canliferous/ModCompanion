@@ -2,12 +2,11 @@ import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
 import * as child_process from "node:child_process";
-import { getMainAssetsDir } from "~/helpers/CoreFilesystem.js";
-import { buildMareTfCreateArgs, SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
-import { runConverter } from "~/helpers/converter/CoreSharedConverter.js";
+import { getMainAssetsDir } from "../helpers/CoreFilesystem.js";
+import { runConverter } from "../helpers/converter/CoreSharedConverter.js";
 import { getAppConfig } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 let binary = "";
 
@@ -24,10 +23,14 @@ export const MareTfSystem = {
             return true;
         }
 
-        Logger.warning(SharedLogChannel.MareTF, "Cannot determine binary for maretf");
+        Logger.warning(Shared.Log.Channel.MareTF, "Cannot determine binary for maretf");
         return false;
     },
-    async createVtf(inputPath: string, outputPath: string, options: SharedVtfCreateOptions = {}): Promise<string> {
+    async createVtf(
+        inputPath: string,
+        outputPath: string,
+        options: Shared.Vtf.SharedVtfCreateOptions = {},
+    ): Promise<string> {
         const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
 
         try {
@@ -41,8 +44,12 @@ export const MareTfSystem = {
     },
 };
 
-function _buildMateTfCreateCommand(inputPath: string, outputPath: string, options: SharedVtfCreateOptions): string {
-    const args = buildMareTfCreateArgs(options);
+function _buildMateTfCreateCommand(
+    inputPath: string,
+    outputPath: string,
+    options: Shared.Vtf.SharedVtfCreateOptions,
+): string {
+    const args = Shared.Vtf.buildMareTfCreateArgs(options);
     const cmd = `${binary} -y create ${inputPath} -o ${outputPath} ${args}`;
     return cmd;
 }

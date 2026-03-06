@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { SharedMapCompileState } from "Shared/SharedMapCompile.js";
+import { CompileState } from "Shared/SharedMap.js";
 import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 
 export const useMapCompileStore = defineStore("map-compile", () => {
     const state = ref<SharedPlayPauseStopControlsState>(SharedPlayPauseStopControlsState.Stopped);
-    const progress = reactive(new Map<string, SharedMapCompileState>());
+    const progress = reactive(new Map<string, CompileState>());
 
     function compileNow(mapPath: string) {
         if (state.value !== SharedPlayPauseStopControlsState.Stopped) return;

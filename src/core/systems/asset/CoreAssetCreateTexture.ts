@@ -1,9 +1,8 @@
-import { SharedAssetTypes, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import { generateAssetId } from "./CoreAssetRepository.js";
 import { filename } from "pathe/utils";
+import { generateAssetId } from "./CoreAssetRepository.js";
 import path from "path";
-import { forwardSlashed } from "Shared/SharedSourceFs.js";
-import { getContentRelativePath } from "~/helpers/CoreSourceFs.js";
+import { getContentRelativePath } from "../../helpers/CoreSourceFs.js";
+import * as Shared from "mod_companion_shared";
 
 function _disassembleTextureName(contentFile: string): { sub: string; name: string } {
     const materialsrc = "materialsrc";
@@ -17,20 +16,20 @@ function _disassembleTextureName(contentFile: string): { sub: string; name: stri
 export function deriveTextureGameFileName(contentFile: string): string {
     const { sub, name } = _disassembleTextureName(contentFile);
     const stripped = path.join("materials", path.dirname(sub), name) + ".vtf";
-    return forwardSlashed(stripped);
+    return Shared.SourceFs.forwardSlashed(stripped);
 }
 
 export function deriveTextureDisplayName(contentFile: string): string {
     const { sub, name } = _disassembleTextureName(contentFile);
     const stripped = path.join(path.dirname(sub), name);
-    return forwardSlashed(stripped);
+    return Shared.SourceFs.forwardSlashed(stripped);
 }
 
-export function createTextureAssetDefinition(file: string): SharedTextureAssetDefinition {
+export function createTextureAssetDefinition(file: string): Shared.Asset.SharedTextureAssetDefinition {
     const id = generateAssetId();
     const contentFile = getContentRelativePath(file);
-    const assetDef: SharedTextureAssetDefinition = {
-        type: SharedAssetTypes.Texture,
+    const assetDef: Shared.Asset.SharedTextureAssetDefinition = {
+        type: Shared.Asset.Types.Texture,
         id: id,
         contentFiles: [contentFile],
         gameFiles: [deriveTextureGameFileName(contentFile)],

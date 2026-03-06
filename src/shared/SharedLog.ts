@@ -1,6 +1,6 @@
 export const MAX_MESSAGES = 500;
 
-export enum SharedLogChannel {
+export enum Channel {
     Generic = "Generic",
     GameInterop = "Game",
     ConversionAgent = "Conv Agent",
@@ -15,31 +15,26 @@ export enum SharedLogChannel {
     TcArtifacts = "TcArtifacts",
 }
 
-export enum SharedLogType {
+export enum Type {
     Debug,
     Info,
     Warning,
     Error,
 }
 
-export const SharedLogTypesArray = [
-    SharedLogType.Debug,
-    SharedLogType.Info,
-    SharedLogType.Warning,
-    SharedLogType.Error,
-];
+export const AllTypes = [Type.Debug, Type.Info, Type.Warning, Type.Error];
 
-export const SharedLogTypeNames: Record<SharedLogType, string> = {
-    [SharedLogType.Debug]: "Debug",
-    [SharedLogType.Info]: "Info",
-    [SharedLogType.Warning]: "Warning",
-    [SharedLogType.Error]: "Error",
+export const TypeNames: Record<Type, string> = {
+    [Type.Debug]: "Debug",
+    [Type.Info]: "Info",
+    [Type.Warning]: "Warning",
+    [Type.Error]: "Error",
 };
 
-export interface SharedLogEvent {
+export interface Event {
     data: any[];
-    type: SharedLogType;
-    channel: SharedLogChannel;
+    type: Type;
+    channel: Channel;
     time: Date;
 }
 
@@ -60,29 +55,29 @@ export function getLogTime(date: Date, noDate: boolean = false, noMilliseconds: 
     return `${y}-${M}-${d} ${time}`;
 }
 
-export function getLogPrefix(logEvent: SharedLogEvent, noDate: boolean = false, noMilliseconds: boolean = false) {
+export function getLogPrefix(logEvent: Event, noDate: boolean = false, noMilliseconds: boolean = false) {
     const time = getLogTime(logEvent.time, noDate, noMilliseconds);
     const channel = `[${logEvent.channel}]`;
 
     return `${time} ${channel}`;
 }
 
-export function printLogEvent(logEvent: SharedLogEvent) {
+export function printLogEvent(logEvent: Event) {
     const prefix = getLogPrefix(logEvent);
     switch (logEvent.type) {
-        case SharedLogType.Debug: {
+        case Type.Debug: {
             console.debug(prefix, ...logEvent.data);
             break;
         }
-        case SharedLogType.Error: {
+        case Type.Error: {
             console.error(prefix, ...logEvent.data);
             break;
         }
-        case SharedLogType.Warning: {
+        case Type.Warning: {
             console.warn(prefix, ...logEvent.data);
             break;
         }
-        case SharedLogType.Info:
+        case Type.Info:
         default: {
             console.log(prefix, ...logEvent.data);
             break;

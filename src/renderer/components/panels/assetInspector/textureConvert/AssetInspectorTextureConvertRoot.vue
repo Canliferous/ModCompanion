@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import { SharedAsset, SharedTextureAsset, SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { getAppConfig } from "~/renderer-config.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";

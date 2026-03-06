@@ -1,7 +1,7 @@
-import { SharedAssetId } from "./SharedAssetDefinition.js";
+import { AssetId } from "./SharedAsset.js";
 
 export interface SharedAssetGroupDefinition {
-    assets: SharedAssetId[];
+    assets: AssetId[];
     displayName: string;
 }
 

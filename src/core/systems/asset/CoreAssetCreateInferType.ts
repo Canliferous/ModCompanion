@@ -1,4 +1,4 @@
-import SharedConstants from "Shared/SharedConstants.js";
+import * as Shared from "mod_companion_shared";
 
 export const AssetCreationInferResults = {
     Unknown: "unknown",
@@ -38,7 +38,7 @@ function _allModelFiles(files: string[]): boolean {
 }
 
 function _isTextureFile(file: string): boolean {
-    for (const ending of SharedConstants.texturesFileEndings) {
+    for (const ending of Shared.FileEndings.texturesFileEndings) {
         if (file.endsWith(ending)) return true;
     }
 
@@ -46,7 +46,7 @@ function _isTextureFile(file: string): boolean {
 }
 
 function _isModelFile(file: string): boolean {
-    for (const ending of SharedConstants.modelFileEndings) {
+    for (const ending of Shared.FileEndings.modelFileEndings) {
         if (file.endsWith(ending)) return true;
     }
 

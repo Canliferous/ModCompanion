@@ -1,10 +1,10 @@
 import child_process from "node:child_process";
 import os from "node:os";
 import { Logger } from "../../systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export async function runConverter(cmd: string, cwd: string, converterName: string): Promise<string> {
-    Logger.info(SharedLogChannel.ConversionAgent, `Running ${converterName} converter cmd`, cmd);
+    Logger.info(Shared.Log.Channel.ConversionAgent, `Running ${converterName} converter cmd`, cmd);
 
     const log: string[] = [`Command: ${cmd}`, ""];
 

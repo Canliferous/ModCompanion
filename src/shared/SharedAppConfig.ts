@@ -1,8 +1,8 @@
-import { SharedVtfCreateOptions } from "./vtf/SharedVtf.js";
-import { S3ClientConfig } from "@aws-sdk/client-s3";
-import { SharedMapPresets } from "./SharedMapPreset.js";
+import { SharedVtfCreateOptions } from "./SharedVtf.js";
+// import { S3ClientConfig } from "@aws-sdk/client-s3";
+import { SharedMapPresets } from "./SharedMap.js";
 
-export interface SharedAppConfig {
+export interface IAppConfig {
     /**
      * Path of the repo root directory
      * Represents: <repo>/
@@ -65,6 +65,6 @@ export interface SharedAppConfig {
         vtfOptions?: SharedVtfCreateOptions;
     };
 
-    teamCityArtifactCloud?: S3ClientConfig;
+    teamCityArtifactCloud?: any; //S3ClientConfig;
     teamCityArtifactCloudBucket?: string;
 }

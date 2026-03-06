@@ -2,9 +2,9 @@ import path from "path";
 import * as os from "node:os";
 import * as child_process from "node:child_process";
 import { existsSync } from "fs";
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
-import { Logger } from "~/systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import { Logger } from "../systems/CoreLogSystem.js";
+import * as Shared from "mod_companion_shared";
 
 export function browseToFile(filePath: string): void {
     const normalizedPath = path.join(getAppConfig().rootPath, filePath);
@@ -13,7 +13,7 @@ export function browseToFile(filePath: string): void {
 
     if (!existsSync(normalizedPath)) {
         Logger.info(
-            SharedLogChannel.FileBrowser,
+            Shared.Log.Channel.FileBrowser,
             "Browsing to file that doesn't exist, opening folder",
             normalizedPath,
         );
@@ -23,14 +23,14 @@ export function browseToFile(filePath: string): void {
     }
 
     if (command === undefined) {
-        Logger.error(SharedLogChannel.FileBrowser, "Cannot browse, unsupported OS");
+        Logger.error(Shared.Log.Channel.FileBrowser, "Cannot browse, unsupported OS");
         return;
     }
 
-    Logger.info(SharedLogChannel.FileBrowser, "Running", command);
+    Logger.info(Shared.Log.Channel.FileBrowser, "Running", command);
     child_process.exec(command, (error) => {
         if (error) {
-            Logger.error(SharedLogChannel.FileBrowser, `Failed: ${error.message}`);
+            Logger.error(Shared.Log.Channel.FileBrowser, `Failed: ${error.message}`);
         }
     });
 }
@@ -93,13 +93,13 @@ export function openFile(filePath: string): void {
     } else if (platform === "linux") {
         command = `xdg-open "${normalizedPath}"`;
     } else {
-        Logger.error(SharedLogChannel.FileBrowser, `Unsupported platform: ${platform}`);
+        Logger.error(Shared.Log.Channel.FileBrowser, `Unsupported platform: ${platform}`);
         return;
     }
 
     child_process.exec(command, (error) => {
         if (error) {
-            Logger.error(SharedLogChannel.FileBrowser, `Failed to open: ${error.message}`);
+            Logger.error(Shared.Log.Channel.FileBrowser, `Failed to open: ${error.message}`);
         }
     });
 }

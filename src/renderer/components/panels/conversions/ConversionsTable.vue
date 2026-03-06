@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import { SharedConversionEvent } from "Shared/SharedConversion.js";
+import { ConversionEvent } from "Shared/SharedConversion.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
 import MConversionStateBadge from "~/components/common/MConversionStateBadge.vue";
@@ -23,10 +23,10 @@ import ConversionsCellAsset from "~/components/panels/conversions/ConversionsCel
 
 const conversionStore = useAssetConversionStore();
 
-const props = defineProps<{ history: SharedConversionEvent[] }>();
+const props = defineProps<{ history: ConversionEvent[] }>();
 const entries = computed(() => props.history.toReversed());
 
-const columns: DataTableColumn<SharedConversionEvent>[] = [
+const columns: DataTableColumn<ConversionEvent>[] = [
     {
         id: "asset",
         label: "Asset",

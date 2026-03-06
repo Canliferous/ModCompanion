@@ -1,14 +1,13 @@
 import fs from "fs/promises";
-import { SharedAssetGroup, SharedAssetGroupDefinition, SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import path from "path";
 import { existsSync } from "fs";
 import { getAppConfig } from "./CoreConfigSystem.js";
 import { v4 } from "uuid";
 import { filename } from "pathe/utils";
+import * as Shared from "mod_companion_shared";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
 
-const groups: Map<SharedAssetGroupId, SharedAssetGroup> = new Map<SharedAssetGroupId, SharedAssetGroup>();
+const groups: Map<Shared.AssetGroup.SharedAssetGroupId, Shared.AssetGroup.SharedAssetGroup> = new Map();
 
 export const AssetGroupsSystem = {
     async initSystem(): Promise<boolean> {
@@ -19,17 +18,20 @@ export const AssetGroupsSystem = {
 
         return true;
     },
-    generateId(): SharedAssetGroupId {
+    generateId(): Shared.AssetGroup.SharedAssetGroupId {
         return v4();
     },
-    async write(id: SharedAssetGroupId, assetGroupDef: SharedAssetGroupDefinition): Promise<SharedAssetGroup> {
+    async write(
+        id: Shared.AssetGroup.SharedAssetGroupId,
+        assetGroupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
+    ): Promise<Shared.AssetGroup.SharedAssetGroup> {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
         const contents = JSON.stringify(assetGroupDef);
         await fs.writeFile(filePath, contents);
-        Logger.info(SharedLogChannel.Assets, "Wrote asset group", filePath, assetGroupDef);
+        Logger.info(Shared.Log.Channel.Assets, "Wrote asset group", filePath, assetGroupDef);
         return { filePath, def: assetGroupDef, id };
     },
-    delete(id: SharedAssetGroupId) {
+    delete(id: Shared.AssetGroup.SharedAssetGroupId) {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
         return fs.rm(filePath);
     },
@@ -49,7 +51,7 @@ export const AssetGroupsSystem = {
                 continue;
             }
             if (groups.has(id)) {
-                Logger.warning(SharedLogChannel.Assets, "Duplicate asset group id", id);
+                Logger.warning(Shared.Log.Channel.Assets, "Duplicate asset group id", id);
                 continue;
             }
 
@@ -60,7 +62,7 @@ export const AssetGroupsSystem = {
         }
 
         const endTime = new Date().getTime();
-        Logger.info(SharedLogChannel.Assets, `Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
+        Logger.info(Shared.Log.Channel.Assets, `Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
 
         // notifyAssetGroupsUpdated({ groups }); // todo
     },

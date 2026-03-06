@@ -1,6 +1,6 @@
-import { SharedAssetId } from "./SharedAssetDefinition.js";
+import { AssetId } from "./SharedAsset.js";
 
-export enum SharedConversionState {
+export enum State {
     Unknown = "unknown",
     Invalid = "invalid",
     Pending = "pending",
@@ -11,43 +11,43 @@ export enum SharedConversionState {
     NoChange = "no_change",
 }
 
-export function getConversionStateName(state: SharedConversionState): string {
+export function getConversionStateName(state: State): string {
     switch (state) {
-        case SharedConversionState.Invalid:
+        case State.Invalid:
             return "Invalid";
-        case SharedConversionState.Pending:
+        case State.Pending:
             return "Pending";
-        case SharedConversionState.PendingForced:
+        case State.PendingForced:
             return "Pending (Forced)";
-        case SharedConversionState.InProgress:
+        case State.InProgress:
             return "In Progress";
-        case SharedConversionState.Finished:
+        case State.Finished:
             return "Finished";
-        case SharedConversionState.Failed:
+        case State.Failed:
             return "Failed";
-        case SharedConversionState.NoChange:
+        case State.NoChange:
             return "No Change";
-        case SharedConversionState.Unknown:
+        case State.Unknown:
         default:
             return "Unknown";
     }
 }
 
-export function getConversionStateColor(state: SharedConversionState): string {
+export function getConversionStateColor(state: State): string {
     switch (state) {
-        case SharedConversionState.Invalid:
-        case SharedConversionState.Failed: {
+        case State.Invalid:
+        case State.Failed: {
             return "error";
         }
-        case SharedConversionState.InProgress: {
+        case State.InProgress: {
             return "info";
         }
-        case SharedConversionState.Finished: {
+        case State.Finished: {
             return "success";
         }
-        case SharedConversionState.Pending:
-        case SharedConversionState.PendingForced:
-        case SharedConversionState.Unknown:
+        case State.Pending:
+        case State.PendingForced:
+        case State.Unknown:
         default: {
             return "neutral";
         }
@@ -55,13 +55,13 @@ export function getConversionStateColor(state: SharedConversionState): string {
 }
 
 export interface SharedConversion {
-    assetId: SharedAssetId;
-    state: SharedConversionState;
+    assetId: AssetId;
+    state: State;
 }
 
-export interface SharedConversionEvent {
-    assetId: SharedAssetId;
-    stateHistory: SharedConversionState[];
+export interface ConversionEvent {
+    assetId: AssetId;
+    stateHistory: State[];
     startTime: Date;
 
     /** When undefined, this is ongoing */
@@ -70,15 +70,15 @@ export interface SharedConversionEvent {
 }
 
 export interface SharedConversionUpdateIpcEvent {
-    conversions: Map<SharedAssetId, SharedConversion>;
+    conversions: Map<AssetId, SharedConversion>;
     conversionsLastChangeTime: Date | undefined;
-    events: SharedConversionEvent[];
+    events: ConversionEvent[];
     eventsLastChangeTime: Date | undefined;
     summary: SharedConversionSummary;
 }
 
 export interface SharedConversionGetStateIpcReport {
-    conversions: Map<SharedAssetId, SharedConversion>;
+    conversions: Map<AssetId, SharedConversion>;
 }
 
 export interface SharedConversionSummary {

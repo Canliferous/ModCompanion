@@ -1,16 +1,10 @@
 import chokidar, { FSWatcher } from "chokidar";
 import { getAppConfig } from "./CoreConfigSystem.js";
 import path from "path";
-import {
-    SharedProjectFileEntry,
-    SharedProjectListFilesReport,
-    SharedProjectListFilesReportTypes,
-} from "Shared/SharedFileListing.js";
 import fs from "fs/promises";
-import SharedSourceFs from "Shared/SharedSourceFs.js";
-// import { notifyFileBrowserDirectoryUpdated } from "../../main/api/MainFileBrowserApi.js";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
+// import { notifyFileBrowserDirectoryUpdated } from "../../main/api/MainFileBrowserApi.js";
 
 let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
@@ -20,13 +14,13 @@ export const FileBrowserSystem = {
         watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
         async function _change(filePath: string) {
-            Logger.debug(SharedLogChannel.FileBrowser, "File changed", filePath);
+            Logger.debug(Shared.Log.Channel.FileBrowser, "File changed", filePath);
             if (!currentPathAbsolute || !currentPathRelative) {
                 return;
             }
 
             const report = await FileBrowserSystem.listFiles(currentPathAbsolute);
-            if (report.type !== SharedProjectListFilesReportTypes.Success) {
+            if (report.type !== Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
                 return;
             }
 
@@ -43,7 +37,7 @@ export const FileBrowserSystem = {
         const config = getAppConfig();
         const fullPath = path.join(config.rootPath, currentDir);
 
-        Logger.info(SharedLogChannel.FileBrowser, "Watching", fullPath);
+        Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullPath);
         if (currentPathAbsolute) {
             watcher?.unwatch(currentPathAbsolute);
         }
@@ -66,10 +60,10 @@ export const FileBrowserSystem = {
         const ind = somePath.indexOf(config.rootPath);
         if (ind !== 0) return undefined;
 
-        return SharedSourceFs.stripPathStart(somePath, config.rootPath);
+        return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
     },
 
-    sortFileEntries(entries: SharedProjectFileEntry[]) {
+    sortFileEntries(entries: Shared.FileListing.SharedProjectFileEntry[]) {
         entries.sort((x, y) => {
             const file1 = x.isFile;
             const file2 = y.isFile;
@@ -81,17 +75,20 @@ export const FileBrowserSystem = {
         });
     },
 
-    async listFiles(dirPath: string, resultBaseRoot?: string): Promise<SharedProjectListFilesReport> {
-        if (!this.isProjectPath(dirPath)) return { type: SharedProjectListFilesReportTypes.Invalid };
+    async listFiles(
+        dirPath: string,
+        resultBaseRoot?: string,
+    ): Promise<Shared.FileListing.SharedProjectListFilesReport> {
+        if (!this.isProjectPath(dirPath)) return { type: Shared.FileListing.SharedProjectListFilesReportTypes.Invalid };
 
         let paths: string[] = [];
         try {
             paths = await fs.readdir(dirPath);
         } catch (e) {
             console.warn(e);
-            return { type: SharedProjectListFilesReportTypes.Invalid };
+            return { type: Shared.FileListing.SharedProjectListFilesReportTypes.Invalid };
         }
-        const entries: SharedProjectFileEntry[] = [];
+        const entries: Shared.FileListing.SharedProjectFileEntry[] = [];
 
         for (const p of paths) {
             if (p.startsWith(".")) continue;
@@ -121,6 +118,6 @@ export const FileBrowserSystem = {
         }
         this.sortFileEntries(entries);
 
-        return { entries, type: SharedProjectListFilesReportTypes.Success };
+        return { entries, type: Shared.FileListing.SharedProjectListFilesReportTypes.Success };
     },
 };

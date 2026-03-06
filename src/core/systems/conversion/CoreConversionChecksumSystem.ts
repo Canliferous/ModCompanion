@@ -1,17 +1,16 @@
-import { SharedAssetDefinition, SharedAssetId, SharedAssetMap } from "Shared/SharedAssetDefinition.js";
 import { getAppConfig } from "../CoreConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
 import crypto from "node:crypto";
 import { Logger } from "../CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export const ConversionChecksumSystem = {
-    checksums: new Map<SharedAssetId, string>(),
+    checksums: new Map<Shared.Asset.AssetId, string>(),
     initSystem() {
         return true;
     },
-    async initChecksums(map: SharedAssetMap) {
+    async initChecksums(map: Shared.Asset.SharedAssetMap) {
         const startTime = new Date();
         {
             const assets = map.values();
@@ -26,7 +25,7 @@ export const ConversionChecksumSystem = {
         }
         const endTime = new Date();
         Logger.info(
-            SharedLogChannel.ConversionAgent,
+            Shared.Log.Channel.ConversionAgent,
             `Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`,
         );
     },
@@ -44,7 +43,7 @@ export const ConversionChecksumSystem = {
         const sum = results.join();
         return sum;
     },
-    async hasChanged(asset: SharedAssetDefinition): Promise<boolean> {
+    async hasChanged(asset: Shared.Asset.SharedAssetDefinition): Promise<boolean> {
         if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
 
         const newSum = await this.createChecksum(asset.contentFiles);

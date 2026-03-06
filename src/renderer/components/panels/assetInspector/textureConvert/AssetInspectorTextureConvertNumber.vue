@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { SharedVtfCreateNumberOptions, SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateNumberOptions, SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 
 const props = defineProps<{

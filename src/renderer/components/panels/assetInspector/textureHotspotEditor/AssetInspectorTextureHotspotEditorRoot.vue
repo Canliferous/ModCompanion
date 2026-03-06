@@ -90,7 +90,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { useRememberRef } from "~/composables/useRemember.js";
 import { SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
 
 const id = useId();

@@ -1,13 +1,12 @@
 import path from "path";
-import SharedConstants from "Shared/SharedConstants.js";
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { createTextureAssetDefinition } from "./CoreAssetCreateTexture.js";
 import { getAssetFromFile } from "./CoreAssetRepository.js";
+import * as Shared from "mod_companion_shared";
 
-export function detectPotentialAssets(contentTree: string[]): SharedAsset[] {
-    const assets: SharedAsset[] = [];
+export function detectPotentialAssets(contentTree: string[]): Shared.Asset.SharedAsset[] {
+    const assets: Shared.Asset.SharedAsset[] = [];
     for (const file of contentTree) {
-        const isTexture = SharedConstants.isTextureFileEnding(path.extname(file));
+        const isTexture = Shared.FileEndings.isTextureFileEnding(path.extname(file));
         if (isTexture) {
             if (!file.includes("_hr")) continue;
             if (getAssetFromFile(file) !== undefined) continue;

@@ -1,10 +1,10 @@
-import { SharedTextureAssetDefinition } from "Shared/SharedAssetDefinition.js";
+import path from "path";
 import { MareTfSystem } from "../../systems/CoreMaretfSystem.js";
 import { getAppConfig } from "../../systems/CoreConfigSystem.js";
-import path from "path";
+import * as Shared from "mod_companion_shared";
 
 export const TextureConverter = {
-    isValid(asset: SharedTextureAssetDefinition): boolean {
+    isValid(asset: Shared.Asset.SharedTextureAssetDefinition): boolean {
         return (
             asset.contentFiles !== undefined &&
             asset.contentFiles?.length === 1 &&
@@ -12,7 +12,7 @@ export const TextureConverter = {
             asset.gameFiles?.length === 1
         );
     },
-    async convert(asset: SharedTextureAssetDefinition): Promise<string | undefined> {
+    async convert(asset: Shared.Asset.SharedTextureAssetDefinition): Promise<string | undefined> {
         if (!this.isValid(asset)) return undefined;
         const srcFileRel = asset.contentFiles![0];
         const config = getAppConfig();

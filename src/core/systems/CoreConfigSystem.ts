@@ -1,12 +1,9 @@
 import path from "path";
 import fs from "fs/promises";
-import { SharedAppConfig } from "Shared/SharedAppConfig.js";
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
 import os from "node:os";
 import { S3ClientConfig } from "@aws-sdk/client-s3";
-import { SharedMapPresets } from "Shared/SharedMapPreset.js";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 interface ConfigFile {
     root?: string;
@@ -14,19 +11,19 @@ interface ConfigFile {
     launcherName?: string;
 
     assetDefaults?: {
-        vtfOptions?: SharedVtfCreateOptions;
+        vtfOptions?: Shared.Vtf.SharedVtfCreateOptions;
     };
 
     teamCityArtifactCloud?: S3ClientConfig;
     teamCityArtifactCloudBucket?: string;
 
     mapSourceDirs?: string[];
-    mapPresets?: SharedMapPresets;
+    mapPresets?: Shared.Map.SharedMapPresets;
 }
 
-let config: SharedAppConfig = null!;
+let config: Shared.AppConfig.IAppConfig = null!;
 
-export function getAppConfig(): SharedAppConfig {
+export function getAppConfig(): Shared.AppConfig.IAppConfig {
     return config;
 }
 
@@ -34,7 +31,7 @@ export async function initConfigSystem(): Promise<boolean> {
     let cfgFile = await _loadConfig();
 
     if (cfgFile === undefined) {
-        Logger.info(SharedLogChannel.MainSystems, "Starting with default config");
+        Logger.info(Shared.Log.Channel.MainSystems, "Starting with default config");
         cfgFile = _createDefaultConfig();
     }
 
@@ -45,7 +42,7 @@ export async function initConfigSystem(): Promise<boolean> {
     return true;
 }
 
-function _createRevolutionStandardConfig(c: ConfigFile): SharedAppConfig | undefined {
+function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.IAppConfig | undefined {
     if (!c.root) {
         return undefined;
     }
@@ -107,7 +104,7 @@ function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): s
         return path.join(root, "game/bin/win64", binaryName + ".exe");
     }
 
-    Logger.info(SharedLogChannel.MainSystems, "Unsupported operating system platform", platform);
+    Logger.info(Shared.Log.Channel.MainSystems, "Unsupported operating system platform", platform);
     return path.join(root, binaryName);
 }
 
@@ -138,7 +135,7 @@ async function _loadConfig(): Promise<ConfigFile | undefined> {
 
         return cfgAny;
     } catch (e) {
-        Logger.error(SharedLogChannel.MainSystems, "Error loading config", e);
+        Logger.error(Shared.Log.Channel.MainSystems, "Error loading config", e);
         return undefined;
     }
 }

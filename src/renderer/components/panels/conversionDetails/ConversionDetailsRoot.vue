@@ -44,11 +44,11 @@
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import { SharedConversionEvent } from "Shared/SharedConversion.js";
+import { ConversionEvent } from "Shared/SharedConversion.js";
 
 const assetListStore = useAssetListStore();
 
-const props = defineProps<{ event: SharedConversionEvent }>();
+const props = defineProps<{ event: ConversionEvent }>();
 
 const asset = computed(() => assetListStore.getAssetById(props.event.assetId));
 function handleClickAsset() {

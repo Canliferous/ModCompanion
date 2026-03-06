@@ -1,17 +1,10 @@
-import {
-    isValidAssetType,
-    SharedAsset,
-    SharedAssetDefinition,
-    SharedAssetDefinitionFileExtension,
-    SharedAssetId,
-    SharedAssetMap,
-} from "Shared/SharedAssetDefinition.js";
 import path from "path";
 import fs from "fs/promises";
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
+import { getAppConfig } from "../CoreConfigSystem.js";
+import * as Shared from "mod_companion_shared";
 
-export async function buildAssets(contentTree: string[]): Promise<SharedAssetMap> {
-    const assets: SharedAssetMap = new Map<SharedAssetId, SharedAsset>();
+export async function buildAssets(contentTree: string[]): Promise<Shared.Asset.SharedAssetMap> {
+    const assets: Shared.Asset.SharedAssetMap = new Map<Shared.Asset.AssetId, Shared.Asset.SharedAsset>();
     const rootPath = getAppConfig().rootPath;
 
     for (const filePath of contentTree) {
@@ -31,7 +24,7 @@ export async function buildAssets(contentTree: string[]): Promise<SharedAssetMap
             continue;
         }
 
-        const asset: SharedAsset = {
+        const asset: Shared.Asset.SharedAsset = {
             def: definition,
             defFilePath: filePath,
         };
@@ -42,13 +35,13 @@ export async function buildAssets(contentTree: string[]): Promise<SharedAssetMap
 }
 
 function _isAssetDefinitionFile(filePath: string): boolean {
-    return path.extname(filePath).toLowerCase() === SharedAssetDefinitionFileExtension;
+    return path.extname(filePath).toLowerCase() === Shared.Asset.SharedAssetDefinitionFileExtension;
 }
 
 async function _readAssetDefinitionFile(
     filePath: string,
     fileRootPath: string,
-): Promise<SharedAssetDefinition | undefined> {
+): Promise<Shared.Asset.SharedAssetDefinition | undefined> {
     const fullPath = path.join(fileRootPath, filePath);
     const text = await fs.readFile(fullPath, "utf-8");
     const unk = JSON.parse(text);
@@ -61,7 +54,7 @@ async function _readAssetDefinitionFile(
         console.warn(`Asset definition file ${filePath} has no id`);
         return undefined;
     }
-    if (!isValidAssetType(unk.type)) {
+    if (!Shared.Asset.isValidAssetType(unk.type)) {
         console.warn(`Asset definition file ${filePath} has invalid type ${unk.type}`);
         return undefined;
     }

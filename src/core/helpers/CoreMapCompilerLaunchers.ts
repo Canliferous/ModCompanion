@@ -1,9 +1,9 @@
 import * as child_process from "node:child_process";
-import { getAppConfig } from "~/systems/CoreConfigSystem.js";
+import { getAppConfig } from "../systems/CoreConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
-import { Logger } from "~/systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Logger } from "../systems/CoreLogSystem.js";
+import * as Shared from "mod_companion_shared";
 
 export type MapCompilerAction = (
     mapPath: string,
@@ -89,7 +89,7 @@ function _runCommand(
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
-    Logger.info(SharedLogChannel.MapCompile, `Running map command ${binaryPath} ${args} in ${cwd}`);
+    Logger.info(Shared.Log.Channel.MapCompile, `Running map command ${binaryPath} ${args} in ${cwd}`);
 
     return new Promise((resolve) => {
         const proc = child_process.spawn(binaryPath, args, { cwd });

@@ -1,4 +1,8 @@
 // import { notifyCompileLog, notifyCompileProgress, notifyQueueUpdated } from "../../main/api/MainMapCompileApi.js";
+
+import { getAppConfig } from "./CoreConfigSystem.js";
+import child_process from "node:child_process";
+import * as Shared from "mod_companion_shared";
 import {
     MapCompilerAction,
     runDone,
@@ -6,14 +10,11 @@ import {
     runVBsp,
     runVRad,
     runVVis,
-} from "~/helpers/CoreMapCompilerLaunchers.js";
-import { SharedMapCompileState, SharedMapCompileStep } from "Shared/SharedMapCompile.js";
-import { getAppConfig } from "./CoreConfigSystem.js";
-import child_process from "node:child_process";
+} from "../helpers/CoreMapCompilerLaunchers.js";
 
 interface Stage {
-    step: SharedMapCompileStep;
-    state: SharedMapCompileState;
+    step: Shared.Map.SharedMapCompileStep;
+    state: Shared.Map.CompileState;
     action: MapCompilerAction;
 }
 
@@ -66,28 +67,28 @@ export const MapCompileSystem = {
 function _createStages(): Stage[] {
     return [
         {
-            state: SharedMapCompileState.Idle,
-            step: SharedMapCompileStep.VBsp,
+            state: Shared.Map.CompileState.Idle,
+            step: Shared.Map.SharedMapCompileStep.VBsp,
             action: runVBsp,
         },
         {
-            state: SharedMapCompileState.Idle,
-            step: SharedMapCompileStep.Post,
+            state: Shared.Map.CompileState.Idle,
+            step: Shared.Map.SharedMapCompileStep.Post,
             action: runPostcompiler,
         },
         {
-            state: SharedMapCompileState.Idle,
-            step: SharedMapCompileStep.VVis,
+            state: Shared.Map.CompileState.Idle,
+            step: Shared.Map.SharedMapCompileStep.VVis,
             action: runVVis,
         },
         {
-            state: SharedMapCompileState.Idle,
-            step: SharedMapCompileStep.VRad,
+            state: Shared.Map.CompileState.Idle,
+            step: Shared.Map.SharedMapCompileStep.VRad,
             action: runVRad,
         },
         {
-            state: SharedMapCompileState.Idle,
-            step: SharedMapCompileStep.Done,
+            state: Shared.Map.CompileState.Idle,
+            step: Shared.Map.SharedMapCompileStep.Done,
             action: runDone,
         },
     ];
@@ -113,11 +114,11 @@ function _workQueue() {
 }
 
 function _isStepsCompleted(steps: Stage[]): boolean {
-    return !steps.some((s) => s.state !== SharedMapCompileState.Completed);
+    return !steps.some((s) => s.state !== Shared.Map.CompileState.Completed);
 }
 
 function _workMap(mapPath: string, steps: Stage[]) {
-    const inProgressStepIdx = steps.findIndex((s) => s.state === SharedMapCompileState.InProgress);
+    const inProgressStepIdx = steps.findIndex((s) => s.state === Shared.Map.CompileState.InProgress);
     if (inProgressStepIdx > 0 || currentCompilePromise !== undefined) {
         return;
     }
@@ -125,7 +126,7 @@ function _workMap(mapPath: string, steps: Stage[]) {
     // Start next stage
     for (let i = 0; i < steps.length; i++) {
         const step = steps[i];
-        if (step.state === SharedMapCompileState.Idle) {
+        if (step.state === Shared.Map.CompileState.Idle) {
             _startStage(mapPath, i);
             return;
         }
@@ -150,7 +151,7 @@ function _startStage(mapPath: string, stageIdx: number): void {
             // notifyCompileLog({ mapPath, message: msg, step: stage.step, isError: true }); // todo
         },
     );
-    stage.state = SharedMapCompileState.InProgress;
+    stage.state = Shared.Map.CompileState.InProgress;
     // notifyCompileProgress({ mapPath, step: stage.step, state: stage.state }); // todo
 
     currentCompilePromise.then(() => {
@@ -160,6 +161,6 @@ function _startStage(mapPath: string, stageIdx: number): void {
 
 function _stageFinished(mapPath: string, stage: Stage): void {
     currentCompilePromise = undefined;
-    stage.state = SharedMapCompileState.Completed;
+    stage.state = Shared.Map.CompileState.Completed;
     // notifyCompileProgress({ mapPath, step: stage.step, state: stage.state }); //todo
 }

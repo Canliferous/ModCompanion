@@ -8,7 +8,7 @@ import fs from "fs/promises";
 import { existsSync } from "fs";
 import { SharedSeconds } from "Shared/SharedTypes.js";
 import * as kv from "@sourcelib/kv";
-import { SharedMapCompileStep } from "Shared/SharedMapCompile.js";
+import { SharedMapCompileStep } from "Shared/SharedMap.js";
 
 export function registerMapTimeReportApi(): boolean {
     ipcMain.handle(SharedIpcChannels.MapCreateTimeReport, (e, maps: SharedMapPath[]) => _createTimeReport(maps));

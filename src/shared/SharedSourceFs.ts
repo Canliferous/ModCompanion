@@ -60,15 +60,6 @@ export function forwardSlashed(str: string): string {
     return str.replace(/\\/g, "/");
 }
 
-function stripPathStart(filePath: string, prefix: string): string {
+export function stripPathStart(filePath: string, prefix: string): string {
     return forwardSlashed(filePath.substring(prefix.length + 1));
 }
-
-export default {
-    getRelativePath,
-    getGameOrContentRelativePath,
-    isRelativeToRoot,
-    getRootRelativePath,
-    forwardSlashed,
-    stripPathStart,
-};

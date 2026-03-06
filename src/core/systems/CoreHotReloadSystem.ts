@@ -1,8 +1,7 @@
-import { isTextureAsset, SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { getAssetMap } from "~/systems/asset/CoreAssetRepository.js";
+import { getAssetMap } from "./asset/CoreAssetRepository.js";
 import { StrataInteropSystem } from "./CoreStrataInteropSystem.js";
 import { Logger } from "./CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 let hotReloadEnabled = false;
 
@@ -10,7 +9,7 @@ export const HotReloadSystem = {
     setEnabled(enabled: boolean): void {
         hotReloadEnabled = enabled;
     },
-    requestHotReload(assets: SharedAssetId[]): void {
+    requestHotReload(assets: Shared.Asset.AssetId[]): void {
         if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
 
         let texturesToReload: string[] = [];
@@ -18,7 +17,7 @@ export const HotReloadSystem = {
             const asset = getAssetMap().get(assetId);
             if (asset === undefined) continue;
 
-            if (isTextureAsset(asset)) {
+            if (Shared.Asset.isTextureAsset(asset)) {
                 const files = asset.def.gameFiles;
                 if (files === undefined || files.length === 0) continue;
                 const fullVtfPath = files[0];
@@ -33,7 +32,7 @@ export const HotReloadSystem = {
         texturesToReload = Array.from(new Set(texturesToReload));
 
         for (const vtf of texturesToReload) {
-            Logger.info(SharedLogChannel.HotReload, "Reloading texture", vtf);
+            Logger.info(Shared.Log.Channel.HotReload, "Reloading texture", vtf);
             StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtf}`);
         }
     },

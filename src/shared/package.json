@@ -1,0 +1,19 @@
+{
+    "name": "mod_companion_shared",
+    "version": "1.0.0",
+    "type": "module",
+    "keywords": [],
+    "private": true,
+    "author": {
+        "name": "Second Face Software",
+        "email": "hello@secondfacesoftware.com"
+    },
+    "scripts": {
+        "dev": "tsc --watch"
+    },
+    "main": "SharedManifest.ts",
+    "devDependencies": {},
+    "dependencies": {
+        "pathe": "^2.0.3"
+    }
+}

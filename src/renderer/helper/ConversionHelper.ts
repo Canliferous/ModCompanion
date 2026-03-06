@@ -1,15 +1,14 @@
-import { SharedConversionState } from "Shared/SharedConversion.js";
+import { State } from "Shared/SharedConversion.js";
 
-export function summarizeConversionStates(states: SharedConversionState[]): SharedConversionState {
+export function summarizeConversionStates(states: State[]): State {
     for (const state of states) {
-        if (state === SharedConversionState.InProgress) return SharedConversionState.InProgress;
-        if (state === SharedConversionState.Failed) return SharedConversionState.Failed;
-        if (state === SharedConversionState.Invalid) return SharedConversionState.Invalid;
-        if (state === SharedConversionState.Pending || state === SharedConversionState.PendingForced)
-            return SharedConversionState.Pending;
-        if (state === SharedConversionState.Unknown) return SharedConversionState.Unknown;
-        if (state === SharedConversionState.Finished) return SharedConversionState.Finished;
+        if (state === State.InProgress) return State.InProgress;
+        if (state === State.Failed) return State.Failed;
+        if (state === State.Invalid) return State.Invalid;
+        if (state === State.Pending || state === State.PendingForced) return State.Pending;
+        if (state === State.Unknown) return State.Unknown;
+        if (state === State.Finished) return State.Finished;
     }
 
-    return SharedConversionState.NoChange;
+    return State.NoChange;
 }

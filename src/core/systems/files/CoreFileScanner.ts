@@ -3,16 +3,16 @@ import path from "path";
 import { timeMillisAsync } from "../../helpers/CoreTiming.js";
 import fs from "fs/promises";
 import { Logger } from "../CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export async function scanContentTree(): Promise<string[]> {
     const config = getAppConfig();
 
-    Logger.info(SharedLogChannel.Generic, "Scanning content directory...");
+    Logger.info(Shared.Log.Channel.Generic, "Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>
         _listFilesRecursive(config.rootPath.length + 1, config.contentPath),
     );
-    Logger.info(SharedLogChannel.Generic, `Scanned content directory in ${millisContent}ms`);
+    Logger.info(Shared.Log.Channel.Generic, `Scanned content directory in ${millisContent}ms`);
     return contentTree;
 }
 

@@ -1,4 +1,4 @@
-import { SharedVtfCreateOptions } from "Shared/vtf/SharedVtf.js";
+import { SharedVtfCreateOptions } from "Shared/SharedVtf.js";
 import { getAppConfig } from "~/renderer-config.js";
 import { SharedVtfDefaultImageFormat } from "Shared/vtf/SharedVtfFormat.js";
 import { SharedVtfDefaultVersion } from "Shared/vtf/SharedVtfVersion.js";
