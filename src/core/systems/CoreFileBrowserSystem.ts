@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from "chokidar";
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
@@ -34,7 +34,7 @@ export const FileBrowserSystem = {
         return true;
     },
     setCurrentDir(currentDir: string) {
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         const fullPath = path.join(config.rootPath, currentDir);
 
         Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullPath);
@@ -48,12 +48,12 @@ export const FileBrowserSystem = {
     },
 
     isProjectPath(p: string): boolean {
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         return path.resolve(p).startsWith(config.rootPath);
     },
 
     correctProjectPath(somePath: string) {
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         if (!path.isAbsolute(somePath)) {
             return somePath;
         }

@@ -1,19 +1,8 @@
 import { app } from "electron";
 import { WindowSystem } from "./systems/MainWindowSystem.js";
-import { initConfigSystem } from "Core/systems/CoreConfigSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
-import { MapCompileSystem } from "Core/systems/CoreMapCompileSystem.js";
-import { MareTfSystem } from "Core/systems/CoreMaretfSystem.js";
-import { ConversionAgentSystem } from "Core/systems/conversion/CoreConversionAgentSystem.js";
-import { StrataInteropSystem } from "Core/systems/CoreStrataInteropSystem.js";
-import { AssetGroupsSystem } from "Core/systems/CoreAssetGroupsSystem.js";
-import { ConversionChecksumSystem } from "Core/systems/conversion/CoreConversionChecksumSystem.js";
-import { AssetWatcherSystem } from "Core/systems/CoreAssetWatcherSystem.js";
-import { TcArtifactsSystem } from "Core/systems/CoreTcArtifactsSystem.js";
-import { FileBrowserSystem } from "Core/systems/CoreFileBrowserSystem.js";
-import MainAssetRepository from "Core/systems/asset/CoreAssetRepository.js";
-import { Logger } from "Core/systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 let headless = false;
 export function isHeadless() {
@@ -27,20 +16,19 @@ interface System {
     disableForHeadless?: boolean;
 }
 const systems: System[] = [
-    { name: "Log", initFunction: Logger.initSystem },
-    { name: "Config", initFunction: initConfigSystem },
+    { name: "Log", initFunction: Core.Logger.initSystem },
+    { name: "Config", initFunction: Core.ConfigSystem.initConfigSystem },
     // { name: "Protocol", initFunction: initProtocolSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem, disableForHeadless: true },
-    { name: "MapCompile", initFunction: MapCompileSystem.initSystem },
-    { name: "AssetWatcher", initFunction: AssetWatcherSystem.initSystem },
-    { name: "MareTf", initFunction: MareTfSystem.initSystem },
-    { name: "ConversionAgent", initFunction: ConversionAgentSystem.initSystem },
-    { name: "ConversionChecksum", initFunction: ConversionChecksumSystem.initSystem },
-    { name: "StrataInterop", initFunction: StrataInteropSystem.initSystem },
-    { name: "AssetGroups", initFunction: AssetGroupsSystem.initSystem },
-    { name: "TeamCityArtifactCloud", initFunction: TcArtifactsSystem.initSystem },
-    { name: "FileBrowser", initFunction: FileBrowserSystem.initSystem },
+    { name: "MapCompile", initFunction: Core.MapCompileSystem.initSystem },
+    { name: "AssetWatcher", initFunction: Core.AssetWatcherSystem.initSystem },
+    { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
+    { name: "ConversionAgent", initFunction: Core.ConversionAgentSystem.initSystem },
+    { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
+    { name: "AssetGroups", initFunction: Core.AssetGroupsSystem.initSystem },
+    { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
+    { name: "FileBrowser", initFunction: Core.FileBrowserSystem.initSystem },
 ];
 
 async function startSystems() {
@@ -50,15 +38,15 @@ async function startSystems() {
     }
 
     if (isHeadless()) {
-        Logger.info(SharedLogChannel.MainSystems, "Starting systems in headless mode...");
+        Core.Logger.info(Shared.Log.Channel.MainSystems, "Starting systems in headless mode...");
     } else {
-        Logger.info(SharedLogChannel.MainSystems, "Starting systems...");
+        Core.Logger.info(Shared.Log.Channel.MainSystems, "Starting systems...");
     }
 
     let success = false;
     for (const system of systems) {
         if (isHeadless() && system.disableForHeadless) {
-            Logger.info(SharedLogChannel.MainSystems, `Skipping ${system.name} system for headless mode`);
+            Core.Logger.info(Shared.Log.Channel.MainSystems, `Skipping ${system.name} system for headless mode`);
             continue;
         }
 
@@ -72,20 +60,20 @@ async function startSystems() {
                 success = await systemResult;
             }
         } catch (e) {
-            Logger.error(SharedLogChannel.MainSystems, e);
+            Core.Logger.error(Shared.Log.Channel.MainSystems, e);
             success = false;
         }
 
         if (!success) {
-            Logger.info(SharedLogChannel.MainSystems, `${system.name} System FAIL`);
+            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System FAIL`);
             break;
         } else {
-            Logger.info(SharedLogChannel.MainSystems, `${system.name} System OK`);
+            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System OK`);
         }
     }
 
     if (success) {
-        Logger.info(SharedLogChannel.MainSystems, "All systems started successfully!");
+        Core.Logger.info(Shared.Log.Channel.MainSystems, "All systems started successfully!");
 
         if (cmdConvert) {
             await runConvert();
@@ -96,10 +84,10 @@ async function startSystems() {
 }
 
 async function runConvert() {
-    Logger.info(SharedLogChannel.MainSystems, "Running convert command");
-    await MainAssetRepository.rescan();
-    await ConversionAgentSystem.runAndConvertUntilItIsDone();
-    Logger.info(SharedLogChannel.MainSystems, "Convert command done. Goodbye");
+    Core.Logger.info(Shared.Log.Channel.MainSystems, "Running convert command");
+    await Core.AssetRepository.rescan();
+    await Core.ConversionAgentSystem.runAndConvertUntilItIsDone();
+    Core.Logger.info(Shared.Log.Channel.MainSystems, "Convert command done. Goodbye");
     app.quit();
 }
 
@@ -128,8 +116,8 @@ function start() {
         return;
     }
 
-    Logger.info(SharedLogChannel.MainSystems, "Starting Mod Companion");
-    Logger.info(SharedLogChannel.MainSystems, "App User Data", app.getPath("userData"));
+    Core.Logger.info(Shared.Log.Channel.MainSystems, "Starting Mod Companion");
+    Core.Logger.info(Shared.Log.Channel.MainSystems, "App User Data", app.getPath("userData"));
 
     startSystems();
 }

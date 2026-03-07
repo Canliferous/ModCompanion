@@ -1,11 +1,11 @@
 import path from "path";
 import fs from "fs/promises";
-import { getAppConfig } from "../CoreConfigSystem.js";
+import { ConfigSystem } from "../CoreConfigSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export async function buildAssets(contentTree: string[]): Promise<Shared.Asset.SharedAssetMap> {
     const assets: Shared.Asset.SharedAssetMap = new Map<Shared.Asset.AssetId, Shared.Asset.SharedAsset>();
-    const rootPath = getAppConfig().rootPath;
+    const rootPath = ConfigSystem.getAppConfig().rootPath;
 
     for (const filePath of contentTree) {
         if (!_isAssetDefinitionFile(filePath)) continue;

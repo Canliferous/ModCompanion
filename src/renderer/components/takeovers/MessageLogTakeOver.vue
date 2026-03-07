@@ -44,7 +44,7 @@ import { AppDesign, getLogTypeTextColorWarnings } from "~/design/AppDesign.js";
 import { Logger } from "~/logger.js";
 import {
     getLogTime,
-    SharedLogChannel,
+    Shared.Log.Channel,
     SharedLogType,
     SharedLogTypeNames,
     SharedLogTypesArray,
@@ -55,10 +55,10 @@ import { TakeOverId } from "~/store/TakeOverStore.js";
 const logStore = useMessageLogStore();
 
 function handleTestLog() {
-    Logger.debug(SharedLogChannel.Generic, "Hello world! Test log debug");
-    Logger.info(SharedLogChannel.Generic, "Hello world! Test log info");
-    Logger.warning(SharedLogChannel.Generic, "Hello world! Test log warning");
-    Logger.error(SharedLogChannel.Generic, "Hello world! Test log error");
+    Logger.debug(Shared.Log.Channel.Generic, "Hello world! Test log debug");
+    Logger.info(Shared.Log.Channel.Generic, "Hello world! Test log info");
+    Logger.warning(Shared.Log.Channel.Generic, "Hello world! Test log warning");
+    Logger.error(Shared.Log.Channel.Generic, "Hello world! Test log error");
 }
 
 const showTime = useRememberRef(ref(true), "log-show-time");

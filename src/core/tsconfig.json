@@ -1,13 +1,12 @@
 {
     "compilerOptions": {
-        "outDir": "../../build_dev/core",
+        "outDir": "../../build_dev",
         "target": "ES2020",
         "module": "NodeNext",
         "esModuleInterop": true,
         "moduleResolution": "nodenext",
         "strict": true,
         "lib": ["ESNext", "DOM"],
-        "composite": true,
         "inlineSources": true,
         "sourceMap": true
     },

@@ -1,17 +1,16 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedLogEvent } from "Shared/SharedLogger.js";
-import { Logger } from "Core/systems/CoreLogSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerLoggerApi(): boolean {
-    ipcMain.on(SharedIpcChannels.LogSendFromRenderer, (event, logEvent: SharedLogEvent) => {
-        Logger.processLog(logEvent, false);
+    ipcMain.on(Shared.Ipc.Channels.LogSendFromRenderer, (event, logEvent: Shared.Log.Event) => {
+        Core.Logger.processLog(logEvent, false);
     });
 
     return true;
 }
 
-export function notifyLogFromMain(logEvent: SharedLogEvent): void {
-    IpcHelper.send(SharedIpcChannels.LogSendFromMain, logEvent);
+export function notifyLogFromMain(logEvent: Shared.Log.Event): void {
+    IpcHelper.send(Shared.Ipc.Channels.LogSendFromMain, logEvent);
 }

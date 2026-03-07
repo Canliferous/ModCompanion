@@ -6,7 +6,7 @@ import * as Conversion from "./SharedConversion.js";
 import * as FileEndings from "./SharedFileEndings.js";
 import * as FileListing from "./SharedFileListing.js";
 import * as ImageMeta from "./SharedImageMetaReport.js";
-import * as IpcChannels from "./SharedIpcChannels.js";
+import * as Ipc from "./SharedIpcChannels.js";
 import * as Launchers from "./SharedLaunchers.js";
 import * as Log from "./SharedLog.js";
 import * as Map from "./SharedMap.js";
@@ -26,7 +26,7 @@ export {
     FileEndings,
     FileListing,
     ImageMeta,
-    IpcChannels,
+    Ipc,
     Launchers,
     Log,
     Map,

@@ -1,10 +1,11 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { MdlInfoHelper } from "Core/helpers/CoreMdlInfoHelper.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerMdlInfoApi() {
-    ipcMain.handle(SharedIpcChannels.MdlInfoGet, (e, mdlFilePath: string) => {
-        return MdlInfoHelper.run(mdlFilePath);
+    ipcMain.handle(Shared.Ipc.Channels.MdlInfoGet, (e, mdlFilePath: string) => {
+        return Core.MdlInfoHelper.run(mdlFilePath);
     });
 
     return true;

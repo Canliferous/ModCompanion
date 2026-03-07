@@ -1,8 +1,8 @@
 import { clipboard, ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
+import * as Shared from "mod_companion_shared";
 
 export function registerClipboardApi(): boolean {
-    ipcMain.on(SharedIpcChannels.ClipboardWriteText, (event, text: string, type?: "selection" | "clipboard") => {
+    ipcMain.on(Shared.Ipc.Channels.ClipboardWriteText, (event, text: string, type?: "selection" | "clipboard") => {
         clipboard.writeText(text, type);
     });
 

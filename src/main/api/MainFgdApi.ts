@@ -1,23 +1,23 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import * as child_process from "node:child_process";
-import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
-import { Logger } from "Core/systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerFgdApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.FgdBuild, () => {
+    ipcMain.handle(Shared.Ipc.Channels.FgdBuild, () => {
         return new Promise<boolean>((resolve) => {
             const cmd = `python content/revolution/fgd_builder/unify_fgd.py exp revolution srctools -o "game/revolution/revolution2.fgd"`;
-            const proc = child_process.exec(cmd, { cwd: getAppConfig().rootPath }, (error, stdout, stderr) => {
+            const cwd = Core.ConfigSystem.getAppConfig().rootPath;
+            const proc = child_process.exec(cmd, { cwd }, (error, stdout, stderr) => {
                 if (error) {
-                    Logger.warning(SharedLogChannel.Fgd, error);
+                    Core.Logger.warning(Shared.Log.Channel.Fgd, error);
                 }
                 if (stdout) {
-                    Logger.info(SharedLogChannel.Fgd, stdout);
+                    Core.Logger.info(Shared.Log.Channel.Fgd, stdout);
                 }
                 if (stderr) {
-                    Logger.warning(SharedLogChannel.Fgd, stderr);
+                    Core.Logger.warning(Shared.Log.Channel.Fgd, stderr);
                 }
             });
             proc.on("exit", (code) => {

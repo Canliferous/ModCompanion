@@ -2,7 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { SharedLaunchers } from "./shared/SharedLaunchers.js";
-import { SharedIpcChannels } from "./shared/SharedIpcChannels.js";
+import { Channels } from "./shared/Shared.Ipc.Channels.js";
 
 import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
 import { SharedMapCompileLogEvent } from "./shared/SharedMapCompileLogEvent.js";
@@ -25,28 +25,27 @@ import { Stream } from "node:stream";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
-        exit: () => ipcRenderer.send(SharedIpcChannels.AppExit),
+        exit: () => ipcRenderer.send(Channels.AppExit),
         launch: (launcherType: SharedLaunchers, launcherArgs: string) =>
-            ipcRenderer.send(SharedIpcChannels.AppLaunch, launcherType, launcherArgs),
+            ipcRenderer.send(Channels.AppLaunch, launcherType, launcherArgs),
     },
 
     fileBrowser: {
-        listFiles: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.FileBrowserListFiles, dirPath),
-        correctPath: (dirPath: string) => ipcRenderer.invoke(SharedIpcChannels.FileBrowserCorrectPath, dirPath),
-        launchFile: (filePath: string | string[]) =>
-            ipcRenderer.send(SharedIpcChannels.FileBrowserLaunchFile, filePath),
-        setCurrentPath: (dirPath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserSetCurrentPath, dirPath),
-        browseToFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserBrowseToFile, filePath),
-        openFile: (filePath: string) => ipcRenderer.send(SharedIpcChannels.FileBrowserOpenFile, filePath),
+        listFiles: (dirPath: string) => ipcRenderer.invoke(Channels.FileBrowserListFiles, dirPath),
+        correctPath: (dirPath: string) => ipcRenderer.invoke(Channels.FileBrowserCorrectPath, dirPath),
+        launchFile: (filePath: string | string[]) => ipcRenderer.send(Channels.FileBrowserLaunchFile, filePath),
+        setCurrentPath: (dirPath: string) => ipcRenderer.send(Channels.FileBrowserSetCurrentPath, dirPath),
+        browseToFile: (filePath: string) => ipcRenderer.send(Channels.FileBrowserBrowseToFile, filePath),
+        openFile: (filePath: string) => ipcRenderer.send(Channels.FileBrowserOpenFile, filePath),
         subscribeDirectoryChanged: (callback: (event: SharedFileBrowserDirectoryUpdatedReport) => void) =>
             ipcRenderer.on(
-                SharedIpcChannels.FileBrowserCurrentDirUpdated,
+                Channels.FileBrowserCurrentDirUpdated,
                 (e: IpcRendererEvent, event: SharedFileBrowserDirectoryUpdatedReport) => callback(event),
             ),
     },
 
     file: {
-        readString: (filePath: string) => ipcRenderer.invoke(SharedIpcChannels.FileReadString, filePath),
+        readString: (filePath: string) => ipcRenderer.invoke(Channels.FileReadString, filePath),
         writeString: (
             filePath: string,
             data:
@@ -55,94 +54,87 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 | Iterable<string | NodeJS.ArrayBufferView>
                 | AsyncIterable<string | NodeJS.ArrayBufferView>
                 | Stream,
-        ) => ipcRenderer.invoke(SharedIpcChannels.FileWriteString, filePath, data),
+        ) => ipcRenderer.invoke(Channels.FileWriteString, filePath, data),
     },
 
     config: {
-        get: () => ipcRenderer.invoke(SharedIpcChannels.ConfigGet),
+        get: () => ipcRenderer.invoke(Channels.ConfigGet),
     },
 
     map: {
-        listSourceDirs: () => ipcRenderer.invoke(SharedIpcChannels.MapListSourceDirs),
-        enqueue: (mapPaths: string[]) => ipcRenderer.send(SharedIpcChannels.MapQueueEnqueue, mapPaths),
+        listSourceDirs: () => ipcRenderer.invoke(Channels.MapListSourceDirs),
+        enqueue: (mapPaths: string[]) => ipcRenderer.send(Channels.MapQueueEnqueue, mapPaths),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
-            ipcRenderer.on(SharedIpcChannels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
-        cancelQueue: () => ipcRenderer.send(SharedIpcChannels.MapQueueCancel),
-        pauseQueue: (paused: boolean) => ipcRenderer.send(SharedIpcChannels.MapQueueSetPaused, paused),
+            ipcRenderer.on(Channels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
+        cancelQueue: () => ipcRenderer.send(Channels.MapQueueCancel),
+        pauseQueue: (paused: boolean) => ipcRenderer.send(Channels.MapQueueSetPaused, paused),
         subscribeCompileLog: (callback: (event: SharedMapCompileLogEvent) => void) =>
-            ipcRenderer.on(SharedIpcChannels.MapCompileLog, (e: IpcRendererEvent, event: SharedMapCompileLogEvent) =>
+            ipcRenderer.on(Channels.MapCompileLog, (e: IpcRendererEvent, event: SharedMapCompileLogEvent) =>
                 callback(event),
             ),
         subscribeCompileProgress: (callback: (event: SharedMapCompileProgressEvent) => void) =>
-            ipcRenderer.on(
-                SharedIpcChannels.MapCompileProgress,
-                (e: IpcRendererEvent, event: SharedMapCompileProgressEvent) => callback(event),
+            ipcRenderer.on(Channels.MapCompileProgress, (e: IpcRendererEvent, event: SharedMapCompileProgressEvent) =>
+                callback(event),
             ),
         createTimeReport: (maps: SharedMapPath[]) =>
-            ipcRenderer.invoke(SharedIpcChannels.MapCreateTimeReport, maps) as Promise<SharedMapTimeReport>,
+            ipcRenderer.invoke(Channels.MapCreateTimeReport, maps) as Promise<SharedMapTimeReport>,
     },
 
     asset: {
-        forceRescan: () => ipcRenderer.send(SharedIpcChannels.AssetForceRescan),
+        forceRescan: () => ipcRenderer.send(Channels.AssetForceRescan),
         subscribeRescanned: (callback: (event: SharedAssetRescanEvent) => void) =>
-            ipcRenderer.on(SharedIpcChannels.AssetRescanned, (e: IpcRendererEvent, event: SharedAssetRescanEvent) =>
+            ipcRenderer.on(Channels.AssetRescanned, (e: IpcRendererEvent, event: SharedAssetRescanEvent) =>
                 callback(event),
             ),
         subscribeAdded: (callback: (event: SharedAssetAddedEvent) => void) =>
-            ipcRenderer.on(SharedIpcChannels.AssetAdded, (e: IpcRendererEvent, event: SharedAssetAddedEvent) =>
-                callback(event),
-            ),
+            ipcRenderer.on(Channels.AssetAdded, (e: IpcRendererEvent, event: SharedAssetAddedEvent) => callback(event)),
         subscribeUpdated: (callback: (event: SharedAssetUpdatedEvent) => void) =>
-            ipcRenderer.on(SharedIpcChannels.AssetUpdated, (e: IpcRendererEvent, event: SharedAssetUpdatedEvent) =>
+            ipcRenderer.on(Channels.AssetUpdated, (e: IpcRendererEvent, event: SharedAssetUpdatedEvent) =>
                 callback(event),
             ),
         subscribeNavigateToHash: (callback: (assetHash: string) => void) =>
-            ipcRenderer.on(SharedIpcChannels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) =>
-                callback(assetHash),
-            ),
+            ipcRenderer.on(Channels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) => callback(assetHash)),
         createAsset: (primaryFile: string, otherFiles: string[]) =>
-            ipcRenderer.invoke(SharedIpcChannels.AssetCreate, primaryFile, otherFiles),
-        createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.AssetCreateEmpty, mcaFilePath),
+            ipcRenderer.invoke(Channels.AssetCreate, primaryFile, otherFiles),
+        createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(Channels.AssetCreateEmpty, mcaFilePath),
         update: (assetId: SharedAssetId, assetDef: SharedAssetDefinition) =>
-            ipcRenderer.invoke(SharedIpcChannels.AssetUpdate, assetId, assetDef),
-        delete: (assetId: SharedAssetId) => ipcRenderer.invoke(SharedIpcChannels.AssetDelete, assetId),
+            ipcRenderer.invoke(Channels.AssetUpdate, assetId, assetDef),
+        delete: (assetId: SharedAssetId) => ipcRenderer.invoke(Channels.AssetDelete, assetId),
     },
 
     assetGroups: {
-        forceRescan: () => ipcRenderer.send(SharedIpcChannels.AssetGroupsForceRescan),
+        forceRescan: () => ipcRenderer.send(Channels.AssetGroupsForceRescan),
         subscribeRescanned: (callback: (event: SharedAssetGroupRescanEvent) => void) =>
-            ipcRenderer.on(
-                SharedIpcChannels.AssetGroupsRescanned,
-                (e: IpcRendererEvent, event: SharedAssetGroupRescanEvent) => callback(event),
+            ipcRenderer.on(Channels.AssetGroupsRescanned, (e: IpcRendererEvent, event: SharedAssetGroupRescanEvent) =>
+                callback(event),
             ),
         create: (assetGroupDef: SharedAssetGroupDefinition) =>
-            ipcRenderer.invoke(SharedIpcChannels.AssetGroupsCreate, assetGroupDef),
+            ipcRenderer.invoke(Channels.AssetGroupsCreate, assetGroupDef),
         update: (groupId: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) =>
-            ipcRenderer.invoke(SharedIpcChannels.AssetGroupsUpdate, groupId, groupDef),
-        delete: (groupId: SharedAssetGroupId) => ipcRenderer.send(SharedIpcChannels.AssetGroupsDelete, groupId),
+            ipcRenderer.invoke(Channels.AssetGroupsUpdate, groupId, groupDef),
+        delete: (groupId: SharedAssetGroupId) => ipcRenderer.send(Channels.AssetGroupsDelete, groupId),
     },
 
     image: {
-        getMeta: (imageFilePath: string) => ipcRenderer.invoke(SharedIpcChannels.ImageGetMeta, imageFilePath),
+        getMeta: (imageFilePath: string) => ipcRenderer.invoke(Channels.ImageGetMeta, imageFilePath),
     },
 
     conversion: {
-        enqueue: (assetId: SharedAssetId) => ipcRenderer.send(SharedIpcChannels.ConversionEnqueue, assetId),
-        enqueueAll: () => ipcRenderer.send(SharedIpcChannels.ConversionEnqueueAll),
-        startAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStart),
-        stopAgent: () => ipcRenderer.send(SharedIpcChannels.ConversionAgentStop),
+        enqueue: (assetId: SharedAssetId) => ipcRenderer.send(Channels.ConversionEnqueue, assetId),
+        enqueueAll: () => ipcRenderer.send(Channels.ConversionEnqueueAll),
+        startAgent: () => ipcRenderer.send(Channels.ConversionAgentStart),
+        stopAgent: () => ipcRenderer.send(Channels.ConversionAgentStop),
         subscribeUpdated: (callback: (event: SharedConversionUpdateIpcEvent) => void) =>
-            ipcRenderer.on(
-                SharedIpcChannels.ConversionUpdated,
-                (e: IpcRendererEvent, event: SharedConversionUpdateIpcEvent) => callback(event),
+            ipcRenderer.on(Channels.ConversionUpdated, (e: IpcRendererEvent, event: SharedConversionUpdateIpcEvent) =>
+                callback(event),
             ),
-        getState: () => ipcRenderer.invoke(SharedIpcChannels.ConversionGetState),
-        clearEvents: () => ipcRenderer.send(SharedIpcChannels.ConversionClearEvents),
+        getState: () => ipcRenderer.invoke(Channels.ConversionGetState),
+        clearEvents: () => ipcRenderer.send(Channels.ConversionClearEvents),
     },
 
     hotReload: {
-        setEnabled: (enable: boolean) => ipcRenderer.send(SharedIpcChannels.HotReloadSetEnabled, enable),
-        reloadChamberSignConfig: () => ipcRenderer.send(SharedIpcChannels.HotReloadChamberSignConfig),
+        setEnabled: (enable: boolean) => ipcRenderer.send(Channels.HotReloadSetEnabled, enable),
+        reloadChamberSignConfig: () => ipcRenderer.send(Channels.HotReloadChamberSignConfig),
     },
 
     webUtils: {
@@ -151,39 +143,37 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     clipboard: {
         writeText: (text: string, type?: "selection" | "clipboard") =>
-            ipcRenderer.send(SharedIpcChannels.ClipboardWriteText, text, type),
+            ipcRenderer.send(Channels.ClipboardWriteText, text, type),
     },
 
     interop: {
-        subscribeConnected: (callback: () => void) =>
-            ipcRenderer.on(SharedIpcChannels.InteropConnected, () => callback()),
-        subscribeDisconnected: (callback: () => void) =>
-            ipcRenderer.on(SharedIpcChannels.InteropDisconnected, () => callback()),
+        subscribeConnected: (callback: () => void) => ipcRenderer.on(Channels.InteropConnected, () => callback()),
+        subscribeDisconnected: (callback: () => void) => ipcRenderer.on(Channels.InteropDisconnected, () => callback()),
         subscribeLog: (callback: (message: string) => void) =>
-            ipcRenderer.on(SharedIpcChannels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
-        sendCommand: (command: string) => ipcRenderer.send(SharedIpcChannels.InteropSendCommand, command),
+            ipcRenderer.on(Channels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
+        sendCommand: (command: string) => ipcRenderer.send(Channels.InteropSendCommand, command),
     },
 
     fgd: {
-        build: () => ipcRenderer.invoke(SharedIpcChannels.FgdBuild),
+        build: () => ipcRenderer.invoke(Channels.FgdBuild),
     },
 
     tcArtifacts: {
-        isConnected: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_IsConnected),
-        listAllMaps: () => ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_ListAllMaps),
+        isConnected: () => ipcRenderer.invoke(Channels.TcArtifacts_IsConnected),
+        listAllMaps: () => ipcRenderer.invoke(Channels.TcArtifacts_ListAllMaps),
         downloadMap: (artifactKey: string, mapPath: string) =>
-            ipcRenderer.invoke(SharedIpcChannels.TcArtifacts_DownloadMap, artifactKey, mapPath),
+            ipcRenderer.invoke(Channels.TcArtifacts_DownloadMap, artifactKey, mapPath),
     },
 
     log: {
-        sendFromRenderer: (event: SharedLogEvent) => ipcRenderer.send(SharedIpcChannels.LogSendFromRenderer, event),
+        sendFromRenderer: (event: SharedLogEvent) => ipcRenderer.send(Channels.LogSendFromRenderer, event),
         subscribeSendFromMain: (callback: (logEvent: SharedLogEvent) => void) =>
-            ipcRenderer.on(SharedIpcChannels.LogSendFromMain, (e: IpcRendererEvent, logEvent: SharedLogEvent) =>
+            ipcRenderer.on(Channels.LogSendFromMain, (e: IpcRendererEvent, logEvent: SharedLogEvent) =>
                 callback(logEvent),
             ),
     },
 
     mdl: {
-        info: (filePath: string) => ipcRenderer.invoke(SharedIpcChannels.MdlInfoGet, filePath),
+        info: (filePath: string) => ipcRenderer.invoke(Channels.MdlInfoGet, filePath),
     },
 });

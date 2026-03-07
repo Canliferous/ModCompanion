@@ -1,22 +1,22 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedTcArtifactsListAllMapsReport } from "Shared/SharedTcArtifacts.js";
-import { TcArtifactsSystem } from "Core/systems/CoreTcArtifactsSystem.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerTcArtifactsApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.TcArtifacts_IsConnected, (): Promise<boolean> => {
-        return TcArtifactsSystem.isCloudConnected();
+    ipcMain.handle(Shared.Ipc.Channels.TcArtifacts_IsConnected, (): Promise<boolean> => {
+        return Core.TcArtifactsSystem.isCloudConnected();
     });
     ipcMain.handle(
-        SharedIpcChannels.TcArtifacts_ListAllMaps,
-        (): Promise<SharedTcArtifactsListAllMapsReport | undefined> => {
-            return TcArtifactsSystem.listMaps();
+        Shared.Ipc.Channels.TcArtifacts_ListAllMaps,
+        (): Promise<Shared.TcArtifacts.SharedTcArtifactsListAllMapsReport | undefined> => {
+            return Core.TcArtifactsSystem.listMaps();
         },
     );
     ipcMain.handle(
-        SharedIpcChannels.TcArtifacts_DownloadMap,
+        Shared.Ipc.Channels.TcArtifacts_DownloadMap,
         async (e, artifactKey: string, mapPath: string): Promise<boolean> => {
-            return await TcArtifactsSystem.downloadMap(artifactKey, mapPath);
+            return await Core.TcArtifactsSystem.downloadMap(artifactKey, mapPath);
         },
     );
 

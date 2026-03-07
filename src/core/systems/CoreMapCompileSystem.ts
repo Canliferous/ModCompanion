@@ -1,6 +1,6 @@
 // import { notifyCompileLog, notifyCompileProgress, notifyQueueUpdated } from "../../main/api/MainMapCompileApi.js";
 
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import child_process from "node:child_process";
 import * as Shared from "mod_companion_shared";
 import {
@@ -29,7 +29,7 @@ export const MapCompileSystem = {
     initSystem(): boolean {
         workerInterval = setInterval(_workQueue, 200);
 
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         child_process.spawnSync(
             `chmod +x ${config.vbspExePath} ${config.postcompilerExePath} ${config.vvisExePath} ${config.vradExePath}`,
             {

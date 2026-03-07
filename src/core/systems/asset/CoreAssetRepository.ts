@@ -1,10 +1,10 @@
 // import { notifyAssetsRescanned } from "../../../main/api/MainAssetApi.js";
 import { buildAssets } from "./CoreAssetScanner.js";
-import { scanContentTree } from "../files/CoreFileScanner.js";
+import { scanContentTree } from "../../helpers/CoreFileScanner.js";
 import { v4 } from "uuid";
 import path from "path";
 import fs from "fs/promises";
-import { getAppConfig } from "../CoreConfigSystem.js";
+import { ConfigSystem } from "../CoreConfigSystem.js";
 import { AssetCreationInferResults, inferAssetCreationType } from "./CoreAssetCreateInferType.js";
 import { createUnknownAssetDefinition } from "./CoreAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./CoreAssetCreateTexture.js";
@@ -90,7 +90,7 @@ export function createEmptyAsset(mcaBasePath: string): Promise<Shared.Asset.Shar
     do {
         mcaFileName = `new_asset_${i++}`;
         mcaFilePath = path.join(mcaBasePath, `${mcaFileName}.mca`);
-    } while (existsSync(path.join(getAppConfig().rootPath, mcaFilePath)));
+    } while (existsSync(path.join(ConfigSystem.getAppConfig().rootPath, mcaFilePath)));
 
     return writeAssetDef(
         {
@@ -106,7 +106,7 @@ export async function writeAssetDef(
     assetDef: Shared.Asset.SharedAssetDefinition,
     mcaPath: string,
 ): Promise<Shared.Asset.SharedAsset> {
-    const absoluteMcaPath = path.join(getAppConfig().rootPath, mcaPath);
+    const absoluteMcaPath = path.join(ConfigSystem.getAppConfig().rootPath, mcaPath);
     const payload = JSON.stringify(assetDef, undefined, 2);
     Logger.info(Shared.Log.Channel.Generic, "Writing asset", mcaPath, assetDef);
     await fs.writeFile(absoluteMcaPath, payload);

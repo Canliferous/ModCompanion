@@ -1,10 +1,10 @@
 import chokidar, { FSWatcher } from "chokidar";
 import { ConversionAgentSystem } from "./conversion/CoreConversionAgentSystem.js";
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import CoreSourceFs from "../helpers/CoreSourceFs.js";
 import { getAssetFromFile } from "./asset/CoreAssetRepository.js";
+import { getContentRelativePath } from "../helpers/CoreSourceFs.js";
 
 const ignoreMap: Map<string, number> = new Map();
 let watcher: FSWatcher | undefined = undefined;
@@ -14,7 +14,7 @@ export const AssetWatcherSystem = {
         return AssetWatcherSystem.startFileWatcher();
     },
     startFileWatcher(): boolean {
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         watcher = chokidar.watch(config.textureSourcePath, { ignoreInitial: true, awaitWriteFinish: true });
 
         // watcher.on("add", _handleAdded);
@@ -34,7 +34,7 @@ function _handleChanged(filePath: string): void {
         ignoreMap.set(filePath, ignoreCount - 1);
         return;
     }
-    const relativePath = CoreSourceFs.getContentRelativePath(filePath);
+    const relativePath = getContentRelativePath(filePath);
     const asset = getAssetFromFile(relativePath);
     if (!asset) return;
 

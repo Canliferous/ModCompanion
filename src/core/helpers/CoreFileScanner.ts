@@ -1,12 +1,12 @@
-import { getAppConfig } from "../CoreConfigSystem.js";
+import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import path from "path";
-import { timeMillisAsync } from "../../helpers/CoreTiming.js";
+import { timeMillisAsync } from "./CoreTiming.js";
 import fs from "fs/promises";
-import { Logger } from "../CoreLogSystem.js";
+import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export async function scanContentTree(): Promise<string[]> {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
 
     Logger.info(Shared.Log.Channel.Generic, "Scanning content directory...");
     const { millis: millisContent, result: contentTree } = await timeMillisAsync(() =>

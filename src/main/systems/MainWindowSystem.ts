@@ -1,12 +1,11 @@
 import { app, BrowserWindow, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
 import settings from "electron-settings";
-import { getMainAssetsDir, getRendererDir, getRootDir } from "Core/helpers/CoreFilesystem.js";
 import fs from "node:fs";
 import { runLauncher } from "../api/MainLauncherApi.js";
-import { SharedLauncherOptions } from "Shared/SharedLaunchers.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
-import { Logger } from "Core/systems/CoreLogSystem.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -50,7 +49,7 @@ function _getSettingsBounds(): WindowRect {
 }
 
 function _getAppIconPath() {
-    return path.join(getMainAssetsDir(), "mod_companion_192.png");
+    return path.join(Core.FileSystem.getMainAssetsDir(), "mod_companion_192.png");
 }
 
 function _createWindow(hasTray: boolean): void {
@@ -63,7 +62,7 @@ function _createWindow(hasTray: boolean): void {
         x: bounds.x,
         y: bounds.y,
         webPreferences: {
-            preload: path.join(getRootDir(), "preload.js"),
+            preload: path.join(Core.FileSystem.getRootDir(), "preload.js"),
             contextIsolation: true,
             nodeIntegration: false,
             webSecurity: false,
@@ -103,7 +102,7 @@ function _createWindow(hasTray: boolean): void {
         mainWindow.loadURL("http://localhost:5173");
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(path.join(getRendererDir(), `index.html`));
+        mainWindow.loadFile(path.join(Core.FileSystem.getRendererDir(), `index.html`));
     }
 
     mainWindow.removeMenu();
@@ -160,7 +159,7 @@ function _createShortcuts() {
 }
 
 function _changeZoom(delta: number) {
-    Logger.info(SharedLogChannel.Generic, "Change zoom", delta);
+    Core.Logger.info(Shared.Log.Channel.Generic, "Change zoom", delta);
     zoomFactor = Math.max(0.1, zoomFactor + delta);
     mainWindow?.webContents.setZoomFactor(zoomFactor);
 }
@@ -175,7 +174,7 @@ function _buildTrayMenu() {
     template.push({ label: "Show", click: () => mainWindow?.show() });
     template.push({ type: "separator" });
 
-    for (const option of SharedLauncherOptions) {
+    for (const option of Shared.Launchers.SharedLauncherOptions) {
         template.push({ label: `${option.name}`, click: () => runLauncher(option.type, option.args) });
     }
     template.push({ type: "separator" });

@@ -1,4 +1,4 @@
-import { printLogEvent, SharedLogChannel, SharedLogEvent, SharedLogType } from "Shared/SharedLogger.js";
+import { printLogEvent, Shared.Log.Channel, SharedLogEvent, SharedLogType } from "Shared/SharedLogger.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
 
 export const Logger = {
@@ -11,16 +11,16 @@ export const Logger = {
             window.electronAPI.log.sendFromRenderer(logEvent);
         }
     },
-    debug(channel: SharedLogChannel, ...data: any[]) {
+    debug(channel: Shared.Log.Channel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Debug }, true);
     },
-    info(channel: SharedLogChannel, ...data: any[]) {
+    info(channel: Shared.Log.Channel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Info }, true);
     },
-    warning(channel: SharedLogChannel, ...data: any[]) {
+    warning(channel: Shared.Log.Channel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Warning }, true);
     },
-    error(channel: SharedLogChannel, ...data: any[]) {
+    error(channel: Shared.Log.Channel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Error }, true);
     },
     init() {

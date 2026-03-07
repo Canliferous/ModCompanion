@@ -1,7 +1,7 @@
 import { useEvent } from "~/composables/useEvent.js";
 import { SharedVtfHotspotRect, SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
 import { Logger } from "~/logger.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Shared.Log.Channel } from "Shared/SharedLogger.js";
 
 export interface RectAndIdx {
     idx: number;
@@ -323,7 +323,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         for (let x = 0; x <= texWidth; x += gridSnap) {
             ctx.moveTo(_textureToCanvasSpaceX(x), 0);
             ctx.lineTo(_textureToCanvasSpaceX(x), _textureToCanvasSpaceY(texHeight));
-            // Logger.debug(SharedLogChannel.Hotspot, "x: ", x);
+            // Logger.debug(Shared.Log.Channel.Hotspot, "x: ", x);
         }
         for (let y = 0; y <= texHeight; y += gridSnap) {
             ctx.moveTo(0, _textureToCanvasSpaceY(y));
@@ -369,7 +369,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     }
 
     function _drawRectId(rect: SharedVtfHotspotRect, rectIdx: number): void {
-        // Logger.debug(SharedLogChannel.Hotspot, "Drawing rect id", rectIdx);
+        // Logger.debug(Shared.Log.Channel.Hotspot, "Drawing rect id", rectIdx);
 
         const w = rect.x1 - rect.x0;
         const h = rect.y1 - rect.y0;

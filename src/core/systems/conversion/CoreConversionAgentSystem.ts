@@ -82,7 +82,7 @@ export const ConversionAgentSystem = {
 async function _runAgent(): Promise<void> {
     const assetsToConvert = _getAssetsToConvert();
     if (assetsToConvert.length > 0) {
-        // Logger.info(SharedLogChannel.ConversionAgent, `Converting ${assetsToConvert.length} asset`);
+        // Logger.info(Shared.Log.Channel.ConversionAgent, `Converting ${assetsToConvert.length} asset`);
         const promises: Promise<string | undefined>[] = [];
         for (const id of assetsToConvert) {
             promises.push(_startConversion(id));

@@ -1,18 +1,18 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import fs from "node:fs/promises";
 import { Stream } from "node:stream";
+import * as Shared from "mod_companion_shared";
 
 export function registerFileApi(): boolean {
     ipcMain.handle(
-        SharedIpcChannels.FileReadString,
+        Shared.Ipc.Channels.FileReadString,
         async (event: Electron.IpcMainInvokeEvent, filePath: string): Promise<string> => {
             return fs.readFile(filePath, "utf-8");
         },
     );
 
     ipcMain.handle(
-        SharedIpcChannels.FileWriteString,
+        Shared.Ipc.Channels.FileWriteString,
         async (
             event: Electron.IpcMainInvokeEvent,
             filePath: string,

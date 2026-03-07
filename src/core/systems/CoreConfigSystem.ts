@@ -23,24 +23,26 @@ interface ConfigFile {
 
 let config: Shared.AppConfig.IAppConfig = null!;
 
-export function getAppConfig(): Shared.AppConfig.IAppConfig {
-    return config;
-}
+export const ConfigSystem = {
+    getAppConfig(): Shared.AppConfig.IAppConfig {
+        return config;
+    },
 
-export async function initConfigSystem(): Promise<boolean> {
-    let cfgFile = await _loadConfig();
+    async initConfigSystem(): Promise<boolean> {
+        let cfgFile = await _loadConfig();
 
-    if (cfgFile === undefined) {
-        Logger.info(Shared.Log.Channel.MainSystems, "Starting with default config");
-        cfgFile = _createDefaultConfig();
-    }
+        if (cfgFile === undefined) {
+            Logger.info(Shared.Log.Channel.MainSystems, "Starting with default config");
+            cfgFile = _createDefaultConfig();
+        }
 
-    const cfg = _createRevolutionStandardConfig(cfgFile);
-    if (!cfg) return false;
+        const cfg = _createRevolutionStandardConfig(cfgFile);
+        if (!cfg) return false;
 
-    config = cfg;
-    return true;
-}
+        config = cfg;
+        return true;
+    },
+};
 
 function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.IAppConfig | undefined {
     if (!c.root) {

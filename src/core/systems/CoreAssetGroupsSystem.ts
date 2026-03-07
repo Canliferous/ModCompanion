@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import { v4 } from "uuid";
 import { filename } from "pathe/utils";
 import * as Shared from "mod_companion_shared";
@@ -69,5 +69,5 @@ export const AssetGroupsSystem = {
 };
 
 function _getAssetGroupDir(): string {
-    return path.join(getAppConfig().contentPath, "_modcomp_asset_groups");
+    return path.join(ConfigSystem.getAppConfig().contentPath, "_modcomp_asset_groups");
 }

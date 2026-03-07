@@ -4,7 +4,7 @@ import path from "node:path";
 import * as child_process from "node:child_process";
 import { getMainAssetsDir } from "../helpers/CoreFilesystem.js";
 import { runConverter } from "../helpers/converter/CoreSharedConverter.js";
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
@@ -40,7 +40,7 @@ export const MareTfSystem = {
             // Nobody cares if the dir already exists
         }
 
-        return runConverter(cmd, getAppConfig().gamePath, "MareTF");
+        return runConverter(cmd, ConfigSystem.getAppConfig().gamePath, "MareTF");
     },
 };
 

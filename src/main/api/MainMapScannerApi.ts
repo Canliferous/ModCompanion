@@ -1,23 +1,23 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
 import fs from "fs/promises";
 import path from "path";
-import { SharedMapSourceDir } from "Shared/SharedMapTypes.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerMapScannerApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.MapListSourceDirs, listMapSourceDirs);
+    ipcMain.handle(Shared.Ipc.Channels.MapListSourceDirs, listMapSourceDirs);
     return true;
 }
 
-export async function listMapSourceDirs(): Promise<SharedMapSourceDir[]> {
-    const config = getAppConfig();
+export async function listMapSourceDirs(): Promise<Shared.Map.SharedMapSourceDir[]> {
+    const config = Core.ConfigSystem.getAppConfig();
 
     if (config.mapSourceDirs === undefined || config.mapSourceDirs.length === 0) return [];
 
     const result = await fs.readdir(config.mapSourcePath);
 
-    const dirs: SharedMapSourceDir[] = [];
+    const dirs: Shared.Map.SharedMapSourceDir[] = [];
     for (const r of result) {
         const fullDirPath = path.join(config.mapSourcePath, r);
         const stat = await fs.stat(fullDirPath);
@@ -26,7 +26,7 @@ export async function listMapSourceDirs(): Promise<SharedMapSourceDir[]> {
 
         let dirContents = await fs.readdir(fullDirPath);
         dirContents = dirContents.filter((f) => path.extname(f) === ".vmf");
-        const dir: SharedMapSourceDir = {
+        const dir: Shared.Map.SharedMapSourceDir = {
             dirName: r,
             vmfNames: dirContents,
         };

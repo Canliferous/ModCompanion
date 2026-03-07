@@ -1,33 +1,34 @@
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedConversionGetStateIpcReport, SharedConversionUpdateIpcEvent } from "Shared/SharedConversion.js";
 import { ipcMain } from "electron";
-import { ConversionAgentSystem } from "Core/systems/conversion/CoreConversionAgentSystem.js";
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { ConversionEventSystem } from "Core/systems/conversion/CoreConversionEventSystem.js";
 import { IpcHelper } from "./MainApiHelper.js";
 
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
+
 export function registerConversionApi(): boolean {
-    ipcMain.on(SharedIpcChannels.ConversionAgentStart, () => {
-        ConversionAgentSystem.startAgent();
+    ipcMain.on(Shared.Ipc.Channels.ConversionAgentStart, () => {
+        Core.ConversionAgentSystem.startAgent();
     });
-    ipcMain.on(SharedIpcChannels.ConversionAgentStop, () => {
-        ConversionAgentSystem.stopAgent();
+    ipcMain.on(Shared.Ipc.Channels.ConversionAgentStop, () => {
+        Core.ConversionAgentSystem.stopAgent();
     });
-    ipcMain.on(SharedIpcChannels.ConversionEnqueue, (event, assetId: SharedAssetId) => {
-        ConversionAgentSystem.enqueue(assetId, true);
+    ipcMain.on(Shared.Ipc.Channels.ConversionEnqueue, (event, assetId: Shared.Asset.AssetId) => {
+        Core.ConversionAgentSystem.enqueue(assetId, true);
     });
-    ipcMain.on(SharedIpcChannels.ConversionEnqueueAll, () => {
-        ConversionAgentSystem.enqueueAll();
+    ipcMain.on(Shared.Ipc.Channels.ConversionEnqueueAll, () => {
+        Core.ConversionAgentSystem.enqueueAll();
     });
-    ipcMain.handle(SharedIpcChannels.ConversionGetState, async (): Promise<SharedConversionGetStateIpcReport> => {
-        return { conversions: ConversionAgentSystem.getConversionsMap() };
-    });
-    ipcMain.on(SharedIpcChannels.ConversionClearEvents, () => {
-        ConversionEventSystem.clearEvents();
+    ipcMain.handle(
+        Shared.Ipc.Channels.ConversionGetState,
+        async (): Promise<Shared.Conversion.SharedConversionGetStateIpcReport> => {
+            return { conversions: Core.ConversionAgentSystem.getConversionsMap() };
+        },
+    );
+    ipcMain.on(Shared.Ipc.Channels.ConversionClearEvents, () => {
+        Core.ConversionEventSystem.clearEvents();
     });
     return true;
 }
 
-export function notifyConversionsUpdated(event: SharedConversionUpdateIpcEvent): void {
-    IpcHelper.send(SharedIpcChannels.ConversionUpdated, event);
+export function notifyConversionsUpdated(event: Shared.Conversion.SharedConversionUpdateIpcEvent): void {
+    IpcHelper.send(Shared.Ipc.Channels.ConversionUpdated, event);
 }

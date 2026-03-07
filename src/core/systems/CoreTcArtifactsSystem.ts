@@ -1,5 +1,5 @@
 import * as AWS from "@aws-sdk/client-s3";
-import { getAppConfig } from "./CoreConfigSystem.js";
+import { ConfigSystem } from "./CoreConfigSystem.js";
 import { filename } from "pathe/utils";
 import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
@@ -17,7 +17,7 @@ const RETRIES = 3;
 
 export const TcArtifactsSystem = {
     async initSystem() {
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         if (!config.teamCityArtifactCloud || !config.teamCityArtifactCloudBucket) {
             console.warn("TeamCity artifact cloud not configured. Disabling system");
             unconfigured = true;
@@ -107,7 +107,10 @@ export const TcArtifactsSystem = {
                 Logger.info(Shared.Log.Channel.TcArtifacts, `Map file is ${humanizePlus.fileSize(a.ContentLength)}`);
             }
 
-            const fullPath = path.join(getAppConfig().mapOutputPath, path.basename(mapName).replace(".vmf", ".bsp"));
+            const fullPath = path.join(
+                ConfigSystem.getAppConfig().mapOutputPath,
+                path.basename(mapName).replace(".vmf", ".bsp"),
+            );
             try {
                 await fs.rm(fullPath);
             } catch (e) {

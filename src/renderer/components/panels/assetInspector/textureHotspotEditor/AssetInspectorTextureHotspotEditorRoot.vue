@@ -85,7 +85,7 @@ import createHotspotEditor, { HotspotEditMode, HotspotEditor } from "~/canvas/ho
 import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { useElementSize, useMouseInElement, useMousePressed } from "@vueuse/core";
 import { Logger } from "~/logger.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Shared.Log.Channel } from "Shared/SharedLogger.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useRememberRef } from "~/composables/useRemember.js";
 import { SharedTextureAsset } from "Shared/SharedAssetDefinition.js";
@@ -221,7 +221,7 @@ function updateEditorTexture(meta: SharedImageMetaReport, editor: HotspotEditor)
         }
     } else {
         Logger.warning(
-            SharedLogChannel.Hotspot,
+            Shared.Log.Channel.Hotspot,
             "Updating hotspot editor texture failed. Image's meta is invalid: ",
             meta,
         );

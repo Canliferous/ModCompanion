@@ -1,5 +1,5 @@
 import * as child_process from "node:child_process";
-import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
 import { Logger } from "../systems/CoreLogSystem.js";
@@ -16,7 +16,7 @@ export const runVBsp: MapCompilerAction = (
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     return _runMapCompiler(mapPath, config.vbspExePath, config.vbspArgs, onStdOut, onStdErr);
 };
 
@@ -25,7 +25,7 @@ export const runVVis: MapCompilerAction = (
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     return _runMapCompiler(mapPath, config.vvisExePath, config.vvisArgs, onStdOut, onStdErr);
 };
 
@@ -34,7 +34,7 @@ export const runVRad: MapCompilerAction = (
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     return _runMapCompiler(mapPath, config.vradExePath, config.vradArgs, onStdOut, onStdErr);
 };
 
@@ -43,7 +43,7 @@ export const runPostcompiler: MapCompilerAction = (
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     return _runMapCompiler(mapPath, config.postcompilerExePath, config.postcompilerArgs, onStdOut, onStdErr);
 };
 
@@ -52,7 +52,7 @@ export const runDone: MapCompilerAction = async (
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     const sourceBsp = path.extname(mapPath) === ".vmf" ? mapPath.replace(".vmf", ".bsp") : mapPath + ".bsp";
     const outBsp = path.basename(sourceBsp);
     const from = path.join(config.mapSourcePath, sourceBsp);
@@ -75,7 +75,7 @@ function _runMapCompiler(
     onStdOut?: (msg: string) => void,
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
-    const config = getAppConfig();
+    const config = ConfigSystem.getAppConfig();
     const map = path.join(config.mapSourcePath, mapPath);
     const cwd = path.join(config.rootPath, "game");
 

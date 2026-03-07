@@ -1,5 +1,5 @@
 {
-    "name": "mod_companion_shared",
+    "name": "mod_companion_core",
     "version": "1.0.0",
     "type": "module",
     "keywords": [],
@@ -9,8 +9,10 @@
         "email": "hello@secondfacesoftware.com"
     },
     "scripts": {
-        "dev": "tsc --watch"
+        "dev": "tsc --watch",
+        "build": "tsc --outDir ../../build_dist"
     },
+    "main": "CoreManifest.ts",
     "devDependencies": {},
     "dependencies": {
         "mod_companion_shared": "../shared",

@@ -1,6 +1,6 @@
 import path from "path";
 import { MareTfSystem } from "../../systems/CoreMaretfSystem.js";
-import { getAppConfig } from "../../systems/CoreConfigSystem.js";
+import { ConfigSystem } from "../../systems/CoreConfigSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export const TextureConverter = {
@@ -15,7 +15,7 @@ export const TextureConverter = {
     async convert(asset: Shared.Asset.SharedTextureAssetDefinition): Promise<string | undefined> {
         if (!this.isValid(asset)) return undefined;
         const srcFileRel = asset.contentFiles![0];
-        const config = getAppConfig();
+        const config = ConfigSystem.getAppConfig();
         const srcFile = path.join(config.contentPath, srcFileRel);
 
         const outFileRel = asset.gameFiles![0];

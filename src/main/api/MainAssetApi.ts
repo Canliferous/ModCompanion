@@ -1,30 +1,19 @@
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
 import { ipcMain } from "electron";
-import MainAssetRepository from "Core/systems/asset/CoreAssetRepository.js";
-import {
-    SharedAsset,
-    SharedAssetAddedEvent,
-    SharedAssetDefinition,
-    SharedAssetId,
-    SharedAssetRescanEvent,
-    SharedAssetUpdatedEvent,
-} from "Shared/SharedAssetDefinition.js";
-import { SharedCreateAssetReport, SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
 import { IpcHelper } from "./MainApiHelper.js";
-import { Logger } from "Core/systems/CoreLogSystem.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerAssetApi(): boolean {
-    ipcMain.on(SharedIpcChannels.AssetForceRescan, () => {
-        MainAssetRepository.rescan();
+    ipcMain.on(Shared.Ipc.Channels.AssetForceRescan, () => {
+        Core.AssetRepository.rescan();
     });
 
     ipcMain.handle(
-        SharedIpcChannels.AssetCreate,
-        async (event, primaryFile: string, otherFiles: string[]): Promise<SharedCreateAssetReport> => {
+        Shared.Ipc.Channels.AssetCreate,
+        async (event, primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.SharedCreateAssetReport> => {
             const files = [primaryFile, ...otherFiles];
-            Logger.info(SharedLogChannel.Assets, "Creating asset for files", primaryFile, otherFiles);
-            const existingAsset = MainAssetRepository.getAssetFromFiles(files);
+            Core.Logger.info(Shared.Log.Channel.Assets, "Creating asset for files", primaryFile, otherFiles);
+            const existingAsset = Core.AssetRepository.getAssetFromFiles(files);
             if (existingAsset) {
                 const allAssetFilesSet = new Set([
                     ...(existingAsset.def.gameFiles ?? []),
@@ -32,69 +21,76 @@ export function registerAssetApi(): boolean {
                 ]);
                 const filesAlreadyUsed = Array.from(allAssetFilesSet.intersection(new Set(files)));
 
-                Logger.info(
-                    SharedLogChannel.Assets,
+                Core.Logger.info(
+                    Shared.Log.Channel.Assets,
                     "Asset API: Files are already used in asset. Used Files: ",
                     filesAlreadyUsed,
                     existingAsset,
                 );
                 return {
-                    type: SharedCreateAssetReportType.ErrorFileAlreadyUsedInAsset,
+                    type: Shared.Asset.SharedCreateAssetReportType.ErrorFileAlreadyUsedInAsset,
                     filesAlreadyUsed,
                     asset: existingAsset.def.id,
                 };
             }
 
             try {
-                Logger.info(SharedLogChannel.Assets, "Asset API: Files not used in any asset 👍");
-                const result = await MainAssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
+                Core.Logger.info(Shared.Log.Channel.Assets, "Asset API: Files not used in any asset 👍");
+                const result = await Core.AssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
                 if (!result) {
                     return {
-                        type: SharedCreateAssetReportType.ErrorUnknown,
+                        type: Shared.Asset.SharedCreateAssetReportType.ErrorUnknown,
                     };
                 }
-                return { type: SharedCreateAssetReportType.Success, assets: result };
+                return { type: Shared.Asset.SharedCreateAssetReportType.Success, assets: result };
             } catch {
                 return {
-                    type: SharedCreateAssetReportType.ErrorUnknown,
+                    type: Shared.Asset.SharedCreateAssetReportType.ErrorUnknown,
                 };
             }
         },
     );
 
-    ipcMain.handle(SharedIpcChannels.AssetCreateEmpty, (event, mcaBasePath: string): Promise<SharedAsset> => {
-        return MainAssetRepository.createEmptyAsset(mcaBasePath);
-    });
+    ipcMain.handle(
+        Shared.Ipc.Channels.AssetCreateEmpty,
+        (event, mcaBasePath: string): Promise<Shared.Asset.SharedAsset> => {
+            return Core.AssetRepository.createEmptyAsset(mcaBasePath);
+        },
+    );
 
-    ipcMain.handle(SharedIpcChannels.AssetDelete, (event, assetId: SharedAssetId): Promise<boolean> => {
-        return MainAssetRepository.deleteAssetDef(assetId);
+    ipcMain.handle(Shared.Ipc.Channels.AssetDelete, (event, assetId: Shared.Asset.AssetId): Promise<boolean> => {
+        return Core.AssetRepository.deleteAssetDef(assetId);
     });
 
     ipcMain.handle(
-        SharedIpcChannels.AssetUpdate,
-        async (event, assetId: SharedAssetId, assetDef: SharedAssetDefinition): Promise<SharedAsset | undefined> => {
-            const asset = MainAssetRepository.getAssetFromId(assetId);
+        Shared.Ipc.Channels.AssetUpdate,
+        async (
+            event,
+            assetId: Shared.Asset.AssetId,
+            assetDef: Shared.Asset.SharedAssetDefinition,
+        ): Promise<Shared.Asset.SharedAsset | undefined> => {
+            const asset = Core.AssetRepository.getAssetFromId(assetId);
             if (!asset || !asset.defFilePath) return;
 
-            return MainAssetRepository.writeAssetDef(assetDef, asset.defFilePath);
+            return Core.AssetRepository.writeAssetDef(assetDef, asset.defFilePath);
         },
     );
 
     return true;
 }
 
-export function notifyAssetsRescanned(event: SharedAssetRescanEvent): void {
-    IpcHelper.send(SharedIpcChannels.AssetRescanned, event);
+export function notifyAssetsRescanned(event: Shared.Asset.SharedAssetRescanEvent): void {
+    IpcHelper.send(Shared.Ipc.Channels.AssetRescanned, event);
 }
 
-export function notifyAssetsAdded(event: SharedAssetAddedEvent): void {
-    IpcHelper.send(SharedIpcChannels.AssetAdded, event);
+export function notifyAssetsAdded(event: Shared.Asset.SharedAssetAddedEvent): void {
+    IpcHelper.send(Shared.Ipc.Channels.AssetAdded, event);
 }
 
-export function notifyAssetsUpdated(event: SharedAssetUpdatedEvent): void {
-    IpcHelper.send(SharedIpcChannels.AssetUpdated, event);
+export function notifyAssetsUpdated(event: Shared.Asset.SharedAssetUpdatedEvent): void {
+    IpcHelper.send(Shared.Ipc.Channels.AssetUpdated, event);
 }
 
 export function notifyNavigateToAssetId(assetId: string): void {
-    IpcHelper.send(SharedIpcChannels.AssetNavigateToId, assetId);
+    IpcHelper.send(Shared.Ipc.Channels.AssetNavigateToId, assetId);
 }

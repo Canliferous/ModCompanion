@@ -2,12 +2,12 @@ import path from "path";
 import * as os from "node:os";
 import * as child_process from "node:child_process";
 import { existsSync } from "fs";
-import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export function browseToFile(filePath: string): void {
-    const normalizedPath = path.join(getAppConfig().rootPath, filePath);
+    const normalizedPath = path.join(ConfigSystem.getAppConfig().rootPath, filePath);
 
     let command: string | undefined = undefined;
 

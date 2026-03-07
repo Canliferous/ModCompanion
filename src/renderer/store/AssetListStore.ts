@@ -7,7 +7,7 @@ import { getContentRelativePath } from "~/helper/SourceFs.js";
 import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { useEvent } from "~/composables/useEvent.js";
 import { Logger } from "~/logger.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Shared.Log.Channel } from "Shared/SharedLogger.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
@@ -131,7 +131,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     }
 
     async function writeAssets(as: SharedAsset[]): Promise<void> {
-        Logger.debug(SharedLogChannel.Generic, "Writing asset", as);
+        Logger.debug(Shared.Log.Channel.Generic, "Writing asset", as);
         const results = as.map((a) => window.electronAPI.asset.update(a.def.id, a.def));
         const newAssets = await Promise.all(results);
         const filtered = newAssets.filter((n) => n !== undefined);

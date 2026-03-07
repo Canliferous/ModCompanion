@@ -4,7 +4,7 @@ import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
-import { SharedLogChannel } from "Shared/SharedLogger.js";
+import { Shared.Log.Channel } from "Shared/SharedLogger.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -88,7 +88,7 @@ export const usePanelsStore = defineStore("panels", () => {
 
     function serialize(): void {
         if (!api.value) {
-            Logger.warning(SharedLogChannel.Generic, "Failed to serialize panels. Dockview api reference is null");
+            Logger.warning(Shared.Log.Channel.Generic, "Failed to serialize panels. Dockview api reference is null");
             return;
         }
 

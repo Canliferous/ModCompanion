@@ -1,47 +1,46 @@
 import { ipcMain } from "electron";
-import { SharedIpcChannels } from "Shared/SharedIpcChannels.js";
-import { SharedMapTimeReport } from "Shared/SharedMapTimeReport.js";
-import { getAppConfig } from "Core/systems/CoreConfigSystem.js";
-import { SharedMapPath } from "Shared/SharedMapPath.js";
 import path from "path";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { SharedSeconds } from "Shared/SharedTypes.js";
 import * as kv from "@sourcelib/kv";
-import { SharedMapCompileStep } from "Shared/SharedMap.js";
+
+import * as Core from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 export function registerMapTimeReportApi(): boolean {
-    ipcMain.handle(SharedIpcChannels.MapCreateTimeReport, (e, maps: SharedMapPath[]) => _createTimeReport(maps));
+    ipcMain.handle(Shared.Ipc.Channels.MapCreateTimeReport, (e, maps: Shared.Map.SharedMapPath[]) =>
+        _createTimeReport(maps),
+    );
     return true;
 }
 
-const reportExtensions: SharedMapCompileStep[] = [
-    SharedMapCompileStep.VBsp,
-    SharedMapCompileStep.VVis,
-    SharedMapCompileStep.VRad,
+const reportExtensions: Shared.Map.SharedMapCompileStep[] = [
+    Shared.Map.SharedMapCompileStep.VBsp,
+    Shared.Map.SharedMapCompileStep.VVis,
+    Shared.Map.SharedMapCompileStep.VRad,
 ];
 
-function _getReportExtension(step: SharedMapCompileStep) {
+function _getReportExtension(step: Shared.Map.SharedMapCompileStep) {
     switch (step) {
-        case SharedMapCompileStep.VBsp:
+        case Shared.Map.SharedMapCompileStep.VBsp:
             return ".report_vbsp.vdf";
-        case SharedMapCompileStep.VVis:
+        case Shared.Map.SharedMapCompileStep.VVis:
             return ".report_vvis.vdf";
-        case SharedMapCompileStep.VRad:
+        case Shared.Map.SharedMapCompileStep.VRad:
             return ".report_vrad.vdf";
         default:
             return undefined;
     }
 }
 
-async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeReport> {
-    const config = getAppConfig();
+async function _createTimeReport(maps: Shared.Map.SharedMapPath[]): Promise<Shared.Map.SharedMapTimeReport> {
+    const config = Core.ConfigSystem.getAppConfig();
 
     const srcPath = config.mapSourcePath;
 
-    const report: SharedMapTimeReport = {
-        maps: new Map<string, SharedSeconds>(),
-        totals: new Map<SharedMapPath, SharedSeconds>(),
+    const report: Shared.Map.SharedMapTimeReport = {
+        maps: new Map<string, number>(),
+        totals: new Map<Shared.Map.SharedMapPath, number>(),
     };
 
     for (const map of maps) {
@@ -54,20 +53,20 @@ async function _createTimeReport(maps: SharedMapPath[]): Promise<SharedMapTimeRe
             if (!existsSync(reportPath)) continue;
 
             const logContents = await fs.readFile(reportPath, { encoding: "utf-8" });
-            const time = _getCompileTime(logContents);
-            if (time === undefined) continue;
+            const seconds = _getCompileTimeSeconds(logContents);
+            if (seconds === undefined) continue;
 
-            report.maps.set(map + step, time);
+            report.maps.set(map + step, seconds);
 
             const mapTotal = report.totals.get(map) ?? 0;
-            report.totals.set(map, mapTotal + time);
+            report.totals.set(map, mapTotal + seconds);
         }
     }
 
     return report;
 }
 
-function _getCompileTime(logContents: string): SharedSeconds | undefined {
+function _getCompileTimeSeconds(logContents: string): number | undefined {
     const doc = kv.parseText(logContents);
     for (const root of doc.getRootItems()) {
         if (root.getKey().getUnquotedContent() !== "report") continue;

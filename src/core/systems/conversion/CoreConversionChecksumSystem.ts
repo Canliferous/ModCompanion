@@ -1,4 +1,4 @@
-import { getAppConfig } from "../CoreConfigSystem.js";
+import { ConfigSystem } from "../CoreConfigSystem.js";
 import path from "path";
 import fs from "fs/promises";
 import crypto from "node:crypto";
@@ -7,9 +7,6 @@ import * as Shared from "mod_companion_shared";
 
 export const ConversionChecksumSystem = {
     checksums: new Map<Shared.Asset.AssetId, string>(),
-    initSystem() {
-        return true;
-    },
     async initChecksums(map: Shared.Asset.SharedAssetMap) {
         const startTime = new Date();
         {
@@ -30,7 +27,7 @@ export const ConversionChecksumSystem = {
         );
     },
     async createChecksum(contentFiles: string[]) {
-        const contentPath = getAppConfig().contentPath;
+        const contentPath = ConfigSystem.getAppConfig().contentPath;
 
         const promises = contentFiles.map(async (f) => {
             const p = path.join(contentPath, f);

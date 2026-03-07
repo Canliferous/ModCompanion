@@ -1,12 +1,13 @@
 import child_process from "node:child_process";
 import { KvSerializer, parseText } from "@sourcelib/kv";
-import { getAppConfig } from "../systems/CoreConfigSystem.js";
+import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export const MdlInfoHelper = {
     async run(mdlFilePath: string): Promise<Shared.MdlInfo.SharedMdlInfoReport> {
         return new Promise((resolve, reject) => {
-            const cmd = `${getAppConfig().mdlInfoPath} -game ${getAppConfig().gamePath} ${mdlFilePath}`;
+            const cfg = ConfigSystem.getAppConfig();
+            const cmd = `${cfg.mdlInfoPath} -game ${cfg.gamePath} ${mdlFilePath}`;
 
             const output: string[] = [];
 

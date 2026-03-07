@@ -1,9 +1,9 @@
 import { WindowSystem } from "../systems/MainWindowSystem.js";
-import { SharedIpcChannel } from "Shared/SharedIpcChannels.js";
 import { isHeadless } from "../main.js";
+import * as Shared from "mod_companion_shared";
 
 export const IpcHelper = {
-    send(channel: SharedIpcChannel, ...args: any[]) {
+    send(channel: Shared.Ipc.Channel, ...args: any[]) {
         if (isHeadless()) {
             return;
         }
