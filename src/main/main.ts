@@ -8,6 +8,7 @@ import { notifyFileBrowserDirUpdated } from "./api/MainFileBrowserApi.js";
 import { notifyAssetsUpdated } from "./api/MainAssetApi.js";
 import { notifyAssetGroupsUpdated } from "./api/MainAssetGroupsApi.js";
 import { notifyConversionsUpdated } from "./api/MainConversionApi.js";
+import { notifyMapCompileLog, notifyMapCompileProgress, notifyMapQueueUpdated } from "./api/MainMapCompileApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -19,7 +20,15 @@ const systems: System[] = [
     { name: "Config", initFunction: Core.ConfigSystem.initConfigSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
-    { name: "MapCompile", initFunction: Core.MapCompileSystem.initSystem },
+    {
+        name: "MapCompile",
+        initFunction: () =>
+            Core.MapCompileSystem.initSystem({
+                queueFunc: notifyMapQueueUpdated,
+                logFunc: notifyMapCompileLog,
+                progressFunc: notifyMapCompileProgress,
+            }),
+    },
     { name: "AssetWatcher", initFunction: () => Core.AssetWatcherSystem.initSystem(notifyAssetsUpdated) },
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: () => Core.ConversionAgentSystem.initSystem(notifyConversionsUpdated) },
@@ -30,10 +39,8 @@ const systems: System[] = [
 ];
 
 async function startSystems() {
-
     let success = false;
     for (const system of systems) {
-
         const systemResult = system.initFunction();
 
         success = false;

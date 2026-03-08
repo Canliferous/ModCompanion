@@ -20,11 +20,17 @@ export interface CompileLogEvent {
     isError: boolean;
 }
 
+export type QueueUpdatedNotifyFunc = (maps: string[]) => void;
+
+export type CompileLogNotifyFunc = (event: CompileLogEvent) => void;
+
 export interface CompileProgressEvent {
     mapPath: string;
     step: CompileStep;
     state: CompileState;
 }
+
+export type CompileProgressNotifyFunc = (event: CompileProgressEvent) => void;
 
 export type SharedMapPresets = Record<string, string[]>;
 

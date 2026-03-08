@@ -17,14 +17,14 @@ export function registerMapCompileApi(): boolean {
     return true;
 }
 
-export function notifyQueueUpdated(): void {
-    IpcHelper.send(Shared.Ipc.Channels.MapQueueUpdated, Core.MapCompileSystem.getQueue());
+export function notifyMapQueueUpdated(queue: string[]): void {
+    IpcHelper.send(Shared.Ipc.Channels.MapQueueUpdated, queue);
 }
 
-export function notifyCompileLog(event: Shared.Map.CompileLogEvent): void {
+export function notifyMapCompileLog(event: Shared.Map.CompileLogEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.MapCompileLog, event);
 }
 
-export function notifyCompileProgress(event: Shared.Map.CompileProgressEvent): void {
+export function notifyMapCompileProgress(event: Shared.Map.CompileProgressEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.MapCompileProgress, event);
 }

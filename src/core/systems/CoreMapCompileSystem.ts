@@ -1,5 +1,3 @@
-// import { notifyCompileLog, notifyCompileProgress, notifyQueueUpdated } from "../../main/api/MainMapCompileApi.js";
-
 import { ConfigSystem } from "./CoreConfigSystem.js";
 import child_process from "node:child_process";
 import * as Shared from "mod_companion_shared";
@@ -25,8 +23,22 @@ let currentCompilePromise: Promise<boolean> | undefined = undefined;
 
 let paused = false;
 
+let notifyQueueFunc: Shared.Map.QueueUpdatedNotifyFunc | undefined = undefined;
+let notifyProgressFunc: Shared.Map.CompileProgressNotifyFunc | undefined = undefined;
+let notifyLogFunc: Shared.Map.CompileLogNotifyFunc | undefined = undefined;
+
+interface Props {
+    queueFunc?: Shared.Map.QueueUpdatedNotifyFunc;
+    progressFunc?: Shared.Map.CompileProgressNotifyFunc;
+    logFunc?: Shared.Map.CompileLogNotifyFunc;
+}
+
 export const MapCompileSystem = {
-    initSystem(): boolean {
+    initSystem(funcs?: Props): boolean {
+        notifyQueueFunc = funcs?.queueFunc;
+        notifyProgressFunc = funcs?.progressFunc;
+        notifyLogFunc = funcs?.logFunc;
+
         workerInterval = setInterval(_workQueue, 200);
 
         const config = ConfigSystem.getAppConfig();
@@ -50,7 +62,7 @@ export const MapCompileSystem = {
             mapQueueStages.set(mapPath, _createStages());
         }
 
-        // notifyQueueUpdated(); //todo
+        notifyQueueFunc?.(MapCompileSystem.getQueue());
     },
     cancelQueue(): void {
         queue = [];
@@ -136,7 +148,7 @@ function _workMap(mapPath: string, steps: Stage[]) {
 function _mapFinished(mapPath: string): void {
     queue.splice(queue.indexOf(mapPath), 1);
     mapQueueStages.delete(mapPath);
-    // notifyQueueUpdated(); //todo
+    notifyQueueFunc?.(MapCompileSystem.getQueue());
 }
 
 function _startStage(mapPath: string, stageIdx: number): void {
@@ -145,14 +157,14 @@ function _startStage(mapPath: string, stageIdx: number): void {
     currentCompilePromise = stage.action(
         mapPath,
         (msg: string) => {
-            // notifyCompileLog({ mapPath, message: msg, step: stage.step, isError: false }); //todo
+            notifyLogFunc?.({ mapPath, message: msg, step: stage.step, isError: false });
         },
         (msg: string) => {
-            // notifyCompileLog({ mapPath, message: msg, step: stage.step, isError: true }); // todo
+            notifyLogFunc?.({ mapPath, message: msg, step: stage.step, isError: true });
         },
     );
     stage.state = Shared.Map.CompileState.InProgress;
-    // notifyCompileProgress({ mapPath, step: stage.step, state: stage.state }); // todo
+    notifyProgressFunc?.({ mapPath, step: stage.step, state: stage.state });
 
     currentCompilePromise.then(() => {
         _stageFinished(mapPath, stage);
@@ -162,5 +174,5 @@ function _startStage(mapPath: string, stageIdx: number): void {
 function _stageFinished(mapPath: string, stage: Stage): void {
     currentCompilePromise = undefined;
     stage.state = Shared.Map.CompileState.Completed;
-    // notifyCompileProgress({ mapPath, step: stage.step, state: stage.state }); //todo
+    notifyProgressFunc?.({ mapPath, step: stage.step, state: stage.state });
 }
