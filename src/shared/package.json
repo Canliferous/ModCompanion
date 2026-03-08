@@ -9,7 +9,8 @@
         "email": "hello@secondfacesoftware.com"
     },
     "scripts": {
-        "dev": "tsc --watch"
+        "dev": "tsc --watch",
+        "build": "tsc --outDir ../../build_dist/shared"
     },
     "main": "SharedManifest.ts",
     "devDependencies": {},

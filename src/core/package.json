@@ -10,7 +10,7 @@
     },
     "scripts": {
         "dev": "tsc --watch",
-        "build": "tsc --outDir ../../build_dist"
+        "build": "tsc --outDir ../../build_dist/core"
     },
     "main": "CoreManifest.ts",
     "devDependencies": {},
