@@ -25,6 +25,7 @@ import { ModelConverter } from "./helpers/converter/CoreModelConverter.js";
 import { TextureConverter } from "./helpers/converter/CoreTextureConverter.js";
 import * as FileBrowseHelper from "./helpers/CoreFileBrowseHelper.js";
 import * as FileSystem from "./helpers/CoreFilesystem.js";
+import * as LauncherHelper from "./helpers/CoreLauncherHelper.js";
 import { MdlInfoHelper } from "./helpers/CoreMdlInfoHelper.js";
 import * as SourceFs from "./helpers/CoreSourceFs.js";
 
@@ -53,6 +54,7 @@ export {
     TextureConverter,
     FileBrowseHelper,
     FileSystem,
+    LauncherHelper,
     MdlInfoHelper,
     SourceFs,
 };
