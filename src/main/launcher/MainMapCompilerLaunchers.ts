@@ -53,7 +53,7 @@ export const runDone: MapCompilerAction = async (
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = getAppConfig();
-    const sourceBsp = mapPath.replace(".vmf", ".bsp");
+    const sourceBsp = path.extname(mapPath) === ".vmf" ? mapPath.replace(".vmf", ".bsp") : mapPath + ".bsp";
     const outBsp = path.basename(sourceBsp);
     const from = path.join(config.mapSourcePath, sourceBsp);
     const to = path.join(config.mapOutputPath, outBsp);
