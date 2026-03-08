@@ -3,6 +3,7 @@ import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
+import { notifyLogFromMain } from "./api/MainLoggerApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -10,7 +11,7 @@ interface System {
     name: string;
 }
 const systems: System[] = [
-    { name: "Log", initFunction: Core.Logger.initSystem },
+    { name: "Log", initFunction: () => Core.Logger.initSystem(notifyLogFromMain) },
     { name: "Config", initFunction: Core.ConfigSystem.initConfigSystem },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },

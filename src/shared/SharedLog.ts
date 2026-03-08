@@ -1,3 +1,5 @@
+import * as Shared from "./SharedManifest.js";
+
 export const MAX_MESSAGES = 500;
 
 export enum Channel {
@@ -37,6 +39,8 @@ export interface Event {
     channel: Channel;
     time: Date;
 }
+
+export type NotifyFunc = (logEvent: Event) => void;
 
 export function getLogTime(date: Date, noDate: boolean = false, noMilliseconds: boolean = false): string {
     const h = date.getHours().toString(10).padStart(2, "0");

@@ -2,7 +2,6 @@ import { app, BrowserWindow, Menu, Rectangle, Tray } from "electron";
 import path from "node:path";
 import settings from "electron-settings";
 import fs from "node:fs";
-import { runLauncher } from "../api/MainLauncherApi.js";
 
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
@@ -175,7 +174,7 @@ function _buildTrayMenu() {
     template.push({ type: "separator" });
 
     for (const option of Shared.Launchers.SharedLauncherOptions) {
-        template.push({ label: `${option.name}`, click: () => runLauncher(option.type, option.args) });
+        template.push({ label: `${option.name}`, click: () => Core.LauncherHelper.runLauncher(option.type, option.args) });
     }
     template.push({ type: "separator" });
     template.push({ label: "Quit", click: () => app.exit() });

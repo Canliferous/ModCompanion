@@ -1,16 +1,18 @@
 // import { notifyLogFromMain } from "../../main/api/MainLoggerApi.js";
 import * as Shared from "mod_companion_shared";
 
+let notifyFunc: Shared.Log.NotifyFunc | undefined = undefined;
+
 export const Logger = {
-    initSystem(): boolean {
+    initSystem(func?: Shared.Log.NotifyFunc): boolean {
+        notifyFunc = func;
         return true;
     },
     processLog(logEvent: Shared.Log.Event, replicateToRenderer: boolean = false) {
         Shared.Log.printLogEvent(logEvent);
 
         if (replicateToRenderer) {
-            // todo
-            // notifyLogFromMain(logEvent);
+            notifyFunc?.(logEvent);
         }
     },
     debug(channel: Shared.Log.Channel, ...data: any[]) {
