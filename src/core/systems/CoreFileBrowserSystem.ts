@@ -4,13 +4,13 @@ import path from "path";
 import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-// import { notifyFileBrowserDirectoryUpdated } from "../../main/api/MainFileBrowserApi.js";
 
 let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
 let currentPathRelative: string | undefined = undefined;
+
 export const FileBrowserSystem = {
-    initSystem() {
+    initSystem(notifyFunc?: Shared.FileListing.DirUpdatedNotifyFunc) {
         watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
         async function _change(filePath: string) {
@@ -19,13 +19,13 @@ export const FileBrowserSystem = {
                 return;
             }
 
-            const report = await FileBrowserSystem.listFiles(currentPathAbsolute);
-            if (report.type !== Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
+            const result = await FileBrowserSystem.listFiles(currentPathAbsolute);
+            if (result.type !== Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
                 return;
             }
 
-            // todo
-            // notifyFileBrowserDirectoryUpdated({ dir: currentPathRelative, entries: report.entries });
+            const report: Shared.FileListing.DirUpdatedReport = { dir: currentPathRelative, entries: result.entries };
+            notifyFunc?.(report);
         }
 
         watcher.on("add", _change);

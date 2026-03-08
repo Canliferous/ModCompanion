@@ -4,6 +4,7 @@ import { initApiSystem } from "./systems/MainApiSystem.js";
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 import { notifyLogFromMain } from "./api/MainLoggerApi.js";
+import { notifyFileBrowserDirUpdated } from "./api/MainFileBrowserApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -22,7 +23,7 @@ const systems: System[] = [
     { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
     { name: "AssetGroups", initFunction: Core.AssetGroupsSystem.initSystem },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
-    { name: "FileBrowser", initFunction: Core.FileBrowserSystem.initSystem },
+    { name: "FileBrowser", initFunction: () => Core.FileBrowserSystem.initSystem(notifyFileBrowserDirUpdated) },
 ];
 
 async function startSystems() {

@@ -85,6 +85,6 @@ export function registerFileBrowserApi(): boolean {
     return true;
 }
 
-export function notifyFileBrowserDirectoryUpdated(report: Shared.FileListing.DirUpdatedReport) {
+export function notifyFileBrowserDirUpdated(report: Shared.FileListing.DirUpdatedReport) {
     IpcHelper.send(Shared.Ipc.Channels.FileBrowserCurrentDirUpdated, report);
 }

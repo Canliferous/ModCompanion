@@ -30,3 +30,5 @@ export interface DirUpdatedReport {
     dir: string;
     entries: FileEntry[];
 }
+
+export type DirUpdatedNotifyFunc = (report: DirUpdatedReport) => void;
