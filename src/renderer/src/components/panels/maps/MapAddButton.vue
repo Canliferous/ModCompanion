@@ -6,15 +6,15 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
-import { SharedMapSourceDir } from "Shared/SharedMapTypes.js";
 import { filename } from "pathe/utils";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 import pathe from "pathe";
+import * as Shared from "mod_companion_shared";
 
 const listStore = useMapListStore();
 
-const mapDirs = ref<SharedMapSourceDir[]>([]);
+const mapDirs = ref<Shared.Map.SharedMapSourceDir[]>([]);
 
 window.electronAPI.map.listSourceDirs().then((value) => (mapDirs.value = value));
 

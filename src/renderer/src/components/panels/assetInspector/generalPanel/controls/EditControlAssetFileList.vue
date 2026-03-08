@@ -20,16 +20,16 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset, SharedAssetDefinitionFileArrays } from "Shared/SharedAssetDefinition.js";
 import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import { getGameOrContentRelativePath, isGameOrContentRelativePath } from "~/helper/SourceFs.js";
 import MDropArea from "~/components/common/MDropArea.vue";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
 const props = defineProps<{
-    asset: SharedAsset;
-    field: keyof SharedAssetDefinitionFileArrays;
+    asset: Shared.Asset.SharedAsset;
+    field: keyof Shared.Asset.SharedAssetDefinitionFileArrays;
     dir: string;
     maxItems?: number;
     heading: string;

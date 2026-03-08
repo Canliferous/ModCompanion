@@ -1,6 +1,6 @@
 <template>
     <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 items-center">
-        <template v-for="entry in SharedAssetDefinitionAssociatedFilesEntries" :key="entry.field">
+        <template v-for="entry in Shared.Asset.AssociatedFilesEntries" :key="entry.field">
             <EditControlAssetAssociatedEntry
                 :file="associated[entry.field] ?? ''"
                 :entry="entry"
@@ -11,15 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    SharedAsset,
-    SharedAssetDefinitionAssociatedFiles,
-    SharedAssetDefinitionAssociatedFilesEntries,
-} from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import EditControlAssetAssociatedEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetAssociatedEntry.vue";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
 
 const associated = ref(props.asset.def.associatedFiles ?? {});
 watch(
@@ -31,7 +27,7 @@ watch(
 
 const inj = inject(AssetInspectorGeneralInjectKey);
 
-function handleUpdated(newText: string, field: keyof SharedAssetDefinitionAssociatedFiles): void {
+function handleUpdated(newText: string, field: keyof Shared.Asset.SharedAssetDefinitionAssociatedFiles): void {
     associated.value[field] = newText;
     save();
 }

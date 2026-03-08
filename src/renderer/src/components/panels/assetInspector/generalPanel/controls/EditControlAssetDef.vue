@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { browseToMca, exploreToMca, openMca } from "~/helper/AssetHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
 
 function handleOpen() {
     openMca(props.asset);

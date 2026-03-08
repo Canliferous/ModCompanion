@@ -3,14 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset, SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
 import { SelectItem } from "@nuxt/ui/components/Select.vue.js";
 import { getAssetTypeIcon, getAssetTypeName } from "~/design/AppDesign.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
 
-const assetType = ref<SharedAssetType>(props.asset.def.type);
+const assetType = ref<Shared.Asset.Type>(props.asset.def.type);
 watch(
     () => props.asset.def.type,
     (n) => {
@@ -18,7 +18,7 @@ watch(
     },
 );
 
-const selectItems = Object.values(SharedAssetTypes).map<SelectItem>((t) => ({
+const selectItems = Object.values(Shared.Asset.Types).map<SelectItem>((t) => ({
     id: t,
     label: getAssetTypeName(t),
     icon: getAssetTypeIcon(t),

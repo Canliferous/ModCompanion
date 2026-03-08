@@ -12,7 +12,7 @@
         "email": "hello@secondfacesoftware.com"
     },
     "scripts": {
-        "run-dist": "cross-env src/main/node_modules/.bin/electron build_dist/main/main.cjs",
+        "run-dist": "cross-env node_modules/.bin/electron build_dist/main/main.cjs",
         "run-dev": "cross-env NODE_ENV=development electron --inspect=9229 --trace-warnings build_dev/main/main.js",
         "dev": "npm run dev:assets && npm run dev:preload && concurrently -k -n MAIN,VITE -c green,magenta \"npm:dev:main\" \"npm:dev:renderer\"",
         "dev:main": "tsc --outDir build_dev/shared --project src/shared/tsconfig.json && tsc --outDir build_dev/core --project src/core/tsconfig.json && tsc --outDir build_dev/main --project src/main/tsconfig.json && concurrently \"tsc --watch --outDir build_dev --project src/main/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/core/tsconfig.json\" \"tsc-alias -w --outDir build_dev --project src/main/tsconfig.json\"",
@@ -28,16 +28,21 @@
         "deploy": "npm run build && node scripts/deploy.cjs",
         "test": "vitest",
         "lint": "eslint src",
-        "lint-fix": "eslint src --fix"
+        "lint-fix": "eslint src --fix",
+        "install": "cd "
     },
     "devDependencies": {
         "concurrently": "^9.2.1",
         "copyfiles": "^2.4.1",
         "cross-env": "^10.1.0",
-        "esbuild": "^0.27.3"
+        "esbuild": "^0.27.3",
+        "prettier": "^3.8.1"
     },
     "dependencies": {
         "commander": "^14.0.3",
         "humanize-plus": "^1.8.2"
-    }
+    },
+    "workspaces": [
+        "src/*"
+    ]
 }

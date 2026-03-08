@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAsset } from "Shared/SharedAssetDefinition.js";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
 
 const credits = ref<string | undefined>(props.asset.def.credits);
 watch(

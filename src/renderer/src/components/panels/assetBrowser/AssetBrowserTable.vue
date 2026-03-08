@@ -20,11 +20,6 @@
 <script setup lang="ts">
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
-import {
-    getAssociatedEntryName,
-    SharedAssetDefinitionAssociatedFiles,
-    SharedAssetId,
-} from "Shared/SharedAssetDefinition.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
@@ -43,7 +38,7 @@ import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBro
 import ClipboardHelper from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
+import * as Shared from "mod_companion_shared";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -79,7 +74,7 @@ listStore.selectEvent.on((assetIds) => {
 
 const entries = computed(() => {
     const assetGroups = assetGroupsStore.groups;
-    const assetIdsInGroups: SharedAssetId[] = [];
+    const assetIdsInGroups: Shared.Asset.AssetId[] = [];
 
     // Add groups first
     const result: AssetBrowserEntry[] = [];
@@ -132,8 +127,8 @@ function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefine
     return undefined;
 }
 
-const editingGroup = ref<SharedAssetGroupId | undefined>();
-const editingAsset = ref<SharedAssetGroupId | undefined>();
+const editingGroup = ref<Shared.AssetGroup.GroupId | undefined>();
+const editingAsset = ref<Shared.AssetGroup.GroupId | undefined>();
 
 function stopEditing() {
     editingAsset.value = undefined;
@@ -265,10 +260,10 @@ const items = computed(() => {
                 if (sel.def.associatedFiles) {
                     const ass = sel.def.associatedFiles;
                     for (const assKey in ass) {
-                        const key = assKey as keyof SharedAssetDefinitionAssociatedFiles;
+                        const key = assKey as keyof Shared.Asset.SharedAssetDefinitionAssociatedFiles;
                         const v = ass[key];
                         if (v) {
-                            const entry = getAssociatedEntryName(key)!;
+                            const entry = Shared.Asset.getAssociatedEntryName(key)!;
                             options.push([
                                 {
                                     label: `Open ${entry.name}`,

@@ -14,11 +14,11 @@ import { useMapTimeReportStore } from "~/store/MapTimeReportStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { computed } from "vue";
 import MapsDataGridProgressCell from "~/components/panels/maps/list/MapsDataGridProgressCell.vue";
-import { SharedMapCompileStep } from "Shared/SharedMap.js";
 import MapsDataGridActionsCell from "~/components/panels/maps/list/MapsDataGridActionsCell.vue";
 import MapsDataGridTimeReportTotalCell from "~/components/panels/maps/list/MapsDataGridTimeReportTotalCell.vue";
 import MapsDataGridTimeReportCell from "~/components/panels/maps/list/MapsDataGridTimeReportCell.vue";
 import MapsDataGridTimeReportBarCell from "~/components/panels/maps/list/MapsDataGridTimeReportBarCell.vue";
+import * as Shared from "mod_companion_shared";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();
@@ -35,37 +35,37 @@ const listColumns: DataTableColumn<string>[] = [
     {
         id: "vbsp",
         label: "VBSP",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.VBsp }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.VBsp }),
         headerClass: "text-center px-1",
     },
     {
         id: "post",
         label: "POST",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.Post }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.Post }),
         headerClass: "text-center px-1",
     },
     {
         id: "vvis",
         label: "VVIS",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.VVis }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.VVis }),
         headerClass: "text-center px-1",
     },
     {
         id: "vrad",
         label: "VRAD",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.VRad }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.VRad }),
         headerClass: "text-center px-1",
     },
     {
         id: "game",
         label: "GAME",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.Game }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.Game }),
         headerClass: "text-center px-1",
     },
     {
         id: "done",
         label: "DONE",
-        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: SharedMapCompileStep.Done }),
+        cell: (entry) => h(MapsDataGridProgressCell, { mapPath: entry, step: Shared.Map.CompileStep.Done }),
         headerClass: "text-center px-1",
     },
     {
@@ -90,19 +90,19 @@ const reportColumns: DataTableColumn<string>[] = [
     {
         id: "vbsp",
         label: "VBSP",
-        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: SharedMapCompileStep.VBsp }),
+        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: Shared.Map.CompileStep.VBsp }),
         headerClass: "text-center px-2",
     },
     {
         id: "vvis",
         label: "VVIS",
-        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: SharedMapCompileStep.VVis }),
+        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: Shared.Map.CompileStep.VVis }),
         headerClass: "text-center px-2",
     },
     {
         id: "vrad",
         label: "VRAD",
-        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: SharedMapCompileStep.VRad }),
+        cell: (entry) => h(MapsDataGridTimeReportCell, { mapPath: entry, step: Shared.Map.CompileStep.VRad }),
         headerClass: "text-center px-2",
     },
     {
