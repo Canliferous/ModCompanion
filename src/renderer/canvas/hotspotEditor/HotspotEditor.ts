@@ -1,14 +1,12 @@
-import { useEvent } from "~/composables/useEvent.js";
-import { SharedVtfHotspotRect, SharedVtfHotspotRectFlags } from "Shared/vtf/SharedVtfHotspotRect.js";
-import { Logger } from "~/logger.js";
-import { Shared.Log.Channel } from "Shared/SharedLogger.js";
+import {useEvent} from "~/composables/useEvent.js";
+import * as Shared from "mod_companion_shared";
 
 export interface RectAndIdx {
     idx: number;
-    rect: SharedVtfHotspotRect;
+    rect: Shared.Vtf.SharedVtfHotspotRect;
 }
 
-function createRect(pos1: Vector2, pos2: Vector2): SharedVtfHotspotRect {
+function createRect(pos1: Vector2, pos2: Vector2): Shared.Vtf.SharedVtfHotspotRect {
     const biggerX1 = pos1.x > pos2.x;
     const biggerY1 = pos1.y > pos2.y;
 
@@ -70,7 +68,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     let drawStartPos: Vector2 | undefined = undefined;
     let drawEndPos: Vector2 | undefined = undefined;
 
-    let rects: SharedVtfHotspotRect[] = [];
+    let rects: Shared.Vtf.SharedVtfHotspotRect[] = [];
 
     // Edge id is rect index * 4 (because 4 edges) + edge index.
     // Edge index is top bottom left right.
@@ -82,7 +80,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     let editMode = HotspotEditMode.Select;
     let showIds = false;
 
-    const changedEvent = useEvent<SharedVtfHotspotRect[]>();
+    const changedEvent = useEvent<Shared.Vtf.SharedVtfHotspotRect[]>();
     const selectedEvent = useEvent<RectAndIdx | undefined>();
 
     function _snapToGrid(n: number): number {
@@ -333,7 +331,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         ctx.stroke();
     }
 
-    function _drawRect(rect: SharedVtfHotspotRect, rectIdx: number): void {
+    function _drawRect(rect: Shared.Vtf.SharedVtfHotspotRect, rectIdx: number): void {
         const hoveredMiddle = _isPointInRect(mouseXTexture, mouseYTexture, rect);
 
         // ctx.strokeStyle = "rgb(255 255 255 / 0.2)";
@@ -368,7 +366,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         }
     }
 
-    function _drawRectId(rect: SharedVtfHotspotRect, rectIdx: number): void {
+    function _drawRectId(rect: Shared.Vtf.SharedVtfHotspotRect, rectIdx: number): void {
         // Logger.debug(Shared.Log.Channel.Hotspot, "Drawing rect id", rectIdx);
 
         const w = rect.x1 - rect.x0;
@@ -384,7 +382,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     }
 
     function _drawRectEdges(
-        rect: SharedVtfHotspotRect,
+        rect: Shared.Vtf.SharedVtfHotspotRect,
         rectIdx: number,
         hoveredTop: boolean,
         hoveredBottom: boolean,
@@ -471,7 +469,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
         return pointX >= x0 && pointX <= x1 && pointY >= y0 && pointY <= y1;
     }
 
-    function _isPointInRect(pointX: number, pointY: number, rect: SharedVtfHotspotRect) {
+    function _isPointInRect(pointX: number, pointY: number, rect: Shared.Vtf.SharedVtfHotspotRect) {
         return pointX >= rect.x0 && pointX <= rect.x1 && pointY >= rect.y0 && pointY <= rect.y1;
     }
 
@@ -524,7 +522,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
     function updateShowIds(shouldShowIds: boolean): void {
         showIds = shouldShowIds;
     }
-    function updateRects(newRects: SharedVtfHotspotRect[]): void {
+    function updateRects(newRects: Shared.Vtf.SharedVtfHotspotRect[]): void {
         grabbedEdge = undefined;
         drawStartPos = undefined;
         drawEndPos = undefined;
@@ -537,7 +535,7 @@ function createHotspotEditor(ctx: CanvasRenderingContext2D, initialCanvasWidth: 
 
         rects = newRects;
     }
-    function updateRectFlags(rectIdx: number, flags: SharedVtfHotspotRectFlags | undefined): void {
+    function updateRectFlags(rectIdx: number, flags: Shared.Vtf.SharedVtfHotspotRectFlags | undefined): void {
         rects[rectIdx].flags = flags;
         pendingSave = true;
     }

@@ -33,12 +33,12 @@ function _getReportExtension(step: Shared.Map.SharedMapCompileStep) {
     }
 }
 
-async function _createTimeReport(maps: Shared.Map.SharedMapPath[]): Promise<Shared.Map.SharedMapTimeReport> {
+async function _createTimeReport(maps: Shared.Map.SharedMapPath[]): Promise<Shared.Map.TimeReport> {
     const config = Core.ConfigSystem.getAppConfig();
 
     const srcPath = config.mapSourcePath;
 
-    const report: Shared.Map.SharedMapTimeReport = {
+    const report: Shared.Map.TimeReport = {
         maps: new Map<string, number>(),
         totals: new Map<Shared.Map.SharedMapPath, number>(),
     };

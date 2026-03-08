@@ -1,4 +1,4 @@
-export enum SharedPlayPauseStopControlsState {
+export enum State {
     Stopped,
     Playing,
     Paused,

@@ -1,17 +1,16 @@
-import { SharedProjectFileEntry, SharedProjectListFilesReportTypes } from "Shared/SharedFileListing.js";
 import { defineStore } from "pinia";
 import { getRootRelativePath } from "~/helper/SourceFs.js";
 import pathe from "pathe";
 import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { Logger } from "~/logger.js";
-import { Shared.Log.Channel } from "Shared/SharedLogger.js";
 import { getAppConfig } from "~/renderer-config.js";
+import * as Shared from "mod_companion_shared"
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
-    const fsEntries = reactive(new Map<string, SharedProjectFileEntry[]>());
+    const fsEntries = reactive(new Map<string, Shared.FileListing.SharedProjectFileEntry[]>());
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
-    const activeEntry = ref<SharedProjectFileEntry | undefined>(undefined);
+    const activeEntry = ref<Shared.FileListing.SharedProjectFileEntry | undefined>(undefined);
 
     watch(currentDir, refreshDir);
 
@@ -19,7 +18,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         const report = await window.electronAPI.fileBrowser.listFiles(dirName);
         window.electronAPI.fileBrowser.setCurrentPath(dirName);
 
-        if (report.type === SharedProjectListFilesReportTypes.Success) {
+        if (report.type === Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
             fsEntries.set(dirName, report.entries);
         }
     }
@@ -45,7 +44,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         currentDir.value = correctedPath;
     }
 
-    function onEntryActivated(entry: SharedProjectFileEntry): void {
+    function onEntryActivated(entry: Shared.FileListing.SharedProjectFileEntry): void {
         if (entry.isFile) {
             const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
             window.electronAPI.fileBrowser.openFile(fullPath);

@@ -2,21 +2,21 @@
     <UButtonGroup class="h-full inline-flex gap-1">
         <UButton
             :icon="AppDesign.Icons.ActionPlay"
-            :color="compileStore.state !== SharedPlayPauseStopControlsState.Playing ? 'success' : 'neutral'"
-            :disabled="compileStore.state === SharedPlayPauseStopControlsState.Playing"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Playing"
+            :color="compileStore.state !== Shared.PlayPauseStop.State.Playing ? 'success' : 'neutral'"
+            :disabled="compileStore.state === Shared.PlayPauseStop.State.Playing"
+            @click="compileStore.state = Shared.PlayPauseStop.State.Playing"
         />
         <UButton
             :icon="AppDesign.Icons.ActionPause"
-            :color="compileStore.state === SharedPlayPauseStopControlsState.Playing ? 'warning' : 'neutral'"
-            :disabled="compileStore.state !== SharedPlayPauseStopControlsState.Playing"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Paused"
+            :color="compileStore.state === Shared.PlayPauseStop.State.Playing ? 'warning' : 'neutral'"
+            :disabled="compileStore.state !== Shared.PlayPauseStop.State.Playing"
+            @click="compileStore.state = Shared.PlayPauseStop.State.Paused"
         />
         <UButton
             :icon="AppDesign.Icons.ActionStop"
-            :color="compileStore.state !== SharedPlayPauseStopControlsState.Stopped ? 'error' : 'neutral'"
-            :disabled="compileStore.state === SharedPlayPauseStopControlsState.Stopped"
-            @click="compileStore.state = SharedPlayPauseStopControlsState.Stopped"
+            :color="compileStore.state !== Shared.PlayPauseStop.State.Stopped ? 'error' : 'neutral'"
+            :disabled="compileStore.state === Shared.PlayPauseStop.State.Stopped"
+            @click="compileStore.state = Shared.PlayPauseStop.State.Stopped"
         />
     </UButtonGroup>
 </template>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { useMapCompileStore } from "~/store/MapCompileStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
+import { Shared.PlayPauseStop.State } from "Shared/SharedPlayPauseStopState.js";
 
 const compileStore = useMapCompileStore();
 </script>

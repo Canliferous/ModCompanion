@@ -12,10 +12,13 @@
         "dev": "tsc --watch",
         "build": "tsc --outDir ../../build_dist"
     },
-    "devDependencies": {},
     "dependencies": {
-        "mod_companion_shared": "../shared",
+        "electron": "36.2.0",
         "mod_companion_core": "../core",
-        "electron": "36.2.0"
+        "mod_companion_shared": "../shared",
+        "pathe": "^2.0.3"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3"
     }
 }

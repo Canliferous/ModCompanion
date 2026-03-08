@@ -1,32 +1,30 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useAssetsFilter } from "~/composables/useFilter.js";
-import { SharedAsset, SharedAssetId, SharedAssetType } from "Shared/SharedAssetDefinition.js";
-import { SharedCreateAssetReportType } from "Shared/SharedCreateAssetReport.js";
+import { useEvent } from "~/composables/useEvent.js";
 import { getContentRelativePath } from "~/helper/SourceFs.js";
 import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
-import { useEvent } from "~/composables/useEvent.js";
 import { Logger } from "~/logger.js";
-import { Shared.Log.Channel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export const useAssetListStore = defineStore("asset-list", () => {
-    const assets = ref<Map<SharedAssetId, SharedAsset>>(new Map<SharedAssetId, SharedAsset>());
-    const potentialAssets = ref<SharedAsset[]>([]);
+    const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.SharedAsset>>(new Map());
+    const potentialAssets = ref<Shared.Asset.SharedAsset[]>([]);
     const refreshing = ref(false);
     const searchTerm = useRememberWorkspaceRef(ref(""), "asset-list-search");
     const assetsEntries = computed(() => [...assets.value.values()]);
-    const typeFilter = useRememberStringArray(ref<SharedAssetType[]>([]), "asset-list-types");
+    const typeFilter = useRememberStringArray(ref<Shared.Asset.Type[]>([]), "asset-list-types");
     const filteredAssets = useAssetsFilter(assetsEntries, searchTerm, typeFilter);
-    const activeId = ref<SharedAssetId | undefined>();
+    const activeId = ref<Shared.Asset.AssetId | undefined>();
     const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
-    const selectedIds = ref<SharedAssetId[]>([]);
+    const selectedIds = ref<Shared.Asset.AssetId[]>([]);
     const selectedAssets = computed(() =>
         filteredAssets.value.filter((value) => selectedIds.value.includes(value.def.id)),
     );
 
-    const activateEvent = useEvent<SharedAssetId | undefined>();
-    const selectEvent = useEvent<SharedAssetId[]>();
-    const writtenEvent = useEvent<SharedAssetId[]>();
+    const activateEvent = useEvent<Shared.Asset.AssetId | undefined>();
+    const selectEvent = useEvent<Shared.Asset.AssetId[]>();
+    const writtenEvent = useEvent<Shared.Asset.AssetId[]>();
 
     window.electronAPI.asset.subscribeRescanned((event) => {
         assets.value = event.assets;
@@ -54,9 +52,9 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeId.value = assetId;
     });
 
-    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<SharedAsset[]> {
+    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.SharedAsset[]> {
         const result = await window.electronAPI.asset.createAsset(primaryFile, otherFiles);
-        if (result.type === SharedCreateAssetReportType.Success) {
+        if (result.type === Shared.Asset.SharedCreateAssetReportType.Success) {
             for (const asset of result.assets) {
                 assets.value.set(asset.def.id, asset);
             }
@@ -67,7 +65,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return [];
     }
 
-    async function deleteAsset(assetId: SharedAssetId): Promise<boolean> {
+    async function deleteAsset(assetId: Shared.Asset.AssetId): Promise<boolean> {
         try {
             await window.electronAPI.asset.delete(assetId);
         } catch {
@@ -91,13 +89,13 @@ export const useAssetListStore = defineStore("asset-list", () => {
         refreshing.value = true;
     }
 
-    function activate(id: SharedAssetId | undefined): void {
+    function activate(id: Shared.Asset.AssetId | undefined): void {
         activateEvent.call(id);
     }
 
     function selectByMca(mcaPaths: string[]): void {
         const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
-        const sel: SharedAssetId[] = [];
+        const sel: Shared.Asset.AssetId[] = [];
         for (const asset of assets.value.values()) {
             if (asset.defFilePath === undefined) continue;
             if (mcaPathsRel.includes(asset.defFilePath)) {
@@ -113,16 +111,16 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     }
 
-    function getAssetById(id: SharedAssetId | undefined): SharedAsset | undefined {
+    function getAssetById(id: Shared.Asset.AssetId | undefined): Shared.Asset.SharedAsset | undefined {
         if (id === undefined) return undefined;
         return assets.value.get(id);
     }
 
-    function getAssetsById(ids: SharedAssetId[]): SharedAsset[] {
+    function getAssetsById(ids: Shared.Asset.AssetId[]): Shared.Asset.SharedAsset[] {
         return ids.map((id) => assets.value.get(id)).filter((a) => a !== undefined);
     }
 
-    function updateAssets(as: SharedAsset[]): void {
+    function updateAssets(as: Shared.Asset.SharedAsset[]): void {
         const mapCopy = new Map(assets.value);
         for (const a of as) {
             mapCopy.set(a.def.id, a);
@@ -130,7 +128,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         assets.value = mapCopy;
     }
 
-    async function writeAssets(as: SharedAsset[]): Promise<void> {
+    async function writeAssets(as: Shared.Asset.SharedAsset[]): Promise<void> {
         Logger.debug(Shared.Log.Channel.Generic, "Writing asset", as);
         const results = as.map((a) => window.electronAPI.asset.update(a.def.id, a.def));
         const newAssets = await Promise.all(results);

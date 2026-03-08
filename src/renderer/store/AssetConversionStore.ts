@@ -1,14 +1,13 @@
 import { defineStore } from "pinia";
-import { SharedConversion, ConversionEvent, State, SharedConversionSummary } from "Shared/SharedConversion.js";
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
+import * as Shared from "mod_companion_shared";
 
 export const useAssetConversionStore = defineStore("asset-conversion", () => {
-    const conversions = ref<Map<SharedAssetId, SharedConversion>>(new Map());
+    const conversions = ref<Map<Shared.Asset.AssetId, Shared.Conversion.SharedConversion>>(new Map());
     const conversionsLastChangeTime = ref<number>(0);
-    const events = ref<ConversionEvent[]>([]);
+    const events = ref<Shared.Conversion.ConversionEvent[]>([]);
     const eventsLastChangeTime = ref<number>(0);
-    const activeEvent = ref<ConversionEvent | undefined>();
-    const summary = ref<SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
+    const activeEvent = ref<Shared.Conversion.ConversionEvent | undefined>();
+    const summary = ref<Shared.Conversion.SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
         const time1 = event.conversionsLastChangeTime?.getTime();
@@ -25,11 +24,11 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         summary.value = event.summary;
     });
 
-    function getState(id: SharedAssetId): State {
-        return conversions.value.get(id)?.state ?? State.Unknown;
+    function getState(id: Shared.Asset.AssetId): Shared.Conversion.State {
+        return conversions.value.get(id)?.state ?? Shared.Conversion.State.Unknown;
     }
 
-    function enqueue(id: SharedAssetId): void {
+    function enqueue(id: Shared.Asset.AssetId): void {
         window.electronAPI.conversion.enqueue(id);
     }
 
@@ -42,7 +41,7 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         conversions.value = state.conversions;
     }
 
-    function setActive(event: ConversionEvent | undefined): void {
+    function setActive(event: Shared.Conversion.ConversionEvent | undefined): void {
         activeEvent.value = event;
     }
 

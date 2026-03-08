@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref } from "vue";
-import { SharedAsset, SharedAssetType } from "Shared/SharedAssetDefinition.js";
+import * as Shared from "mod_companion_shared";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
     return computed(() => {
@@ -31,9 +31,9 @@ export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string,
 }
 
 export function useAssetsFilter(
-    assets: ComputedRef<SharedAsset[]>,
+    assets: ComputedRef<Shared.Asset.SharedAsset[]>,
     searchFilter: Ref<string>,
-    typeFilter: Ref<SharedAssetType[]>,
+    typeFilter: Ref<Shared.Asset.Type[]>,
 ) {
     return computed(() => {
         const typeFilterVal = typeFilter.value;
@@ -41,7 +41,7 @@ export function useAssetsFilter(
             return assets.value;
         }
 
-        const filteredAssets: SharedAsset[] = [];
+        const filteredAssets: Shared.Asset.SharedAsset[] = [];
         for (const asset of assets.value) {
             if (typeFilterVal.length > 0) {
                 const isIncluded = typeFilter.value.includes(asset.def.type);

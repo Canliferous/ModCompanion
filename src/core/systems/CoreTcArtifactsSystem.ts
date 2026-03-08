@@ -52,9 +52,9 @@ export const TcArtifactsSystem = {
             return response?.Contents;
         });
     },
-    async listMaps(): Promise<Shared.TcArtifacts.SharedTcArtifactsListAllMapsReport | undefined> {
+    async listMaps(): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> {
         return _useS3(
-            async (client, bucket): Promise<Shared.TcArtifacts.SharedTcArtifactsListAllMapsReport | undefined> => {
+            async (client, bucket): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> => {
                 const response = await client.listObjectsV2({
                     Bucket: bucket,
                     Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/",
@@ -64,7 +64,7 @@ export const TcArtifactsSystem = {
                     return undefined;
                 }
 
-                const mapsMap = new Map<string, Shared.TcArtifacts.SharedTcArtifactsListAllMapsReportMap[]>();
+                const mapsMap = new Map<string, Shared.TcArtifacts.MapInfo[]>();
                 for (const content of contents) {
                     if (content.Size === undefined || content.LastModified === undefined || content.Key === undefined)
                         continue;
@@ -72,7 +72,7 @@ export const TcArtifactsSystem = {
                     const mapName = filename(content.Key);
                     if (mapName === undefined) continue;
 
-                    const entry: Shared.TcArtifacts.SharedTcArtifactsListAllMapsReportMap = {
+                    const entry: Shared.TcArtifacts.MapInfo = {
                         size: content.Size,
                         dateModified: content.LastModified,
                         objectKey: content.Key,

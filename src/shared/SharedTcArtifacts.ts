@@ -1,9 +1,9 @@
-export interface SharedTcArtifactsListAllMapsReportMap {
+export interface MapInfo {
     objectKey: string;
     size: number;
     dateModified: Date;
 }
 
-export interface SharedTcArtifactsListAllMapsReport {
-    maps: Map<string, SharedTcArtifactsListAllMapsReportMap[]>;
+export interface ListAllMapsReport {
+    maps: Map<string, MapInfo[]>;
 }

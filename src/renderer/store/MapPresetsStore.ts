@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { SharedMapPresets } from "Shared/SharedMapPreset.js";
 import { configInitializedEvent } from "~/renderer-config.js";
+import * as Shared from "mod_companion_shared";
 
 export const useMapPresetsStore = defineStore("map-presets", () => {
-    const presets = ref<SharedMapPresets>({});
+    const presets = ref<Shared.Map.SharedMapPresets>({});
 
     configInitializedEvent.on((payload) => {
         if (payload.mapPresets) {

@@ -1,14 +1,14 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import ui from "@nuxt/ui/vite";
-import uiconfig from "./uiconfig";
+import uiconfig from "./uiconfig.js";
 
 // https://vitejs.dev/config
 export default defineConfig({
     plugins: [vue(), ui(uiconfig())],
     base: "./",
     build: {
-        outDir: "build_dist/renderer",
+        outDir: "../../build_dist/renderer",
         rollupOptions: {
             output: {
                 entryFileNames: `index.js`,
@@ -19,13 +19,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            "~": "/src/renderer",
-            Shared: "/src/shared",
-        },
-    },
-    server: {
-        watch: {
-            ignored: ["**/sample/**"],
+            "~": "/"
         },
     },
 });

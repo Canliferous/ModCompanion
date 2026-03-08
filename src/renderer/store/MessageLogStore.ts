@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
-import { MAX_MESSAGES, SharedLogEvent } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export const useMessageLogStore = defineStore("logs", () => {
-    const logEvents = reactive<SharedLogEvent[]>([]);
+    const logEvents = reactive<Shared.Log.Event[]>([]);
 
     const latestEvent = computed(() => (logEvents.length > 0 ? logEvents[logEvents.length - 1] : undefined));
 
-    function add(logEvent: SharedLogEvent): void {
+    function add(logEvent: Shared.Log.Event): void {
         logEvents.push(logEvent);
-        const tooManyCount = logEvents.length - MAX_MESSAGES;
+        const tooManyCount = logEvents.length - Shared.Log.MAX_MESSAGES;
         if (tooManyCount > 0) {
             logEvents.splice(0, tooManyCount);
         }

@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { SharedTcArtifactsListAllMapsReportMap } from "Shared/SharedTcArtifacts.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 import { filename } from "pathe/utils";
+import * as Shared from "mod_companion_shared";
 
 export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
     const connected = ref(false);
-    const mapsList = ref<Map<string, SharedTcArtifactsListAllMapsReportMap[]>>(new Map());
+    const mapsList = ref<Map<string, Shared.TcArtifacts.MapInfo[]>>(new Map());
     const activeDownloads = reactive<Map<string, Promise<boolean>>>(new Map());
 
     async function checkAlive() {

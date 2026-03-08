@@ -1,16 +1,16 @@
-import { SharedAppConfig } from "Shared/SharedAppConfig.js";
 import { useEvent } from "~/composables/useEvent.js";
+import * as Shared from "mod_companion_shared";
 
-let config: SharedAppConfig;
+let config: Shared.AppConfig.IAppConfig;
 
-export function getAppConfig(): SharedAppConfig {
+export function getAppConfig(): Shared.AppConfig.IAppConfig {
     return config;
 }
 
-export const configInitializedEvent = useEvent<SharedAppConfig>();
+export const configInitializedEvent = useEvent<Shared.AppConfig.IAppConfig>();
 
 export function initConfig() {
-    window.electronAPI.config.get().then((cfg: SharedAppConfig) => {
+    window.electronAPI.config.get().then((cfg: Shared.AppConfig.IAppConfig) => {
         console.log("Config loaded from main");
         config = cfg;
         configInitializedEvent.call(cfg);

@@ -4,7 +4,7 @@ import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
 import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
-import { Shared.Log.Channel } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();

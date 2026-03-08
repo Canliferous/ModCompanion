@@ -17,7 +17,7 @@ import {
     SharedAssetUpdatedEvent,
 } from "./shared/SharedAssetDefinition.js";
 import { SharedConversionUpdateIpcEvent } from "./shared/SharedConversion";
-import { SharedAssetGroupDefinition, SharedAssetGroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
+import { SharedAssetGroupDefinition, GroupId, SharedAssetGroupRescanEvent } from "./shared/SharedAssetGroup";
 import { SharedFileBrowserDirectoryUpdatedReport } from "./shared/SharedFileListing";
 import { LogType } from "vite";
 import { SharedLogEvent } from "./shared/SharedLogger";
@@ -110,9 +110,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ),
         create: (assetGroupDef: SharedAssetGroupDefinition) =>
             ipcRenderer.invoke(Channels.AssetGroupsCreate, assetGroupDef),
-        update: (groupId: SharedAssetGroupId, groupDef: SharedAssetGroupDefinition) =>
+        update: (groupId: GroupId, groupDef: SharedAssetGroupDefinition) =>
             ipcRenderer.invoke(Channels.AssetGroupsUpdate, groupId, groupDef),
-        delete: (groupId: SharedAssetGroupId) => ipcRenderer.send(Channels.AssetGroupsDelete, groupId),
+        delete: (groupId: GroupId) => ipcRenderer.send(Channels.AssetGroupsDelete, groupId),
     },
 
     image: {

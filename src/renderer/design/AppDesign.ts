@@ -1,6 +1,4 @@
-import { SharedAssetType, SharedAssetTypes } from "Shared/SharedAssetDefinition.js";
-import { SharedLaunchers } from "Shared/SharedLaunchers.js";
-import { SharedLogType } from "Shared/SharedLogger.js";
+import * as Shared from "mod_companion_shared";
 
 export const Icons = {
     Asset: "mingcute:traffic-cone-fill",
@@ -112,96 +110,96 @@ export const Icons = {
 
 export const BitmapIcon = {
     Launchers: {
-        [SharedLaunchers.Game]: "revolution",
-        [SharedLaunchers.Hammer]: "hammer",
-        [SharedLaunchers.Faceposer]: "faceposer",
-        [SharedLaunchers.Hlmv]: "hlmv",
+        [Shared.Launchers.SharedLaunchers.Game]: "revolution",
+        [Shared.Launchers.SharedLaunchers.Hammer]: "hammer",
+        [Shared.Launchers.SharedLaunchers.Faceposer]: "faceposer",
+        [Shared.Launchers.SharedLaunchers.Hlmv]: "hlmv",
     },
     ModCompanion: "mod_companion_192",
 } as const;
 
-export function getAssetTypeIcon(type: SharedAssetType): string {
+export function getAssetTypeIcon(type: Shared.Asset.Type): string {
     switch (type) {
-        case SharedAssetTypes.Texture:
+        case Shared.Asset.Types.Texture:
             return Icons.Texture;
-        case SharedAssetTypes.Model:
+        case Shared.Asset.Types.Model:
             return Icons.Model;
-        case SharedAssetTypes.Unknown:
+        case Shared.Asset.Types.Unknown:
         default:
             return Icons.Asset;
     }
 }
-export function getAssetTypeTextColor(type: SharedAssetType): string {
+export function getAssetTypeTextColor(type: Shared.Asset.Type): string {
     switch (type) {
-        case SharedAssetTypes.Texture:
+        case Shared.Asset.Types.Texture:
             return "text-blue-400";
-        case SharedAssetTypes.Model:
+        case Shared.Asset.Types.Model:
             return "text-pink-400";
-        case SharedAssetTypes.Unknown:
+        case Shared.Asset.Types.Unknown:
         default:
             return "text-neutral-500";
     }
 }
 
-export function getAssetTypeName(type: SharedAssetType) {
+export function getAssetTypeName(type: Shared.Asset.Type) {
     switch (type) {
-        case SharedAssetTypes.Model: {
+        case Shared.Asset.Types.Model: {
             return "Model";
         }
-        case SharedAssetTypes.Texture: {
+        case Shared.Asset.Types.Texture: {
             return "Texture";
         }
         default:
-        case SharedAssetTypes.Unknown: {
+        case Shared.Asset.Types.Unknown: {
             return "Unknown";
         }
     }
 }
 
-export function getLogTypeIcon(logType: SharedLogType) {
+export function getLogTypeIcon(logType: Shared.Log.Type) {
     switch (logType) {
-        case SharedLogType.Debug: {
+        case Shared.Log.Type.Debug: {
             return Icons.LogType_Debug;
         }
-        case SharedLogType.Info: {
+        case Shared.Log.Type.Info: {
             return Icons.LogType_Info;
         }
-        case SharedLogType.Warning: {
+        case Shared.Log.Type.Warning: {
             return Icons.LogType_Warning;
         }
-        case SharedLogType.Error: {
+        case Shared.Log.Type.Error: {
             return Icons.LogType_Error;
         }
     }
 }
 
-export function getLogTypeTextColor(logType: SharedLogType): string {
+export function getLogTypeTextColor(logType: Shared.Log.Type): string {
     switch (logType) {
-        case SharedLogType.Debug: {
+        case Shared.Log.Type.Debug: {
             return "text-magenta-400";
         }
-        case SharedLogType.Info: {
+        case Shared.Log.Type.Info: {
             return "text-info-400";
         }
-        case SharedLogType.Warning: {
+        case Shared.Log.Type.Warning: {
             return "text-yellow-400";
         }
-        case SharedLogType.Error: {
+        case Shared.Log.Type.Error: {
             return "text-red-400";
         }
     }
 }
 
-export function getLogTypeTextColorWarnings(logType: SharedLogType): string {
+export function getLogTypeTextColorWarnings(logType: Shared.Log.Type): string {
     switch (logType) {
-        case SharedLogType.Debug:
-        case SharedLogType.Info: {
+        case Shared.Log.Type.Debug:
+        case Shared.Log.Type.Info: {
             return "";
         }
-        case SharedLogType.Warning: {
+        case Shared.Log.Type.Warning: {
             return "text-yellow-400";
         }
-        case SharedLogType.Error: {
+        case Shared.Log.Type.Error: {
             return "text-red-400";
         }
     }

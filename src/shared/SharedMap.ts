@@ -26,13 +26,11 @@ export interface SharedMapCompileProgressEvent {
     state: CompileState;
 }
 
-export type SharedMapPath = string;
-
 export type SharedMapPresets = Record<string, string[]>;
 
-export interface SharedMapTimeReport {
+export interface TimeReport {
     maps: Map<string, number>;
-    totals: Map<SharedMapPath, number>;
+    totals: Map<string, number>;
 }
 
 export interface SharedMapSourceDir {

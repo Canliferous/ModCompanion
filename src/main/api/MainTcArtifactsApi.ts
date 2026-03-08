@@ -9,7 +9,7 @@ export function registerTcArtifactsApi(): boolean {
     });
     ipcMain.handle(
         Shared.Ipc.Channels.TcArtifacts_ListAllMaps,
-        (): Promise<Shared.TcArtifacts.SharedTcArtifactsListAllMapsReport | undefined> => {
+        (): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> => {
             return Core.TcArtifactsSystem.listMaps();
         },
     );

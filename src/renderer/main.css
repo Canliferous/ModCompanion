@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
-@import '../../node_modules/dockview-vue/dist/styles/dockview.css';
+@import 'dockview-vue/dist/styles/dockview.css';
 
 :root {
     --ui-radius: 0.2rem;

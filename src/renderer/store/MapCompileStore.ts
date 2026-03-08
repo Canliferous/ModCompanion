@@ -1,15 +1,14 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { CompileState } from "Shared/SharedMap.js";
-import { SharedPlayPauseStopControlsState } from "Shared/SharedPlayPauseStopState.js";
 import { useMapListStore } from "~/store/MapListStore.js";
+import * as Shared from "mod_companion_shared";
 
 export const useMapCompileStore = defineStore("map-compile", () => {
-    const state = ref<SharedPlayPauseStopControlsState>(SharedPlayPauseStopControlsState.Stopped);
-    const progress = reactive(new Map<string, CompileState>());
+    const state = ref<Shared.PlayPauseStop.State>(Shared.PlayPauseStop.State.Stopped);
+    const progress = reactive(new Map<string, Shared.Map.CompileState>());
 
     function compileNow(mapPath: string) {
-        if (state.value !== SharedPlayPauseStopControlsState.Stopped) return;
+        if (state.value !== Shared.PlayPauseStop.State.Stopped) return;
 
         window.electronAPI.map.enqueue([mapPath]);
     }
@@ -20,17 +19,17 @@ export const useMapCompileStore = defineStore("map-compile", () => {
     });
 
     watch(state, (newState, oldState) => {
-        if (newState === SharedPlayPauseStopControlsState.Stopped) {
+        if (newState === Shared.PlayPauseStop.State.Stopped) {
             window.electronAPI.map.cancelQueue();
-        } else if (newState === SharedPlayPauseStopControlsState.Playing) {
-            if (oldState === SharedPlayPauseStopControlsState.Paused) {
+        } else if (newState === Shared.PlayPauseStop.State.Playing) {
+            if (oldState === Shared.PlayPauseStop.State.Paused) {
                 window.electronAPI.map.pauseQueue(false);
             } else {
                 const mapList = useMapListStore().mapList;
                 window.electronAPI.map.enqueue(toRaw(mapList));
                 progress.clear();
             }
-        } else if (newState === SharedPlayPauseStopControlsState.Paused) {
+        } else if (newState === Shared.PlayPauseStop.State.Paused) {
             window.electronAPI.map.pauseQueue(true);
         }
     });

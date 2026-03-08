@@ -1,9 +1,9 @@
-import { printLogEvent, Shared.Log.Channel, SharedLogEvent, SharedLogType } from "Shared/SharedLogger.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
+import * as Shared from "mod_companion_shared";
 
 export const Logger = {
-    processLog(logEvent: SharedLogEvent, replicateToMain: boolean = false): void {
-        printLogEvent(logEvent);
+    processLog(logEvent: Shared.Log.Event, replicateToMain: boolean = false): void {
+        Shared.Log.printLogEvent(logEvent);
 
         useMessageLogStore().add(logEvent);
 
@@ -12,16 +12,16 @@ export const Logger = {
         }
     },
     debug(channel: Shared.Log.Channel, ...data: any[]) {
-        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Debug }, true);
+        Logger.processLog({ data, channel, time: new Date(), type: Shared.Log.Type.Debug }, true);
     },
     info(channel: Shared.Log.Channel, ...data: any[]) {
-        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Info }, true);
+        Logger.processLog({ data, channel, time: new Date(), type: Shared.Log.Type.Info }, true);
     },
     warning(channel: Shared.Log.Channel, ...data: any[]) {
-        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Warning }, true);
+        Logger.processLog({ data, channel, time: new Date(), type: Shared.Log.Type.Warning }, true);
     },
     error(channel: Shared.Log.Channel, ...data: any[]) {
-        Logger.processLog({ data, channel, time: new Date(), type: SharedLogType.Error }, true);
+        Logger.processLog({ data, channel, time: new Date(), type: Shared.Log.Type.Error }, true);
     },
     init() {
         window.electronAPI.log.subscribeSendFromMain((logEvent) => {

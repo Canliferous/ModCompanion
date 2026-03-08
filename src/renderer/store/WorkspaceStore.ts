@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { v4 } from "uuid";
+import * as uuid from "uuid";
 import { useRememberRef, useRememberStringArray } from "~/composables/useRemember.js";
 import { SerializedDockview } from "dockview-vue";
 import { useEventListener } from "@vueuse/core";
@@ -7,7 +7,7 @@ import { useEventListener } from "@vueuse/core";
 export type WorkspaceId = string;
 
 export function generateWorkspaceId(): string {
-    return v4();
+    return uuid.v4();
 }
 
 export const useWorkspaceStore = defineStore("workspace", () => {

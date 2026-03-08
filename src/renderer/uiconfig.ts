@@ -3,15 +3,15 @@ import { NuxtUIOptions } from "@nuxt/ui/vite";
 export default function buildConfig(): NuxtUIOptions {
     return {
         components: {
-            dts: "./src/renderer/components.d.ts",
-            dirs: ["./src/renderer/components"],
+            dts: "./components.d.ts",
+            dirs: ["./components"],
             extensions: ["vue"],
             deep: true,
         },
         autoImport: {
             vueDirectives: true,
             vueTemplate: true,
-            dts: "./src/renderer/auto-imports.d.ts",
+            dts: "./auto-imports.d.ts",
             imports: ["vue"],
         },
         ui: {

@@ -17,7 +17,7 @@ export function registerAssetGroupsApi(): boolean {
         Shared.Ipc.Channels.AssetGroupsUpdate,
         (
             event,
-            id: Shared.AssetGroup.SharedAssetGroupId,
+            id: Shared.AssetGroup.GroupId,
             groupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
         ): Promise<Shared.AssetGroup.SharedAssetGroup> => {
             return Core.AssetGroupsSystem.write(id, groupDef);
@@ -26,7 +26,7 @@ export function registerAssetGroupsApi(): boolean {
     ipcMain.on(Shared.Ipc.Channels.AssetGroupsForceRescan, (): void => {
         Core.AssetGroupsSystem.scan();
     });
-    ipcMain.on(Shared.Ipc.Channels.AssetGroupsDelete, (event, groupId: Shared.AssetGroup.SharedAssetGroupId): void => {
+    ipcMain.on(Shared.Ipc.Channels.AssetGroupsDelete, (event, groupId: Shared.AssetGroup.GroupId): void => {
         Core.AssetGroupsSystem.delete(groupId);
     });
 

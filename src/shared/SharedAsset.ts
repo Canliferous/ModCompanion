@@ -7,13 +7,13 @@ export const Types = {
     Texture: "texture",
     Model: "model",
 } as const;
-export type SharedAssetType = (typeof Types)[keyof typeof Types];
+export type Type = (typeof Types)[keyof typeof Types];
 
-export function isValidAssetType(str: string): str is SharedAssetType {
+export function isValidAssetType(str: string): str is Type {
     return (Object.values(Types) as string[]).includes(str);
 }
 
-export function getAssetTypeName(type: SharedAssetType): string {
+export function getAssetTypeName(type: Type): string {
     switch (type) {
         case Types.Texture: {
             return "Texture";
@@ -37,7 +37,7 @@ export interface SharedAssetDefinitionFileArrays {
 
 export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
     id: string;
-    type: SharedAssetType;
+    type: Type;
     displayName?: string;
 
     associatedFiles?: SharedAssetDefinitionAssociatedFiles;

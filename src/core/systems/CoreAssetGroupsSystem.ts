@@ -7,7 +7,7 @@ import { filename } from "pathe/utils";
 import * as Shared from "mod_companion_shared";
 import { Logger } from "./CoreLogSystem.js";
 
-const groups: Map<Shared.AssetGroup.SharedAssetGroupId, Shared.AssetGroup.SharedAssetGroup> = new Map();
+const groups: Map<Shared.AssetGroup.GroupId, Shared.AssetGroup.SharedAssetGroup> = new Map();
 
 export const AssetGroupsSystem = {
     async initSystem(): Promise<boolean> {
@@ -18,11 +18,11 @@ export const AssetGroupsSystem = {
 
         return true;
     },
-    generateId(): Shared.AssetGroup.SharedAssetGroupId {
+    generateId(): Shared.AssetGroup.GroupId {
         return v4();
     },
     async write(
-        id: Shared.AssetGroup.SharedAssetGroupId,
+        id: Shared.AssetGroup.GroupId,
         assetGroupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
     ): Promise<Shared.AssetGroup.SharedAssetGroup> {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
@@ -31,7 +31,7 @@ export const AssetGroupsSystem = {
         Logger.info(Shared.Log.Channel.Assets, "Wrote asset group", filePath, assetGroupDef);
         return { filePath, def: assetGroupDef, id };
     },
-    delete(id: Shared.AssetGroup.SharedAssetGroupId) {
+    delete(id: Shared.AssetGroup.GroupId) {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
         return fs.rm(filePath);
     },

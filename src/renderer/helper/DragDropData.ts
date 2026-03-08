@@ -1,9 +1,8 @@
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
-import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
+import * as Shared from "mod_companion_shared";
 
 export interface AssetDragDropTransferData {
-    assetIds: SharedAssetId[];
-    groupIds: SharedAssetGroupId[];
+    assetIds: Shared.Asset.AssetId[];
+    groupIds: Shared.AssetGroup.GroupId[];
 }
 
 const AssetIdPrefix = "asset;";
@@ -12,8 +11,8 @@ const GroupIdPrefix = "group;";
 export function deserializeAssetDragDropTransferData(transferData: string): AssetDragDropTransferData {
     const splits = transferData.split("\n");
 
-    const assetIds: SharedAssetId[] = [];
-    const groupIds: SharedAssetGroupId[] = [];
+    const assetIds: Shared.Asset.AssetId[] = [];
+    const groupIds: Shared.AssetGroup.GroupId[] = [];
     for (const split of splits) {
         if (split.startsWith(AssetIdPrefix)) {
             const id = split.substring(AssetIdPrefix.length);
