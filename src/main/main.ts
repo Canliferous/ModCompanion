@@ -7,6 +7,7 @@ import { notifyLogFromMain } from "./api/MainLoggerApi.js";
 import { notifyFileBrowserDirUpdated } from "./api/MainFileBrowserApi.js";
 import { notifyAssetsUpdated } from "./api/MainAssetApi.js";
 import { notifyAssetGroupsUpdated } from "./api/MainAssetGroupsApi.js";
+import { notifyConversionsUpdated } from "./api/MainConversionApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -21,7 +22,7 @@ const systems: System[] = [
     { name: "MapCompile", initFunction: Core.MapCompileSystem.initSystem },
     { name: "AssetWatcher", initFunction: () => Core.AssetWatcherSystem.initSystem(notifyAssetsUpdated) },
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
-    { name: "ConversionAgent", initFunction: Core.ConversionAgentSystem.initSystem },
+    { name: "ConversionAgent", initFunction: () => Core.ConversionAgentSystem.initSystem(notifyConversionsUpdated) },
     { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },

@@ -40,7 +40,6 @@ export async function rescan(): Promise<Shared.Asset.SharedAssetRescanEvent> {
     return { assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis };
 }
 
-// TODO: Collision check?
 export function generateAssetId(): string {
     return v4();
 }

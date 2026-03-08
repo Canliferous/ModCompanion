@@ -77,6 +77,8 @@ export interface UpdateEvent {
     summary: SharedConversionSummary;
 }
 
+export type UpdateNotifyFunc = (event: UpdateEvent) => void;
+
 export interface SharedConversionGetStateIpcReport {
     conversions: Map<AssetId, SharedConversion>;
 }

@@ -22,8 +22,11 @@ const conversionJobs: Map<Shared.Asset.AssetId, Promise<JobResult>> = new Map();
 let agentInterval: NodeJS.Timeout | undefined;
 const conversionsMap: Map<Shared.Asset.AssetId, Shared.Conversion.SharedConversion> = new Map();
 
+let notifyFunc: Shared.Conversion.UpdateNotifyFunc | undefined = undefined;
+
 export const ConversionAgentSystem = {
-    initSystem(): boolean {
+    initSystem(func?: Shared.Conversion.UpdateNotifyFunc): boolean {
+        notifyFunc = func;
         return true;
     },
     startAgent(): void {
@@ -93,17 +96,18 @@ async function _runAgent(): Promise<void> {
         });
     }
 
-    // todo
-    // notifyConversionsUpdated({
-    //     conversions: conversionsMap,
-    //     conversionsLastChangeTime: lastChangeTime,
-    //     events: ConversionEventSystem.conversionEvents,
-    //     eventsLastChangeTime: ConversionEventSystem.lastChangeTime,
-    //     summary: {
-    //         currentStatus: conversionJobs.size === 0 ? "idle" : "working",
-    //         totalSum: ConversionEventSystem.conversionEvents.length,
-    //     },
-    // });
+    const event: Shared.Conversion.UpdateEvent = {
+        conversions: conversionsMap,
+        conversionsLastChangeTime: lastChangeTime,
+        events: ConversionEventSystem.conversionEvents,
+        eventsLastChangeTime: ConversionEventSystem.lastChangeTime,
+        summary: {
+            currentStatus: conversionJobs.size === 0 ? "idle" : "working",
+            totalSum: ConversionEventSystem.conversionEvents.length,
+        },
+    }
+
+    notifyFunc?.(event);
 }
 
 function _getAssetsToConvert(): Shared.Asset.AssetId[] {
