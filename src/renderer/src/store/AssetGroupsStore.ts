@@ -18,6 +18,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
     });
 
     window.electronAPI.assetGroups.subscribeRescanned((event) => {
+        console.log(event);
         groups.value = event.groups;
     });
 

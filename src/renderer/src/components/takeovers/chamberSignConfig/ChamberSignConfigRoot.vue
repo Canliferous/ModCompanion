@@ -36,14 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-    SharedChamberSignConfig,
-    SharedChamberSignConfigMap,
-    SharedChamberSignConfigMapSign,
-} from "Shared/SharedChamberSignConfig.js";
 import { TreeItem } from "@nuxt/ui/components/Tree.vue.js";
+import * as Shared from "mod_companion_shared";
 
-const model = defineModel<SharedChamberSignConfig>({ required: true });
+const model = defineModel<Shared.ChamberSignConfig.SharedChamberSignConfig>({ required: true });
 
 const selectedMapIndex = ref<number | undefined>(undefined);
 const selectedSignIndex = ref<number | undefined>(undefined);

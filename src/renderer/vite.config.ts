@@ -10,7 +10,7 @@ export default defineConfig({
     base: "./",
     root: "src",
     build: {
-        outDir: "../../../build_dist/renderer",
+        outDir: "../../../build/renderer",
         emptyOutDir: true,
         rollupOptions: {
             output: {

@@ -4,10 +4,10 @@
 </template>
 
 <script setup lang="ts">
-import { SharedProjectFileEntry } from "Shared/SharedFileListing.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
-defineProps<{ entry: SharedProjectFileEntry }>();
+defineProps<{ entry: Shared.FileListing.FileEntry }>();
 </script>
 
 <style scoped></style>

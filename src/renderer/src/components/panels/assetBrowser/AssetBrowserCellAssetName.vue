@@ -18,13 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { SharedAssetId, SharedAssetType } from "Shared/SharedAssetDefinition.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
+import * as Shared from "mod_companion_shared";
 
 const props = defineProps<{
-    id: SharedAssetId;
+    id: Shared.Asset.AssetId;
     name: string;
-    type: SharedAssetType;
+    type: Shared.Asset.Type;
     depth?: number;
     editing?: boolean;
 }>();

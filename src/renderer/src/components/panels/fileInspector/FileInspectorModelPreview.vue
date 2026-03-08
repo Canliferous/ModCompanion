@@ -13,13 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { SharedMdlInfoReport } from "Shared/SharedMdlInfoReport.js";
 import { VerticalTableItem } from "~/components/common/MVerticalTable.model.js";
 import MVerticalTable from "~/components/common/MVerticalTable.vue";
+import * as Shared from "mod_companion_shared";
 
 const props = defineProps<{ path: string }>();
 
-const info = ref<SharedMdlInfoReport | undefined>();
+const info = ref<Shared.MdlInfo.SharedMdlInfoReport | undefined>();
 
 watch(
     () => props.path,

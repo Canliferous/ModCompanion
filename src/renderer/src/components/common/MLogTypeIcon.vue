@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { SharedLogType } from "Shared/SharedLogger.js";
 import { getLogTypeIcon, getLogTypeTextColor } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
-defineProps<{ type: SharedLogType }>();
+defineProps<{ type: Shared.Log.Type }>();
 </script>
 
 <style scoped></style>

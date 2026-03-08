@@ -5,10 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { State } from "Shared/SharedConversion.js";
 import MConversionStateIcon from "~/components/common/MConversionStateIcon.vue";
+import * as Shared from "mod_companion_shared";
 
-defineProps<{ state: State }>();
+defineProps<{ state: Shared.Conversion.State }>();
 </script>
 
 <style scoped></style>

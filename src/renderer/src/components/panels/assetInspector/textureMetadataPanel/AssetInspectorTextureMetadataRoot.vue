@@ -14,10 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
-import { computed } from "vue";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ meta: SharedImageMetaReport }>();
+const props = defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport }>();
 
 const items = computed(() =>
     Object.entries(props.meta.tags ?? {})

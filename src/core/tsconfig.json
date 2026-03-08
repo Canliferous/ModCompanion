@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "../../build_dev/core",
+        "outDir": "../../build/core",
         "target": "ES2020",
         "module": "NodeNext",
         "esModuleInterop": true,
@@ -8,7 +8,8 @@
         "strict": true,
         "lib": ["ESNext"],
         "inlineSources": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "types": ["node"]
     },
     "include": ["."]
 }

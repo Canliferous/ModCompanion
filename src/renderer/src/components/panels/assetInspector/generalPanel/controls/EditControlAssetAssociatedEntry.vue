@@ -14,10 +14,10 @@
 <script setup lang="ts">
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import { SharedAssetDefinitionAssociatedFilesEntry } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ file: string; entry: SharedAssetDefinitionAssociatedFilesEntry }>();
+const props = defineProps<{ file: string; entry: Shared.Asset.SharedAssetDefinitionAssociatedFilesEntry }>();
 const file = ref(props.file);
 watch(
     () => props.file,

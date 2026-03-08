@@ -26,7 +26,8 @@ Or if you want to use real data, set root to your Portal Revolution 2 repository
 ## Install
 
 ```bash
-npm ci
+# --workspaces is very important to make sure you're installing the dependencies for all packages
+npm ci --workspaces
 ```
 
 ## Develop
@@ -58,10 +59,11 @@ npm run run-dist
 npm run deploy
 ```
 
-## Commands
+## Package overview
 
-Mod Companion can be run in headless modes to do work without opening a window
+Mod companion is split into a whole load of individual npm packages. It used to just be one, but has been split apart to allow for a headless CLI application to exist that doesn't depend on Electron
 
-```bash
---convert  # Convert all stale asset
-```
+1. Shared - Pure typescript that can run in browsers and node. Runtime agnostic. Renderer, main, core and CLI all depend on this. Put shared type definitions and small pieces of logic code here that every part of the app needs
+2. Core - Nodejs code that is shared by main and cli
+3. Main - The Electron main process. Should be a minimal layer that maps features from Core to Electron APIs
+4. Renderer - The Electron renderer process. Features browser code

@@ -7,10 +7,10 @@
 
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import { SharedAssetId } from "Shared/SharedAssetDefinition.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ assetId: SharedAssetId }>();
+const props = defineProps<{ assetId: Shared.Asset.AssetId }>();
 
 const conversionStore = useAssetConversionStore();
 const state = computed(() => conversionStore.getState(props.assetId));

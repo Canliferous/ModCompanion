@@ -28,14 +28,14 @@
 import { useDropZone } from "@vueuse/core";
 import { deserializeAssetDragDropTransferData } from "~/helper/DragDropData.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
-import { SharedAssetGroupId } from "Shared/SharedAssetGroup.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import * as Shared from "mod_companion_shared";
 
 const groupsStore = useAssetGroupsStore();
 
 const props = defineProps<{
     name: string;
-    id: SharedAssetGroupId;
+    id: Shared.AssetGroup.GroupId;
     editing?: boolean;
 }>();
 const emit = defineEmits<{

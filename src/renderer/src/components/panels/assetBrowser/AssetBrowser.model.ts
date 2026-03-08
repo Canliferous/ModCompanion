@@ -1,5 +1,4 @@
-import { SharedAssetDefinition } from "Shared/SharedAssetDefinition.js";
-import { SharedAssetGroup } from "Shared/SharedAssetGroup.js";
+import * as Shared from "mod_companion_shared";
 
 export const AssetBrowserEntryTypes = {
     Unknown: 0,
@@ -14,12 +13,12 @@ interface AssetBrowserBaseEntry {
 
 export interface AssetBrowserAssetEntry extends AssetBrowserBaseEntry {
     type: typeof AssetBrowserEntryTypes.Asset;
-    assetDef: SharedAssetDefinition;
+    assetDef: Shared.Asset.SharedAssetDefinition;
 }
 
 export interface AssetBrowserGroupEntry extends AssetBrowserBaseEntry {
     type: typeof AssetBrowserEntryTypes.Group;
-    group: SharedAssetGroup;
+    group: Shared.AssetGroup.SharedAssetGroup;
 }
 
 export type AssetBrowserEntry = AssetBrowserAssetEntry | AssetBrowserGroupEntry;

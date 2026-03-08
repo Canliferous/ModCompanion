@@ -1,8 +1,8 @@
-import { SharedImageMetaReport } from "Shared/SharedImageMetaReport.js";
 import { Reactive } from "vue";
+import * as Shared from "mod_companion_shared";
 
 export const AssetInspectorTextureInjectKey = Symbol() as InjectionKey<{
-    meta: MaybeRefOrGetter<SharedImageMetaReport | undefined>;
+    meta: MaybeRefOrGetter<Shared.ImageMeta.SharedImageMetaReport | undefined>;
 }>;
 
 export const AssetInspectorPanelsInjectKey = Symbol() as InjectionKey<{

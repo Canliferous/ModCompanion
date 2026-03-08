@@ -9,8 +9,8 @@
         "email": "hello@secondfacesoftware.com"
     },
     "scripts": {
-        "dev": "tsc --watch",
-        "build": "tsc --outDir ../../build_dist/core"
+        "dev": "tsc --watch --preserveWatchOutput",
+        "build": "tsc"
     },
     "main": "CoreManifest.ts",
     "devDependencies": {

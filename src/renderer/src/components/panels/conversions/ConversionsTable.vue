@@ -13,20 +13,20 @@
 
 <script setup lang="ts">
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
-import { ConversionEvent } from "Shared/SharedConversion.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import ConversionsCellDuration from "~/components/panels/conversions/ConversionsCellDuration.vue";
 import MConversionStateBadge from "~/components/common/MConversionStateBadge.vue";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import ConversionsCellAsset from "~/components/panels/conversions/ConversionsCellAsset.vue";
+import * as Shared from "mod_companion_shared";
 
 const conversionStore = useAssetConversionStore();
 
-const props = defineProps<{ history: ConversionEvent[] }>();
+const props = defineProps<{ history: Shared.Conversion.ConversionEvent[] }>();
 const entries = computed(() => props.history.toReversed());
 
-const columns: DataTableColumn<ConversionEvent>[] = [
+const columns: DataTableColumn<Shared.Conversion.ConversionEvent>[] = [
     {
         id: "asset",
         label: "Asset",

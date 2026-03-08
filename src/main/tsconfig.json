@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "../../build_dev",
+        "outDir": "../../build",
         "target": "ES2020",
         "module": "NodeNext",
         "esModuleInterop": true,
