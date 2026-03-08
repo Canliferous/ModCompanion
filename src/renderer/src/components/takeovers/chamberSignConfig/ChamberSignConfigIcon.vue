@@ -15,7 +15,7 @@ import * as Shared from "mod_companion_shared";
 const model = defineModel<Shared.ChamberSignConfig.SharedChamberSignConfigMapSignIcon>({ required: true });
 
 const iconImgSrc = computed(
-    () => `/chamber_sign_icons/sign_${Shared.ChamberSignConfig.getChamberSignIconImageName(model.value.name)}.png`,
+    () => `./img/chamber_sign_icons/sign_${Shared.ChamberSignConfig.getChamberSignIconImageName(model.value.name)}.png`,
 );
 </script>
 
