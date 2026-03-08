@@ -78,7 +78,7 @@ export function getChamberSignIconImageName(icon: string): string {
         case "tbeams":
             return "tractor_beam";
         case "paint_bounce":
-            return "paint_bounce";
+            return "paint_jump";
         case "paint_speed":
             return "paint_speed";
         case "handoff":
