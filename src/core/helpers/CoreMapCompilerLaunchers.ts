@@ -94,9 +94,9 @@ function _runCommand(
     return new Promise((resolve) => {
         const proc = child_process.spawn(binaryPath, args, { cwd });
 
-        if (onStdOut) proc.stdout.on("data", (o) => onStdOut(o.toString()));
-        if (onStdErr) proc.stderr.on("data", (o) => onStdErr(o.toString()));
-        if (onStdErr) proc.on("error", (o) => onStdErr(o.toString()));
+        if (onStdOut) proc.stdout.on("data", (o: any) => onStdOut(o.toString()));
+        if (onStdErr) proc.stderr.on("data", (o: any) => onStdErr(o.toString()));
+        if (onStdErr) proc.on("error", (o: any) => onStdErr(o.toString()));
 
         proc.on("close", (code: number) => {
             resolve(code === 1);

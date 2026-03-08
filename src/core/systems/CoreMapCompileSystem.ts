@@ -13,7 +13,7 @@ import {
 } from "../helpers/CoreMapCompilerLaunchers.js";
 
 interface Stage {
-    step: Shared.Map.SharedMapCompileStep;
+    step: Shared.Map.CompileStep;
     state: Shared.Map.CompileState;
     action: MapCompilerAction;
 }
@@ -68,27 +68,27 @@ function _createStages(): Stage[] {
     return [
         {
             state: Shared.Map.CompileState.Idle,
-            step: Shared.Map.SharedMapCompileStep.VBsp,
+            step: Shared.Map.CompileStep.VBsp,
             action: runVBsp,
         },
         {
             state: Shared.Map.CompileState.Idle,
-            step: Shared.Map.SharedMapCompileStep.Post,
+            step: Shared.Map.CompileStep.Post,
             action: runPostcompiler,
         },
         {
             state: Shared.Map.CompileState.Idle,
-            step: Shared.Map.SharedMapCompileStep.VVis,
+            step: Shared.Map.CompileStep.VVis,
             action: runVVis,
         },
         {
             state: Shared.Map.CompileState.Idle,
-            step: Shared.Map.SharedMapCompileStep.VRad,
+            step: Shared.Map.CompileStep.VRad,
             action: runVRad,
         },
         {
             state: Shared.Map.CompileState.Idle,
-            step: Shared.Map.SharedMapCompileStep.Done,
+            step: Shared.Map.CompileStep.Done,
             action: runDone,
         },
     ];

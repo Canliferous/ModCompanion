@@ -13,8 +13,8 @@
         "build": "tsc --outDir ../../build_dist/shared"
     },
     "main": "SharedManifest.ts",
-    "devDependencies": {},
     "dependencies": {
+        "exifreader": "^4.36.2",
         "pathe": "^2.0.3"
     }
 }

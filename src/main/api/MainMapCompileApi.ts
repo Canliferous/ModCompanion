@@ -21,10 +21,10 @@ export function notifyQueueUpdated(): void {
     IpcHelper.send(Shared.Ipc.Channels.MapQueueUpdated, Core.MapCompileSystem.getQueue());
 }
 
-export function notifyCompileLog(event: Shared.Map.SharedMapCompileLogEvent): void {
+export function notifyCompileLog(event: Shared.Map.CompileLogEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.MapCompileLog, event);
 }
 
-export function notifyCompileProgress(event: Shared.Map.SharedMapCompileProgressEvent): void {
+export function notifyCompileProgress(event: Shared.Map.CompileProgressEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.MapCompileProgress, event);
 }

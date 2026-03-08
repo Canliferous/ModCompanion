@@ -63,7 +63,7 @@ export const FileBrowserSystem = {
         return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
     },
 
-    sortFileEntries(entries: Shared.FileListing.SharedProjectFileEntry[]) {
+    sortFileEntries(entries: Shared.FileListing.FileEntry[]) {
         entries.sort((x, y) => {
             const file1 = x.isFile;
             const file2 = y.isFile;
@@ -88,7 +88,7 @@ export const FileBrowserSystem = {
             console.warn(e);
             return { type: Shared.FileListing.SharedProjectListFilesReportTypes.Invalid };
         }
-        const entries: Shared.FileListing.SharedProjectFileEntry[] = [];
+        const entries: Shared.FileListing.FileEntry[] = [];
 
         for (const p of paths) {
             if (p.startsWith(".")) continue;

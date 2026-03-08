@@ -13,11 +13,20 @@
         "build": "tsc --outDir ../../build_dist/core"
     },
     "main": "CoreManifest.ts",
-    "devDependencies": {},
+    "devDependencies": {
+        "@types/humanize-plus": "^1.8.2",
+        "@types/node": "^25.3.5",
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.18"
+    },
     "dependencies": {
-        "mod_companion_shared": "../shared",
         "@aws-sdk/client-s3": "^3.922.0",
         "@sourcelib/kv": "^0.9.1",
-        "chokidar": "^4.0.3"
+        "chokidar": "^4.0.3",
+        "exifreader": "^4.36.2",
+        "humanize-plus": "^1.8.2",
+        "mod_companion_shared": "../shared",
+        "pathe": "^2.0.3",
+        "uuid": "^13.0.0"
     }
 }

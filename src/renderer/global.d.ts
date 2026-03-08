@@ -19,7 +19,7 @@ declare global {
                 browseToFile: (filePath: string) => void;
                 openFile: (filePath: string | string[]) => void;
                 subscribeDirectoryChanged: (
-                    callback: (event: Shared.FileListing.SharedFileBrowserDirectoryUpdatedReport) => void,
+                    callback: (event: Shared.FileListing.DirUpdatedReport) => void,
                 ) => IpcRenderer;
             };
 
@@ -46,8 +46,8 @@ declare global {
                 subscribeQueueUpdated: (callback: (queue: string[]) => void) => IpcRenderer;
                 cancelQueue: () => void;
                 pauseQueue: (paused: boolean) => void;
-                subscribeCompileLog: (callback: (event: Shared.Map.SharedMapCompileLogEvent) => void) => IpcRenderer;
-                subscribeCompileProgress: (callback: (event: Shared.Map.SharedMapCompileProgressEvent) => void) => IpcRenderer;
+                subscribeCompileLog: (callback: (event: Shared.Map.CompileLogEvent) => void) => IpcRenderer;
+                subscribeCompileProgress: (callback: (event: Shared.Map.CompileProgressEvent) => void) => IpcRenderer;
                 createTimeReport: (maps: string[]) => Promise<Shared.Map.TimeReport>;
             };
 
@@ -65,11 +65,11 @@ declare global {
 
             assetGroups: {
                 forceRescan: () => void;
-                subscribeRescanned: (callback: (event: Shared.AssetGroup.SharedAssetGroupRescanEvent) => void) => IpcRenderer;
-                create: (groupDef: Shared.AssetGroup.SharedAssetGroupDefinition) => Promise<Shared.AssetGroup.SharedAssetGroup>;
+                subscribeRescanned: (callback: (event: Shared.AssetGroup.RescanEvent) => void) => IpcRenderer;
+                create: (groupDef: Shared.AssetGroup.GroupDefinition) => Promise<Shared.AssetGroup.SharedAssetGroup>;
                 update: (
                     groupId: Shared.AssetGroup.GroupId,
-                    groupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
+                    groupDef: Shared.AssetGroup.GroupDefinition,
                 ) => Promise<Shared.AssetGroup.SharedAssetGroup>;
                 delete: (groupId: Shared.AssetGroup.GroupId) => void;
             };
@@ -83,7 +83,7 @@ declare global {
                 enqueueAll: () => void;
                 startAgent: () => void;
                 stopAgent: () => void;
-                subscribeUpdated: (callback: (event: Shared.Conversion.SharedConversionUpdateIpcEvent) => void) => IpcRenderer;
+                subscribeUpdated: (callback: (event: Shared.Conversion.UpdateEvent) => void) => IpcRenderer;
                 getState: () => Promise<Shared.Conversion.SharedConversionGetStateIpcReport>;
                 clearEvents: () => void;
             };

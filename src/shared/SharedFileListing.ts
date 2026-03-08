@@ -1,4 +1,4 @@
-export interface SharedProjectFileEntry {
+export interface FileEntry {
     name: string;
     path: string;
     isFile: boolean;
@@ -18,7 +18,7 @@ interface SharedProjectListFilesReportBase {
 
 export interface SharedProjectListFilesReportSuccess extends SharedProjectListFilesReportBase {
     type: typeof SharedProjectListFilesReportTypes.Success;
-    entries: SharedProjectFileEntry[];
+    entries: FileEntry[];
 }
 export interface SharedProjectListFilesReportInvalid extends SharedProjectListFilesReportBase {
     type: typeof SharedProjectListFilesReportTypes.Invalid;
@@ -26,7 +26,7 @@ export interface SharedProjectListFilesReportInvalid extends SharedProjectListFi
 
 export type SharedProjectListFilesReport = SharedProjectListFilesReportSuccess | SharedProjectListFilesReportInvalid;
 
-export interface SharedFileBrowserDirectoryUpdatedReport {
+export interface DirUpdatedReport {
     dir: string;
-    entries: SharedProjectFileEntry[];
+    entries: FileEntry[];
 }

@@ -13,12 +13,15 @@
         "build": "tsc --outDir ../../build_dist"
     },
     "dependencies": {
-        "electron": "36.2.0",
+        "@sourcelib/kv": "^0.9.1",
+        "electron": "^40.8.0",
+        "electron-settings": "^4.0.4",
         "mod_companion_core": "../core",
         "mod_companion_shared": "../shared",
         "pathe": "^2.0.3"
     },
     "devDependencies": {
+        "@types/node": "^25.3.5",
         "typescript": "^5.9.3"
     }
 }

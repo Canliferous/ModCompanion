@@ -29,6 +29,6 @@ export function registerConversionApi(): boolean {
     return true;
 }
 
-export function notifyConversionsUpdated(event: Shared.Conversion.SharedConversionUpdateIpcEvent): void {
+export function notifyConversionsUpdated(event: Shared.Conversion.UpdateEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.ConversionUpdated, event);
 }

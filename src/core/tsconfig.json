@@ -6,7 +6,7 @@
         "esModuleInterop": true,
         "moduleResolution": "nodenext",
         "strict": true,
-        "lib": ["ESNext", "DOM"],
+        "lib": ["ESNext"],
         "inlineSources": true,
         "sourceMap": true
     },

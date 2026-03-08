@@ -69,7 +69,7 @@ export interface ConversionEvent {
     log: string;
 }
 
-export interface SharedConversionUpdateIpcEvent {
+export interface UpdateEvent {
     conversions: Map<AssetId, SharedConversion>;
     conversionsLastChangeTime: Date | undefined;
     events: ConversionEvent[];

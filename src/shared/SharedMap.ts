@@ -1,4 +1,4 @@
-export enum SharedMapCompileStep {
+export enum CompileStep {
     VBsp,
     Post,
     VVis,
@@ -13,16 +13,16 @@ export enum CompileState {
     Completed,
 }
 
-export interface SharedMapCompileLogEvent {
+export interface CompileLogEvent {
     mapPath: string;
-    step: SharedMapCompileStep;
+    step: CompileStep;
     message: string;
     isError: boolean;
 }
 
-export interface SharedMapCompileProgressEvent {
+export interface CompileProgressEvent {
     mapPath: string;
-    step: SharedMapCompileStep;
+    step: CompileStep;
     state: CompileState;
 }
 

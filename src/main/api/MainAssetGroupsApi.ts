@@ -8,7 +8,7 @@ export function registerAssetGroupsApi(): boolean {
         Shared.Ipc.Channels.AssetGroupsCreate,
         (
             event,
-            groupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
+            groupDef: Shared.AssetGroup.GroupDefinition,
         ): Promise<Shared.AssetGroup.SharedAssetGroup> => {
             return Core.AssetGroupsSystem.write(Core.AssetGroupsSystem.generateId(), groupDef);
         },
@@ -18,7 +18,7 @@ export function registerAssetGroupsApi(): boolean {
         (
             event,
             id: Shared.AssetGroup.GroupId,
-            groupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
+            groupDef: Shared.AssetGroup.GroupDefinition,
         ): Promise<Shared.AssetGroup.SharedAssetGroup> => {
             return Core.AssetGroupsSystem.write(id, groupDef);
         },
@@ -33,6 +33,6 @@ export function registerAssetGroupsApi(): boolean {
     return true;
 }
 
-export function notifyAssetGroupsUpdated(event: Shared.AssetGroup.SharedAssetGroupRescanEvent): void {
+export function notifyAssetGroupsUpdated(event: Shared.AssetGroup.RescanEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.AssetGroupsRescanned, event);
 }

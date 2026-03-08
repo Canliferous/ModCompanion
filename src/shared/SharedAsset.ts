@@ -1,6 +1,6 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
 
-export const SharedAssetDefinitionFileExtension = ".mca"; // Mod Companion Asset
+export const McaFileExt = ".mca"; // Mod Companion Asset
 
 export const Types = {
     Unknown: "unknown",
@@ -56,7 +56,7 @@ export interface SharedAssetDefinitionAssociatedFilesEntry {
     icon: string;
 }
 
-export const SharedAssetDefinitionAssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[] = [
+export const AssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[] = [
     {
         field: "substanceDesigner",
         name: "Substance Designer",
@@ -75,7 +75,7 @@ export const SharedAssetDefinitionAssociatedFilesEntries: SharedAssetDefinitionA
 ];
 
 export function getAssociatedEntryName(field: keyof SharedAssetDefinitionAssociatedFiles) {
-    return SharedAssetDefinitionAssociatedFilesEntries.find((value) => value.field === field);
+    return AssociatedFilesEntries.find((value) => value.field === field);
 }
 
 export interface SharedAsset {

@@ -1,6 +1,6 @@
 import { AssetId } from "./SharedAsset.js";
 
-export interface SharedAssetGroupDefinition {
+export interface GroupDefinition {
     assets: AssetId[];
     displayName: string;
 }
@@ -8,11 +8,11 @@ export interface SharedAssetGroupDefinition {
 export type GroupId = string;
 
 export interface SharedAssetGroup {
-    def: SharedAssetGroupDefinition;
+    def: GroupDefinition;
     filePath: string;
     id: GroupId;
 }
 
-export interface SharedAssetGroupRescanEvent {
+export interface RescanEvent {
     groups: Map<GroupId, SharedAssetGroup>;
 }

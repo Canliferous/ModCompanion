@@ -23,7 +23,7 @@ export const AssetGroupsSystem = {
     },
     async write(
         id: Shared.AssetGroup.GroupId,
-        assetGroupDef: Shared.AssetGroup.SharedAssetGroupDefinition,
+        assetGroupDef: Shared.AssetGroup.GroupDefinition,
     ): Promise<Shared.AssetGroup.SharedAssetGroup> {
         const filePath = path.join(_getAssetGroupDir(), id + ".json");
         const contents = JSON.stringify(assetGroupDef);

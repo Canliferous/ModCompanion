@@ -8,39 +8,39 @@ import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 
 export function registerMapTimeReportApi(): boolean {
-    ipcMain.handle(Shared.Ipc.Channels.MapCreateTimeReport, (e, maps: Shared.Map.SharedMapPath[]) =>
+    ipcMain.handle(Shared.Ipc.Channels.MapCreateTimeReport, (e, maps: string[]) =>
         _createTimeReport(maps),
     );
     return true;
 }
 
-const reportExtensions: Shared.Map.SharedMapCompileStep[] = [
-    Shared.Map.SharedMapCompileStep.VBsp,
-    Shared.Map.SharedMapCompileStep.VVis,
-    Shared.Map.SharedMapCompileStep.VRad,
+const reportExtensions: Shared.Map.CompileStep[] = [
+    Shared.Map.CompileStep.VBsp,
+    Shared.Map.CompileStep.VVis,
+    Shared.Map.CompileStep.VRad,
 ];
 
-function _getReportExtension(step: Shared.Map.SharedMapCompileStep) {
+function _getReportExtension(step: Shared.Map.CompileStep) {
     switch (step) {
-        case Shared.Map.SharedMapCompileStep.VBsp:
+        case Shared.Map.CompileStep.VBsp:
             return ".report_vbsp.vdf";
-        case Shared.Map.SharedMapCompileStep.VVis:
+        case Shared.Map.CompileStep.VVis:
             return ".report_vvis.vdf";
-        case Shared.Map.SharedMapCompileStep.VRad:
+        case Shared.Map.CompileStep.VRad:
             return ".report_vrad.vdf";
         default:
             return undefined;
     }
 }
 
-async function _createTimeReport(maps: Shared.Map.SharedMapPath[]): Promise<Shared.Map.TimeReport> {
+async function _createTimeReport(maps: string[]): Promise<Shared.Map.TimeReport> {
     const config = Core.ConfigSystem.getAppConfig();
 
     const srcPath = config.mapSourcePath;
 
     const report: Shared.Map.TimeReport = {
         maps: new Map<string, number>(),
-        totals: new Map<Shared.Map.SharedMapPath, number>(),
+        totals: new Map<string, number>(),
     };
 
     for (const map of maps) {

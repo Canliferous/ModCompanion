@@ -35,7 +35,7 @@ export async function buildAssets(contentTree: string[]): Promise<Shared.Asset.S
 }
 
 function _isAssetDefinitionFile(filePath: string): boolean {
-    return path.extname(filePath).toLowerCase() === Shared.Asset.SharedAssetDefinitionFileExtension;
+    return path.extname(filePath).toLowerCase() === Shared.Asset.McaFileExt;
 }
 
 async function _readAssetDefinitionFile(

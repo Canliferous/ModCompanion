@@ -57,7 +57,7 @@ export async function createAssetsFromFiles(
     Logger.info(Shared.Log.Channel.Generic, "Inferred asset type", inferredType);
     if (inferredType === AssetCreationInferResults.Unknown) {
         const def = createUnknownAssetDefinition(primaryFile, otherFiles);
-        const mca = primaryFile + Shared.Asset.SharedAssetDefinitionFileExtension;
+        const mca = primaryFile + Shared.Asset.McaFileExt;
 
         const newAsset = await writeAssetDef(def, mca);
         assetMap.set(def.id, newAsset);
@@ -68,7 +68,7 @@ export async function createAssetsFromFiles(
         const newAssets: Shared.Asset.SharedAsset[] = [];
         for (const file of files) {
             const def = createTextureAssetDefinition(file);
-            const mca = file + Shared.Asset.SharedAssetDefinitionFileExtension;
+            const mca = file + Shared.Asset.McaFileExt;
 
             const newAsset = await writeAssetDef(def, mca);
             assetMap.set(def.id, newAsset);
