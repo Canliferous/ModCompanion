@@ -6,11 +6,14 @@ import { v4 } from "uuid";
 import { filename } from "pathe/utils";
 import * as Shared from "mod_companion_shared";
 import { Logger } from "./CoreLogSystem.js";
+import { RescanNotifyFunc } from "mod_companion_shared/SharedAssetGroup.js";
 
 const groups: Map<Shared.AssetGroup.GroupId, Shared.AssetGroup.SharedAssetGroup> = new Map();
+let notifyFunc: Shared.AssetGroup.RescanNotifyFunc | undefined = undefined;
 
 export const AssetGroupsSystem = {
-    async initSystem(): Promise<boolean> {
+    async initSystem(func?: RescanNotifyFunc): Promise<boolean> {
+        notifyFunc = func;
         const dir = _getAssetGroupDir();
         if (!existsSync(dir)) {
             await fs.mkdir(dir);
@@ -64,7 +67,7 @@ export const AssetGroupsSystem = {
         const endTime = new Date().getTime();
         Logger.info(Shared.Log.Channel.Assets, `Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
 
-        // notifyAssetGroupsUpdated({ groups }); // todo
+        notifyFunc?.({ groups });
     },
 };
 

@@ -9,8 +9,11 @@ import { getContentRelativePath } from "../helpers/CoreSourceFs.js";
 const ignoreMap: Map<string, number> = new Map();
 let watcher: FSWatcher | undefined = undefined;
 
+let notifyFunc: Shared.Asset.AssetUpdatedNotifyFunc | undefined = undefined;
+
 export const AssetWatcherSystem = {
-    initSystem() {
+    initSystem(func?: Shared.Asset.AssetUpdatedNotifyFunc) {
+        notifyFunc = func;
         return AssetWatcherSystem.startFileWatcher();
     },
     startFileWatcher(): boolean {
@@ -39,6 +42,6 @@ function _handleChanged(filePath: string): void {
     if (!asset) return;
 
     Logger.info(Shared.Log.Channel.Assets, "Asset files changed", asset.def.displayName, filePath);
-    // notifyAssetsUpdated({ asset: [asset] }); // todo
+    notifyFunc?.({ assets: [asset] });
     ConversionAgentSystem.enqueue(asset.def.id);
 }

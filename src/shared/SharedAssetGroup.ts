@@ -16,3 +16,5 @@ export interface SharedAssetGroup {
 export interface RescanEvent {
     groups: Map<GroupId, SharedAssetGroup>;
 }
+
+export type RescanNotifyFunc = (event: RescanEvent) => void;

@@ -5,6 +5,8 @@ import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 import { notifyLogFromMain } from "./api/MainLoggerApi.js";
 import { notifyFileBrowserDirUpdated } from "./api/MainFileBrowserApi.js";
+import { notifyAssetsUpdated } from "./api/MainAssetApi.js";
+import { notifyAssetGroupsUpdated } from "./api/MainAssetGroupsApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -17,11 +19,11 @@ const systems: System[] = [
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
     { name: "MapCompile", initFunction: Core.MapCompileSystem.initSystem },
-    { name: "AssetWatcher", initFunction: Core.AssetWatcherSystem.initSystem },
+    { name: "AssetWatcher", initFunction: () => Core.AssetWatcherSystem.initSystem(notifyAssetsUpdated) },
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: Core.ConversionAgentSystem.initSystem },
     { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
-    { name: "AssetGroups", initFunction: Core.AssetGroupsSystem.initSystem },
+    { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
     { name: "FileBrowser", initFunction: () => Core.FileBrowserSystem.initSystem(notifyFileBrowserDirUpdated) },
 ];

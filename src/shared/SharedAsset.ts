@@ -107,6 +107,8 @@ export interface SharedAssetUpdatedEvent {
     assets: SharedAsset[];
 }
 
+export type AssetUpdatedNotifyFunc = (event: SharedAssetUpdatedEvent) => void;
+
 export type SharedAssetMap = Map<AssetId, SharedAsset>;
 
 export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
