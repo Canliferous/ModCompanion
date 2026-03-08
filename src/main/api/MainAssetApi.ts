@@ -4,8 +4,8 @@ import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 
 export function registerAssetApi(): boolean {
-    ipcMain.on(Shared.Ipc.Channels.AssetForceRescan, () => {
-        Core.AssetRepository.rescan();
+    ipcMain.handle(Shared.Ipc.Channels.AssetForceRescan, () => {
+        return Core.AssetRepository.rescan();
     });
 
     ipcMain.handle(

@@ -26,12 +26,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const selectEvent = useEvent<Shared.Asset.AssetId[]>();
     const writtenEvent = useEvent<Shared.Asset.AssetId[]>();
 
-    window.electronAPI.asset.subscribeRescanned((event) => {
-        assets.value = event.assets;
-        potentialAssets.value = event.potentialAssets;
-        refreshing.value = false;
-    });
-
     window.electronAPI.asset.subscribeAdded((event) => {
         const newAssets = event.assets;
         if (newAssets.length === 0) return;
@@ -84,9 +78,16 @@ export const useAssetListStore = defineStore("asset-list", () => {
         return true;
     }
 
-    function refresh(): void {
-        window.electronAPI.asset.forceRescan();
+    async function refresh(): Promise<void> {
         refreshing.value = true;
+        try {
+            const result = await window.electronAPI.asset.rescan();
+
+            assets.value = result.assets;
+            potentialAssets.value = result.potentialAssets;
+        } finally {
+            refreshing.value = false;
+        }
     }
 
     function activate(id: Shared.Asset.AssetId | undefined): void {

@@ -23,7 +23,7 @@ export function getAssetMap(): Readonly<Shared.Asset.SharedAssetMap> {
     return assetMap;
 }
 
-export async function rescan() {
+export async function rescan(): Promise<Shared.Asset.SharedAssetRescanEvent> {
     Logger.info(Shared.Log.Channel.Generic, "Rescanning asset...");
 
     const startMillis = new Date().getTime();
@@ -37,7 +37,7 @@ export async function rescan() {
 
     const endMillis = new Date().getTime();
 
-    // notifyAssetsRescanned({ asset: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis }); //todo
+    return { assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis };
 }
 
 // TODO: Collision check?
