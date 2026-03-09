@@ -54,7 +54,11 @@ export const ConversionAgentSystem = {
                     _setState(conv.assetId, Shared.Conversion.State.PendingForced);
                 }
                 convStartNotifyFunc?.(conv.assetId);
-                await _startConversion(conv.assetId);
+                try {
+                    await _startConversion(conv.assetId);
+                } catch (e) {
+                    Logger.warning(Shared.Log.Channel.ConversionAgent, "Conversion failed", conv.assetId);
+                }
             }
         }
     },

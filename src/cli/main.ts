@@ -2,8 +2,6 @@ import { program } from "commander";
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 import chalk from "chalk";
-import humanizePlus from "humanize-plus";
-import { getAssetsFromMcaFiles } from "../core/systems/asset/CoreAssetRepository.js";
 
 program.name("Mod Companion CLI").description("Headless cli for mod companion tasks without GUI");
 
