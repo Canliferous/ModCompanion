@@ -136,6 +136,17 @@ export function getAssetFromFiles(filePaths: string[]): Shared.Asset.SharedAsset
     return undefined;
 }
 
+export function getAssetsFromMcaFiles(mcaFilePaths: string[]): Shared.Asset.SharedAsset[] {
+    const result: Shared.Asset.SharedAsset[] = [];
+    for (const asset of assetMap.values()) {
+        for (const filePath of mcaFilePaths) {
+            if (asset.defFilePath === filePath) result.push(asset);
+        }
+    }
+
+    return result;
+}
+
 export function getAssetFromId(hash: Shared.Asset.AssetId): Shared.Asset.SharedAsset | undefined {
     return assetMap.get(hash);
 }

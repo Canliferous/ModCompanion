@@ -10,6 +10,7 @@ import { HotReloadSystem } from "../CoreHotReloadSystem.js";
 import { AssetWatcherSystem } from "../CoreAssetWatcherSystem.js";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
+import { ConversionStartNotifyFunc } from "mod_companion_shared/SharedConversion.js";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
@@ -39,9 +40,20 @@ export const ConversionAgentSystem = {
             clearInterval(agentInterval);
         }
     },
-    async runAndConvertUntilItIsDone(): Promise<void> {
+    async runAndConvertUntilItIsDone(
+        force?: boolean,
+        convStartNotifyFunc?: Shared.Conversion.ConversionStartNotifyFunc,
+    ): Promise<void> {
         for (const conv of conversionsMap.values()) {
-            if (conv.state === Shared.Conversion.State.Pending) {
+            if (
+                force ||
+                conv.state === Shared.Conversion.State.Pending ||
+                conv.state === Shared.Conversion.State.PendingForced
+            ) {
+                if (force) {
+                    _setState(conv.assetId, Shared.Conversion.State.PendingForced);
+                }
+                convStartNotifyFunc?.(conv.assetId);
                 await _startConversion(conv.assetId);
             }
         }
@@ -105,7 +117,7 @@ async function _runAgent(): Promise<void> {
             currentStatus: conversionJobs.size === 0 ? "idle" : "working",
             totalSum: ConversionEventSystem.conversionEvents.length,
         },
-    }
+    };
 
     notifyFunc?.(event);
 }

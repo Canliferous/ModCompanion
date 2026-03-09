@@ -26,6 +26,9 @@ export const MareTfSystem = {
         Logger.warning(Shared.Log.Channel.MareTF, "Cannot determine binary for maretf");
         return false;
     },
+    getMareTfBinaryPath(): string {
+        return binary;
+    },
     async createVtf(
         inputPath: string,
         outputPath: string,
