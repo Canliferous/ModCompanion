@@ -58,7 +58,9 @@ const maps = computed(() => {
     }
 });
 const tooltip = computed(() =>
-    maps.value.length > 0 ? `Download latest (${fileSize(maps.value[0].size)})` : "No artifacts available",
+    maps.value.length > 0
+        ? `Download latest (${maps.value[0].dateModified.toDateString()}) ${fileSize(maps.value[0].size)}`
+        : "No artifacts available",
 );
 
 function handleDownloadLatest() {
