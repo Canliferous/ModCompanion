@@ -177,16 +177,18 @@ async function _startConversion(id: Shared.Asset.AssetId): Promise<string | unde
     }
 
     Logger.info(Shared.Log.Channel.ConversionAgent, "Converting asset", asset.def.displayName, asset.def.id);
-    const timeoutPromise = _convertAsset(asset.def);
-    timeoutPromise.catch((log: string | undefined) => {
-        Logger.info(Shared.Log.Channel.ConversionAgent, log);
-        _onJobPromiseDone(id, Shared.Conversion.State.Failed, log);
-    });
-    timeoutPromise.then((log) => {
-        const newState = log === undefined ? Shared.Conversion.State.Failed : Shared.Conversion.State.Finished;
-        _onJobPromiseDone(id, newState, log);
-        _touchAsset(asset.def);
-    });
+    const timeoutPromise = _convertAsset(asset.def)
+        .then((log) => {
+            const newState = log === undefined ? Shared.Conversion.State.Failed : Shared.Conversion.State.Finished;
+            _onJobPromiseDone(id, newState, log);
+            _touchAsset(asset.def);
+            return log;
+        })
+        .catch((log: string | undefined) => {
+            Logger.info(Shared.Log.Channel.ConversionAgent, log);
+            _onJobPromiseDone(id, Shared.Conversion.State.Failed, log);
+            return log;
+        });
     conversionJobs.set(id, timeoutPromise);
     return timeoutPromise;
 }
