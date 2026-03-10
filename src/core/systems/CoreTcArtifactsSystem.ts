@@ -53,45 +53,43 @@ export const TcArtifactsSystem = {
         });
     },
     async listMaps(): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> {
-        return _useS3(
-            async (client, bucket): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> => {
-                const response = await client.listObjectsV2({
-                    Bucket: bucket,
-                    Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/",
-                });
-                const contents = response?.Contents;
-                if (contents === undefined || contents.length === 0) {
-                    return undefined;
+        return _useS3(async (client, bucket): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> => {
+            const response = await client.listObjectsV2({
+                Bucket: bucket,
+                Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/",
+            });
+            const contents = response?.Contents;
+            if (contents === undefined || contents.length === 0) {
+                return undefined;
+            }
+
+            const mapsMap = new Map<string, Shared.TcArtifacts.MapInfo[]>();
+            for (const content of contents) {
+                if (content.Size === undefined || content.LastModified === undefined || content.Key === undefined)
+                    continue;
+
+                const mapName = filename(content.Key);
+                if (mapName === undefined) continue;
+
+                const entry: Shared.TcArtifacts.MapInfo = {
+                    size: content.Size,
+                    dateModified: content.LastModified,
+                    objectKey: content.Key,
+                };
+
+                if (!mapsMap.has(mapName)) {
+                    mapsMap.set(mapName, [entry]);
+                } else {
+                    mapsMap.get(mapName)?.push(entry);
                 }
+            }
 
-                const mapsMap = new Map<string, Shared.TcArtifacts.MapInfo[]>();
-                for (const content of contents) {
-                    if (content.Size === undefined || content.LastModified === undefined || content.Key === undefined)
-                        continue;
+            for (const arr of mapsMap.values()) {
+                arr.sort((a, b) => b.dateModified.getTime() - a.dateModified.getTime());
+            }
 
-                    const mapName = filename(content.Key);
-                    if (mapName === undefined) continue;
-
-                    const entry: Shared.TcArtifacts.MapInfo = {
-                        size: content.Size,
-                        dateModified: content.LastModified,
-                        objectKey: content.Key,
-                    };
-
-                    if (!mapsMap.has(mapName)) {
-                        mapsMap.set(mapName, [entry]);
-                    } else {
-                        mapsMap.get(mapName)?.push(entry);
-                    }
-                }
-
-                for (const arr of mapsMap.values()) {
-                    arr.sort((a, b) => b.dateModified.getTime() - a.dateModified.getTime());
-                }
-
-                return { maps: mapsMap };
-            },
-        );
+            return { maps: mapsMap };
+        });
     },
     async downloadMap(objectKey: string, mapName: string): Promise<boolean> {
         const result = await _useS3(async (client, bucket): Promise<boolean> => {
@@ -114,8 +112,7 @@ export const TcArtifactsSystem = {
             try {
                 await fs.rm(fullPath);
             } catch (e) {
-                Logger.warning(Shared.Log.Channel.TcArtifacts, `Failed to delete`, fullPath, e);
-                return false;
+                // ignore. probably just doesn't exist
             }
 
             const writeStream = createWriteStream(fullPath);
