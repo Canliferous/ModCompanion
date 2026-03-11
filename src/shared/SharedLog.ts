@@ -15,6 +15,7 @@ export enum Channel {
     MainSystems = "Main Systems",
     Hotspot = "Hotspot",
     TcArtifacts = "TcArtifacts",
+    Cli = "CLI",
 }
 
 export enum Type {
