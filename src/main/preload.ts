@@ -3,7 +3,8 @@
 
 import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
 import { Stream } from "node:stream";
-import * as Shared from "mod_companion_shared"
+import * as Shared from "mod_companion_shared";
+import { IndexUpdatedReport } from "mod_companion_shared/SharedFileListing.js";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -14,12 +15,14 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserListFiles, dirPath),
+        indexFiles: () => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserIndexFiles),
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserCorrectPath, dirPath),
-        launchFile: (filePath: string | string[]) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowserLaunchFile, filePath),
+        launchFile: (filePath: string | string[]) =>
+            ipcRenderer.send(Shared.Ipc.Channels.FileBrowserLaunchFile, filePath),
         setCurrentPath: (dirPath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowserSetCurrentPath, dirPath),
         browseToFile: (filePath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowserBrowseToFile, filePath),
         openFile: (filePath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowserOpenFile, filePath),
-        subscribeDirectoryChanged: (callback: (event: Shared.FileListing.DirUpdatedReport) => void) =>
+        subscribeDirUpdated: (callback: (event: Shared.FileListing.DirUpdatedReport) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowserCurrentDirUpdated,
                 (e: IpcRendererEvent, event: Shared.FileListing.DirUpdatedReport) => callback(event),
@@ -47,16 +50,20 @@ contextBridge.exposeInMainWorld("electronAPI", {
         listSourceDirs: () => ipcRenderer.invoke(Shared.Ipc.Channels.MapListSourceDirs),
         enqueue: (mapPaths: string[]) => ipcRenderer.send(Shared.Ipc.Channels.MapQueueEnqueue, mapPaths),
         subscribeQueueUpdated: (callback: (maps: string[]) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) => callback(maps)),
+            ipcRenderer.on(Shared.Ipc.Channels.MapQueueUpdated, (e: IpcRendererEvent, maps: string[]) =>
+                callback(maps),
+            ),
         cancelQueue: () => ipcRenderer.send(Shared.Ipc.Channels.MapQueueCancel),
         pauseQueue: (paused: boolean) => ipcRenderer.send(Shared.Ipc.Channels.MapQueueSetPaused, paused),
         subscribeCompileLog: (callback: (event: Shared.Map.CompileLogEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.MapCompileLog, (e: IpcRendererEvent, event: Shared.Map.CompileLogEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.MapCompileLog,
+                (e: IpcRendererEvent, event: Shared.Map.CompileLogEvent) => callback(event),
             ),
         subscribeCompileProgress: (callback: (event: Shared.Map.CompileProgressEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.MapCompileProgress, (e: IpcRendererEvent, event: Shared.Map.CompileProgressEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.MapCompileProgress,
+                (e: IpcRendererEvent, event: Shared.Map.CompileProgressEvent) => callback(event),
             ),
         createTimeReport: (maps: string[]) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.MapCreateTimeReport, maps) as Promise<Shared.Map.TimeReport>,
@@ -65,17 +72,24 @@ contextBridge.exposeInMainWorld("electronAPI", {
     asset: {
         rescan: () => ipcRenderer.invoke(Shared.Ipc.Channels.AssetForceRescan),
         subscribeRescanned: (callback: (event: Shared.Asset.SharedAssetRescanEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.AssetRescanned, (e: IpcRendererEvent, event: Shared.Asset.SharedAssetRescanEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.AssetRescanned,
+                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetRescanEvent) => callback(event),
             ),
         subscribeAdded: (callback: (event: Shared.Asset.SharedAssetAddedEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.AssetAdded, (e: IpcRendererEvent, event: Shared.Asset.SharedAssetAddedEvent) => callback(event)),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.AssetAdded,
+                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetAddedEvent) => callback(event),
+            ),
         subscribeUpdated: (callback: (event: Shared.Asset.SharedAssetUpdatedEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.AssetUpdated, (e: IpcRendererEvent, event: Shared.Asset.SharedAssetUpdatedEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.AssetUpdated,
+                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetUpdatedEvent) => callback(event),
             ),
         subscribeNavigateToHash: (callback: (assetHash: string) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) => callback(assetHash)),
+            ipcRenderer.on(Shared.Ipc.Channels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) =>
+                callback(assetHash),
+            ),
         createAsset: (primaryFile: string, otherFiles: string[]) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreate, primaryFile, otherFiles),
         createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreateEmpty, mcaFilePath),
@@ -87,14 +101,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
     assetGroups: {
         forceRescan: () => ipcRenderer.send(Shared.Ipc.Channels.AssetGroupsForceRescan),
         subscribeRescanned: (callback: (event: Shared.AssetGroup.RescanEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.AssetGroupsRescanned, (e: IpcRendererEvent, event: Shared.AssetGroup.RescanEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.AssetGroupsRescanned,
+                (e: IpcRendererEvent, event: Shared.AssetGroup.RescanEvent) => callback(event),
             ),
         create: (assetGroupDef: Shared.AssetGroup.GroupDefinition) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetGroupsCreate, assetGroupDef),
         update: (groupId: Shared.AssetGroup.GroupId, groupDef: Shared.AssetGroup.GroupDefinition) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetGroupsUpdate, groupId, groupDef),
-        delete: (groupId: Shared.AssetGroup.GroupId) => ipcRenderer.send(Shared.Ipc.Channels.AssetGroupsDelete, groupId),
+        delete: (groupId: Shared.AssetGroup.GroupId) =>
+            ipcRenderer.send(Shared.Ipc.Channels.AssetGroupsDelete, groupId),
     },
 
     image: {
@@ -107,8 +123,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
         startAgent: () => ipcRenderer.send(Shared.Ipc.Channels.ConversionAgentStart),
         stopAgent: () => ipcRenderer.send(Shared.Ipc.Channels.ConversionAgentStop),
         subscribeUpdated: (callback: (event: Shared.Conversion.UpdateEvent) => void) =>
-            ipcRenderer.on(Shared.Ipc.Channels.ConversionUpdated, (e: IpcRendererEvent, event: Shared.Conversion.UpdateEvent) =>
-                callback(event),
+            ipcRenderer.on(
+                Shared.Ipc.Channels.ConversionUpdated,
+                (e: IpcRendererEvent, event: Shared.Conversion.UpdateEvent) => callback(event),
             ),
         getState: () => ipcRenderer.invoke(Shared.Ipc.Channels.ConversionGetState),
         clearEvents: () => ipcRenderer.send(Shared.Ipc.Channels.ConversionClearEvents),
@@ -129,8 +146,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     interop: {
-        subscribeConnected: (callback: () => void) => ipcRenderer.on(Shared.Ipc.Channels.InteropConnected, () => callback()),
-        subscribeDisconnected: (callback: () => void) => ipcRenderer.on(Shared.Ipc.Channels.InteropDisconnected, () => callback()),
+        subscribeConnected: (callback: () => void) =>
+            ipcRenderer.on(Shared.Ipc.Channels.InteropConnected, () => callback()),
+        subscribeDisconnected: (callback: () => void) =>
+            ipcRenderer.on(Shared.Ipc.Channels.InteropDisconnected, () => callback()),
         subscribeLog: (callback: (message: string) => void) =>
             ipcRenderer.on(Shared.Ipc.Channels.InteropLog, (e: IpcRendererEvent, message: string) => callback(message)),
         sendCommand: (command: string) => ipcRenderer.send(Shared.Ipc.Channels.InteropSendCommand, command),

@@ -5,6 +5,7 @@ export const Channels = {
     ClipboardWriteText: "clipboard_write_text",
 
     FileBrowserListFiles: "filebrowser_list_files",
+    FileBrowserIndexFiles: "filebrowser_index_files",
     FileBrowserCorrectPath: "filebrowser_correct_path",
     FileBrowserLaunchFile: "filebrowser_launch_file",
     FileBrowserSetCurrentPath: "filebrowser_set_current_path",

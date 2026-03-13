@@ -120,4 +120,45 @@ export const FileBrowserSystem = {
 
         return { entries, type: Shared.FileListing.SharedProjectListFilesReportTypes.Success };
     },
+
+    async indexFiles(): Promise<Map<string, Shared.FileListing.FileEntry[]>> {
+        const result = new Map<string, Shared.FileListing.FileEntry[]>();
+
+        Logger.info(Shared.Log.Channel.FileBrowser, "Indexing file system...");
+        async function walkFolder(dir: string) {
+            const paths = await fs.readdir(dir);
+            const entries: Shared.FileListing.FileEntry[] = [];
+
+            for (const p of paths) {
+                const fullPath = path.join(dir, p);
+                const stat = await fs.stat(fullPath);
+                if (stat.isFile()) {
+                    entries.push({
+                        name: p,
+                        path: fullPath,
+                        isFile: true,
+                        fileSize: stat.size,
+                    });
+                } else {
+                    entries.push({
+                        name: p,
+                        path: fullPath,
+                        isFile: false,
+                    });
+
+                    await walkFolder(fullPath);
+                }
+            }
+
+            result.set(dir, entries);
+        }
+
+        const { millis } = await Shared.Timing.timeMillisAsync(async () => {
+            await walkFolder(ConfigSystem.getAppConfig().gamePath);
+            await walkFolder(ConfigSystem.getAppConfig().contentPath);
+        });
+
+        Logger.info(Shared.Log.Channel.FileBrowser, "Done indexing file system. Took", millis, "ms");
+        return result;
+    },
 };

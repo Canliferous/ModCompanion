@@ -38,6 +38,13 @@ export function registerFileBrowserApi(): boolean {
     );
 
     ipcMain.handle(
+        Shared.Ipc.Channels.FileBrowserIndexFiles,
+        async (event): Promise<Shared.FileListing.IndexUpdatedReport> => {
+            return { index: await Core.FileBrowserSystem.indexFiles() };
+        },
+    );
+
+    ipcMain.handle(
         Shared.Ipc.Channels.FileBrowserCorrectPath,
         async (event: Electron.IpcMainInvokeEvent, somePath: string): Promise<string | undefined> => {
             return Core.FileBrowserSystem.correctProjectPath(somePath);

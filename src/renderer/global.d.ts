@@ -13,14 +13,13 @@ declare global {
 
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileListing.SharedProjectListFilesReport>;
+                indexFiles: () => Promise<Shared.FileListing.IndexUpdatedReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 launchFile: (filePath: string | string[]) => void;
                 setCurrentPath: (dirPath: string) => void;
                 browseToFile: (filePath: string) => void;
                 openFile: (filePath: string | string[]) => void;
-                subscribeDirectoryChanged: (
-                    callback: (event: Shared.FileListing.DirUpdatedReport) => void,
-                ) => IpcRenderer;
+                subscribeDirUpdated: (callback: (event: Shared.FileListing.DirUpdatedReport) => void) => IpcRenderer;
             };
 
             file: {
@@ -56,9 +55,15 @@ declare global {
                 subscribeAdded: (callback: (event: Shared.Asset.SharedAssetAddedEvent) => void) => IpcRenderer;
                 subscribeUpdated: (callback: (event: Shared.Asset.SharedAssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
-                createAsset: (primaryFile: string, otherFiles: string[]) => Promise<Shared.Asset.SharedCreateAssetReport>;
+                createAsset: (
+                    primaryFile: string,
+                    otherFiles: string[],
+                ) => Promise<Shared.Asset.SharedCreateAssetReport>;
                 createEmpty: (mcaFilePath: string) => Promise<Shared.Asset.SharedCreateAssetReport>;
-                update: (assetId: Shared.Asset.AssetId, assetDef: Shared.Asset.SharedAssetDefinition) => Promise<Shared.Asset.SharedAsset | undefined>;
+                update: (
+                    assetId: Shared.Asset.AssetId,
+                    assetDef: Shared.Asset.SharedAssetDefinition,
+                ) => Promise<Shared.Asset.SharedAsset | undefined>;
                 delete: (assetId: Shared.Asset.AssetId) => Promise<boolean>;
             };
 

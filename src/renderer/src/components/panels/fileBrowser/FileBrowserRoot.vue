@@ -1,7 +1,10 @@
 <template>
     <MPanelRoot always-show-scroll>
         <template #header>
-            <FileBrowserLocationBar @focus-list="handleFocusList" />
+            <div class="grid gap-1 grid-cols-[1fr_minmax(4rem,30%)]">
+                <FileBrowserLocationBar @focus-list="handleFocusList" />
+                <FileBrowserSearchBar />
+            </div>
         </template>
         <UContextMenu :items="items">
             <MDataTable
@@ -33,12 +36,16 @@ import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { getAppConfig } from "~/renderer-config.js";
 import clipboardHelper from "~/helper/ClipboardHelper.js";
 import * as Shared from "mod_companion_shared";
+import FileBrowserSearchBar from "~/components/panels/fileBrowser/FileBrowserSearchBar.vue";
+import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEntryName.vue";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 const assetGroupsStore = useAssetGroupsStore();
 
-const entries = computed(() => fileBrowserStore.currentEntries ?? []);
+const entries = computed(() =>
+    fileBrowserStore.searchTerm.length > 0 ? fileBrowserStore.searchEntries : (fileBrowserStore.currentEntries ?? []),
+);
 
 const selectedEntries = ref<Shared.FileListing.FileEntry[]>([]);
 
@@ -59,7 +66,7 @@ const columns: DataTableColumn<Shared.FileListing.FileEntry>[] = [
         id: "name",
         size: "1fr",
         label: "Name",
-        cell: (entry) => h("span", entry.name),
+        cell: (entry) => h(FileBrowserEntryName, { entry: entry }),
     },
     {
         id: "size",
@@ -68,7 +75,7 @@ const columns: DataTableColumn<Shared.FileListing.FileEntry>[] = [
         cell: (entry) =>
             h(
                 "span",
-                { class: "text-right tabular-nums" },
+                { class: "text-right tabular-nums whitespace-nowrap" },
                 entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : "",
             ),
     },
