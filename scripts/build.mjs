@@ -51,12 +51,13 @@ async function getWorkersOptions() {
         outbase: workersDir,
         platform: "node",
         bundle: true,
+        outExtension: { ".js": ".cjs" },
     };
 }
 
 async function run() {
     const doWatch = process.argv.length > 2 && process.argv[2] === "watch";
-    if(doWatch) {
+    if (doWatch) {
         const mainCtx = await esbuild.context(mainOptions);
         const cliCtx = await esbuild.context(cliOptions);
         const workersCtx = await esbuild.context(await getWorkersOptions());

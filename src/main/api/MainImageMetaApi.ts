@@ -18,7 +18,7 @@ export function registerImageMetaApi(): boolean {
 export async function getImageMeta(imageFilePath: string): Promise<Shared.ImageMeta.SharedImageMetaReport | undefined> {
     return new Promise((resolve) => {
         const worker = new Worker(
-            path.join(Core.FileSystem.getRootDir(), "main", "workers", "MainImageMetaWorker.js"),
+            path.join(Core.FileSystem.getRootDir(), "core", "workers", "CoreImageMetaWorker.cjs"),
             {
                 workerData: imageFilePath,
             },
