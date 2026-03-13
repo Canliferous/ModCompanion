@@ -11,7 +11,7 @@
         >
             <template v-for="i in domItemCount" :key="i">
                 <div
-                    v-if="startIndex + i < items.length"
+                    v-if="startIndex + i <= items.length"
                     class="grid"
                     :style="`height: ${rowHeight}px; translate: 0px ${props.rowHeight * startIndex + i - 1}px`"
                     :class="{ 'col-span-full grid-cols-subgrid': subgrid }"
