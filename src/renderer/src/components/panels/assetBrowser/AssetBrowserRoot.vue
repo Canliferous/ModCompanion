@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot>
+    <MPanelRoot noScroll>
         <template #header>
             <div class="flex gap-1">
                 <AssetBrowserSearchInput />
@@ -10,9 +10,7 @@
                 </UButtonGroup>
             </div>
         </template>
-        <div>
-            <AssetBrowserTable />
-        </div>
+        <AssetBrowserTable />
     </MPanelRoot>
 </template>
 

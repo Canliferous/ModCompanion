@@ -22,3 +22,9 @@ export const DataTableEntryActionInjectKey = Symbol() as InjectionKey<{
     onEntryActivated: (idx: number) => void;
     onEntryContextMenu: (event: MouseEvent, idx: number) => void;
 }>;
+
+export interface DataTableHierarchyEntry<T> {
+    entry: T;
+    depth: number;
+    id: number;
+}

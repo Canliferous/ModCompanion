@@ -7,24 +7,20 @@
         @keydown="handleKeyDown"
     >
         <MDataTableHeader v-if="!noHeader" :columns="columns" />
-        <div
-            ref="grid"
-            class="grid col-span-full grid-cols-subgrid content-start pr-1"
-            :class="{ 'overflow-y-scroll': !(noScroll ?? false) }"
-        >
-            <MDataTableRow
-                v-for="(entry, i) in entriesHierarchy"
-                :key="i"
-                :idx="i"
-                :entry="entry.entry"
-                :columns="props.columns"
-                :draggable="draggable"
-                :neutral-highlight="neutralHighlight"
-                :depth="entry.depth"
-                @drag-start="(e) => handleDragEvent(e, i, 'onDragStart')"
-                @drag-end="(e) => handleDragEvent(e, i, 'onDragEnd')"
-            />
-        </div>
+        <MRecycler :items="entriesHierarchy" :row-height="20" subgrid key-field="id">
+            <template #default="{ item, idx }">
+                <MDataTableRow
+                    :idx="idx"
+                    :entry="item.entry"
+                    :columns="props.columns"
+                    :draggable="draggable"
+                    :neutral-highlight="neutralHighlight"
+                    :depth="item.depth"
+                    @drag-start="(e) => handleDragEvent(e, idx, 'onDragStart')"
+                    @drag-end="(e) => handleDragEvent(e, idx, 'onDragEnd')"
+                />
+            </template>
+        </MRecycler>
     </div>
 </template>
 
@@ -33,6 +29,7 @@ import {
     DataTableColumn,
     DataTableEntryActionInjectKey,
     DataTableSelectionInjectKey,
+    DataTableHierarchyEntry,
 } from "~/components/common/dataTable/MDataTable.model.js";
 import MDataTableHeader from "~/components/common/dataTable/MDataTableHeader.vue";
 
@@ -43,27 +40,23 @@ const props = defineProps<{
     draggable?: boolean;
     neutralHighlight?: boolean;
     treeChildFunc?: (entry: T) => T[] | undefined;
-    noScroll?: boolean;
 }>();
-
-interface HierarchyEntry {
-    entry: T;
-    depth: number;
-}
 
 const entriesHierarchy = computed(() => {
     const func = props.treeChildFunc;
     if (func === undefined) {
-        return props.entries.map<HierarchyEntry>((e) => ({ entry: e, depth: 0 }));
+        return props.entries.map<DataTableHierarchyEntry<T>>((e, i) => ({ entry: e, depth: 0, id: i }));
     }
 
-    const result: HierarchyEntry[] = [];
+    const result: DataTableHierarchyEntry<T>[] = [];
 
+    let i = 0;
     function populateResult(entries: T[], depth: number = 0): void {
         for (const entry of entries) {
             result.push({
                 entry,
                 depth,
+                id: i++,
             });
             const children = func?.(entry);
             if (children) {
@@ -90,7 +83,6 @@ const emit = defineEmits<{
     onDragEnd: [event: DragEvent, primaryEntry: T, allEntries: T[]];
     onKeyDown: [event: KeyboardEvent, active: T | undefined];
 }>();
-const gridEl = useTemplateRef("grid");
 
 const columnTemplate = computed(() => props.columns.map((c) => c.size ?? "auto").join(" "));
 
@@ -138,11 +130,12 @@ provide(DataTableEntryActionInjectKey, {
 
 defineExpose({
     focus: () => {
-        const el = gridEl?.value;
-        if (!el) return;
-        const child = el.firstElementChild;
-        if (!child) return;
-        (child as any).focus?.();
+        // TODO Add back data table focusing
+        // const el = gridEl?.value;
+        // if (!el) return;
+        // const child = el.firstElementChild;
+        // if (!child) return;
+        // (child as any).focus?.();
     },
     selectAll,
     deselect,

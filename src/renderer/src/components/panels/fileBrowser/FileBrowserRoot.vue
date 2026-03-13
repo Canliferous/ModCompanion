@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot always-show-scroll>
+    <MPanelRoot no-scroll>
         <template #header>
             <div class="grid gap-1 grid-cols-[1fr_minmax(4rem,30%)]">
                 <FileBrowserLocationBar @focus-list="handleFocusList" />
