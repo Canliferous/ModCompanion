@@ -1,6 +1,7 @@
 <template>
     <UContextMenu :items="items">
         <MDataTable
+            :row-height="20"
             :entries="entries"
             :columns="columns"
             neutral-highlight

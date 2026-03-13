@@ -9,6 +9,7 @@
         <UContextMenu :items="items">
             <MDataTable
                 ref="dataTable"
+                :row-height="20"
                 :columns="columns"
                 :entries="entries"
                 :draggable="true"

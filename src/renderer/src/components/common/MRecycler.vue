@@ -34,26 +34,18 @@ defineSlots<{
 
 const parentEl = useTemplateRef("parent");
 
-const domItemCount = ref(0);
-const containerStyle = computed(() => `height: ${props.rowHeight * props.items.length}px`);
-const startIndex = computed(() => Math.floor(y.value / props.rowHeight));
-
 const { y } = useScroll(parentEl);
 
+const parentHeight = ref(0);
 useResizeObserver(parentEl, (entries) => {
-    const height = entries[0].contentRect.height;
-    computeDom(height, props.rowHeight, props.items.length);
+    parentHeight.value = entries[0].contentRect.height;
 });
-watchEffect(() => {
-    const height = parentEl.value?.clientHeight;
-    if (!height) return;
-    computeDom(height, props.rowHeight, props.items.length);
+const domItemCount = computed(() => {
+    const fitCount = Math.ceil(parentHeight.value / props.rowHeight);
+    return Math.min(props.items.length, fitCount);
 });
-
-function computeDom(parentHeight: number, rowHeight: number, itemCount: number) {
-    const fitCount = Math.ceil(parentHeight / rowHeight);
-    domItemCount.value = Math.min(itemCount, fitCount);
-}
+const containerStyle = computed(() => `height: ${props.rowHeight * props.items.length}px`);
+const startIndex = computed(() => Math.floor(y.value / props.rowHeight));
 </script>
 
 <style scoped></style>

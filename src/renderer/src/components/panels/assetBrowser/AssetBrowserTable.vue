@@ -2,6 +2,7 @@
     <UContextMenu :items="items">
         <MDataTable
             ref="table"
+            :row-height="20"
             :entries="entries"
             :columns="columns"
             :tree-child-func="treeChildFunc"

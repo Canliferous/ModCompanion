@@ -1,5 +1,6 @@
 <template>
     <MDataTable
+        :row-height="32"
         :entries="listStore.filteredMapList"
         :columns="columns"
         neutral-highlight

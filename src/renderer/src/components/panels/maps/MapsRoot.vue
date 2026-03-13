@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot always-show-scroll>
+    <MPanelRoot no-scroll>
         <template #header>
             <div class="flex gap-1">
                 <MapAddButton />

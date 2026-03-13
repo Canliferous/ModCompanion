@@ -7,7 +7,7 @@
         @keydown="handleKeyDown"
     >
         <MDataTableHeader v-if="!noHeader" :columns="columns" />
-        <MRecycler :items="entriesHierarchy" :row-height="20" subgrid key-field="id">
+        <MRecycler :items="entriesHierarchy" :row-height="rowHeight" subgrid key-field="id">
             <template #default="{ item, idx }">
                 <MDataTableRow
                     :idx="idx"
@@ -36,6 +36,7 @@ import MDataTableHeader from "~/components/common/dataTable/MDataTableHeader.vue
 const props = defineProps<{
     entries: T[];
     columns: DataTableColumn<T>[];
+    rowHeight: number;
     noHeader?: boolean;
     draggable?: boolean;
     neutralHighlight?: boolean;
