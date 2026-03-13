@@ -1,11 +1,7 @@
 <template>
-    <div
-        ref="parent"
-        class="w-full h-full overflow-y-scroll grid pr-2"
-        :class="{ 'col-span-full grid-cols-subgrid': subgrid }"
-    >
+    <div ref="parent" class="overflow-y-scroll grid" :class="{ 'col-span-full grid-cols-subgrid': subgrid }">
         <div
-            class="h-full w-full grid content-start"
+            class="h-full grid content-start"
             :class="{ 'col-span-full grid-cols-subgrid': subgrid }"
             :style="containerStyle"
         >

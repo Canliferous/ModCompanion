@@ -1,7 +1,7 @@
 <template>
     <div
         class="grid content-start w-full h-full"
-        :class="noHeader ? 'grid-rows-[minmax(0,_1fr)]' : 'grid-rows-[auto_minmax(0,_1fr)]'"
+        :class="noHeader ? 'grid-rows-[minmax(0,1fr)]' : 'grid-rows-[auto_minmax(0,1fr)]'"
         :style="`grid-template-columns: ${columnTemplate}`"
         @click="handleClickEmptyArea"
         @keydown="handleKeyDown"
