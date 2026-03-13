@@ -75,6 +75,10 @@ export const FileBrowserSystem = {
         });
     },
 
+    isIgnoredPathName(name: string): boolean {
+        return name.startsWith(".") || name === "src";
+    },
+
     async listFiles(
         dirPath: string,
         resultBaseRoot?: string,
@@ -91,7 +95,7 @@ export const FileBrowserSystem = {
         const entries: Shared.FileListing.FileEntry[] = [];
 
         for (const p of paths) {
-            if (p.startsWith(".")) continue;
+            if (FileBrowserSystem.isIgnoredPathName(p)) continue;
 
             try {
                 const s = await fs.stat(path.join(dirPath, p));
@@ -125,37 +129,41 @@ export const FileBrowserSystem = {
         const result = new Map<string, Shared.FileListing.FileEntry[]>();
 
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing file system...");
-        async function walkFolder(dir: string) {
+        async function walkFolder(dir: string, startDirLen: number): Promise<void> {
             const paths = await fs.readdir(dir);
             const entries: Shared.FileListing.FileEntry[] = [];
 
             for (const p of paths) {
+                if (FileBrowserSystem.isIgnoredPathName(p)) continue;
+                console.log(p);
                 const fullPath = path.join(dir, p);
                 const stat = await fs.stat(fullPath);
+
+                const resultPath = fullPath.substring(startDirLen);
                 if (stat.isFile()) {
                     entries.push({
                         name: p,
-                        path: fullPath,
+                        path: resultPath,
                         isFile: true,
                         fileSize: stat.size,
                     });
                 } else {
                     entries.push({
                         name: p,
-                        path: fullPath,
+                        path: resultPath,
                         isFile: false,
                     });
 
-                    await walkFolder(fullPath);
+                    await walkFolder(fullPath, startDirLen);
                 }
             }
+            FileBrowserSystem.sortFileEntries(entries);
 
-            result.set(dir, entries);
+            result.set(dir.substring(startDirLen), entries);
         }
 
         const { millis } = await Shared.Timing.timeMillisAsync(async () => {
-            await walkFolder(ConfigSystem.getAppConfig().gamePath);
-            await walkFolder(ConfigSystem.getAppConfig().contentPath);
+            await walkFolder(ConfigSystem.getAppConfig().rootPath, ConfigSystem.getAppConfig().rootPath.length + 1);
         });
 
         Logger.info(Shared.Log.Channel.FileBrowser, "Done indexing file system. Took", millis, "ms");

@@ -76,7 +76,7 @@ const columns: DataTableColumn<Shared.FileListing.FileEntry>[] = [
         cell: (entry) =>
             h(
                 "span",
-                { class: "text-right tabular-nums whitespace-nowrap" },
+                { class: "text-right font-mono whitespace-nowrap" },
                 entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : "",
             ),
     },

@@ -1,5 +1,5 @@
 <template>
-    <UTooltip :text="entry.path">
+    <UTooltip :text="entry.path" :content="{ align: 'start' }">
         <span>{{ entry.name }}</span>
     </UTooltip>
 </template>

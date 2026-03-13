@@ -97,8 +97,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         searchEntries.value = result;
     }
 
-    refreshDir(currentDir.value);
-    refreshIndex();
+    refreshDir(currentDir.value).then(() => refreshIndex());
 
     return {
         currentDir,
