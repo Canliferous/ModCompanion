@@ -7,6 +7,7 @@ export interface SharedChamberSignConfigMapSign {
     name: string;
     current_level: number;
     total_levels: number;
+    startup_sequence: string;
     icons: SharedChamberSignConfigMapSignIcon[];
 }
 
