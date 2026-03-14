@@ -5,6 +5,7 @@ import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { Logger } from "~/logger.js";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
+import { useFileFilter } from "~/composables/useFilter.js";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
@@ -12,7 +13,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
     const activeEntry = ref<Shared.FileListing.FileEntry | undefined>(undefined);
     const searchTerm = ref("");
-    const searchEntries = ref<Shared.FileListing.FileEntry[]>([]);
+    const searchEntries = useFileFilter(fsEntries, searchTerm);
 
     watch(currentDir, refreshDir);
 
@@ -61,40 +62,6 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         } else {
             updateCurrentDir(entry.path);
         }
-    }
-
-    watch(searchTerm, (newVal) => updateSearch(newVal));
-
-    function updateSearch(searchTerm: string): void {
-        const result: Shared.FileListing.FileEntry[] = [];
-
-        const MAX_RESULTS = 1000;
-        let resultsCount = 0;
-
-        const searchTerms = searchTerm.split(" ");
-        const { millis } = Shared.Timing.timeMillis(() => {
-            loop1: for (const entry of fsEntries.values()) {
-                for (const e of entry) {
-                    let match = true;
-                    for (const term of searchTerms) {
-                        if (!e.name.includes(term)) {
-                            match = false;
-                        }
-                    }
-
-                    if (match) {
-                        if (resultsCount++ > MAX_RESULTS) break loop1;
-                        result.push(e);
-                    }
-                }
-            }
-        });
-
-        result.sort((a, b) => a.name.localeCompare(b.name));
-
-        Logger.debug(Shared.Log.Channel.FileBrowser, "Searching took", millis, "ms");
-
-        searchEntries.value = result;
     }
 
     refreshDir(currentDir.value).then(() => refreshIndex());

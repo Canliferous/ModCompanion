@@ -1,4 +1,4 @@
-import { computed, ComputedRef, Ref } from "vue";
+import { computed, ComputedRef, Reactive, Ref } from "vue";
 import * as Shared from "mod_companion_shared";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
@@ -77,5 +77,37 @@ export function useAssetsFilter(
         });
 
         return filteredAssets;
+    });
+}
+
+export function useFileFilter(files: Reactive<Map<string, Shared.FileListing.FileEntry[]>>, searchFilter: Ref<string>) {
+    return computed<Shared.FileListing.FileEntry[]>(() => {
+        const result: Shared.FileListing.FileEntry[] = [];
+
+        const MAX_RESULTS = 1000;
+        let resultsCount = 0;
+
+        const searchTerms = searchFilter.value.split(" ");
+        const { millis } = Shared.Timing.timeMillis(() => {
+            loop1: for (const entry of files.values()) {
+                for (const e of entry) {
+                    let match = true;
+                    for (const term of searchTerms) {
+                        if (!e.name.includes(term)) {
+                            match = false;
+                        }
+                    }
+
+                    if (match) {
+                        if (resultsCount++ > MAX_RESULTS) break loop1;
+                        result.push(e);
+                    }
+                }
+            }
+        });
+
+        result.sort((a, b) => a.name.localeCompare(b.name));
+
+        return result;
     });
 }
