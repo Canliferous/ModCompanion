@@ -2,6 +2,8 @@
 @import "@nuxt/ui";
 @import 'dockview-vue/dist/styles/dockview.css';
 
+@source "./uiconfig.ts";
+
 :root {
     --ui-radius: 0.2rem;
 
