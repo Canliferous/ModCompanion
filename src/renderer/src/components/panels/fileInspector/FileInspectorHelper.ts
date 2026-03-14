@@ -45,10 +45,29 @@ export function getFileTypeName(fileType: FileType): string {
 export function getFileType(fileName: string): FileType {
     const ext = pathe.extname(fileName);
     if (ext === ".mca") return FileType.TextMca;
+
     if (ext === ".txt") return FileType.TextGeneric;
+    if (ext === ".kv") return FileType.TextGeneric;
+    if (ext === ".vdf") return FileType.TextGeneric;
+    if (ext === ".vcd") return FileType.TextGeneric; // Todo: Add file preview for scenes with button to open in faceposer
     if (ext === ".json") return FileType.TextGeneric;
     if (ext === ".yml") return FileType.TextGeneric;
     if (ext === ".log") return FileType.TextGeneric;
+    if (ext === ".bat") return FileType.TextGeneric;
+    if (ext === ".sh") return FileType.TextGeneric;
+    if (ext === ".md") return FileType.TextGeneric;
+    if (ext === ".fgd") return FileType.TextGeneric;
+    if (ext === ".inf") return FileType.TextGeneric;
+    if (ext === ".rad") return FileType.TextGeneric;
+    if (ext === ".nut") return FileType.TextGeneric;
+    if (ext === ".res") return FileType.TextGeneric;
+    if (ext === ".cfg") return FileType.TextGeneric;
+    if (ext === ".js") return FileType.TextGeneric;
+    if (ext === ".xml") return FileType.TextGeneric;
+    if (ext === ".html") return FileType.TextGeneric;
+    if (ext === ".css") return FileType.TextGeneric;
+    if (ext === ".scss") return FileType.TextGeneric;
+
     if (ext === ".vmt") return FileType.TextVmt;
     if (ext === ".png") return FileType.ImagePng;
     if (ext === ".jpg") return FileType.ImageJpg;
