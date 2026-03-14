@@ -135,7 +135,6 @@ export const FileBrowserSystem = {
 
             for (const p of paths) {
                 if (FileBrowserSystem.isIgnoredPathName(p)) continue;
-                console.log(p);
                 const fullPath = path.join(dir, p);
                 const stat = await fs.stat(fullPath);
 

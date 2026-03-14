@@ -45,7 +45,7 @@ function _connect(port: number): Promise<net.Socket | undefined> {
 async function _healthcheck() {
     if (!socket) {
         if (reconnect) {
-            const s = await _connect(Shared.StrataInterop.SHARED_STRATA_INTEROP_SOCKET_PORT);
+            const s = await _connect(Shared.StrataInterop.NetconPort);
             if (s) {
                 s.on("close", () => {
                     socket = undefined;

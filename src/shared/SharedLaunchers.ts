@@ -1,4 +1,4 @@
-import { SHARED_STRATA_INTEROP_SOCKET_PORT } from "./SharedStrataInterop.js";
+import { NetconPort } from "./SharedStrataInterop.js";
 
 export enum SharedLaunchers {
     Game = "game",
@@ -21,12 +21,12 @@ export const SharedLauncherOptions: SharedLauncherOption[] = [
     {
         name: "Game (Dev)",
         type: SharedLaunchers.Game,
-        args: `-dev -condebug -novid -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
+        args: `-dev -condebug -novid -netconport ${NetconPort}`,
     },
     {
         name: "Game (Tools)",
         type: SharedLaunchers.Game,
-        args: `-tools -netconport ${SHARED_STRATA_INTEROP_SOCKET_PORT}`,
+        args: `-tools -netconport ${NetconPort}`,
     },
     {
         name: "Hammer",

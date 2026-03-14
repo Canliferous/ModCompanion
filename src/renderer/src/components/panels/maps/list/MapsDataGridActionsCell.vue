@@ -16,7 +16,7 @@
             </UButton>
         </UTooltip>
         <UTooltip text="Open in Game">
-            <UButton @click="() => handleOpenInGame(mapPath)">
+            <UButton @click="() => openMapInGame(mapPath)">
                 <template #leading>
                     <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers.game" />
                 </template>
@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { filename } from "pathe/utils";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { computed, ref } from "vue";
@@ -46,7 +45,7 @@ import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import MapsDataGridActionCloudButton from "~/components/panels/maps/list/MapsDataGridActionCloudButton.vue";
-import * as Shared from "mod_companion_shared";
+import { openMapInGame, openMapInHammer } from "~/helper/LauncherHelper.js";
 
 const compileStore = useMapCompileStore();
 const listStore = useMapListStore();
@@ -56,13 +55,8 @@ const props = defineProps<{ mapPath: string }>();
 
 const hasQueue = computed(() => listStore.mapQueue.length > 0);
 
-function handleOpenInGame(mapPath: string) {
-    const mapName = filename(mapPath);
-    window.electronAPI.app.launch(Shared.Launchers.SharedLaunchers.Game, `-dev -condebug +map ${mapName}`);
-}
 function handleOpenInHammer(mapPath: string) {
-    const fullPath = pathe.join(getAppConfig().mapSourcePath, mapPath);
-    window.electronAPI.app.launch(Shared.Launchers.SharedLaunchers.Hammer, fullPath);
+    openMapInHammer(pathe.join(getAppConfig().mapSourcePath, mapPath));
 }
 
 const dropdownItems = ref<DropdownMenuItem[][]>([

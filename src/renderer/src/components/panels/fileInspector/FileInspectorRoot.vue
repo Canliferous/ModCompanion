@@ -38,17 +38,7 @@
             </div>
         </template>
         <div v-if="entry" class="grid gap-2 h-full">
-            <template v-if="fileInspector === FileInspectors.Image">
-                <FileInspectorImagePreview :path="fullPath" />
-            </template>
-
-            <template v-if="fileInspector === FileInspectors.Text">
-                <FileInspectorTextPreview :path="fullPath" />
-            </template>
-
-            <template v-if="fileInspector === FileInspectors.Model">
-                <FileInspectorModelPreview :path="fullPath" />
-            </template>
+            <component :is="getFileInspectorComponent(fileInspector)" :path="fullPath" />
         </div>
         <div v-else class="grid h-full place-items-center text-muted">No file selected</div>
     </MPanelRoot>
@@ -61,6 +51,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import {
     FileInspectors,
     FileType,
+    getFileInspectorComponent,
     getFileInspectorFromType,
     getFileType,
     getFileTypeName,

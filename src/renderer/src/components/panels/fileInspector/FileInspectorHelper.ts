@@ -1,4 +1,9 @@
 import pathe from "pathe";
+import FileInspectorModelPreview from "~/components/panels/fileInspector/FileInspectorModelPreview.vue";
+import FileInspectorImagePreview from "~/components/panels/fileInspector/FileInspectorImagePreview.vue";
+import { DefineComponent } from "vue";
+import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";
+import FileInspectorMapPreview from "~/components/panels/fileInspector/FileInspectorMapPreview.vue";
 
 export enum FileInspectors {
     Unknown,
@@ -6,6 +11,7 @@ export enum FileInspectors {
     Image,
     Model,
     Texture,
+    Map,
 }
 
 export enum FileType {
@@ -17,6 +23,7 @@ export enum FileType {
     ImageJpg,
     Mdl,
     Vtf,
+    Vmf,
 }
 
 const FileTypeNames: Record<FileType, string> = {
@@ -28,6 +35,7 @@ const FileTypeNames: Record<FileType, string> = {
     [FileType.ImageJpg]: "JPG",
     [FileType.Mdl]: "Model Definition",
     [FileType.Vtf]: "Texture",
+    [FileType.Vmf]: "Hammer Map",
 };
 
 export function getFileTypeName(fileType: FileType): string {
@@ -46,6 +54,7 @@ export function getFileType(fileName: string): FileType {
     if (ext === ".jpg") return FileType.ImageJpg;
     if (ext === ".mdl") return FileType.Mdl;
     if (ext === ".vtf") return FileType.Vtf;
+    if (ext === ".vmf") return FileType.Vmf;
 
     return FileType.Unknown;
 }
@@ -67,9 +76,30 @@ export function getFileInspectorFromType(fileType: FileType): FileInspectors {
         case FileType.Vtf: {
             return FileInspectors.Texture;
         }
+        case FileType.Vmf: {
+            return FileInspectors.Map;
+        }
         case FileType.Unknown:
         default: {
             return FileInspectors.Unknown;
         }
+    }
+}
+
+export type FileInspectorComponent = DefineComponent<{ path: string }, any, any>;
+
+export function getFileInspectorComponent(inspector: FileInspectors): FileInspectorComponent | undefined {
+    switch (inspector) {
+        case FileInspectors.Text:
+            return FileInspectorTextPreview;
+        case FileInspectors.Image:
+            return FileInspectorImagePreview;
+        case FileInspectors.Model:
+            return FileInspectorModelPreview;
+        case FileInspectors.Map:
+            return FileInspectorMapPreview;
+        default:
+        case FileInspectors.Unknown:
+            return undefined;
     }
 }
