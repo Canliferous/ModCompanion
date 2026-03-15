@@ -26,12 +26,13 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         }
     }
 
-    async function refreshIndex() {
-        const result = await window.electronAPI.fileBrowser.indexFiles();
-        fsEntries.clear();
-        for (const [k, v] of result.index.entries()) {
-            fsEntries.set(k, v);
-        }
+    function refreshIndex() {
+        window.electronAPI.fileBrowser.indexFiles();
+    }
+
+    function refresh() {
+        refreshIndex();
+        refreshDir(currentDir.value);
     }
 
     window.electronAPI.fileBrowser.subscribeDirUpdated((report) => {
@@ -64,12 +65,10 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         }
     }
 
-    refreshDir(currentDir.value).then(() => refreshIndex());
-
     return {
         currentDir,
         fsEntries,
-        refreshDir,
+        refresh,
         searchTerm,
         searchEntries,
         activeEntry,

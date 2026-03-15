@@ -13,7 +13,7 @@ declare global {
 
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileListing.SharedProjectListFilesReport>;
-                indexFiles: () => Promise<Shared.FileListing.IndexUpdatedReport>;
+                indexFiles: () => void;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 launchFile: (filePath: string | string[]) => void;
                 setCurrentPath: (dirPath: string) => void;

@@ -31,8 +31,4 @@ export interface DirUpdatedReport {
     entries: FileEntry[];
 }
 
-export interface IndexUpdatedReport {
-    index: Map<string, FileEntry[]>;
-}
-
 export type DirUpdatedNotifyFunc = (report: DirUpdatedReport) => void;

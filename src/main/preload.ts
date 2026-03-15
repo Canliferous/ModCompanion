@@ -4,7 +4,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent, webUtils } from "electron";
 import { Stream } from "node:stream";
 import * as Shared from "mod_companion_shared";
-import { IndexUpdatedReport } from "mod_companion_shared/SharedFileListing.js";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
@@ -15,7 +14,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserListFiles, dirPath),
-        indexFiles: () => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserIndexFiles),
+        indexFiles: () => ipcRenderer.send(Shared.Ipc.Channels.FileBrowserIndexFiles),
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowserCorrectPath, dirPath),
         launchFile: (filePath: string | string[]) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowserLaunchFile, filePath),

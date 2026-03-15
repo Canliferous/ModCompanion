@@ -76,7 +76,14 @@ export const FileBrowserSystem = {
     },
 
     isIgnoredPathName(name: string): boolean {
-        return name.startsWith(".") || name === "src";
+        return (
+            name.startsWith(".") ||
+            name === "src" ||
+            name === "_sentry" ||
+            name === "ContentBuilder" ||
+            name === "venv" ||
+            name === "node_modules"
+        );
     },
 
     async listFiles(
@@ -125,9 +132,7 @@ export const FileBrowserSystem = {
         return { entries, type: Shared.FileListing.SharedProjectListFilesReportTypes.Success };
     },
 
-    async indexFiles(): Promise<Map<string, Shared.FileListing.FileEntry[]>> {
-        const result = new Map<string, Shared.FileListing.FileEntry[]>();
-
+    async indexFiles(notifyCallback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void): Promise<void> {
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing file system...");
         async function walkFolder(dir: string, startDirLen: number): Promise<void> {
             const paths = await fs.readdir(dir);
@@ -158,7 +163,7 @@ export const FileBrowserSystem = {
             }
             FileBrowserSystem.sortFileEntries(entries);
 
-            result.set(dir.substring(startDirLen), entries);
+            notifyCallback(dir.substring(startDirLen), entries);
         }
 
         const { millis } = await Shared.Timing.timeMillisAsync(async () => {
@@ -166,6 +171,5 @@ export const FileBrowserSystem = {
         });
 
         Logger.info(Shared.Log.Channel.FileBrowser, "Done indexing file system. Took", millis, "ms");
-        return result;
     },
 };

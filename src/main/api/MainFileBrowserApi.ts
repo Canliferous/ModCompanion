@@ -37,12 +37,11 @@ export function registerFileBrowserApi(): boolean {
         },
     );
 
-    ipcMain.handle(
-        Shared.Ipc.Channels.FileBrowserIndexFiles,
-        async (event): Promise<Shared.FileListing.IndexUpdatedReport> => {
-            return { index: await Core.FileBrowserSystem.indexFiles() };
-        },
-    );
+    ipcMain.on(Shared.Ipc.Channels.FileBrowserIndexFiles, (): Promise<void> => {
+        return Core.FileBrowserSystem.indexFiles((dir, entries) => {
+            notifyFileBrowserDirUpdated({ dir, entries });
+        });
+    });
 
     ipcMain.handle(
         Shared.Ipc.Channels.FileBrowserCorrectPath,
