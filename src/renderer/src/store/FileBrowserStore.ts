@@ -13,7 +13,12 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
     const activeEntry = ref<Shared.FileListing.FileEntry | undefined>(undefined);
     const searchTerm = ref("");
-    const searchEntries = useFileFilter(fsEntries, searchTerm);
+    const searchEntries = useFileFilter(fsEntries, searchTerm, 1000);
+    const entriesToShow = computed(() =>
+        Shared.FileListing.sortFileEntries(
+            searchTerm.value.length > 0 ? searchEntries.value : (currentEntries.value ?? []),
+        ),
+    );
 
     watch(currentDir, refreshDir);
 
@@ -26,17 +31,19 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         }
     }
 
-    function refreshIndex() {
-        window.electronAPI.fileBrowser.indexFiles();
-    }
-
     function refresh() {
-        refreshIndex();
         refreshDir(currentDir.value);
     }
 
-    window.electronAPI.fileBrowser.subscribeDirUpdated((report) => {
-        fsEntries.set(report.dir, report.entries);
+    window.electronAPI.fileBrowser.subscribeDirUpdated((dir, entries) => {
+        fsEntries.set(dir, entries);
+    });
+
+    window.electronAPI.fileBrowser.subscribeIndexUpdated((index) => {
+        fsEntries.clear();
+        for (const [key, entries] of index.entries()) {
+            fsEntries.set(key, entries);
+        }
     });
 
     function updateCurrentDir(dir: string): void {
@@ -73,6 +80,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         searchEntries,
         activeEntry,
         currentEntries,
+        entriesToShow,
         updateCurrentDir,
         onEntryActivated,
     };

@@ -23,3 +23,5 @@ function postInit() {
 }
 
 postInit();
+
+window.electronAPI.app.rendererReady();

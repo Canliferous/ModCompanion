@@ -80,33 +80,32 @@ export function useAssetsFilter(
     });
 }
 
-export function useFileFilter(files: Reactive<Map<string, Shared.FileListing.FileEntry[]>>, searchFilter: Ref<string>) {
+export function useFileFilter(
+    files: Reactive<Map<string, Shared.FileListing.FileEntry[]>>,
+    searchFilter: Ref<string>,
+    maxResults: number,
+) {
     return computed<Shared.FileListing.FileEntry[]>(() => {
         const result: Shared.FileListing.FileEntry[] = [];
 
-        const MAX_RESULTS = 1000;
         let resultsCount = 0;
 
         const searchTerms = searchFilter.value.split(" ");
-        const { millis } = Shared.Timing.timeMillis(() => {
-            loop1: for (const entry of files.values()) {
-                for (const e of entry) {
-                    let match = true;
-                    for (const term of searchTerms) {
-                        if (!e.name.includes(term)) {
-                            match = false;
-                        }
-                    }
-
-                    if (match) {
-                        if (resultsCount++ > MAX_RESULTS) break loop1;
-                        result.push(e);
+        loop1: for (const [key, entry] of files.entries()) {
+            for (const e of entry) {
+                let match = true;
+                for (const term of searchTerms) {
+                    if (!e.name.includes(term)) {
+                        match = false;
                     }
                 }
-            }
-        });
 
-        result.sort((a, b) => a.name.localeCompare(b.name));
+                if (match) {
+                    if (resultsCount++ > maxResults) break loop1;
+                    result.push(e);
+                }
+            }
+        }
 
         return result;
     });

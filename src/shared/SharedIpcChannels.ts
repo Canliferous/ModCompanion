@@ -1,17 +1,18 @@
 export const Channels = {
     AppLaunch: "app_launch",
     AppExit: "app_exit",
+    AppRendererReady: "app_renderer_ready",
 
     ClipboardWriteText: "clipboard_write_text",
 
-    FileBrowserListFiles: "filebrowser_list_files",
-    FileBrowserIndexFiles: "filebrowser_index_files",
-    FileBrowserCorrectPath: "filebrowser_correct_path",
-    FileBrowserLaunchFile: "filebrowser_launch_file",
-    FileBrowserSetCurrentPath: "filebrowser_set_current_path",
-    FileBrowserCurrentDirUpdated: "filebrowser_current_dir_updated",
-    FileBrowserBrowseToFile: "filebrowser_browse_to_file",
-    FileBrowserOpenFile: "filebrowser_open_file",
+    FileBrowser_ListFilesQuery: "filebrowser_list_files",
+    FileBrowser_CorrectPathQuery: "filebrowser_correct_path",
+    FileBrowser_LaunchFileAction: "filebrowser_launch_file",
+    FileBrowser_SetCurrentPathAction: "filebrowser_set_current_path",
+    FileBrowser_BrowseToFileAction: "filebrowser_browse_to_file",
+    FileBrowser_OpenFileAction: "filebrowser_open_file",
+    FileBrowser_DirUpdatedEvent: "filebrowser_update_dir",
+    FileBrowser_IndexUpdatedEvent: "filebrowser_update_index",
 
     FileReadString: "file_read_string",
     FileWriteString: "file_write_string",

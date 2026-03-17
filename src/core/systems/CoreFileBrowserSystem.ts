@@ -4,13 +4,26 @@ import path from "path";
 import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
+import { createWorker, Worker } from "../helpers/CoreWorkerHelper.js";
 
 let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
 let currentPathRelative: string | undefined = undefined;
 
+const prefillIndex: Map<string, Shared.FileListing.FileEntry[]> = new Map();
+
+let dirUpdatedNotifyFunc: Shared.FileListing.DirUpdatedNotifyFunc | undefined = undefined;
+
+function _handleIndexMessage(result: { dir: string; entries: Shared.FileListing.FileEntry[] }) {
+    prefillIndex.set(result.dir, result.entries);
+    dirUpdatedNotifyFunc?.(result.dir, result.entries);
+}
+
 export const FileBrowserSystem = {
     initSystem(notifyFunc?: Shared.FileListing.DirUpdatedNotifyFunc) {
+        dirUpdatedNotifyFunc = notifyFunc;
+        this.indexFiles();
+
         watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
         async function _change(filePath: string) {
@@ -24,8 +37,7 @@ export const FileBrowserSystem = {
                 return;
             }
 
-            const report: Shared.FileListing.DirUpdatedReport = { dir: currentPathRelative, entries: result.entries };
-            notifyFunc?.(report);
+            notifyFunc?.(currentPathRelative, result.entries);
         }
 
         watcher.on("add", _change);
@@ -63,27 +75,8 @@ export const FileBrowserSystem = {
         return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
     },
 
-    sortFileEntries(entries: Shared.FileListing.FileEntry[]) {
-        entries.sort((x, y) => {
-            const file1 = x.isFile;
-            const file2 = y.isFile;
-            if (file1 !== file2) {
-                return file1 ? 1 : -1;
-            } else {
-                return x.name.localeCompare(y.name);
-            }
-        });
-    },
-
-    isIgnoredPathName(name: string): boolean {
-        return (
-            name.startsWith(".") ||
-            name === "src" ||
-            name === "_sentry" ||
-            name === "ContentBuilder" ||
-            name === "venv" ||
-            name === "node_modules"
-        );
+    getPrefillIndex(): Map<string, Shared.FileListing.FileEntry[]> {
+        return prefillIndex;
     },
 
     async listFiles(
@@ -102,7 +95,7 @@ export const FileBrowserSystem = {
         const entries: Shared.FileListing.FileEntry[] = [];
 
         for (const p of paths) {
-            if (FileBrowserSystem.isIgnoredPathName(p)) continue;
+            if (Shared.FileListing.isIgnoredPathName(p)) continue;
 
             try {
                 const s = await fs.stat(path.join(dirPath, p));
@@ -127,49 +120,12 @@ export const FileBrowserSystem = {
                 // Like "System Volume Information", which exists when using the P:/ drive alias on the repo root
             }
         }
-        this.sortFileEntries(entries);
 
         return { entries, type: Shared.FileListing.SharedProjectListFilesReportTypes.Success };
     },
 
-    async indexFiles(notifyCallback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void): Promise<void> {
-        Logger.info(Shared.Log.Channel.FileBrowser, "Indexing file system...");
-        async function walkFolder(dir: string, startDirLen: number): Promise<void> {
-            const paths = await fs.readdir(dir);
-            const entries: Shared.FileListing.FileEntry[] = [];
-
-            for (const p of paths) {
-                if (FileBrowserSystem.isIgnoredPathName(p)) continue;
-                const fullPath = path.join(dir, p);
-                const stat = await fs.stat(fullPath);
-
-                const resultPath = fullPath.substring(startDirLen);
-                if (stat.isFile()) {
-                    entries.push({
-                        name: p,
-                        path: resultPath,
-                        isFile: true,
-                        fileSize: stat.size,
-                    });
-                } else {
-                    entries.push({
-                        name: p,
-                        path: resultPath,
-                        isFile: false,
-                    });
-
-                    await walkFolder(fullPath, startDirLen);
-                }
-            }
-            FileBrowserSystem.sortFileEntries(entries);
-
-            notifyCallback(dir.substring(startDirLen), entries);
-        }
-
-        const { millis } = await Shared.Timing.timeMillisAsync(async () => {
-            await walkFolder(ConfigSystem.getAppConfig().rootPath, ConfigSystem.getAppConfig().rootPath.length + 1);
-        });
-
-        Logger.info(Shared.Log.Channel.FileBrowser, "Done indexing file system. Took", millis, "ms");
+    indexFiles() {
+        const worker = createWorker(Worker.IndexFilesystem, ConfigSystem.getAppConfig().rootPath);
+        worker.on("message", _handleIndexMessage);
     },
 };

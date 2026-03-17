@@ -1,3 +1,5 @@
+import * as Shared from "./SharedManifest.js";
+
 export interface FileEntry {
     name: string;
     path: string;
@@ -26,9 +28,27 @@ export interface SharedProjectListFilesReportInvalid extends SharedProjectListFi
 
 export type SharedProjectListFilesReport = SharedProjectListFilesReportSuccess | SharedProjectListFilesReportInvalid;
 
-export interface DirUpdatedReport {
-    dir: string;
-    entries: FileEntry[];
+export type DirUpdatedNotifyFunc = (dir: string, entries: FileEntry[]) => void;
+
+export function isIgnoredPathName(name: string): boolean {
+    return (
+        name.startsWith(".") ||
+        name === "src" ||
+        name === "_sentry" ||
+        name === "ContentBuilder" ||
+        name === "venv" ||
+        name === "node_modules"
+    );
 }
 
-export type DirUpdatedNotifyFunc = (report: DirUpdatedReport) => void;
+export function sortFileEntries(entries: FileEntry[]): Shared.FileListing.FileEntry[] {
+    return entries.sort((x, y) => {
+        const file1 = x.isFile;
+        const file2 = y.isFile;
+        if (file1 !== file2) {
+            return file1 ? 1 : -1;
+        } else {
+            return x.name.localeCompare(y.name);
+        }
+    });
+}

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug main" type="NodeJSConfigurationType" activateToolWindowBeforeRun="false" application-parameters="--remote-debugging-port=9222" path-to-node="$PROJECT_DIR$/node_modules/.bin/electron.cmd" node-parameters="build/main/main.cjs" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="Debug main" type="NodeJSConfigurationType" activateToolWindowBeforeRun="false" application-parameters="--inspect-brk=9229" path-to-node="$PROJECT_DIR$/node_modules/.bin/electron.cmd" node-parameters="build/main/main.cjs" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="NODE_ENV" value="development" />
     </envs>

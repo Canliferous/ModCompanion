@@ -9,17 +9,22 @@ declare global {
             app: {
                 launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string | undefined) => void;
                 exit: () => void;
+                rendererReady: () => void;
             };
 
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileListing.SharedProjectListFilesReport>;
-                indexFiles: () => void;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 launchFile: (filePath: string | string[]) => void;
                 setCurrentPath: (dirPath: string) => void;
                 browseToFile: (filePath: string) => void;
                 openFile: (filePath: string | string[]) => void;
-                subscribeDirUpdated: (callback: (event: Shared.FileListing.DirUpdatedReport) => void) => IpcRenderer;
+                subscribeDirUpdated: (
+                    callback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void,
+                ) => IpcRenderer;
+                subscribeIndexUpdated: (
+                    callback: (index: Map<string, Shared.FileListing.FileEntry[]>) => void,
+                ) => IpcRenderer;
             };
 
             file: {

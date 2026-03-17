@@ -44,9 +44,7 @@ const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 const assetGroupsStore = useAssetGroupsStore();
 
-const entries = computed(() =>
-    fileBrowserStore.searchTerm.length > 0 ? fileBrowserStore.searchEntries : (fileBrowserStore.currentEntries ?? []),
-);
+const entries = computed(() => fileBrowserStore.entriesToShow);
 
 const selectedEntries = ref<Shared.FileListing.FileEntry[]>([]);
 
