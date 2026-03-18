@@ -17,7 +17,6 @@ import * as AssetAutoDetect from "./systems/asset/CoreAssetAutoDetect.js";
 import * as AssetInferType from "./systems/asset/CoreAssetCreateInferType.js";
 import * as AssetCreateTexture from "./systems/asset/CoreAssetCreateTexture.js";
 import * as AssetCreateUnknown from "./systems/asset/CoreAssetCreateUnknown.js";
-import * as AssetMaintenance from "./systems/asset/CoreAssetMaintenance.js";
 import * as AssetRepository from "./systems/asset/CoreAssetRepository.js";
 import * as AssetScanner from "./systems/asset/CoreAssetScanner.js";
 
@@ -47,7 +46,6 @@ export {
     AssetInferType,
     AssetCreateTexture,
     AssetCreateUnknown,
-    AssetMaintenance,
     AssetRepository,
     AssetScanner,
     ModelConverter,
