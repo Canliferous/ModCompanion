@@ -125,7 +125,22 @@ export const FileBrowserSystem = {
     },
 
     indexFiles() {
+        const timeStart = new Date().getTime();
         const worker = createWorker(Worker.IndexFilesystem, ConfigSystem.getAppConfig().rootPath);
         worker.on("message", _handleIndexMessage);
+        worker.on("exit", (args) => {
+            const timeEnd = new Date().getTime();
+            const totalEntries = prefillIndex.values().reduce((sum, a) => sum + a.length, 0);
+            Logger.info(
+                Shared.Log.Channel.FileBrowser,
+                "Indexing done. Found",
+                totalEntries,
+                "entries in",
+                prefillIndex.size,
+                "directories. Took",
+                timeEnd - timeStart,
+                "ms",
+            );
+        });
     },
 };
