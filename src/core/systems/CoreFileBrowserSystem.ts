@@ -128,7 +128,7 @@ export const FileBrowserSystem = {
         const timeStart = new Date().getTime();
         const worker = createWorker(Worker.IndexFilesystem, ConfigSystem.getAppConfig().rootPath);
         worker.on("message", _handleIndexMessage);
-        worker.on("exit", (args) => {
+        worker.on("exit", () => {
             const timeEnd = new Date().getTime();
             const totalEntries = prefillIndex.values().reduce((sum, a) => sum + a.length, 0);
             Logger.info(
