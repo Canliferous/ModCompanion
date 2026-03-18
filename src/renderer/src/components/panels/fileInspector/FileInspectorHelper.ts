@@ -18,6 +18,7 @@ export enum FileType {
     Unknown,
     TextMca,
     TextVmt,
+    TextQc,
     TextGeneric,
     ImagePng,
     ImageJpg,
@@ -30,6 +31,7 @@ const FileTypeNames: Record<FileType, string> = {
     [FileType.Unknown]: "Unknown",
     [FileType.TextMca]: "Mod Companion Asset",
     [FileType.TextVmt]: "Material",
+    [FileType.TextQc]: "Model Compile Config",
     [FileType.TextGeneric]: "Text",
     [FileType.ImagePng]: "PNG",
     [FileType.ImageJpg]: "JPG",
@@ -45,6 +47,8 @@ export function getFileTypeName(fileType: FileType): string {
 export function getFileType(fileName: string): FileType {
     const ext = pathe.extname(fileName);
     if (ext === ".mca") return FileType.TextMca;
+    if (ext === ".vmt") return FileType.TextVmt;
+    if (ext === ".qc") return FileType.TextQc;
 
     if (ext === ".txt") return FileType.TextGeneric;
     if (ext === ".kv") return FileType.TextGeneric;
@@ -68,7 +72,6 @@ export function getFileType(fileName: string): FileType {
     if (ext === ".css") return FileType.TextGeneric;
     if (ext === ".scss") return FileType.TextGeneric;
 
-    if (ext === ".vmt") return FileType.TextVmt;
     if (ext === ".png") return FileType.ImagePng;
     if (ext === ".jpg") return FileType.ImageJpg;
     if (ext === ".mdl") return FileType.Mdl;
@@ -82,7 +85,8 @@ export function getFileInspectorFromType(fileType: FileType): FileInspectors {
     switch (fileType) {
         case FileType.TextGeneric:
         case FileType.TextVmt:
-        case FileType.TextMca: {
+        case FileType.TextMca:
+        case FileType.TextQc: {
             return FileInspectors.Text;
         }
         case FileType.ImagePng:
