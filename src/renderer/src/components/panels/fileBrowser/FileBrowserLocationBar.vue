@@ -22,6 +22,8 @@
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import * as Shared from "mod_companion_shared";
 
+const fileBrowserStore = useFileBrowserStore();
+
 const showBreadcrumbs = ref(true);
 const inputText = ref("");
 
@@ -31,7 +33,7 @@ const emit = defineEmits<{
 
 function handleBgClicked(): void {
     showBreadcrumbs.value = false;
-    inputText.value = useFileBrowserStore().currentDir;
+    inputText.value = fileBrowserStore.currentDir;
 }
 
 function handleBlur(): void {
@@ -50,7 +52,7 @@ function handleDown(event: KeyboardEvent): void {
 
 function _finish() {
     showBreadcrumbs.value = true;
-    useFileBrowserStore().updateCurrentDir(Shared.SourceFs.forwardSlashed(inputText.value));
+    fileBrowserStore.updateCurrentDir(Shared.SourceFs.forwardSlashed(inputText.value));
 }
 </script>
 

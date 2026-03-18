@@ -38,11 +38,13 @@ function handleClick(event: MouseEvent, index: number): void {
     }
 
     fileBrowserStore.currentDir = fullPath;
+    fileBrowserStore.searchTerm = "";
 }
 
 function handleHomeClick(event: MouseEvent): void {
     event.stopPropagation();
     fileBrowserStore.updateCurrentDir("");
+    fileBrowserStore.searchTerm = "";
 }
 </script>
 
