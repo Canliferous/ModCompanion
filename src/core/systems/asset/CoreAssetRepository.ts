@@ -1,4 +1,3 @@
-// import { notifyAssetsRescanned } from "../../../main/api/MainAssetApi.js";
 import { buildAssets } from "./CoreAssetScanner.js";
 import { scanContentTree } from "../../helpers/CoreFileScanner.js";
 import { v4 } from "uuid";
@@ -9,12 +8,12 @@ import { AssetCreationInferResults, inferAssetCreationType } from "./CoreAssetCr
 import { createUnknownAssetDefinition } from "./CoreAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./CoreAssetCreateTexture.js";
 import { detectPotentialAssets } from "./CoreAssetAutoDetect.js";
-import { maintainAssets } from "./CoreAssetMaintenance.js";
 import { ConversionChecksumSystem } from "../conversion/CoreConversionChecksumSystem.js";
 import { ConversionAgentSystem } from "../conversion/CoreConversionAgentSystem.js";
 import { existsSync } from "fs";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
+import { timeMillisAsync } from "mod_companion_shared/SharedTiming.js";
 
 let assetMap: Shared.Asset.SharedAssetMap = new Map();
 let potentialAssets: Shared.Asset.SharedAsset[] = [];
@@ -26,18 +25,15 @@ export function getAssetMap(): Readonly<Shared.Asset.SharedAssetMap> {
 export async function rescan(): Promise<Shared.Asset.SharedAssetRescanEvent> {
     Logger.info(Shared.Log.Channel.Generic, "Rescanning asset...");
 
-    const startMillis = new Date().getTime();
+    const { millis } = await timeMillisAsync(async () => {
+        const contentTree = await scanContentTree();
+        assetMap = await buildAssets(contentTree);
+        potentialAssets = detectPotentialAssets(contentTree);
+        await ConversionChecksumSystem.initChecksums(assetMap);
+        await ConversionAgentSystem.initStates(assetMap);
+    });
 
-    const contentTree = await scanContentTree();
-    assetMap = await buildAssets(contentTree);
-    await maintainAssets(assetMap);
-    potentialAssets = detectPotentialAssets(contentTree);
-    await ConversionChecksumSystem.initChecksums(assetMap);
-    await ConversionAgentSystem.initStates(assetMap);
-
-    const endMillis = new Date().getTime();
-
-    return { assets: assetMap, potentialAssets, totalTimeMillis: endMillis - startMillis };
+    return { assets: assetMap, potentialAssets, totalTimeMillis: millis };
 }
 
 export function generateAssetId(): string {
