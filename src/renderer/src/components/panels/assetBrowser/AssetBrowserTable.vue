@@ -261,7 +261,7 @@ const items = computed(() => {
                 if (sel.def.associatedFiles) {
                     const ass = sel.def.associatedFiles;
                     for (const assKey in ass) {
-                        const key = assKey as keyof Shared.Asset.SharedAssetDefinitionAssociatedFiles;
+                        const key = assKey as keyof Shared.Asset.AssociatedFiles;
                         const v = ass[key];
                         if (v) {
                             const entry = Shared.Asset.getAssociatedEntryName(key)!;

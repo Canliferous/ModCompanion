@@ -3,7 +3,7 @@ import { ConversionAgentSystem } from "./conversion/CoreConversionAgentSystem.js
 import { ConfigSystem } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import { getAssetFromFile } from "./asset/CoreAssetRepository.js";
+import { AssetRepositorySystem } from "./asset/CoreAssetRepositorySystem.js";
 import { getContentRelativePath } from "../helpers/CoreSourceFs.js";
 
 const ignoreMap: Map<string, number> = new Map();
@@ -38,7 +38,7 @@ function _handleChanged(filePath: string): void {
         return;
     }
     const relativePath = getContentRelativePath(filePath);
-    const asset = getAssetFromFile(relativePath);
+    const asset = AssetRepositorySystem.getAssetFromFile(relativePath);
     if (!asset) return;
 
     Logger.info(Shared.Log.Channel.Assets, "Asset files changed", asset.def.displayName, filePath);

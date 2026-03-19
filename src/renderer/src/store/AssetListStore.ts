@@ -8,8 +8,8 @@ import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
 
 export const useAssetListStore = defineStore("asset-list", () => {
-    const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.SharedAsset>>(new Map());
-    const potentialAssets = ref<Shared.Asset.SharedAsset[]>([]);
+    const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.Asset>>(new Map());
+    const potentialAssets = ref<Shared.Asset.Asset[]>([]);
     const refreshing = ref(false);
     const searchTerm = useRememberWorkspaceRef(ref(""), "asset-list-search");
     const assetsEntries = computed(() => [...assets.value.values()]);
@@ -46,7 +46,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activeId.value = assetId;
     });
 
-    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.SharedAsset[]> {
+    async function createAsset(primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.Asset[]> {
         const result = await window.electronAPI.asset.createAsset(primaryFile, otherFiles);
         if (result.type === Shared.Asset.SharedCreateAssetReportType.Success) {
             for (const asset of result.assets) {
@@ -112,16 +112,16 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
     }
 
-    function getAssetById(id: Shared.Asset.AssetId | undefined): Shared.Asset.SharedAsset | undefined {
+    function getAssetById(id: Shared.Asset.AssetId | undefined): Shared.Asset.Asset | undefined {
         if (id === undefined) return undefined;
         return assets.value.get(id);
     }
 
-    function getAssetsById(ids: Shared.Asset.AssetId[]): Shared.Asset.SharedAsset[] {
+    function getAssetsById(ids: Shared.Asset.AssetId[]): Shared.Asset.Asset[] {
         return ids.map((id) => assets.value.get(id)).filter((a) => a !== undefined);
     }
 
-    function updateAssets(as: Shared.Asset.SharedAsset[]): void {
+    function updateAssets(as: Shared.Asset.Asset[]): void {
         const mapCopy = new Map(assets.value);
         for (const a of as) {
             mapCopy.set(a.def.id, a);
@@ -129,7 +129,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
         assets.value = mapCopy;
     }
 
-    async function writeAssets(as: Shared.Asset.SharedAsset[]): Promise<void> {
+    async function writeAssets(as: Shared.Asset.Asset[]): Promise<void> {
         Logger.debug(Shared.Log.Channel.Generic, "Writing asset", as);
         const results = as.map((a) => window.electronAPI.asset.update(a.def.id, a.def));
         const newAssets = await Promise.all(results);

@@ -23,7 +23,7 @@ import { fetchImageMeta } from "~/store/ImageCacheStore.js";
 import { themeModcompNested } from "~/design/ModcompDockviewTheme.js";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.Asset }>();
 const workspaceStore = useWorkspaceStore();
 
 const api = ref<DockviewApi>();
@@ -64,7 +64,7 @@ provide(AssetInspectorPanelsInjectKey, {
     visiblePanels,
 });
 
-function handleAssetUpdated(asset: Shared.Asset.SharedAsset, api: DockviewApi): void {
+function handleAssetUpdated(asset: Shared.Asset.Asset, api: DockviewApi): void {
     if (Shared.Asset.isTextureAsset(asset)) {
         updateTextureMeta(asset);
     }
@@ -72,7 +72,7 @@ function handleAssetUpdated(asset: Shared.Asset.SharedAsset, api: DockviewApi): 
     updateTabs(asset.def.type, api);
 }
 
-function updateTextureMeta(asset: Shared.Asset.SharedTextureAsset) {
+function updateTextureMeta(asset: Shared.Asset.TextureAsset) {
     const content = asset.def.contentFiles;
     if (content === undefined || content.length === 0) {
         // TODO: Clear

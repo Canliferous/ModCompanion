@@ -5,7 +5,7 @@ import * as Shared from "mod_companion_shared";
 
 export function registerAssetApi(): boolean {
     ipcMain.handle(Shared.Ipc.Channels.AssetForceRescan, () => {
-        return Core.AssetRepository.rescan();
+        return Core.AssetRepositorySystem.rescan();
     });
 
     ipcMain.handle(
@@ -13,7 +13,7 @@ export function registerAssetApi(): boolean {
         async (event, primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.SharedCreateAssetReport> => {
             const files = [primaryFile, ...otherFiles];
             Core.Logger.info(Shared.Log.Channel.Assets, "Creating asset for files", primaryFile, otherFiles);
-            const existingAsset = Core.AssetRepository.getAssetFromFiles(files);
+            const existingAsset = Core.AssetRepositorySystem.getAssetFromFiles(files);
             if (existingAsset) {
                 const allAssetFilesSet = new Set([
                     ...(existingAsset.def.gameFiles ?? []),
@@ -36,7 +36,7 @@ export function registerAssetApi(): boolean {
 
             try {
                 Core.Logger.info(Shared.Log.Channel.Assets, "Asset API: Files not used in any asset 👍");
-                const result = await Core.AssetRepository.createAssetsFromFiles(primaryFile, otherFiles);
+                const result = await Core.AssetRepositorySystem.createAssetsFromFiles(primaryFile, otherFiles);
                 if (!result) {
                     return {
                         type: Shared.Asset.SharedCreateAssetReportType.ErrorUnknown,
@@ -51,15 +51,12 @@ export function registerAssetApi(): boolean {
         },
     );
 
-    ipcMain.handle(
-        Shared.Ipc.Channels.AssetCreateEmpty,
-        (event, mcaBasePath: string): Promise<Shared.Asset.SharedAsset> => {
-            return Core.AssetRepository.createEmptyAsset(mcaBasePath);
-        },
-    );
+    ipcMain.handle(Shared.Ipc.Channels.AssetCreateEmpty, (event, mcaBasePath: string): Promise<Shared.Asset.Asset> => {
+        return Core.AssetRepositorySystem.createEmptyAsset(mcaBasePath);
+    });
 
     ipcMain.handle(Shared.Ipc.Channels.AssetDelete, (event, assetId: Shared.Asset.AssetId): Promise<boolean> => {
-        return Core.AssetRepository.deleteAssetDef(assetId);
+        return Core.AssetRepositorySystem.deleteAssetDef(assetId);
     });
 
     ipcMain.handle(
@@ -67,27 +64,27 @@ export function registerAssetApi(): boolean {
         async (
             event,
             assetId: Shared.Asset.AssetId,
-            assetDef: Shared.Asset.SharedAssetDefinition,
-        ): Promise<Shared.Asset.SharedAsset | undefined> => {
-            const asset = Core.AssetRepository.getAssetFromId(assetId);
+            assetDef: Shared.Asset.AssetDef,
+        ): Promise<Shared.Asset.Asset | undefined> => {
+            const asset = Core.AssetRepositorySystem.getAssetFromId(assetId);
             if (!asset || !asset.defFilePath) return;
 
-            return Core.AssetRepository.writeAssetDef(assetDef, asset.defFilePath);
+            return Core.AssetRepositorySystem.writeAssetDef(assetDef, asset.defFilePath);
         },
     );
 
     return true;
 }
 
-export function notifyAssetsRescanned(event: Shared.Asset.SharedAssetRescanEvent): void {
+export function notifyAssetsRescanned(event: Shared.Asset.AssetRescanEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.AssetRescanned, event);
 }
 
-export function notifyAssetsAdded(event: Shared.Asset.SharedAssetAddedEvent): void {
+export function notifyAssetsAdded(event: Shared.Asset.AssetAddedEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.AssetAdded, event);
 }
 
-export function notifyAssetsUpdated(event: Shared.Asset.SharedAssetUpdatedEvent): void {
+export function notifyAssetsUpdated(event: Shared.Asset.AssetUpdatedEvent): void {
     IpcHelper.send(Shared.Ipc.Channels.AssetUpdated, event);
 }
 

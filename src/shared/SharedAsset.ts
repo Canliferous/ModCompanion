@@ -1,6 +1,13 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
+import pathe from "pathe";
+
+export type AssetId = string;
 
 export const McaFileExt = ".mca"; // Mod Companion Asset
+
+export function isMcaFile(filePath: string): boolean {
+    return pathe.extname(filePath).toLowerCase() === McaFileExt;
+}
 
 export const Types = {
     Unknown: "unknown",
@@ -28,35 +35,38 @@ export function getAssetTypeName(type: Type): string {
     }
 }
 
-export const SharedAssetTypesValid = [Types.Texture, Types.Model];
+export const ValidTypes = [Types.Texture, Types.Model];
 
-export interface SharedAssetDefinitionFileArrays {
+export interface AssetDefFileArrays {
     readonly contentFiles?: string[];
     readonly gameFiles?: string[];
 }
 
-export interface SharedAssetDefinition extends SharedAssetDefinitionFileArrays {
+/**
+ * JSON data structure for .mca files. Gets read and written to disk
+ */
+export interface AssetDef extends AssetDefFileArrays {
     id: string;
     type: Type;
     displayName?: string;
 
-    associatedFiles?: SharedAssetDefinitionAssociatedFiles;
+    associatedFiles?: AssociatedFiles;
     credits?: string;
 }
 
-export interface SharedAssetDefinitionAssociatedFiles {
+export interface AssociatedFiles {
     substanceDesigner?: string;
     substancePainter?: string;
     blender?: string;
 }
 
-export interface SharedAssetDefinitionAssociatedFilesEntry {
-    field: keyof SharedAssetDefinitionAssociatedFiles;
+export interface AssociatedFilesEntry {
+    field: keyof AssociatedFiles;
     name: string;
     icon: string;
 }
 
-export const AssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[] = [
+export const AssociatedFilesEntries: AssociatedFilesEntry[] = [
     {
         field: "substanceDesigner",
         name: "Substance Designer",
@@ -74,63 +84,57 @@ export const AssociatedFilesEntries: SharedAssetDefinitionAssociatedFilesEntry[]
     },
 ];
 
-export function getAssociatedEntryName(field: keyof SharedAssetDefinitionAssociatedFiles) {
+export function getAssociatedEntryName(field: keyof AssociatedFiles) {
     return AssociatedFilesEntries.find((value) => value.field === field);
 }
 
-export interface SharedAsset {
+export interface Asset {
     /** Asset definition data read from the mca file */
-    readonly def: SharedAssetDefinition;
+    readonly def: AssetDef;
 
     /** Path to the mca file */
     readonly defFilePath?: string;
 }
 
-export interface SharedTextureAsset extends SharedAsset {
+export interface TextureAsset extends Asset {
     /** @inheritDoc */
-    readonly def: SharedTextureAssetDefinition;
+    readonly def: TextureAssetDef;
 }
 
-export type AssetId = string;
-
-export interface SharedAssetRescanEvent {
-    assets: Map<AssetId, SharedAsset>;
-    potentialAssets: SharedAsset[];
+export interface AssetRescanEvent {
+    assets: Map<AssetId, Asset>;
+    potentialAssets: Asset[];
     totalTimeMillis?: number;
 }
 
-export interface SharedAssetAddedEvent {
-    assets: SharedAsset[];
+export interface AssetAddedEvent {
+    assets: Asset[];
 }
 
-export interface SharedAssetUpdatedEvent {
-    assets: SharedAsset[];
+export interface AssetUpdatedEvent {
+    assets: Asset[];
 }
 
-export type AssetUpdatedNotifyFunc = (event: SharedAssetUpdatedEvent) => void;
+export type AssetUpdatedNotifyFunc = (event: AssetUpdatedEvent) => void;
 
-export type SharedAssetMap = Map<AssetId, SharedAsset>;
-
-export interface SharedTextureAssetDefinition extends SharedAssetDefinition {
+export interface TextureAssetDef extends AssetDef {
     type: typeof Types.Texture;
     vtfOptions?: SharedVtfCreateOptions;
 }
 
-export function isTextureAssetDefinition(
-    asset: SharedAssetDefinition | undefined,
-): asset is SharedTextureAssetDefinition {
+export function isTextureAssetDef(asset: AssetDef | undefined): asset is TextureAssetDef {
     return asset?.type === Types.Texture;
 }
 
-export function isTextureAsset(asset: SharedAsset | undefined): asset is SharedTextureAsset {
-    return isTextureAssetDefinition(asset?.def);
+export function isTextureAsset(asset: Asset | undefined): asset is TextureAsset {
+    return isTextureAssetDef(asset?.def);
 }
 
-export interface SharedModelAssetDefinition extends SharedAssetDefinition {
+export interface ModelAssetDef extends AssetDef {
     type: typeof Types.Model;
 }
 
-export function isModelAssetDefinition(asset: SharedAssetDefinition | undefined): asset is SharedModelAssetDefinition {
+export function isModelAssetDef(asset: AssetDef | undefined): asset is ModelAssetDef {
     return asset?.type === Types.Model;
 }
 
@@ -158,7 +162,7 @@ interface FilesAlreadyUsedInAssetError extends BaseSharedCreateAssetReport {
 
 interface Success extends BaseSharedCreateAssetReport {
     type: SharedCreateAssetReportType.Success;
-    assets: SharedAsset[];
+    assets: Asset[];
 }
 
 export type SharedCreateAssetReport = UnknownError | FilesAlreadyUsedInAssetError | Success;

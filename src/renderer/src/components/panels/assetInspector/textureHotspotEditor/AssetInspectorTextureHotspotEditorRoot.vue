@@ -93,7 +93,7 @@ const id = useId();
 
 const canvasRef = useTemplateRef("canvasRef");
 
-const props = defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.SharedTextureAsset }>();
+const props = defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.TextureAsset }>();
 
 const { width, height } = useElementSize(canvasRef);
 const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
@@ -195,7 +195,7 @@ onMounted(() => {
     editor.value.changedEvent.on((r) => {
         const options: Shared.Vtf.SharedVtfCreateOptions = { ...toRaw(props.asset.def.vtfOptions), hotspot: r };
 
-        const asset: Shared.Asset.SharedTextureAsset = {
+        const asset: Shared.Asset.TextureAsset = {
             ...toRaw(props.asset),
             def: { ...toRaw(props.asset.def), vtfOptions: options },
         };

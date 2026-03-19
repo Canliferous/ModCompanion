@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import { getAssetFromId, getAssetMap } from "../asset/CoreAssetRepository.js";
 import { TextureConverter } from "../../helpers/converter/CoreTextureConverter.js";
 import { ModelConverter } from "../../helpers/converter/CoreModelConverter.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../../helpers/CoreSourceFs.js";
@@ -10,7 +9,7 @@ import { HotReloadSystem } from "../CoreHotReloadSystem.js";
 import { AssetWatcherSystem } from "../CoreAssetWatcherSystem.js";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import { ConversionStartNotifyFunc } from "mod_companion_shared/SharedConversion.js";
+import { AssetRepositorySystem } from "../asset/CoreAssetRepositorySystem.js";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
@@ -77,11 +76,11 @@ export const ConversionAgentSystem = {
         }
     },
     enqueueAll(): void {
-        for (const assetId of getAssetMap().keys()) {
+        for (const assetId of AssetRepositorySystem.getAssetMap().keys()) {
             ConversionAgentSystem.enqueue(assetId, true);
         }
     },
-    async initStates(map: Shared.Asset.SharedAssetMap) {
+    async initStates(map: Map<Shared.Asset.AssetId, Shared.Asset.Asset>) {
         for (const asset of map.values()) {
             if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
                 _setState(asset.def.id, Shared.Conversion.State.Invalid);
@@ -148,7 +147,7 @@ function _getAssetsToConvert(): Shared.Asset.AssetId[] {
 }
 
 async function _startConversion(id: Shared.Asset.AssetId): Promise<string | undefined> {
-    const asset = getAssetFromId(id);
+    const asset = AssetRepositorySystem.getAssetFromId(id);
     const previousState = _getState(id);
     if (!asset) {
         _setState(id, Shared.Conversion.State.Unknown);
@@ -193,29 +192,29 @@ async function _startConversion(id: Shared.Asset.AssetId): Promise<string | unde
     return timeoutPromise;
 }
 
-async function _convertAsset(asset: Shared.Asset.SharedAssetDefinition): Promise<string | undefined> {
+async function _convertAsset(asset: Shared.Asset.AssetDef): Promise<string | undefined> {
     switch (asset.type) {
         case Shared.Asset.Types.Texture:
-            return TextureConverter.convert(asset as Shared.Asset.SharedTextureAssetDefinition);
+            return TextureConverter.convert(asset as Shared.Asset.TextureAssetDef);
         case Shared.Asset.Types.Model:
-            return ModelConverter.convert(asset as Shared.Asset.SharedModelAssetDefinition);
+            return ModelConverter.convert(asset as Shared.Asset.ModelAssetDef);
         default:
             return undefined;
     }
 }
 
-function _isValidAsset(asset: Shared.Asset.SharedAssetDefinition): boolean {
+function _isValidAsset(asset: Shared.Asset.AssetDef): boolean {
     switch (asset.type) {
         case Shared.Asset.Types.Texture:
-            return TextureConverter.isValid(asset as Shared.Asset.SharedTextureAssetDefinition);
+            return TextureConverter.isValid(asset as Shared.Asset.TextureAssetDef);
         case Shared.Asset.Types.Model:
-            return ModelConverter.getQcFile(asset as Shared.Asset.SharedModelAssetDefinition) !== undefined;
+            return ModelConverter.getQcFile(asset as Shared.Asset.ModelAssetDef) !== undefined;
         default:
             return false;
     }
 }
 
-function _doContentFilesExist(asset: Shared.Asset.SharedAssetDefinition): boolean {
+function _doContentFilesExist(asset: Shared.Asset.AssetDef): boolean {
     if (asset.contentFiles === undefined) return false;
     return !asset.contentFiles.map((c) => existsSync(makeContentPathAbsolute(c))).some((c) => !c);
 }
@@ -250,7 +249,7 @@ function _getState(id: Shared.Asset.AssetId) {
     return conversionsMap.get(id)?.state ?? Shared.Conversion.State.Unknown;
 }
 
-async function _touchAsset(asset: Shared.Asset.SharedAssetDefinition) {
+async function _touchAsset(asset: Shared.Asset.AssetDef) {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
     if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
 
@@ -270,7 +269,7 @@ async function _touchAsset(asset: Shared.Asset.SharedAssetDefinition) {
     }
 }
 
-async function _isAssetStale(asset: Shared.Asset.SharedAssetDefinition): Promise<boolean> {
+async function _isAssetStale(asset: Shared.Asset.AssetDef): Promise<boolean> {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
     if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
 

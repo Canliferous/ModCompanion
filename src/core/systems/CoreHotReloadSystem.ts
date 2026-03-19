@@ -1,4 +1,4 @@
-import { getAssetMap } from "./asset/CoreAssetRepository.js";
+import { AssetRepositorySystem } from "./asset/CoreAssetRepositorySystem.js";
 import { StrataInteropSystem } from "./CoreStrataInteropSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -14,7 +14,7 @@ export const HotReloadSystem = {
 
         let texturesToReload: string[] = [];
         for (const assetId of assets) {
-            const asset = getAssetMap().get(assetId);
+            const asset = AssetRepositorySystem.getAssetFromId(assetId);
             if (asset === undefined) continue;
 
             if (Shared.Asset.isTextureAsset(asset)) {

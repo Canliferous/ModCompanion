@@ -30,11 +30,11 @@ program
         if (opts.verbose)
             Core.Logger.debug(Shared.Log.Channel.Cli, "Maretf Path", Core.MareTfSystem.getMareTfBinaryPath());
 
-        await Core.AssetRepository.rescan();
-        const assets = Core.AssetRepository.getAssetMap();
+        await Core.AssetRepositorySystem.rescan();
+        const assets = Core.AssetRepositorySystem.getAssetMap();
 
         if (files.length > 0) {
-            const assets = Core.AssetRepository.getAssetsFromMcaFiles(files);
+            const assets = Core.AssetRepositorySystem.getAssetsFromMcaFiles(files);
             for (const asset of assets) {
                 Core.ConversionAgentSystem.enqueue(asset.def.id, opts.force);
             }

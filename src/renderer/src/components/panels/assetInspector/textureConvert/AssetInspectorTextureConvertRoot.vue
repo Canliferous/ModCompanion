@@ -89,7 +89,7 @@ import AssetInspectorTextureConvertFlags from "~/components/panels/assetInspecto
 import { getVtfDefaults } from "~/helper/VtfDefaults.js";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: Shared.Asset.SharedTextureAsset }>();
+const props = defineProps<{ asset: Shared.Asset.TextureAsset }>();
 
 const options = ref<Shared.Vtf.SharedVtfCreateOptions>({
     ...getAppConfig().assetDefaults?.vtfOptions,
@@ -126,8 +126,8 @@ provide(AssetInspectorTextureConvertInjectKey, {
         if (opt.noThumbnail === false) opt.noThumbnail = undefined;
         if (opt.noAnimation === false) opt.noAnimation = undefined;
 
-        const assetDef: Shared.Asset.SharedTextureAssetDefinition = { ...rawAsset.def, vtfOptions: opt };
-        const newAsset: Shared.Asset.SharedAsset = { ...rawAsset, def: assetDef };
+        const assetDef: Shared.Asset.TextureAssetDef = { ...rawAsset.def, vtfOptions: opt };
+        const newAsset: Shared.Asset.Asset = { ...rawAsset, def: assetDef };
         assetStore.writeAssets([newAsset]);
     },
 });

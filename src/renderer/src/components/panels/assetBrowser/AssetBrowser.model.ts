@@ -13,7 +13,7 @@ interface AssetBrowserBaseEntry {
 
 export interface AssetBrowserAssetEntry extends AssetBrowserBaseEntry {
     type: typeof AssetBrowserEntryTypes.Asset;
-    assetDef: Shared.Asset.SharedAssetDefinition;
+    assetDef: Shared.Asset.AssetDef;
 }
 
 export interface AssetBrowserGroupEntry extends AssetBrowserBaseEntry {

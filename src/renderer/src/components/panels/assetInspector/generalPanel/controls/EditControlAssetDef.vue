@@ -21,7 +21,7 @@ import { browseToMca, exploreToMca, openMca } from "~/helper/AssetHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.Asset }>();
 
 function handleOpen() {
     openMca(props.asset);

@@ -17,7 +17,11 @@ import * as Shared from "mod_companion_shared";
 
 const listStore = useAssetListStore();
 
-const items = Shared.Asset.SharedAssetTypesValid.map((k) => ({ id: k, label: Shared.Asset.getAssetTypeName(k), icon: getAssetTypeIcon(k) }));
+const items = Shared.Asset.ValidTypes.map((k) => ({
+    id: k,
+    label: Shared.Asset.getAssetTypeName(k),
+    icon: getAssetTypeIcon(k),
+}));
 const selected = ref<Shared.Asset.Type[]>(listStore.typeFilter);
 watch(selected, (value) => {
     listStore.typeFilter = value;

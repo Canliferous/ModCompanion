@@ -46,19 +46,19 @@ import EditControlAssetAssociated from "~/components/panels/assetInspector/gener
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.Asset }>();
 const waiting = ref(false);
 provide(AssetInspectorGeneralInjectKey, { waiting, updateAsset });
 
 const assetStore = useAssetListStore();
 
-async function updateAsset(def: Partial<Shared.Asset.SharedAssetDefinition>) {
+async function updateAsset(def: Partial<Shared.Asset.AssetDef>) {
     waiting.value = true;
 
     try {
         const rawAsset = toRaw(props.asset);
-        const assetDef: Shared.Asset.SharedAssetDefinition = { ...rawAsset.def, ...def };
-        const newAsset: Shared.Asset.SharedAsset = { ...rawAsset, def: assetDef };
+        const assetDef: Shared.Asset.AssetDef = { ...rawAsset.def, ...def };
+        const newAsset: Shared.Asset.Asset = { ...rawAsset, def: assetDef };
         assetStore.writeAssets([newAsset]);
 
         // Toast on failure?

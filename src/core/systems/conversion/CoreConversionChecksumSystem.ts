@@ -7,7 +7,7 @@ import * as Shared from "mod_companion_shared";
 
 export const ConversionChecksumSystem = {
     checksums: new Map<Shared.Asset.AssetId, string>(),
-    async initChecksums(map: Shared.Asset.SharedAssetMap) {
+    async initChecksums(map: Map<Shared.Asset.AssetId, Shared.Asset.Asset>) {
         const startTime = new Date();
         {
             const assets = map.values();
@@ -40,7 +40,7 @@ export const ConversionChecksumSystem = {
         const sum = results.join();
         return sum;
     },
-    async hasChanged(asset: Shared.Asset.SharedAssetDefinition): Promise<boolean> {
+    async hasChanged(asset: Shared.Asset.AssetDef): Promise<boolean> {
         if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
 
         const newSum = await this.createChecksum(asset.contentFiles);

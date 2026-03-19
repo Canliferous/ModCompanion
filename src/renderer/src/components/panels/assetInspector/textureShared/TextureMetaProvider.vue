@@ -21,7 +21,7 @@ const inj = inject(AssetInspectorTextureInjectKey);
 const myMeta = computed(() => (inj !== undefined ? toValue(inj.meta) : undefined));
 
 defineSlots<{
-    default(props: { meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.SharedTextureAsset }): any;
+    default(props: { meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.TextureAsset }): any;
 }>();
 </script>
 

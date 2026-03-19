@@ -15,7 +15,7 @@ import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspect
 import EditControlAssetAssociatedEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetAssociatedEntry.vue";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ asset: Shared.Asset.SharedAsset }>();
+const props = defineProps<{ asset: Shared.Asset.Asset }>();
 
 const associated = ref(props.asset.def.associatedFiles ?? {});
 watch(
@@ -27,7 +27,7 @@ watch(
 
 const inj = inject(AssetInspectorGeneralInjectKey);
 
-function handleUpdated(newText: string, field: keyof Shared.Asset.SharedAssetDefinitionAssociatedFiles): void {
+function handleUpdated(newText: string, field: keyof Shared.Asset.AssociatedFiles): void {
     associated.value[field] = newText;
     save();
 }

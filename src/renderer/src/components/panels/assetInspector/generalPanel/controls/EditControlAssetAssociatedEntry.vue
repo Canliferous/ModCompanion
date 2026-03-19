@@ -17,7 +17,7 @@ import { getAppConfig } from "~/renderer-config.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ file: string; entry: Shared.Asset.SharedAssetDefinitionAssociatedFilesEntry }>();
+const props = defineProps<{ file: string; entry: Shared.Asset.AssociatedFilesEntry }>();
 const file = ref(props.file);
 watch(
     () => props.file,

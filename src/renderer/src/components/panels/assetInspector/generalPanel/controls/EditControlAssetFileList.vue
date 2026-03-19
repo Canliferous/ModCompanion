@@ -28,8 +28,8 @@ import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
 const props = defineProps<{
-    asset: Shared.Asset.SharedAsset;
-    field: keyof Shared.Asset.SharedAssetDefinitionFileArrays;
+    asset: Shared.Asset.Asset;
+    field: keyof Shared.Asset.AssetDefFileArrays;
     dir: string;
     maxItems?: number;
     heading: string;

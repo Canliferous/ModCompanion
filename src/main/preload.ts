@@ -77,20 +77,19 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     asset: {
         rescan: () => ipcRenderer.invoke(Shared.Ipc.Channels.AssetForceRescan),
-        subscribeRescanned: (callback: (event: Shared.Asset.SharedAssetRescanEvent) => void) =>
+        subscribeRescanned: (callback: (event: Shared.Asset.AssetRescanEvent) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.AssetRescanned,
-                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetRescanEvent) => callback(event),
+                (e: IpcRendererEvent, event: Shared.Asset.AssetRescanEvent) => callback(event),
             ),
-        subscribeAdded: (callback: (event: Shared.Asset.SharedAssetAddedEvent) => void) =>
-            ipcRenderer.on(
-                Shared.Ipc.Channels.AssetAdded,
-                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetAddedEvent) => callback(event),
+        subscribeAdded: (callback: (event: Shared.Asset.AssetAddedEvent) => void) =>
+            ipcRenderer.on(Shared.Ipc.Channels.AssetAdded, (e: IpcRendererEvent, event: Shared.Asset.AssetAddedEvent) =>
+                callback(event),
             ),
-        subscribeUpdated: (callback: (event: Shared.Asset.SharedAssetUpdatedEvent) => void) =>
+        subscribeUpdated: (callback: (event: Shared.Asset.AssetUpdatedEvent) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.AssetUpdated,
-                (e: IpcRendererEvent, event: Shared.Asset.SharedAssetUpdatedEvent) => callback(event),
+                (e: IpcRendererEvent, event: Shared.Asset.AssetUpdatedEvent) => callback(event),
             ),
         subscribeNavigateToHash: (callback: (assetHash: string) => void) =>
             ipcRenderer.on(Shared.Ipc.Channels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) =>
@@ -99,7 +98,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
         createAsset: (primaryFile: string, otherFiles: string[]) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreate, primaryFile, otherFiles),
         createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreateEmpty, mcaFilePath),
-        update: (assetId: Shared.Asset.AssetId, assetDef: Shared.Asset.SharedAssetDefinition) =>
+        update: (assetId: Shared.Asset.AssetId, assetDef: Shared.Asset.AssetDef) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetUpdate, assetId, assetDef),
         delete: (assetId: Shared.Asset.AssetId) => ipcRenderer.invoke(Shared.Ipc.Channels.AssetDelete, assetId),
     },

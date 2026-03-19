@@ -1,5 +1,5 @@
 import { filename } from "pathe/utils";
-import { generateAssetId } from "./CoreAssetRepository.js";
+import { AssetRepositorySystem } from "./CoreAssetRepositorySystem.js";
 import path from "path";
 import { getContentRelativePath } from "../../helpers/CoreSourceFs.js";
 import * as Shared from "mod_companion_shared";
@@ -25,10 +25,10 @@ export function deriveTextureDisplayName(contentFile: string): string {
     return Shared.SourceFs.forwardSlashed(stripped);
 }
 
-export function createTextureAssetDefinition(file: string): Shared.Asset.SharedTextureAssetDefinition {
-    const id = generateAssetId();
+export function createTextureAssetDefinition(file: string): Shared.Asset.TextureAssetDef {
+    const id = AssetRepositorySystem.generateAssetId();
     const contentFile = getContentRelativePath(file);
-    const assetDef: Shared.Asset.SharedTextureAssetDefinition = {
+    const assetDef: Shared.Asset.TextureAssetDef = {
         type: Shared.Asset.Types.Texture,
         id: id,
         contentFiles: [contentFile],

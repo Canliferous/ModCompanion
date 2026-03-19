@@ -5,11 +5,11 @@ import * as Shared from "mod_companion_shared";
 import { ConfigSystem } from "../../systems/CoreConfigSystem.js";
 
 export const ModelConverter = {
-    getQcFile(asset: Shared.Asset.SharedModelAssetDefinition): string | undefined {
+    getQcFile(asset: Shared.Asset.ModelAssetDef): string | undefined {
         const qcFile = asset.contentFiles?.find((f) => f.endsWith(".qc"));
         return qcFile;
     },
-    async convert(asset: Shared.Asset.SharedModelAssetDefinition): Promise<string | undefined> {
+    async convert(asset: Shared.Asset.ModelAssetDef): Promise<string | undefined> {
         const qcFile = this.getQcFile(asset);
         if (!qcFile) return undefined;
         const fullQcFile = path.join(ConfigSystem.getAppConfig().contentPath, qcFile);

@@ -56,9 +56,9 @@ declare global {
             };
 
             asset: {
-                rescan: () => Promise<Shared.Asset.SharedAssetRescanEvent>;
-                subscribeAdded: (callback: (event: Shared.Asset.SharedAssetAddedEvent) => void) => IpcRenderer;
-                subscribeUpdated: (callback: (event: Shared.Asset.SharedAssetUpdatedEvent) => void) => IpcRenderer;
+                rescan: () => Promise<Shared.Asset.AssetRescanEvent>;
+                subscribeAdded: (callback: (event: Shared.Asset.AssetAddedEvent) => void) => IpcRenderer;
+                subscribeUpdated: (callback: (event: Shared.Asset.AssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
                 createAsset: (
                     primaryFile: string,
@@ -67,8 +67,8 @@ declare global {
                 createEmpty: (mcaFilePath: string) => Promise<Shared.Asset.SharedCreateAssetReport>;
                 update: (
                     assetId: Shared.Asset.AssetId,
-                    assetDef: Shared.Asset.SharedAssetDefinition,
-                ) => Promise<Shared.Asset.SharedAsset | undefined>;
+                    assetDef: Shared.Asset.AssetDef,
+                ) => Promise<Shared.Asset.Asset | undefined>;
                 delete: (assetId: Shared.Asset.AssetId) => Promise<boolean>;
             };
 

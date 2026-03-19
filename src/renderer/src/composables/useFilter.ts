@@ -31,7 +31,7 @@ export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string,
 }
 
 export function useAssetsFilter(
-    assets: ComputedRef<Shared.Asset.SharedAsset[]>,
+    assets: ComputedRef<Shared.Asset.Asset[]>,
     searchFilter: Ref<string>,
     typeFilter: Ref<Shared.Asset.Type[]>,
 ) {
@@ -41,7 +41,7 @@ export function useAssetsFilter(
             return assets.value;
         }
 
-        const filteredAssets: Shared.Asset.SharedAsset[] = [];
+        const filteredAssets: Shared.Asset.Asset[] = [];
         for (const asset of assets.value) {
             if (typeFilterVal.length > 0) {
                 const isIncluded = typeFilter.value.includes(asset.def.type);
