@@ -18,7 +18,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
     });
 
     window.electronAPI.assetGroups.subscribeRescanned((event) => {
-        console.log(event);
         groups.value = event.groups;
     });
 
@@ -60,13 +59,19 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         activeGroupId.value = id;
     }
 
-    async function writeGroup(id: Shared.AssetGroup.GroupId, groupDef: Shared.AssetGroup.GroupDefinition): Promise<void> {
+    async function writeGroup(
+        id: Shared.AssetGroup.GroupId,
+        groupDef: Shared.AssetGroup.GroupDefinition,
+    ): Promise<void> {
         const result = await window.electronAPI.assetGroups.update(id, groupDef);
         groups.value.set(result.id, result);
         notifyGroupsWritten(id);
     }
 
-    async function writeAddAssetsToGroup(groupId: Shared.AssetGroup.GroupId, assetIds: Shared.Asset.AssetId[]): Promise<void> {
+    async function writeAddAssetsToGroup(
+        groupId: Shared.AssetGroup.GroupId,
+        assetIds: Shared.Asset.AssetId[],
+    ): Promise<void> {
         const group = groups.value.get(groupId);
         if (group === undefined) return;
 
@@ -74,7 +79,10 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         return writeGroup(group.id, { ...toRaw(group.def), assets });
     }
 
-    async function writeRemoveAssetsFromGroup(groupId: Shared.AssetGroup.GroupId, assetIds: Shared.Asset.AssetId[]): Promise<void> {
+    async function writeRemoveAssetsFromGroup(
+        groupId: Shared.AssetGroup.GroupId,
+        assetIds: Shared.Asset.AssetId[],
+    ): Promise<void> {
         const group = groups.value.get(groupId);
         if (group === undefined) return;
 

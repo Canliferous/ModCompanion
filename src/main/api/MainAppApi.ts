@@ -1,8 +1,7 @@
 import { app, ipcMain } from "electron";
 import { WindowSystem } from "../systems/MainWindowSystem.js";
 import * as Shared from "mod_companion_shared";
-import * as Core from "mod_companion_core";
-import { FileBrowserApi } from "./MainFileBrowserApi.js";
+import { IpcHelper } from "./MainApiHelper.js";
 
 export const AppApi = {
     register(): boolean {
@@ -12,8 +11,7 @@ export const AppApi = {
         });
 
         ipcMain.on(Shared.Ipc.Channels.AppRendererReady, () => {
-            const index = Core.FileBrowserSystem.getPrefillIndex();
-            FileBrowserApi.notifyIndexUpdated(index);
+            IpcHelper.markRendererReady();
         });
 
         return true;

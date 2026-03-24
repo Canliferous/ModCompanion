@@ -1,4 +1,3 @@
-import { scanContentTree } from "../../helpers/CoreFileScanner.js";
 import { v4 } from "uuid";
 import path from "path";
 import fs from "fs/promises";
@@ -6,34 +5,44 @@ import { ConfigSystem } from "../CoreConfigSystem.js";
 import { AssetCreationInferResults, inferAssetCreationType } from "./CoreAssetCreateInferType.js";
 import { createUnknownAssetDefinition } from "./CoreAssetCreateUnknown.js";
 import { createTextureAssetDefinition } from "./CoreAssetCreateTexture.js";
-import { detectPotentialAssets } from "./CoreAssetAutoDetect.js";
 import { ConversionChecksumSystem } from "../conversion/CoreConversionChecksumSystem.js";
 import { ConversionAgentSystem } from "../conversion/CoreConversionAgentSystem.js";
 import { existsSync } from "fs";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { timeMillisAsync } from "mod_companion_shared/SharedTiming.js";
+import { FileBrowserSystem } from "../CoreFileBrowserSystem.js";
 
 let assetMap: Map<Shared.Asset.AssetId, Shared.Asset.Asset> = new Map();
 let potentialAssets: Shared.Asset.Asset[] = [];
 
+let assetRescanNotifyFunc: Shared.Asset.AssetRescanNotifyFunc | undefined = undefined;
 export const AssetRepositorySystem = {
+    initSystem(notifyFunc?: Shared.Asset.AssetRescanNotifyFunc): boolean {
+        assetRescanNotifyFunc = notifyFunc;
+        FileBrowserSystem.getIndexDoneEvent()?.on((payload) => {
+            AssetRepositorySystem.rescan(payload);
+        });
+        return true;
+    },
+
     getAssetMap(): Readonly<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
         return assetMap;
     },
 
-    async rescan(): Promise<Shared.Asset.AssetRescanEvent> {
-        Logger.info(Shared.Log.Channel.Generic, "Rescanning asset...");
+    async rescan(index?: Map<string, Shared.FileListing.FileEntry[]>): Promise<void> {
+        Logger.info(Shared.Log.Channel.Assets, "Rescanning assets...");
 
+        const fileIndex = index ?? FileBrowserSystem.getIndex();
         const { millis } = await timeMillisAsync(async () => {
-            const contentTree = await scanContentTree();
-            assetMap = await AssetRepositorySystem.buildAssets(contentTree);
-            potentialAssets = detectPotentialAssets(contentTree);
+            assetMap = await _buildAssets(fileIndex);
+            potentialAssets = _detectPotentialAssets(fileIndex.keys());
             await ConversionChecksumSystem.initChecksums(assetMap);
             await ConversionAgentSystem.initStates(assetMap);
         });
 
-        return { assets: assetMap, potentialAssets, totalTimeMillis: millis };
+        Logger.info(Shared.Log.Channel.Assets, "Asset rescan done. Found", assetMap.size, "assets in", millis, "ms");
+        assetRescanNotifyFunc?.({ assets: assetMap, potentialAssets, totalTimeMillis: millis });
     },
 
     generateAssetId(): string {
@@ -161,38 +170,70 @@ export const AssetRepositorySystem = {
             return false;
         }
     },
+};
 
-    async buildAssets(contentTree: string[]): Promise<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
-        const assets = new Map<Shared.Asset.AssetId, Shared.Asset.Asset>();
-        const rootPath = ConfigSystem.getAppConfig().rootPath;
+async function _buildAssets(
+    index: Map<string, Shared.FileListing.FileEntry[]>,
+): Promise<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
+    const assets = new Map<Shared.Asset.AssetId, Shared.Asset.Asset>();
+    const rootPath = ConfigSystem.getAppConfig().rootPath;
 
-        for (const filePath of contentTree) {
-            if (!Shared.Asset.isMcaFile(filePath)) continue;
+    for (const filePaths of index.values()) {
+        for (const filePath of filePaths) {
+            if (!Shared.Asset.isMcaFile(filePath.path)) continue;
 
-            const definition = await _readMcaFile(filePath, rootPath);
+            const definition = await _readMcaFile(filePath.path, rootPath);
             if (definition === undefined) {
-                console.warn(`Asset definition file ${filePath} is invalid and will be ignored`);
+                Logger.warning(
+                    Shared.Log.Channel.Assets,
+                    "Asset definition file",
+                    filePath,
+                    "is invalid and will be ignored",
+                );
                 continue;
             }
 
             const duplicateOther = assets.get(definition.id);
             if (duplicateOther !== undefined) {
-                console.warn(
-                    `Asset definition file ${filePath} has the same id as ${duplicateOther.def.id} (${definition.id}) and will be ignored`,
+                Logger.warning(
+                    Shared.Log.Channel.Assets,
+                    "Asset definition file",
+                    filePath,
+                    "has the same id as",
+                    duplicateOther.def.id,
+                    definition.id,
+                    "and will be ignored",
                 );
                 continue;
             }
 
             const asset: Shared.Asset.Asset = {
                 def: definition,
-                defFilePath: filePath,
+                defFilePath: filePath.path,
             };
             assets.set(definition.id, asset);
         }
+    }
 
-        return assets;
-    },
-};
+    return assets;
+}
+
+function _detectPotentialAssets(contentTree: Iterable<string>): Shared.Asset.Asset[] {
+    const assets: Shared.Asset.Asset[] = [];
+    for (const file of contentTree) {
+        const isTexture = Shared.FileEndings.isTextureFileEnding(path.extname(file));
+        if (isTexture) {
+            if (!file.includes("_hr")) continue;
+            if (AssetRepositorySystem.getAssetFromFile(file) !== undefined) continue;
+
+            assets.push({
+                defFilePath: file,
+                def: createTextureAssetDefinition(file),
+            });
+        }
+    }
+    return assets;
+}
 
 async function _readMcaFile(filePath: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
     const fullPath = path.join(fileRootPath, filePath);
@@ -200,15 +241,15 @@ async function _readMcaFile(filePath: string, fileRootPath: string): Promise<Sha
     const unk = JSON.parse(text);
 
     if (unk.type === undefined) {
-        console.warn(`Asset definition file ${filePath} has no type`);
+        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", filePath, "has no type");
         return undefined;
     }
     if (unk.id === undefined) {
-        console.warn(`Asset definition file ${filePath} has no id`);
+        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", filePath, "has no id");
         return undefined;
     }
     if (!Shared.Asset.isValidAssetType(unk.type)) {
-        console.warn(`Asset definition file ${filePath} has invalid type ${unk.type}`);
+        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", filePath, "has invalid type ", unk.type);
         return undefined;
     }
 

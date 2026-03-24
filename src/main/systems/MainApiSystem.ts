@@ -4,7 +4,7 @@ import { AppApi } from "../api/MainAppApi.js";
 import { registerMapCompileApi } from "../api/MainMapCompileApi.js";
 import { registerAppConfigApi } from "../api/MainAppConfigApi.js";
 import { registerMapTimeReportApi } from "../api/MainMapTimeReportApi.js";
-import { registerAssetApi } from "../api/MainAssetApi.js";
+import { AssetRepositoryApi } from "../api/MainAssetApi.js";
 import { registerImageMetaApi } from "../api/MainImageMetaApi.js";
 import { registerConversionApi } from "../api/MainConversionApi.js";
 import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
@@ -27,7 +27,7 @@ const apis: (() => boolean)[] = [
     registerMapCompileApi,
     registerMapTimeReportApi,
     FileBrowserApi.register,
-    registerAssetApi,
+    AssetRepositoryApi.register,
     registerImageMetaApi,
     registerConversionApi,
     registerHotReloadApi,

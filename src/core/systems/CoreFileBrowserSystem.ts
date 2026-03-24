@@ -5,24 +5,28 @@ import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { createWorker, Worker } from "../helpers/CoreWorkerHelper.js";
+import { createEvent, Event } from "../helpers/CoreEventHelper.js";
 
 let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
 let currentPathRelative: string | undefined = undefined;
 
-const prefillIndex: Map<string, Shared.FileListing.FileEntry[]> = new Map();
+const index: Map<string, Shared.FileListing.FileEntry[]> = new Map();
 
 let dirUpdatedNotifyFunc: Shared.FileListing.DirUpdatedNotifyFunc | undefined = undefined;
 
 function _handleIndexMessage(result: { dir: string; entries: Shared.FileListing.FileEntry[] }) {
-    prefillIndex.set(result.dir, result.entries);
-    dirUpdatedNotifyFunc?.(result.dir, result.entries);
+    index.set(result.dir, result.entries);
+    // dirUpdatedNotifyFunc?.(result.dir, result.entries);
 }
+
+let indexDoneEvent: Event<Map<string, Shared.FileListing.FileEntry[]>> | undefined = undefined;
 
 export const FileBrowserSystem = {
     initSystem(notifyFunc?: Shared.FileListing.DirUpdatedNotifyFunc) {
         dirUpdatedNotifyFunc = notifyFunc;
         this.indexFiles();
+        indexDoneEvent = createEvent();
 
         watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
 
@@ -44,6 +48,9 @@ export const FileBrowserSystem = {
         watcher.on("change", _change);
         watcher.on("unlink", _change);
         return true;
+    },
+    getIndexDoneEvent() {
+        return indexDoneEvent;
     },
     setCurrentDir(currentDir: string) {
         const config = ConfigSystem.getAppConfig();
@@ -75,8 +82,8 @@ export const FileBrowserSystem = {
         return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
     },
 
-    getPrefillIndex(): Map<string, Shared.FileListing.FileEntry[]> {
-        return prefillIndex;
+    getIndex(): Map<string, Shared.FileListing.FileEntry[]> {
+        return index;
     },
 
     async listFiles(
@@ -125,22 +132,24 @@ export const FileBrowserSystem = {
     },
 
     indexFiles() {
+        Logger.info(Shared.Log.Channel.FileBrowser, "Indexing files...");
         const timeStart = new Date().getTime();
         const worker = createWorker(Worker.IndexFilesystem, ConfigSystem.getAppConfig().rootPath);
         worker.on("message", _handleIndexMessage);
         worker.on("exit", () => {
             const timeEnd = new Date().getTime();
-            const totalEntries = prefillIndex.values().reduce((sum, a) => sum + a.length, 0);
+            const totalEntries = index.values().reduce((sum, a) => sum + a.length, 0);
             Logger.info(
                 Shared.Log.Channel.FileBrowser,
                 "Indexing done. Found",
                 totalEntries,
                 "entries in",
-                prefillIndex.size,
+                index.size,
                 "directories. Took",
                 timeEnd - timeStart,
                 "ms",
             );
+            indexDoneEvent?.call(index);
         });
     },
 };

@@ -107,6 +107,8 @@ export interface AssetRescanEvent {
     totalTimeMillis?: number;
 }
 
+export type AssetRescanNotifyFunc = (event: AssetRescanEvent) => void;
+
 export interface AssetAddedEvent {
     assets: Asset[];
 }

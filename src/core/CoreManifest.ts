@@ -13,7 +13,6 @@ import { ConversionAgentSystem } from "./systems/conversion/CoreConversionAgentS
 import { ConversionChecksumSystem } from "./systems/conversion/CoreConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./systems/conversion/CoreConversionEventSystem.js";
 
-import * as AssetAutoDetect from "./systems/asset/CoreAssetAutoDetect.js";
 import * as AssetInferType from "./systems/asset/CoreAssetCreateInferType.js";
 import * as AssetCreateTexture from "./systems/asset/CoreAssetCreateTexture.js";
 import * as AssetCreateUnknown from "./systems/asset/CoreAssetCreateUnknown.js";
@@ -41,7 +40,6 @@ export {
     ConversionAgentSystem,
     ConversionChecksumSystem,
     ConversionEventSystem,
-    AssetAutoDetect,
     AssetInferType,
     AssetCreateTexture,
     AssetCreateUnknown,

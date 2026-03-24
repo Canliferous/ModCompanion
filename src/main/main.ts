@@ -4,7 +4,7 @@ import { initApiSystem } from "./systems/MainApiSystem.js";
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 import { notifyLogFromMain } from "./api/MainLoggerApi.js";
-import { notifyAssetsUpdated } from "./api/MainAssetApi.js";
+import { AssetRepositoryApi } from "./api/MainAssetApi.js";
 import { notifyAssetGroupsUpdated } from "./api/MainAssetGroupsApi.js";
 import { notifyConversionsUpdated } from "./api/MainConversionApi.js";
 import { notifyMapCompileLog, notifyMapCompileProgress, notifyMapQueueUpdated } from "./api/MainMapCompileApi.js";
@@ -18,6 +18,11 @@ interface System {
 const systems: System[] = [
     { name: "Log", initFunction: () => Core.Logger.initSystem(notifyLogFromMain) },
     { name: "Config", initFunction: Core.ConfigSystem.initConfigSystem },
+    { name: "FileBrowser", initFunction: () => Core.FileBrowserSystem.initSystem(FileBrowserApi.notifyDirUpdated) },
+    {
+        name: "AssetRepository",
+        initFunction: () => Core.AssetRepositorySystem.initSystem(AssetRepositoryApi.notifyAssetsRescanned),
+    },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: WindowSystem.initSystem },
     {
@@ -29,13 +34,15 @@ const systems: System[] = [
                 progressFunc: notifyMapCompileProgress,
             }),
     },
-    { name: "AssetWatcher", initFunction: () => Core.AssetWatcherSystem.initSystem(notifyAssetsUpdated) },
+    {
+        name: "AssetWatcher",
+        initFunction: () => Core.AssetWatcherSystem.initSystem(AssetRepositoryApi.notifyAssetsUpdated),
+    },
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: () => Core.ConversionAgentSystem.initSystem(notifyConversionsUpdated) },
     { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
-    { name: "FileBrowser", initFunction: () => Core.FileBrowserSystem.initSystem(FileBrowserApi.notifyDirUpdated) },
 ];
 
 async function startSystems() {

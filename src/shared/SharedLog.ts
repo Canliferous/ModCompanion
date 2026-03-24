@@ -1,5 +1,3 @@
-import * as Shared from "./SharedManifest.js";
-
 export const MAX_MESSAGES = 500;
 
 export enum Channel {

@@ -56,7 +56,8 @@ declare global {
             };
 
             asset: {
-                rescan: () => Promise<Shared.Asset.AssetRescanEvent>;
+                rescan: () => void;
+                subscribeRescanned: (callback: (event: Shared.Asset.AssetRescanEvent) => void) => IpcRenderer;
                 subscribeAdded: (callback: (event: Shared.Asset.AssetAddedEvent) => void) => IpcRenderer;
                 subscribeUpdated: (callback: (event: Shared.Asset.AssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
