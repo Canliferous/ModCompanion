@@ -10,7 +10,6 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
     const summary = ref<Shared.Conversion.SharedConversionSummary>({ currentStatus: "idle", totalSum: 0 });
 
     window.electronAPI.conversion.subscribeUpdated((event) => {
-        console.log(event);
         const time1 = event.conversionsLastChangeTime?.getTime();
         if (time1 !== undefined && conversionsLastChangeTime.value !== time1) {
             conversions.value = event.conversions;
@@ -46,8 +45,8 @@ export const useAssetConversionStore = defineStore("asset-conversion", () => {
         activeEvent.value = event;
     }
 
-    // _fetchState();
-    // window.electronAPI.conversion.startAgent();
+    _fetchState();
+    window.electronAPI.conversion.startAgent();
 
     return { conversions, conversionEvents: events, activeEvent, summary, getState, enqueue, enqueueAll, setActive };
 });
