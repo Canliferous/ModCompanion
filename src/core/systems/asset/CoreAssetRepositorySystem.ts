@@ -37,12 +37,13 @@ export const AssetRepositorySystem = {
         const { millis } = await timeMillisAsync(async () => {
             assetMap = await _buildAssets(fileIndex);
             potentialAssets = _detectPotentialAssets(fileIndex.keys());
-            await ConversionChecksumSystem.initChecksums(assetMap);
-            await ConversionAgentSystem.initStates(assetMap);
         });
 
         Logger.info(Shared.Log.Channel.Assets, "Asset rescan done. Found", assetMap.size, "assets in", millis, "ms");
         assetRescanNotifyFunc?.({ assets: assetMap, potentialAssets, totalTimeMillis: millis });
+
+        await ConversionChecksumSystem.initChecksums(assetMap);
+        await ConversionAgentSystem.initStates(assetMap);
     },
 
     generateAssetId(): string {
