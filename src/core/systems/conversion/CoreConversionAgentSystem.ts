@@ -231,11 +231,11 @@ function _onJobPromiseDone(id: Shared.Asset.AssetId, stateAfter: Shared.Conversi
 }
 
 function _setState(id: Shared.Asset.AssetId, state: Shared.Conversion.State, noHistory = false) {
+    lastChangeTime = new Date();
     if (conversionsMap.has(id)) {
         conversionsMap.get(id)!.state = state;
     } else {
         conversionsMap.set(id, { assetId: id, state });
-        lastChangeTime = new Date();
     }
 
     if (!noHistory) {

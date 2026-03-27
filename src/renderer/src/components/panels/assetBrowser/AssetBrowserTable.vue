@@ -143,6 +143,7 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
     {
         id: "name",
         label: "Name",
+        size: "minmax(0, 1fr)",
         cell: (entry, depth) => {
             if (isAssetBrowserAssetEntry(entry)) {
                 return h(AssetBrowserCellAssetName, {
@@ -164,11 +165,11 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
 
             return undefined;
         },
-        size: "minmax(0, 1fr)",
     },
     {
         id: "converted",
         label: "Conv",
+        size: "auto",
         cell: (entry) => {
             if (isAssetBrowserAssetEntry(entry)) {
                 const state = conversionStore.getState(entry.assetDef.id);
@@ -180,7 +181,6 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
                 return h(AssetBrowserCellConverted, { state });
             }
         },
-        size: "auto",
     },
 ];
 
