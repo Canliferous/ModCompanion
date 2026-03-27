@@ -1,5 +1,5 @@
 <template>
-    <slot :visible="visible" />
+    <slot :visible="visible" v-bind="attrs" />
 </template>
 
 <script setup lang="ts">
@@ -8,6 +8,8 @@ import { PanelComponentId } from "~/helper/PanelComponents.js";
 
 const inj = inject(AssetInspectorPanelsInjectKey);
 const props = defineProps<{ panelId: PanelComponentId }>();
+
+const attrs = useAttrs();
 
 const visible = computed(() => (inj !== undefined ? (inj.visiblePanels.get(props.panelId) ?? false) : false));
 
