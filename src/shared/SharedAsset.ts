@@ -69,12 +69,12 @@ export interface AssociatedFilesEntry {
 export const AssociatedFilesEntries: AssociatedFilesEntry[] = [
     {
         field: "substanceDesigner",
-        name: "Substance Designer",
+        name: "Designer",
         icon: "substance:designer",
     },
     {
         field: "substancePainter",
-        name: "Substance Painter",
+        name: "Painter",
         icon: "substance:painter",
     },
     {
