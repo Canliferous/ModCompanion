@@ -14,11 +14,12 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     const activeEntry = ref<Shared.FileListing.FileEntry | undefined>(undefined);
     const searchTerm = ref("");
     const searchEntries = useFileFilter(fsEntries, searchTerm, 1000);
-    const entriesToShow = computed(() =>
-        Shared.FileListing.sortFileEntries(
-            searchTerm.value.length > 0 ? searchEntries.value : (currentEntries.value ?? []),
-        ),
-    );
+    const entriesToShow = computed(() => {
+        const entries = searchTerm.value.length > 0 ? searchEntries.value : (currentEntries.value ?? []);
+        const { millis, result } = Shared.FileListing.sortFileEntries(entries);
+        // Logger.debug(Shared.Log.Channel.FileBrowser, "Sorting file entries took", millis, "ms");
+        return result;
+    });
 
     watch(currentDir, refreshDir);
 

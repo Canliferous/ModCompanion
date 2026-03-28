@@ -1,4 +1,5 @@
 import * as Shared from "./SharedManifest.js";
+import { timeMillis } from "./SharedTiming.js";
 
 export interface FileEntry {
     name: string;
@@ -41,14 +42,16 @@ export function isIgnoredPathName(name: string): boolean {
     );
 }
 
-export function sortFileEntries(entries: FileEntry[]): Shared.FileListing.FileEntry[] {
-    return entries.sort((x, y) => {
-        const file1 = x.isFile;
-        const file2 = y.isFile;
-        if (file1 !== file2) {
-            return file1 ? 1 : -1;
-        } else {
-            return x.name.localeCompare(y.name);
-        }
-    });
+export function sortFileEntries(entries: FileEntry[]) {
+    return timeMillis(() =>
+        entries.toSorted((x, y) => {
+            const file1 = x.isFile;
+            const file2 = y.isFile;
+            if (file1 !== file2) {
+                return file1 ? 1 : -1;
+            } else {
+                return x.name.localeCompare(y.name);
+            }
+        }),
+    );
 }
