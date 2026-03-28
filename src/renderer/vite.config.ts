@@ -1,12 +1,13 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import vueDevtools from "vite-plugin-vue-devtools";
 import ui from "@nuxt/ui/vite";
 import uiconfig from "./uiconfig.js";
 import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config
 export default defineConfig({
-    plugins: [vue(), ui(uiconfig())],
+    plugins: [vue(), vueDevtools(), ui(uiconfig())],
     base: "./",
     root: "src",
     build: {
@@ -18,11 +19,11 @@ export default defineConfig({
                 chunkFileNames: `chunks/[name].js`,
                 assetFileNames: `assets/[name][extname]`,
             },
-        }
+        },
     },
     resolve: {
         alias: {
-            "~": fileURLToPath(new URL("./src", import.meta.url))
+            "~": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
 });
