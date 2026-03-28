@@ -1,6 +1,6 @@
 <template>
-    <div class="flex items-center gap-1">
-        <div v-if="depth !== undefined" :style="`width: ${depth + 1}rem`" />
+    <div class="grid items-center gap-1" :style="columnStyle">
+        <div v-if="depth !== undefined" />
         <MAssetTypeIcon :type />
         <div
             class="text-sm text-neutral-300 tracking-wide text-ellipsis overflow-hidden text-left"
@@ -31,6 +31,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     stopEditing: [void];
 }>();
+const columnStyle = computed(() => `grid-template-columns: ${(props.depth ?? 0) + 1}rem auto 1fr`);
 
 function handleNameChanged(newName: string) {
     const asset = useAssetListStore().getAssetById(props.id);
