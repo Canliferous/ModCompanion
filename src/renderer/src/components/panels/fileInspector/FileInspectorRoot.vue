@@ -3,7 +3,7 @@
         <template #header>
             <div v-if="entry" class="grid gap-2">
                 <div class="flex gap-2 w-full items-center">
-                    <UIcon class="size-10 text-blue-300" :name="AppDesign.Icons.FsFile" />
+                    <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
                         <div>{{ entry.name }}</div>
                         <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
@@ -54,6 +54,7 @@ import {
     getFileInspectorComponent,
     getFileInspectorFromType,
     getFileType,
+    getFileTypeIcon,
     getFileTypeName,
 } from "~/components/panels/fileInspector/FileInspectorHelper.js";
 import pathe from "pathe";

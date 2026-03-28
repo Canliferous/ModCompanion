@@ -17,7 +17,7 @@ let dirUpdatedNotifyFunc: Shared.FileListing.DirUpdatedNotifyFunc | undefined = 
 
 function _handleIndexMessage(result: { dir: string; entries: Shared.FileListing.FileEntry[] }) {
     index.set(result.dir, result.entries);
-    // dirUpdatedNotifyFunc?.(result.dir, result.entries);
+    dirUpdatedNotifyFunc?.(result.dir, result.entries);
 }
 
 let indexDoneEvent: Event<Map<string, Shared.FileListing.FileEntry[]>> | undefined = undefined;

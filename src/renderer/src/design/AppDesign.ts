@@ -37,6 +37,8 @@ export const Icons = {
     FsFolder: "mingcute:folder-fill",
     FsFolderOpen: "mingcute:folder-open-fill",
     FsFile: "mingcute:file-fill",
+    FsImage: "mingcute:pic-fill",
+    FsCode: "mingcute:file-code-fill",
 
     ActionAdd: "mingcute:add-line",
     ActionRemove: "mingcute:minimize-line",

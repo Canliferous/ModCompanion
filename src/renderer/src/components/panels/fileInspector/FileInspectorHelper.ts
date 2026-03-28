@@ -1,7 +1,8 @@
 import pathe from "pathe";
+import { DefineComponent } from "vue";
+import { AppDesign } from "~/design/AppDesign.js";
 import FileInspectorModelPreview from "~/components/panels/fileInspector/FileInspectorModelPreview.vue";
 import FileInspectorImagePreview from "~/components/panels/fileInspector/FileInspectorImagePreview.vue";
-import { DefineComponent } from "vue";
 import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";
 import FileInspectorMapPreview from "~/components/panels/fileInspector/FileInspectorMapPreview.vue";
 
@@ -42,6 +43,20 @@ const FileTypeNames: Record<FileType, string> = {
 
 export function getFileTypeName(fileType: FileType): string {
     return FileTypeNames[fileType];
+}
+
+export function getFileTypeIcon(fileType: FileType): string {
+    switch (fileType) {
+        case FileType.ImagePng:
+        case FileType.ImageJpg:
+            return AppDesign.Icons.FsImage;
+        case FileType.TextMca:
+            return AppDesign.Icons.Asset;
+        case FileType.TextQc:
+            return AppDesign.Icons.FsCode;
+        default:
+            return AppDesign.Icons.FsFile;
+    }
 }
 
 export function getFileType(fileName: string): FileType {
