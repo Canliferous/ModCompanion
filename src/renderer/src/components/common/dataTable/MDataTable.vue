@@ -14,7 +14,6 @@
                     :entry="item.entry"
                     :columns="props.columns"
                     :draggable="draggable"
-                    :neutral-highlight="neutralHighlight"
                     :depth="item.depth"
                     @drag-start="(e) => handleDragEvent(e, idx, 'onDragStart')"
                     @drag-end="(e) => handleDragEvent(e, idx, 'onDragEnd')"
@@ -39,7 +38,6 @@ const props = defineProps<{
     rowHeight: number;
     noHeader?: boolean;
     draggable?: boolean;
-    neutralHighlight?: boolean;
     treeChildFunc?: (entry: T) => T[] | undefined;
 }>();
 

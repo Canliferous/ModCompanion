@@ -1,6 +1,6 @@
 <template>
     <button
-        class="grid col-span-full grid-cols-subgrid items-center px-1 gap-x-1 text-sm text-left cursor-pointer outline-none hover:bg-accented"
+        class="grid col-span-full grid-cols-subgrid items-center px-1 mr-1 gap-x-1 text-sm text-left cursor-pointer outline-none rounded hover:bg-accented hover:shadow transition-colors"
         :class="rowHighlightClass"
         :draggable="draggable"
         @click="handleClick"
@@ -28,7 +28,6 @@ const props = defineProps<{
     idx: number;
     columns: DataTableColumn<T>[];
     draggable?: boolean;
-    neutralHighlight?: boolean;
     depth: number;
 }>();
 
@@ -83,17 +82,10 @@ function handleEnter(event: KeyboardEvent): void {
     event.stopPropagation();
     entryAction?.onEntryActivated(props.idx);
 }
-const rowHighlightClass = computed(() =>
-    props.neutralHighlight
-        ? {
-              "bg-neutral-750 hover:bg-neutral-600": isSelected.value && !isActive.value,
-              "bg-neutral-700 hover:bg-neutral-600": isActive.value,
-          }
-        : {
-              "bg-primary-700 hover:bg-primary-500": isSelected.value && !isActive.value,
-              "bg-primary-600 hover:bg-primary-500": isActive.value,
-          },
-);
+const rowHighlightClass = computed(() => ({
+    "bg-neutral-750 hover:bg-neutral-600": isSelected.value && !isActive.value,
+    "bg-neutral-700 hover:bg-neutral-600": isActive.value,
+}));
 </script>
 
 <style scoped></style>
