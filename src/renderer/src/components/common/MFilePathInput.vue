@@ -19,6 +19,7 @@
                         :placeholder="placeholder ?? 'Choose or drop file...'"
                         class="w-full"
                         variant="none"
+                        size="sm"
                         @change="emit('change', model ?? '')"
                     />
                     <UButton
