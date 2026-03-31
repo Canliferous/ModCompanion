@@ -7,19 +7,13 @@ import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
 export function browseToFile(filePath: string): void {
-    const normalizedPath = path.join(ConfigSystem.getAppConfig().rootPath, filePath);
-
     let command: string | undefined = undefined;
 
-    if (!existsSync(normalizedPath)) {
-        Logger.info(
-            Shared.Log.Channel.FileBrowser,
-            "Browsing to file that doesn't exist, opening folder",
-            normalizedPath,
-        );
-        command = _getBrowseToDirectoryCommand(path.dirname(normalizedPath));
+    if (!existsSync(filePath)) {
+        Logger.info(Shared.Log.Channel.FileBrowser, "Browsing to file that doesn't exist, opening folder", filePath);
+        command = _getBrowseToDirectoryCommand(path.dirname(filePath));
     } else {
-        command = _getBrowseToFileSelectCommand(normalizedPath);
+        command = _getBrowseToFileSelectCommand(filePath);
     }
 
     if (command === undefined) {
@@ -28,11 +22,21 @@ export function browseToFile(filePath: string): void {
     }
 
     Logger.info(Shared.Log.Channel.FileBrowser, "Running", command);
-    child_process.exec(command, (error) => {
-        if (error) {
-            Logger.error(Shared.Log.Channel.FileBrowser, `Failed: ${error.message}`);
-        }
-    });
+    child_process.exec(
+        command,
+        {
+            env: {
+                ...process.env,
+                LANG: "en_US.UTF-8",
+                LC_ALL: "en_US.UTF-8",
+            },
+        },
+        (error) => {
+            if (error) {
+                Logger.error(Shared.Log.Channel.FileBrowser, `Failed: ${error.message}`);
+            }
+        },
+    );
 }
 
 function _getBrowseToFileSelectCommand(filePath: string): string | undefined {

@@ -76,7 +76,7 @@ function handleExplore() {
 
 function handleOpen() {
     if (fullPath.value) {
-        window.electronAPI.fileBrowser.openFile(fullPath.value);
+        window.electronAPI.fileBrowser.open(fullPath.value);
     }
 }
 </script>

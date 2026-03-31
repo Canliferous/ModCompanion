@@ -12,12 +12,17 @@
                 </div>
             </template>
             <template v-else>
-                <UInput
-                    v-model="model"
-                    :placeholder="placeholder"
-                    class="w-full"
-                    @change="emit('change', model ?? '')"
-                />
+                <UInput v-model="model" :placeholder="placeholder" class="w-full" @change="emit('change', model ?? '')">
+                    <template #leading>
+                        <slot name="input-leading" />
+                    </template>
+                    <template #default>
+                        <slot name="input-default" />
+                    </template>
+                    <template #trailing>
+                        <slot name="input-trailing" />
+                    </template>
+                </UInput>
             </template>
         </template>
     </MAcceptDrop>

@@ -6,7 +6,7 @@ import * as Shared from "mod_companion_shared";
 export function openMca(asset: Shared.Asset.Asset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    window.electronAPI.fileBrowser.openFile(pathe.join(getAppConfig().rootPath, p));
+    window.electronAPI.fileBrowser.open(pathe.join(getAppConfig().rootPath, p));
 }
 
 export function exploreToMca(asset: Shared.Asset.Asset): void {
@@ -22,5 +22,5 @@ export function browseToMca(asset: Shared.Asset.Asset): void {
 }
 
 export function openAssociatedFile(associatedFile: string): void {
-    window.electronAPI.fileBrowser.openFile(pathe.join(getAppConfig().rootPath, associatedFile));
+    window.electronAPI.fileBrowser.open(pathe.join(getAppConfig().rootPath, associatedFile));
 }

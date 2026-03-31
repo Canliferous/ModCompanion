@@ -109,7 +109,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: !allFiles,
                 onSelect() {
                     const fullPaths = pathsArray.map((p) => pathe.join(getAppConfig().rootPath, p));
-                    window.electronAPI.fileBrowser.openFile(fullPaths);
+                    window.electronAPI.fileBrowser.open(fullPaths);
                 },
             },
             {
@@ -117,7 +117,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionBrowseToFolder,
                 disabled: entries.length !== 1,
                 onSelect() {
-                    window.electronAPI.fileBrowser.browseToFile(entries[0].path);
+                    window.electronAPI.fileBrowser.browseToFile(pathe.join(getAppConfig().rootPath, entries[0].path));
                 },
             },
         ],

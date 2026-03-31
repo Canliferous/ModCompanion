@@ -16,13 +16,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_ListFilesQuery, dirPath),
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_CorrectPathQuery, dirPath),
-        launchFile: (filePath: string | string[]) =>
+        execute: (filePath: string | string[]) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_LaunchFileAction, filePath),
         setCurrentPath: (dirPath: string) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_SetCurrentPathAction, dirPath),
         browseToFile: (filePath: string) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath),
-        openFile: (filePath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenFileAction, filePath),
+        open: (filePath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenFileAction, filePath),
         subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent,

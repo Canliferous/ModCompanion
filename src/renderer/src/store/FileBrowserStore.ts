@@ -67,7 +67,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
     function onEntryActivated(entry: Shared.FileListing.FileEntry): void {
         if (entry.isFile) {
             const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
-            window.electronAPI.fileBrowser.openFile(fullPath);
+            window.electronAPI.fileBrowser.open(fullPath);
         } else {
             updateCurrentDir(entry.path);
         }

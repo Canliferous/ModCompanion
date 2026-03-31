@@ -15,10 +15,20 @@ declare global {
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileListing.SharedProjectListFilesReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
-                launchFile: (filePath: string | string[]) => void;
                 setCurrentPath: (dirPath: string) => void;
                 browseToFile: (filePath: string) => void;
-                openFile: (filePath: string | string[]) => void;
+
+                /**
+                 * Open one or more files with their default application. To execute a binaries, use launchFile
+                 * @see execute
+                 * */
+                open: (filePath: string | string[]) => void;
+
+                /**
+                 * Launches one or more executables. To open a file with its default application, use openFile
+                 * @see open
+                 */
+                execute: (filePath: string | string[]) => void;
                 subscribeDirUpdated: (
                     callback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void,
                 ) => IpcRenderer;
