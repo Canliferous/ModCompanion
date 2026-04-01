@@ -8,7 +8,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 import { getFileTypeIcon, getFileType } from "~/components/panels/fileInspector/FileInspectorHelper.js";
 
-defineProps<{ entry: Shared.FileListing.FileEntry }>();
+defineProps<{ entry: Shared.FileBrowser.FileEntry }>();
 </script>
 
 <style scoped></style>

@@ -13,27 +13,27 @@ declare global {
             };
 
             fileBrowser: {
-                listFiles: (dirPath: string) => Promise<Shared.FileListing.SharedProjectListFilesReport>;
+                listFiles: (dirPath: string) => Promise<Shared.FileBrowser.SharedProjectListFilesReport>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
                 setCurrentPath: (dirPath: string) => void;
-                browseToFile: (filePath: string) => void;
+                browseToFile: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
 
                 /**
                  * Open one or more files with their default application. To execute a binaries, use launchFile
                  * @see execute
                  * */
-                open: (filePath: string | string[]) => void;
+                open: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) => void;
 
                 /**
                  * Launches one or more executables. To open a file with its default application, use openFile
                  * @see open
                  */
-                execute: (filePath: string | string[]) => void;
+                execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) => void;
                 subscribeDirUpdated: (
-                    callback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void,
+                    callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void,
                 ) => IpcRenderer;
                 subscribeIndexUpdated: (
-                    callback: (index: Map<string, Shared.FileListing.FileEntry[]>) => void,
+                    callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void,
                 ) => IpcRenderer;
             };
 
@@ -51,7 +51,7 @@ declare global {
             };
 
             config: {
-                get: () => Promise<Shared.AppConfig.IAppConfig>;
+                get: () => Promise<Shared.AppConfig.AppConfig>;
             };
 
             map: {

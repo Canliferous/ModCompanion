@@ -3,16 +3,18 @@
         <template #hint />
         <div class="grid gap-1">
             <template v-for="(file, i) in files" :key="i">
-                <EditControlAssetFileListEntry
-                    :entry="file"
-                    :dir
-                    @remove="() => handleRemove(i)"
-                    @changed="(newText) => handleChanged(i, newText)"
-                />
+                <MFilePathInput :model-value="file" :base="base" @change="(newText) => handleChanged(i, newText)">
+                    <UButton
+                        size="sm"
+                        variant="link"
+                        :icon="AppDesign.Icons.ActionRemove"
+                        @click="() => handleRemove(i)"
+                    />
+                </MFilePathInput>
             </template>
 
             <div v-if="files.length < (maxItems ?? Number.MAX_VALUE)" class="grid grid-cols-[1fr_auto] gap-1">
-                <MDropArea @change="handleDrop"> Drop files to add </MDropArea>
+                <MDropArea @change="handleDrop">Drop files to add</MDropArea>
                 <UButton :icon="AppDesign.Icons.ActionAdd" class="justify-self-end" @click="handleAdd" />
             </div>
         </div>
@@ -20,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import EditControlAssetFileListEntry from "~/components/panels/assetInspector/generalPanel/controls/EditControlAssetFileListEntry.vue";
 import { AssetInspectorGeneralInjectKey } from "~/components/panels/assetInspector/generalPanel/AssetInspectorGeneral.model.js";
 import { getGameOrContentRelativePath, isGameOrContentRelativePath } from "~/helper/SourceFs.js";
 import MDropArea from "~/components/common/MDropArea.vue";
@@ -30,9 +31,9 @@ import * as Shared from "mod_companion_shared";
 const props = defineProps<{
     asset: Shared.Asset.Asset;
     field: keyof Shared.Asset.AssetDefFileArrays;
-    dir: string;
     maxItems?: number;
     heading: string;
+    base: Shared.FileBrowser.PathBase;
 }>();
 
 const inj = inject(AssetInspectorGeneralInjectKey);

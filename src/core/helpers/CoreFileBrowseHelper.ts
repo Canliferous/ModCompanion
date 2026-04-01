@@ -6,14 +6,15 @@ import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
-export function browseToFile(filePath: string): void {
+export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBase): void {
+    const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
     let command: string | undefined = undefined;
 
-    if (!existsSync(filePath)) {
-        Logger.info(Shared.Log.Channel.FileBrowser, "Browsing to file that doesn't exist, opening folder", filePath);
-        command = _getBrowseToDirectoryCommand(path.dirname(filePath));
+    if (!existsSync(fullPath)) {
+        Logger.info(Shared.Log.Channel.FileBrowser, "Browsing to file that doesn't exist, opening folder", fullPath);
+        command = _getBrowseToDirectoryCommand(path.dirname(fullPath));
     } else {
-        command = _getBrowseToFileSelectCommand(filePath);
+        command = _getBrowseToFileSelectCommand(fullPath);
     }
 
     if (command === undefined) {
@@ -84,18 +85,18 @@ function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {
     return undefined;
 }
 
-export function openFile(filePath: string): void {
-    const normalizedPath = path.resolve(filePath);
+export function openFile(filePath: string, base?: Shared.FileBrowser.PathBase): void {
+    const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
     const platform = os.platform();
 
     let command = "";
 
     if (platform === "win32") {
-        command = `"${normalizedPath}"`;
+        command = `"${fullPath}"`;
     } else if (platform === "darwin") {
-        command = `open "${normalizedPath}"`;
+        command = `open "${fullPath}"`;
     } else if (platform === "linux") {
-        command = `xdg-open "${normalizedPath}"`;
+        command = `xdg-open "${fullPath}"`;
     } else {
         Logger.error(Shared.Log.Channel.FileBrowser, `Unsupported platform: ${platform}`);
         return;
@@ -106,4 +107,26 @@ export function openFile(filePath: string): void {
             Logger.error(Shared.Log.Channel.FileBrowser, `Failed to open: ${error.message}`);
         }
     });
+}
+
+export function executeFile(file: string, base?: Shared.FileBrowser.PathBase): void {
+    let p = Shared.FileBrowser.makeAbsolute(file, base, ConfigSystem.getAppConfig());
+
+    Logger.info(Shared.Log.Channel.FileBrowser, "Executing file", p);
+
+    try {
+        child_process.execFile(p, { shell: true }, (error, stdout, stderr) => {
+            if (error) {
+                Logger.warning(Shared.Log.Channel.FileBrowser, error);
+            }
+            if (stdout) {
+                Logger.info(Shared.Log.Channel.FileBrowser, stdout);
+            }
+            if (stderr) {
+                Logger.warning(Shared.Log.Channel.FileBrowser, stderr);
+            }
+        });
+    } catch (e) {
+        Logger.warning(Shared.Log.Channel.FileBrowser, e);
+    }
 }

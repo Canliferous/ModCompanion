@@ -30,7 +30,7 @@ export const AssetRepositorySystem = {
         return assetMap;
     },
 
-    async rescan(index?: Map<string, Shared.FileListing.FileEntry[]>): Promise<void> {
+    async rescan(index?: Map<string, Shared.FileBrowser.FileEntry[]>): Promise<void> {
         Logger.info(Shared.Log.Channel.Assets, "Rescanning assets...");
 
         const fileIndex = index ?? FileBrowserSystem.getIndex();
@@ -174,7 +174,7 @@ export const AssetRepositorySystem = {
 };
 
 async function _buildAssets(
-    index: Map<string, Shared.FileListing.FileEntry[]>,
+    index: Map<string, Shared.FileBrowser.FileEntry[]>,
 ): Promise<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
     const assets = new Map<Shared.Asset.AssetId, Shared.Asset.Asset>();
     const rootPath = ConfigSystem.getAppConfig().rootPath;

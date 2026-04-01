@@ -6,10 +6,10 @@ import * as Shared from "mod_companion_shared";
 async function indexFiles(startDir: string): Promise<void> {
     async function walkFolder(dir: string, startDirLen: number): Promise<void> {
         const paths = await fs.readdir(dir);
-        const entries: Shared.FileListing.FileEntry[] = [];
+        const entries: Shared.FileBrowser.FileEntry[] = [];
 
         for (const p of paths) {
-            if (Shared.FileListing.isIgnoredPathName(p)) continue;
+            if (Shared.FileBrowser.isIgnoredPathName(p)) continue;
             const fullPath = path.join(dir, p);
             const stat = await fs.stat(fullPath);
 

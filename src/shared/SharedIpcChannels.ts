@@ -7,10 +7,10 @@ export const Channels = {
 
     FileBrowser_ListFilesQuery: "filebrowser_list_files",
     FileBrowser_CorrectPathQuery: "filebrowser_correct_path",
-    FileBrowser_LaunchFileAction: "filebrowser_launch_file",
+    FileBrowser_ExecuteAction: "filebrowser_execute",
     FileBrowser_SetCurrentPathAction: "filebrowser_set_current_path",
     FileBrowser_BrowseToFileAction: "filebrowser_browse_to_file",
-    FileBrowser_OpenFileAction: "filebrowser_open_file",
+    FileBrowser_OpenAction: "filebrowser_open",
     FileBrowser_DirUpdatedEvent: "filebrowser_update_dir",
     FileBrowser_IndexUpdatedEvent: "filebrowser_update_index",
 

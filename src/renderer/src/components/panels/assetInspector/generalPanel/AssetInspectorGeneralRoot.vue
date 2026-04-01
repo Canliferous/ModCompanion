@@ -12,13 +12,18 @@
                 <EditControlAssetDisplayName :asset="asset" />
             </UFormField>
 
-            <EditControlAssetFileList heading="Content Files" :asset="asset" field="contentFiles" dir="content" />
+            <EditControlAssetFileList
+                heading="Content Files"
+                :asset="asset"
+                field="contentFiles"
+                :base="Shared.FileBrowser.PathBases.ContentRelative"
+            />
             <EditControlAssetFileList
                 heading="Game Files"
                 :asset="asset"
                 field="gameFiles"
-                dir="game"
                 :max-items="maxGameFiles"
+                :base="Shared.FileBrowser.PathBases.GameRelative"
             />
 
             <UFormField label="Associated Files" class="col-span-2">

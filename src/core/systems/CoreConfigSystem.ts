@@ -21,10 +21,10 @@ interface ConfigFile {
     mapPresets?: Shared.Map.SharedMapPresets;
 }
 
-let config: Shared.AppConfig.IAppConfig = null!;
+let config: Shared.AppConfig.AppConfig = null!;
 
 export const ConfigSystem = {
-    getAppConfig(): Shared.AppConfig.IAppConfig {
+    getAppConfig(): Shared.AppConfig.AppConfig {
         return config;
     },
 
@@ -44,7 +44,7 @@ export const ConfigSystem = {
     },
 };
 
-function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.IAppConfig | undefined {
+function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.AppConfig | undefined {
     if (!c.root) {
         return undefined;
     }

@@ -45,15 +45,17 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 import { useGlobalDragging } from "~/composables/useGlobalDragging.js";
-import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import * as Shared from "mod_companion_shared";
 
 const model = defineModel<string>({ required: false });
 const emit = defineEmits<{ change: [string] }>();
-defineProps<{ placeholder?: string }>();
+
+const props = defineProps<{ placeholder?: string; base?: Shared.FileBrowser.PathBase }>();
+
 const { isDragging } = useGlobalDragging();
 
-const fullFilePath = computed(() => pathe.join(getAppConfig().rootPath, model.value ?? ""));
+const fullFilePath = computed(() => Shared.FileBrowser.makeAbsolute(model.value ?? "", props.base, getAppConfig()));
 
 function handleBrowse(): void {
     window.electronAPI.fileBrowser.browseToFile(fullFilePath.value);

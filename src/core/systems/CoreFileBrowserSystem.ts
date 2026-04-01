@@ -11,19 +11,19 @@ let watcher: FSWatcher | undefined;
 let currentPathAbsolute: string | undefined = undefined;
 let currentPathRelative: string | undefined = undefined;
 
-const index: Map<string, Shared.FileListing.FileEntry[]> = new Map();
+const index: Map<string, Shared.FileBrowser.FileEntry[]> = new Map();
 
-let dirUpdatedNotifyFunc: Shared.FileListing.DirUpdatedNotifyFunc | undefined = undefined;
+let dirUpdatedNotifyFunc: Shared.FileBrowser.DirUpdatedNotifyFunc | undefined = undefined;
 
-function _handleIndexMessage(result: { dir: string; entries: Shared.FileListing.FileEntry[] }) {
+function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.FileEntry[] }) {
     index.set(result.dir, result.entries);
     dirUpdatedNotifyFunc?.(result.dir, result.entries);
 }
 
-let indexDoneEvent: Event<Map<string, Shared.FileListing.FileEntry[]>> | undefined = undefined;
+let indexDoneEvent: Event<Map<string, Shared.FileBrowser.FileEntry[]>> | undefined = undefined;
 
 export const FileBrowserSystem = {
-    initSystem(notifyFunc?: Shared.FileListing.DirUpdatedNotifyFunc) {
+    initSystem(notifyFunc?: Shared.FileBrowser.DirUpdatedNotifyFunc) {
         dirUpdatedNotifyFunc = notifyFunc;
         this.indexFiles();
         indexDoneEvent = createEvent();
@@ -37,7 +37,7 @@ export const FileBrowserSystem = {
             }
 
             const result = await FileBrowserSystem.listFiles(currentPathAbsolute);
-            if (result.type !== Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
+            if (result.type !== Shared.FileBrowser.SharedProjectListFilesReportTypes.Success) {
                 return;
             }
 
@@ -82,27 +82,27 @@ export const FileBrowserSystem = {
         return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
     },
 
-    getIndex(): Map<string, Shared.FileListing.FileEntry[]> {
+    getIndex(): Map<string, Shared.FileBrowser.FileEntry[]> {
         return index;
     },
 
     async listFiles(
         dirPath: string,
         resultBaseRoot?: string,
-    ): Promise<Shared.FileListing.SharedProjectListFilesReport> {
-        if (!this.isProjectPath(dirPath)) return { type: Shared.FileListing.SharedProjectListFilesReportTypes.Invalid };
+    ): Promise<Shared.FileBrowser.SharedProjectListFilesReport> {
+        if (!this.isProjectPath(dirPath)) return { type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Invalid };
 
         let paths: string[] = [];
         try {
             paths = await fs.readdir(dirPath);
         } catch (e) {
             console.warn(e);
-            return { type: Shared.FileListing.SharedProjectListFilesReportTypes.Invalid };
+            return { type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Invalid };
         }
-        const entries: Shared.FileListing.FileEntry[] = [];
+        const entries: Shared.FileBrowser.FileEntry[] = [];
 
         for (const p of paths) {
-            if (Shared.FileListing.isIgnoredPathName(p)) continue;
+            if (Shared.FileBrowser.isIgnoredPathName(p)) continue;
 
             try {
                 const s = await fs.stat(path.join(dirPath, p));
@@ -128,7 +128,7 @@ export const FileBrowserSystem = {
             }
         }
 
-        return { entries, type: Shared.FileListing.SharedProjectListFilesReportTypes.Success };
+        return { entries, type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Success };
     },
 
     indexFiles() {

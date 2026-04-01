@@ -46,7 +46,7 @@ const assetGroupsStore = useAssetGroupsStore();
 
 const entries = computed(() => fileBrowserStore.entriesToShow);
 
-const selectedEntries = ref<Shared.FileListing.FileEntry[]>([]);
+const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
 
 watch(entries, () => {
     dataTable.value?.deselect();
@@ -54,7 +54,7 @@ watch(entries, () => {
 
 const dataTable = useTemplateRef("dataTable");
 
-const columns: DataTableColumn<Shared.FileListing.FileEntry>[] = [
+const columns: DataTableColumn<Shared.FileBrowser.FileEntry>[] = [
     {
         id: "icon",
         size: "auto",
@@ -179,22 +179,22 @@ function handleFocusList(): void {
     dataTable.value?.focus();
 }
 
-function handleActivated(active: Shared.FileListing.FileEntry): void {
+function handleActivated(active: Shared.FileBrowser.FileEntry): void {
     fileBrowserStore.onEntryActivated(active);
 }
 
-function handleSelectionChanged(entries: Shared.FileListing.FileEntry[]): void {
+function handleSelectionChanged(entries: Shared.FileBrowser.FileEntry[]): void {
     selectedEntries.value = entries;
 }
 
-function handleActiveChanged(entry: Shared.FileListing.FileEntry | undefined): void {
+function handleActiveChanged(entry: Shared.FileBrowser.FileEntry | undefined): void {
     fileBrowserStore.activeEntry = entry;
 }
 
 function handleDragStart(
     event: DragEvent,
-    primaryEntry: Shared.FileListing.FileEntry,
-    allEntries: Shared.FileListing.FileEntry[],
+    primaryEntry: Shared.FileBrowser.FileEntry,
+    allEntries: Shared.FileBrowser.FileEntry[],
 ): void {
     const payload = allEntries.map((e) => e.path).join("\n");
     event.dataTransfer?.setData("text/plain", payload);

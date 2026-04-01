@@ -9,14 +9,14 @@ import { useFileFilter } from "~/composables/useFilter.js";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
     const currentDir = useRememberWorkspaceRef(ref(""), "file-browser-dir");
-    const fsEntries = reactive(new Map<string, Shared.FileListing.FileEntry[]>());
+    const fsEntries = reactive(new Map<string, Shared.FileBrowser.FileEntry[]>());
     const currentEntries = computed(() => fsEntries.get(currentDir.value));
-    const activeEntry = ref<Shared.FileListing.FileEntry | undefined>(undefined);
+    const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);
     const searchTerm = ref("");
     const searchEntries = useFileFilter(fsEntries, searchTerm, 1000);
     const entriesToShow = computed(() => {
         const entries = searchTerm.value.length > 0 ? searchEntries.value : (currentEntries.value ?? []);
-        const { millis, result } = Shared.FileListing.sortFileEntries(entries);
+        const { millis, result } = Shared.FileBrowser.sortFileEntries(entries);
         // Logger.debug(Shared.Log.Channel.FileBrowser, "Sorting file entries took", millis, "ms");
         return result;
     });
@@ -27,7 +27,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         const report = await window.electronAPI.fileBrowser.listFiles(dirName);
         window.electronAPI.fileBrowser.setCurrentPath(dirName);
 
-        if (report.type === Shared.FileListing.SharedProjectListFilesReportTypes.Success) {
+        if (report.type === Shared.FileBrowser.SharedProjectListFilesReportTypes.Success) {
             fsEntries.set(dirName, report.entries);
         }
     }
@@ -64,7 +64,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         currentDir.value = correctedPath;
     }
 
-    function onEntryActivated(entry: Shared.FileListing.FileEntry): void {
+    function onEntryActivated(entry: Shared.FileBrowser.FileEntry): void {
         if (entry.isFile) {
             const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
             window.electronAPI.fileBrowser.open(fullPath);

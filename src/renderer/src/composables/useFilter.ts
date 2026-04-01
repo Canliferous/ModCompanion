@@ -81,12 +81,12 @@ export function useAssetsFilter(
 }
 
 export function useFileFilter(
-    files: Reactive<Map<string, Shared.FileListing.FileEntry[]>>,
+    files: Reactive<Map<string, Shared.FileBrowser.FileEntry[]>>,
     searchFilter: Ref<string>,
     maxResults: number,
 ) {
-    return computed<Shared.FileListing.FileEntry[]>(() => {
-        const result: Shared.FileListing.FileEntry[] = [];
+    return computed<Shared.FileBrowser.FileEntry[]>(() => {
+        const result: Shared.FileBrowser.FileEntry[] = [];
 
         let resultsCount = 0;
 

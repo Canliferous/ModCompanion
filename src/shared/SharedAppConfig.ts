@@ -2,7 +2,7 @@ import { SharedVtfCreateOptions } from "./SharedVtf.js";
 // import { S3ClientConfig } from "@aws-sdk/client-s3";
 import { SharedMapPresets } from "./SharedMap.js";
 
-export interface IAppConfig {
+export interface AppConfig {
     /**
      * Path of the repo root directory
      * Represents: <repo>/

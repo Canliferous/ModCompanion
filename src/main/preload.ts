@@ -16,22 +16,23 @@ contextBridge.exposeInMainWorld("electronAPI", {
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_ListFilesQuery, dirPath),
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_CorrectPathQuery, dirPath),
-        execute: (filePath: string | string[]) =>
-            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_LaunchFileAction, filePath),
+        execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_ExecuteAction, filePath, base),
         setCurrentPath: (dirPath: string) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_SetCurrentPathAction, dirPath),
-        browseToFile: (filePath: string) =>
-            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath),
-        open: (filePath: string) => ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenFileAction, filePath),
-        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileListing.FileEntry[]) => void) =>
+        browseToFile: (filePath: string, base: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath, base),
+        open: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenAction, filePath, base),
+        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent,
-                (e: IpcRendererEvent, dir: string, entries: Shared.FileListing.FileEntry[]) => callback(dir, entries),
+                (e: IpcRendererEvent, dir: string, entries: Shared.FileBrowser.FileEntry[]) => callback(dir, entries),
             ),
-        subscribeIndexUpdated: (callback: (index: Map<string, Shared.FileListing.FileEntry[]>) => void) =>
+        subscribeIndexUpdated: (callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_IndexUpdatedEvent,
-                (e: IpcRendererEvent, index: Map<string, Shared.FileListing.FileEntry[]>) => callback(index),
+                (e: IpcRendererEvent, index: Map<string, Shared.FileBrowser.FileEntry[]>) => callback(index),
             ),
     },
 
