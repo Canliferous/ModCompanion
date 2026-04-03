@@ -12,6 +12,7 @@ import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { timeMillisAsync } from "mod_companion_shared/SharedTiming.js";
 import { FileBrowserSystem } from "../CoreFileBrowserSystem.js";
+import { createModelAssetDefinition } from "./CoreAssetCreateModel.js";
 
 let assetMap: Map<Shared.Asset.AssetId, Shared.Asset.Asset> = new Map();
 let potentialAssets: Shared.Asset.Asset[] = [];
@@ -77,6 +78,15 @@ export const AssetRepositorySystem = {
                 newAssets.push(newAsset);
             }
             return newAssets;
+        }
+
+        if (inferredType === AssetCreationInferResults.Model) {
+            const { qcFile, def } = createModelAssetDefinition(primaryFile, otherFiles);
+            const mca = (qcFile ?? primaryFile) + Shared.Asset.McaFileExt;
+
+            const newAsset = await AssetRepositorySystem.writeAssetDef(def, mca);
+            assetMap.set(def.id, newAsset);
+            return [newAsset];
         }
 
         return undefined;

@@ -6,6 +6,7 @@ import { getContentRelativePath } from "~/helper/SourceFs.js";
 import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
+import { Channel } from "mod_companion_shared/SharedLog.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.Asset>>(new Map());
@@ -59,6 +60,8 @@ export const useAssetListStore = defineStore("asset-list", () => {
             }
 
             return result.assets;
+        } else {
+            Logger.warning(Channel.Assets, "Failed to create asset");
         }
 
         return [];
