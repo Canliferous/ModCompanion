@@ -15,6 +15,7 @@ export default function buildConfig(): NuxtUIOptions {
             imports: ["vue"],
         },
         ui: {
+            colorMode: false,
             colors: {
                 primary: "magenta",
             },

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, Rectangle, Tray } from "electron";
+import { app, BrowserWindow, Menu, Rectangle, Tray, nativeTheme } from "electron";
 import path from "node:path";
 import settings from "electron-settings";
 import fs from "node:fs";
@@ -55,6 +55,8 @@ function _createWindow(hasTray: boolean): void {
     const bounds = _getSettingsBounds();
     const iconPath = _getAppIconPath();
 
+    nativeTheme.themeSource = "dark";
+
     mainWindow = new BrowserWindow({
         width: bounds.width,
         height: bounds.height,
@@ -67,6 +69,7 @@ function _createWindow(hasTray: boolean): void {
             webSecurity: false,
         },
         icon: fs.existsSync(iconPath) ? iconPath : undefined,
+        darkTheme: true,
     });
 
     // Event listeners
@@ -174,7 +177,10 @@ function _buildTrayMenu() {
     template.push({ type: "separator" });
 
     for (const option of Shared.Launchers.SharedLauncherOptions) {
-        template.push({ label: `${option.name}`, click: () => Core.LauncherHelper.runLauncher(option.type, option.args) });
+        template.push({
+            label: `${option.name}`,
+            click: () => Core.LauncherHelper.runLauncher(option.type, option.args),
+        });
     }
     template.push({ type: "separator" });
     template.push({ label: "Quit", click: () => app.exit() });
