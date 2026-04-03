@@ -12,7 +12,7 @@
     },
     "scripts": {
         "run-dist": "cross-env node_modules/.bin/electron build/main/main.cjs",
-        "run-dev": "cross-env NODE_ENV=development electron --inspect=9229 --trace-warnings build/main/main.cjs",
+        "run-dev": "cross-env NODE_ENV=development electron --trace-warnings build/main/main.cjs",
         "run-dev-break": "cross-env NODE_ENV=development electron --inspect-brk=9229 build/main/main.cjs",
         "dev": "npm run copyassets && concurrently -k -n PRELOAD,MAIN,VITE -c blue,green,magenta \"npm:dev:preload\" \"npm:dev:main\" \"npm:dev:renderer\"",
         "dev:main": "node scripts/build.mjs watch",
