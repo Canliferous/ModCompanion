@@ -12,6 +12,8 @@ export const useMessageLogStore = defineStore("logs", () => {
         if (tooManyCount > 0) {
             logEvents.splice(0, tooManyCount);
         }
+
+        logEvents.sort((a, b) => a.time.getTime() - b.time.getTime());
     }
 
     function clear(): void {
