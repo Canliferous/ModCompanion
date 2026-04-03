@@ -120,6 +120,14 @@ const items = computed<ContextMenuItem[][]>(() => {
                     window.electronAPI.fileBrowser.browseToFile(pathe.join(getAppConfig().rootPath, entries[0].path));
                 },
             },
+            {
+                label: "Show directory",
+                icon: AppDesign.Icons.ActionBrowseToFolder,
+                disabled: entries.length !== 1,
+                onSelect() {
+                    fileBrowserStore.setCurrentDir(pathe.dirname(entries[0].path));
+                },
+            },
         ],
         [
             {

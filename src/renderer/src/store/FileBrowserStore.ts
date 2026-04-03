@@ -47,7 +47,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         }
     });
 
-    function updateCurrentDir(dir: string): void {
+    function setCurrentDir(dir: string): void {
         let correctedPath = getRootRelativePath(dir);
         if (correctedPath === undefined) {
             Logger.warning(Shared.Log.Channel.Generic, `Cannot update path to ${dir} because it's invalid`);
@@ -62,6 +62,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         }
 
         currentDir.value = correctedPath;
+        clearSearchTerm();
     }
 
     function onEntryActivated(entry: Shared.FileBrowser.FileEntry): void {
@@ -69,8 +70,12 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
             const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
             window.electronAPI.fileBrowser.open(fullPath);
         } else {
-            updateCurrentDir(entry.path);
+            setCurrentDir(entry.path);
         }
+    }
+
+    function clearSearchTerm(): void {
+        searchTerm.value = "";
     }
 
     return {
@@ -82,7 +87,8 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         activeEntry,
         currentEntries,
         entriesToShow,
-        updateCurrentDir,
+        setCurrentDir,
         onEntryActivated,
+        clearSearchTerm,
     };
 });

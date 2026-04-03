@@ -52,7 +52,7 @@ function handleDown(event: KeyboardEvent): void {
 
 function _finish() {
     showBreadcrumbs.value = true;
-    fileBrowserStore.updateCurrentDir(Shared.SourceFs.forwardSlashed(inputText.value));
+    fileBrowserStore.setCurrentDir(Shared.SourceFs.forwardSlashed(inputText.value));
 }
 </script>
 

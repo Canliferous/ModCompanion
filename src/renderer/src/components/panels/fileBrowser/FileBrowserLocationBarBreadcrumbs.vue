@@ -43,7 +43,7 @@ function handleClick(event: MouseEvent, index: number): void {
 
 function handleHomeClick(event: MouseEvent): void {
     event.stopPropagation();
-    fileBrowserStore.updateCurrentDir("");
+    fileBrowserStore.setCurrentDir("");
     fileBrowserStore.searchTerm = "";
 }
 </script>

@@ -63,7 +63,7 @@ export const usePanelsManagerStore = defineStore("panels-manager", () => {
 
     function openFileBrowser(path: string): void {
         panelsStore.focusOrCreatePanel(PanelComponents.panels.fileBrowser);
-        useFileBrowserStore().updateCurrentDir(path);
+        useFileBrowserStore().setCurrentDir(path);
     }
 
     return { openFileBrowser };
