@@ -56,7 +56,7 @@ import {
     getFileType,
     getFileTypeIcon,
     getFileTypeName,
-} from "~/components/panels/fileInspector/FileInspectorHelper.js";
+} from "~/helper/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";

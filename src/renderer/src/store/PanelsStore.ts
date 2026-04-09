@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
+import { GlobalComponentName } from "~/helper/GlobalComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
+import * as uuid from "uuid";
+import { PanelModel, PanelParams } from "~/helper/GlobalComponents.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -16,7 +18,7 @@ export const usePanelsStore = defineStore("panels", () => {
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
 
-        deserialize();
+        // deserialize();
 
         event.api.onDidLayoutChange(() => {
             serialize();
@@ -32,40 +34,24 @@ export const usePanelsStore = defineStore("panels", () => {
         event.api.onDidAddPanel(updatePanels);
     }
 
-    function trySpawnPanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): IDockviewPanel | undefined {
-        const openPanel = findOpenPanel(panel.componentId);
-        if (openPanel) {
-            return openPanel;
-        }
-
-        const op: AddPanelOptions = {
+    function spawnPanel<T extends PanelModel>(
+        panel: GlobalComponentName,
+        model: T,
+        options?: Partial<AddPanelOptions>,
+    ): IDockviewPanel | undefined {
+        const op: AddPanelOptions<PanelParams<T>> = {
             ...options,
-            id: panel.componentId,
-            component: panel.componentId,
-            title: PanelTitles[panel.componentId] ?? "",
-            tabComponent: PanelComponents.tabComponents.panelTab.componentId,
-            params: { icon: PanelIcons[panel.componentId] },
+            id: panel + ":" + uuid.v4(),
+            component: panel,
+            // tabComponent: ExtraComponents.PanelTab.,
+            params: { model, panelId: panel, noClose: false },
         };
 
         return api.value?.addPanel(op);
     }
 
-    function togglePanel(panel: ComponentDesc): void {
-        const p = findOpenPanel(panel.componentId);
-        if (p) {
-            api.value?.removePanel(p);
-        } else {
-            trySpawnPanel(panel);
-        }
-    }
-
     function findOpenPanel(panelId: string): IDockviewPanel | undefined {
         return api.value?.panels.find((p) => p.id.startsWith(panelId));
-    }
-
-    function focusOrCreatePanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): void {
-        const p = trySpawnPanel(panel, options);
-        p?.focus();
     }
 
     function deserialize(): void {
@@ -101,5 +87,5 @@ export const usePanelsStore = defineStore("panels", () => {
         workspaceStore.updatePanels(activeWorkspace, serializedDockview);
     }
 
-    return { api, handleReady, trySpawnPanel, togglePanel, findOpenPanel, focusOrCreatePanel };
+    return { api, handleReady, spawnPanel };
 });

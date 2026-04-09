@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { AssetInspectorPanelsInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
-import { PanelComponentId } from "~/helper/PanelComponents.js";
+import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
+import { GlobalComponentName } from "~/helper/GlobalComponents.js";
 
-const inj = inject(AssetInspectorPanelsInjectKey);
-const props = defineProps<{ panelId: PanelComponentId }>();
+const inj = inject(AssetInspectorBehavior.PanelsInjectKey);
+const props = defineProps<{ panelId: GlobalComponentName }>();
 
 const attrs = useAttrs();
 

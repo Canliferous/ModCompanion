@@ -1,8 +1,8 @@
 <template>
-    <div class="grid grid-cols-[minmax(0,_1fr)] grid-rows-1 h-full">
+    <div class="grid grid-cols-[minmax(0,1fr)] grid-rows-1 h-full">
         <DockviewVue
             :theme="themeModcompNested"
-            :default-tab-component="PanelComponents.tabComponents.panelTab.componentId"
+            :default-tab-component="GlobalComponentNames.PanelTab"
             default-renderer="onlyWhenVisible"
             @ready="handleReady"
         />
@@ -11,17 +11,14 @@
 
 <script setup lang="ts">
 import { DockviewApi, DockviewReadyEvent, DockviewVue, SerializedDockview } from "dockview-vue";
-import {
-    AssetInspectorPanelsInjectKey,
-    AssetInspectorTextureInjectKey,
-} from "~/components/panels/assetInspector/AssetInspector.model.js";
+import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { fetchImageMeta } from "~/store/ImageCacheStore.js";
 import { themeModcompNested } from "~/design/ModcompDockviewTheme.js";
 import * as Shared from "mod_companion_shared";
+import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 
 const props = defineProps<{ asset: Shared.Asset.Asset }>();
 const workspaceStore = useWorkspaceStore();
@@ -56,11 +53,11 @@ watch(
     },
 );
 
-provide(AssetInspectorTextureInjectKey, {
+provide(AssetInspectorBehavior.TextureInjectKey, {
     meta: textureMeta,
 });
 
-provide(AssetInspectorPanelsInjectKey, {
+provide(AssetInspectorBehavior.PanelsInjectKey, {
     visiblePanels,
 });
 
@@ -108,47 +105,48 @@ function deserializeLayout(type: Shared.Asset.Type): SerializedDockview | undefi
 }
 
 function getPanelsByType(type: Shared.Asset.Type) {
-    const additionalPanels = PanelComponents.additional;
-
-    const defaultPanels = [additionalPanels.assetInspectorGeneral];
-    const whichPanelsShouldExist: ComponentDesc[] = defaultPanels;
-
-    if (type === Shared.Asset.Types.Texture) {
-        whichPanelsShouldExist.push(additionalPanels.assetInspectorTexturePreview);
-        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
-        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
-        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
-        whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureHotspotEditor);
-    }
-
-    return whichPanelsShouldExist;
+    // const additionalPanels = PanelComponents.additional;
+    //
+    // const defaultPanels = [additionalPanels.assetInspectorGeneral];
+    // const whichPanelsShouldExist: ComponentDesc[] = defaultPanels;
+    //
+    // if (type === Shared.Asset.Types.Texture) {
+    //     whichPanelsShouldExist.push(additionalPanels.assetInspectorTexturePreview);
+    //     whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureChannels);
+    //     whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureMetadata);
+    //     whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureConvert);
+    //     whichPanelsShouldExist.push(additionalPanels.assetInspectorTextureHotspotEditor);
+    // }
+    //
+    // return whichPanelsShouldExist;
+    return [];
 }
 
 function setupTabs(type: Shared.Asset.Type, api: DockviewApi) {
     const whichPanelsShouldExist = getPanelsByType(type);
 
-    const panels = api.panels;
-    // Spawn missing panels
-    for (const panel of whichPanelsShouldExist) {
-        const alreadyExists = panels.some((p) => p.id === panel.componentId);
-        if (!alreadyExists) {
-            api.addPanel({
-                title: PanelTitles[panel.componentId],
-                id: panel.componentId,
-                component: panel.componentId,
-                tabComponent: PanelComponents.tabComponents.panelTab.componentId,
-                params: { icon: PanelIcons[panel.componentId], noClose: true },
-            });
-        }
-    }
-
-    // Destroy unneeded panels
-    for (const panel of panels) {
-        const shouldExist = whichPanelsShouldExist.some((p) => panel.id === p.componentId);
-        if (!shouldExist) {
-            api.removePanel(panel);
-        }
-    }
+    // const panels = api.panels;
+    // // Spawn missing panels
+    // for (const panel of whichPanelsShouldExist) {
+    //     const alreadyExists = panels.some((p) => p.id === panel.componentId);
+    //     if (!alreadyExists) {
+    //         // api.addPanel({
+    //         //     title: PanelNames[panel.componentId],
+    //         //     id: panel.componentId,
+    //         //     component: panel.componentId,
+    //         //     tabComponent: PanelComponents.tabComponents.panelTab.componentId,
+    //         //     params: { icon: PanelIcons[panel.componentId], noClose: true },
+    //         // });
+    //     }
+    // }
+    //
+    // // Destroy unneeded panels
+    // for (const panel of panels) {
+    //     const shouldExist = whichPanelsShouldExist.some((p) => panel.id === p.componentId);
+    //     if (!shouldExist) {
+    //         api.removePanel(panel);
+    //     }
+    // }
 }
 
 function updateTabs(type: Shared.Asset.Type, api: DockviewApi): void {

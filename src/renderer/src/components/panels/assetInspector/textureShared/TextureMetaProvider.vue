@@ -11,12 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { AssetInspectorTextureInjectKey } from "~/components/panels/assetInspector/AssetInspector.model.js";
+import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import * as Shared from "mod_companion_shared";
 
 const assetStore = useAssetListStore();
-const inj = inject(AssetInspectorTextureInjectKey);
+const inj = inject(AssetInspectorBehavior.TextureInjectKey);
 
 const myMeta = computed(() => (inj !== undefined ? toValue(inj.meta) : undefined));
 
