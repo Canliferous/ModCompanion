@@ -13,8 +13,7 @@
 
 <script setup lang="ts">
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { GlobalComponentName } from "~/helper/GlobalComponents.js";
-import { PanelComponentNames, PanelsBehaviors } from "~/helper/GlobalComponents.js";
+import { PanelComponentName, PanelComponentNames, PanelsBehaviors } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 
 const panelsStore = usePanelsStore();
@@ -22,7 +21,7 @@ const panelsStore = usePanelsStore();
 const props = defineProps<{ buttonSize?: string; spawnOptions?: Partial<AddPanelOptions> }>();
 const emit = defineEmits<{ buttonClicked: [void] }>();
 
-function handleClick(panel: GlobalComponentName) {
+function handleClick(panel: PanelComponentName) {
     panelsStore.spawnPanel(panel, {}, props.spawnOptions);
     emit("buttonClicked");
 }

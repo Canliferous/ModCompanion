@@ -1,9 +1,6 @@
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
-import { useAssetsFilter } from "~/composables/useFilter.js";
 import { useEvent } from "~/composables/useEvent.js";
-import { getContentRelativePath } from "~/helper/SourceFs.js";
-import { useRememberStringArray, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
 import { Channel } from "mod_companion_shared/SharedLog.js";
@@ -12,16 +9,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.Asset>>(new Map());
     const potentialAssets = ref<Shared.Asset.Asset[]>([]);
     const refreshing = ref(false);
-    const searchTerm = useRememberWorkspaceRef(ref(""), "asset-list-search");
-    const assetsEntries = computed(() => [...assets.value.values()]);
-    const typeFilter = useRememberStringArray(ref<Shared.Asset.Type[]>([]), "asset-list-types");
-    const filteredAssets = useAssetsFilter(assetsEntries, searchTerm, typeFilter);
-    const activeId = ref<Shared.Asset.AssetId | undefined>();
-    const activeAsset = computed(() => (activeId.value ? assets.value.get(activeId.value) : undefined));
-    const selectedIds = ref<Shared.Asset.AssetId[]>([]);
-    const selectedAssets = computed(() =>
-        filteredAssets.value.filter((value) => selectedIds.value.includes(value.def.id)),
-    );
 
     const activateEvent = useEvent<Shared.Asset.AssetId | undefined>();
     const selectEvent = useEvent<Shared.Asset.AssetId[]>();
@@ -48,10 +35,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         assets.value = event.assets;
     });
 
-    window.electronAPI.asset.subscribeNavigateToHash((assetId) => {
-        activeId.value = assetId;
-    });
-
     async function createAsset(primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.Asset[]> {
         const result = await window.electronAPI.asset.createAsset(primaryFile, otherFiles);
         if (result.type === Shared.Asset.SharedCreateAssetReportType.Success) {
@@ -75,14 +58,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         }
 
         assets.value.delete(assetId);
-        if (activeId.value === assetId) {
-            activeId.value = undefined;
-        }
-
-        const selectedIdx = selectedIds.value.indexOf(assetId);
-        if (selectedIdx !== -1) {
-            selectedIds.value = selectedIds.value.toSpliced(selectedIdx, 1);
-        }
         return true;
     }
 
@@ -94,24 +69,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     function activate(id: Shared.Asset.AssetId | undefined): void {
         activateEvent.call(id);
-    }
-
-    function selectByMca(mcaPaths: string[]): void {
-        const mcaPathsRel = mcaPaths.map((p) => getContentRelativePath(p));
-        const sel: Shared.Asset.AssetId[] = [];
-        for (const asset of assets.value.values()) {
-            if (asset.defFilePath === undefined) continue;
-            if (mcaPathsRel.includes(asset.defFilePath)) {
-                sel.push(asset.def.id);
-            }
-        }
-
-        if (sel.length === 0) return;
-
-        activateEvent.call(sel[0]);
-        if (sel.length > 1) {
-            selectEvent.call(sel);
-        }
     }
 
     function getAssetById(id: Shared.Asset.AssetId | undefined): Shared.Asset.Asset | undefined {
@@ -144,13 +101,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         assets,
         potentialAssets,
         refreshing,
-        searchTerm,
-        filteredAssets,
-        activeId,
-        activeAsset,
-        selectedIds,
-        selectedAssets,
-        typeFilter,
         createAsset,
         deleteAsset,
         writeAssets,
@@ -158,7 +108,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         getAssetsById,
         refresh,
         activate,
-        selectByMca,
         activateEvent,
         selectEvent,
         writtenEvent,

@@ -1,4 +1,4 @@
-import { computed, ComputedRef, Reactive, Ref } from "vue";
+import { computed, Reactive, Ref } from "vue";
 import * as Shared from "mod_companion_shared";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
@@ -31,24 +31,23 @@ export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string,
 }
 
 export function useAssetsFilter(
-    assets: ComputedRef<Shared.Asset.Asset[]>,
-    searchFilter: Ref<string>,
-    typeFilter: Ref<Shared.Asset.Type[]>,
-) {
-    return computed(() => {
-        const typeFilterVal = typeFilter.value;
-        if (searchFilter.value === "" && typeFilterVal.length === 0) {
-            return assets.value;
+    assets: Iterable<Shared.Asset.Asset>,
+    searchFilter: string | undefined,
+    typeFilter: Shared.Asset.Type[] | undefined,
+): Shared.Asset.Asset[] {
+    if (!searchFilter && (!typeFilter || typeFilter.length === 0)) {
+        return Array.from(assets);
+    }
+
+    const filteredAssets: Shared.Asset.Asset[] = [];
+    for (const asset of assets) {
+        if (typeFilter && typeFilter.length > 0) {
+            const isIncluded = typeFilter.includes(asset.def.type);
+            if (!isIncluded) continue;
         }
 
-        const filteredAssets: Shared.Asset.Asset[] = [];
-        for (const asset of assets.value) {
-            if (typeFilterVal.length > 0) {
-                const isIncluded = typeFilter.value.includes(asset.def.type);
-                if (!isIncluded) continue;
-            }
-
-            const splits = searchFilter.value.split(" ");
+        if (searchFilter) {
+            const splits = searchFilter.split(" ");
 
             let match = true;
             for (const split of splits) {
@@ -62,22 +61,24 @@ export function useAssetsFilter(
             if (match) {
                 filteredAssets.push(asset);
             }
+        } else {
+            filteredAssets.push(asset);
+        }
+    }
+
+    filteredAssets.sort((a, b) => {
+        if (a.def.displayName !== undefined && b.def.displayName !== undefined) {
+            return a.def.displayName.localeCompare(b.def.displayName);
         }
 
-        filteredAssets.sort((a, b) => {
-            if (a.def.displayName !== undefined && b.def.displayName !== undefined) {
-                return a.def.displayName.localeCompare(b.def.displayName);
-            }
+        if (a.defFilePath !== undefined && b.defFilePath !== undefined) {
+            return a.defFilePath.localeCompare(b.defFilePath);
+        }
 
-            if (a.defFilePath !== undefined && b.defFilePath !== undefined) {
-                return a.defFilePath.localeCompare(b.defFilePath);
-            }
-
-            return a.def.id.localeCompare(b.def.id);
-        });
-
-        return filteredAssets;
+        return a.def.id.localeCompare(b.def.id);
     });
+
+    return filteredAssets;
 }
 
 export function useFileFilter(

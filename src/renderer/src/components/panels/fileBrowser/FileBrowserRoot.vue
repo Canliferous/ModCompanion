@@ -152,14 +152,6 @@ const items = computed<ContextMenuItem[][]>(() => {
                         .then((assets) => assetGroupsStore.createGroup(assets.map((s) => s.def.id)));
                 },
             },
-            {
-                label: "Select Asset in Browser",
-                icon: AppDesign.Icons.Asset,
-                disabled: mcaFiles.length === 0,
-                onSelect() {
-                    assetListStore.selectByMca(mcaFiles.map((m) => m.path));
-                },
-            },
         ],
         [
             {

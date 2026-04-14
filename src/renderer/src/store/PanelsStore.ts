@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { GlobalComponentName } from "~/helper/GlobalComponents.js";
+import { GlobalComponentNames, PanelComponentName, PanelModel, PanelParams } from "~/helper/GlobalComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
 import * as uuid from "uuid";
-import { PanelModel, PanelParams } from "~/helper/GlobalComponents.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
     const currentPanels = ref<IDockviewPanel[]>([]);
     const workspaceStore = useWorkspaceStore();
+    const models = reactive<Map<string, PanelModel>>(new Map());
 
     watch(() => workspaceStore.activeWorkspace, deserialize);
 
@@ -35,16 +35,18 @@ export const usePanelsStore = defineStore("panels", () => {
     }
 
     function spawnPanel<T extends PanelModel>(
-        panel: GlobalComponentName,
+        panelName: PanelComponentName,
         model: T,
         options?: Partial<AddPanelOptions>,
     ): IDockviewPanel | undefined {
+        const panelId = panelName + ":" + uuid.v4();
+        models.set(panelId, model);
         const op: AddPanelOptions<PanelParams<T>> = {
             ...options,
-            id: panel + ":" + uuid.v4(),
-            component: panel,
-            // tabComponent: ExtraComponents.PanelTab.,
-            params: { model, panelId: panel, noClose: false },
+            id: panelId,
+            component: panelName,
+            tabComponent: GlobalComponentNames.PanelTab,
+            params: { model, panelName, panelId, noClose: false },
         };
 
         return api.value?.addPanel(op);
@@ -87,5 +89,9 @@ export const usePanelsStore = defineStore("panels", () => {
         workspaceStore.updatePanels(activeWorkspace, serializedDockview);
     }
 
-    return { api, handleReady, spawnPanel };
+    function getModel<T extends PanelModel>(panelId: string): T | undefined {
+        return models.get(panelId) as T | undefined;
+    }
+
+    return { api, handleReady, spawnPanel, getModel };
 });

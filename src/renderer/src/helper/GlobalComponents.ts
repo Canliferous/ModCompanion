@@ -70,12 +70,6 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
 
 export type PanelModel = object;
 
-export interface PanelParams<T extends PanelModel> {
-    model: T;
-    panelId: GlobalComponentName;
-    noClose: boolean;
-}
-
 export const PanelComponentNames = [
     GlobalComponentNames.AssetInspector,
     GlobalComponentNames.AssetBrowser,
@@ -88,6 +82,13 @@ export const PanelComponentNames = [
     // GlobalComponentNames.ConversionDetails,
 ];
 export type PanelComponentName = (typeof PanelComponentNames)[number];
+
+export interface PanelParams<T extends PanelModel> {
+    model: T;
+    panelName: PanelComponentName;
+    panelId: string;
+    noClose: boolean;
+}
 
 export interface PanelBehavior<T extends PanelModel> {
     getTitle(model: T | undefined): string;

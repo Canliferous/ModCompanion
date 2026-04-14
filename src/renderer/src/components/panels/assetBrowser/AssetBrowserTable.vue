@@ -31,6 +31,7 @@ import {
     AssetBrowserAssetEntry,
     AssetBrowserEntry,
     AssetBrowserEntryTypes,
+    AssetBrowserModel,
     getAssetBrowserEntrySortString,
     isAssetBrowserAssetEntry,
     isAssetBrowserGroupEntry,
@@ -40,12 +41,27 @@ import ClipboardHelper from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
+import { useAssetsFilter } from "~/composables/useFilter";
+import { computed, ref } from "vue";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
 const assetGroupsStore = useAssetGroupsStore();
 
 const table = useTemplateRef("table");
+
+const model = defineModel<AssetBrowserModel>({ required: true });
+
+const filteredEntries = computed(() =>
+    useAssetsFilter(listStore.assets.values(), model.value.searchTerm, model.value.typeFilter),
+);
+
+const activeId = ref<Shared.Asset.AssetId | undefined>();
+const activeAsset = computed(() => (activeId.value ? listStore.assets.get(activeId.value) : undefined));
+const selectedIds = ref<Shared.Asset.AssetId[]>([]);
+const selectedAssets = computed(() =>
+    filteredEntries.value.filter((value) => selectedIds.value.includes(value.def.id)),
+);
 
 listStore.activateEvent.on((assetId) => {
     if (assetId === undefined) {
@@ -80,7 +96,7 @@ const entries = computed(() => {
     // Add groups first
     const result: AssetBrowserEntry[] = [];
     for (const assetGroup of assetGroups.values()) {
-        const searchTerm = listStore.searchTerm;
+        const searchTerm = model.value.searchTerm;
         if (searchTerm) {
             const passesSearch = assetGroup.def.displayName.includes(searchTerm);
             if (!passesSearch) {
@@ -96,8 +112,10 @@ const entries = computed(() => {
         assetIdsInGroups.push(...assetGroup.def.assets);
     }
 
+    console.log(listStore.assets);
+    console.log(filteredEntries.value);
     // Add remaining ungrouped asset
-    for (const assets of listStore.filteredAssets) {
+    for (const assets of filteredEntries.value) {
         if (assetIdsInGroups.includes(assets.def.id)) {
             continue;
         }
@@ -185,16 +203,16 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
 ];
 
 function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
-    listStore.selectedIds = entries.filter(isAssetBrowserAssetEntry).map((a) => a.assetDef.id);
+    selectedIds.value = entries.filter(isAssetBrowserAssetEntry).map((a) => a.assetDef.id);
 }
 
 function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
     if (isAssetBrowserAssetEntry(entry)) {
-        listStore.activeId = entry.assetDef.id;
+        activeId.value = entry.assetDef.id;
         assetGroupsStore.activateGroup(undefined);
     } else if (isAssetBrowserGroupEntry(entry)) {
         assetGroupsStore.activateGroup(entry.group.id);
-        listStore.activeId = undefined;
+        activeId.value = undefined;
     }
 }
 
@@ -228,15 +246,15 @@ const items = computed(() => {
     }
 
     {
-        const assets = listStore.selectedAssets;
-        if (assets.length > 0) {
-            const isAnyGrouped = assets.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
-            const isAllGrouped = assets.every((selected) => assetGroupsStore.isGrouped(selected.def.id));
+        const selAssets = selectedAssets.value;
+        if (selAssets.length > 0) {
+            const isAnyGrouped = selAssets.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
+            const isAllGrouped = selAssets.every((selected) => assetGroupsStore.isGrouped(selected.def.id));
             options.push([
                 {
                     label: "Convert",
                     onSelect() {
-                        for (const sel of assets) {
+                        for (const sel of selAssets) {
                             conversionStore.enqueue(sel.def.id);
                         }
                     },
@@ -246,7 +264,7 @@ const items = computed(() => {
                 {
                     label: "Create Asset Group",
                     onSelect() {
-                        assetGroupsStore.createGroup(assets.map((s) => s.def.id));
+                        assetGroupsStore.createGroup(selAssets.map((s) => s.def.id));
                         table.value?.deselect();
                     },
                     icon: AppDesign.Icons.ActionCreateAssetGroup,
@@ -255,8 +273,8 @@ const items = computed(() => {
                 },
             ]);
 
-            if (assets.length === 1) {
-                const sel = assets[0];
+            if (selAssets.length === 1) {
+                const sel = selAssets[0];
 
                 if (sel.def.associatedFiles) {
                     const ass = sel.def.associatedFiles;
@@ -314,7 +332,7 @@ const items = computed(() => {
                         label: "Remove from group",
                         icon: AppDesign.Icons.ActionRemove,
                         onSelect() {
-                            assetGroupsStore.writeRemoveAssetsFromTheirGroups(assets.map((a) => a.def.id));
+                            assetGroupsStore.writeRemoveAssetsFromTheirGroups(selAssets.map((a) => a.def.id));
                         },
                         disabled: !isAllGrouped,
                     },

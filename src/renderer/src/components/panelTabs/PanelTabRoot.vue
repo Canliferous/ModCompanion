@@ -20,7 +20,7 @@ import { IDockviewPanelHeaderProps } from "dockview-vue";
 import { PanelParams, PanelsBehaviors } from "~/helper/GlobalComponents.js";
 
 const p = defineProps<{ props: IDockviewPanelHeaderProps<PanelParams<any>> }>();
-const behavior = computed(() => PanelsBehaviors[p.props.params.panelId]);
+const behavior = computed(() => PanelsBehaviors[p.props.params.panelName]);
 
 function handleClose() {
     if (!p.props.params.noClose) {
