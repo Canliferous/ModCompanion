@@ -5,6 +5,7 @@ import fs from "node:fs";
 
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
+import { Logger } from "mod_companion_core";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -84,6 +85,10 @@ function _createWindow(hasTray: boolean): void {
                 settings.setSync(SETTING_WINDOW_BOUNDS, bounds as any);
             }
         }
+    });
+
+    mainWindow.webContents.on("render-process-gone", (event, details) => {
+        Logger.error(Shared.Log.Channel.Generic, "Renderer crashed", details);
     });
 
     if (hasTray) {
