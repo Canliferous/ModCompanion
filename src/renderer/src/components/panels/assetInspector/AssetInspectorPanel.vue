@@ -1,31 +1,33 @@
 <template>
     <TooltipProvider>
-        <template v-if="assetStore.activeAsset">
-            <div class="grid grid-rows-[auto_minmax(0,_1fr)] h-full">
+        <template v-if="model && asset">
+            <div class="grid grid-rows-[auto_minmax(0,1fr)] h-full">
                 <header class="flex m-1">
-                    <AssetInspectorConversion :asset-id="assetStore.activeAsset.def.id" />
+                    <AssetInspectorConversion :asset-id="model.assetId" />
                     <div class="ml-auto">
                         <AssetInspectorSaved />
                     </div>
                 </header>
-                <AssetInspectorRoot :asset="assetStore.activeAsset" />
+                <AssetInspectorRoot :asset="asset" />
             </div>
         </template>
-        <template v-else-if="assetGroupsStore.activeGroup">
-            <AssetInspectorGroupPanel :group="assetGroupsStore.activeGroup" />
-        </template>
-        <div v-else class="grid h-full place-items-center text-muted">No Asset Selected</div>
     </TooltipProvider>
 </template>
 
 <script setup lang="ts">
-import { useAssetListStore } from "~/store/AssetListStore.js";
 import { TooltipProvider } from "reka-ui";
 import AssetInspectorSaved from "~/components/panels/assetInspector/AssetInspectorSaved.vue";
-import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
+import { IDockviewPanelProps } from "dockview-vue";
+import { PanelParams } from "~/helper/GlobalComponents.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
+import { useAssetListStore } from "~/store/AssetListStore.js";
 
-const assetStore = useAssetListStore();
-const assetGroupsStore = useAssetGroupsStore();
+const props = defineProps<{ params: IDockviewPanelProps<PanelParams<AssetInspectorModel>> }>();
+const model = usePanelsStore().getModel<AssetInspectorModel>(props.params.params.panelId);
+
+const assetListStore = useAssetListStore();
+const asset = computed(() => assetListStore.getAssetById(model?.assetId));
 </script>
 
 <style scoped></style>
