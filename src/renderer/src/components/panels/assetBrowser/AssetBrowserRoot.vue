@@ -1,5 +1,5 @@
 <template>
-    <MPanelRoot noScroll>
+    <MPanelRoot no-scroll>
         <template #header>
             <div class="flex gap-1">
                 <UInput
@@ -11,12 +11,17 @@
                 />
                 <AssetBrowserTypeSelect />
                 <UButtonGroup>
-                    <AssetBrowserCollapseButtons />
+                    <UTooltip text="Expand All">
+                        <UButton :icon="AppDesign.Icons.ExpandVertical" @click="table?.expandAll()" />
+                    </UTooltip>
+                    <UTooltip text="Collapse All">
+                        <UButton :icon="AppDesign.Icons.CollapseVertical" @click="table?.collapseAll()" />
+                    </UTooltip>
                     <AssetBrowserRefreshButton />
                 </UButtonGroup>
             </div>
         </template>
-        <AssetBrowserTable v-model="model" />
+        <AssetBrowserTable ref="table" v-model="model" />
     </MPanelRoot>
 </template>
 
@@ -27,6 +32,7 @@ import { AssetBrowserModel } from "~/components/panels/assetBrowser/AssetBrowser
 import { AppDesign } from "~/design/AppDesign.js";
 
 const model = defineModel<AssetBrowserModel>({ required: true });
+const table = useTemplateRef("table");
 </script>
 
 <style scoped></style>

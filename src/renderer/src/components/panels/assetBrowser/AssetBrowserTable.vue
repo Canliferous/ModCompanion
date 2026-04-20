@@ -456,6 +456,8 @@ function collapseAll() {
 function expandAll() {
     expandedState.value = Array.from(assetGroupsStore.groups.keys());
 }
+
+defineExpose({ collapseAll, expandAll });
 </script>
 
 <style scoped></style>
