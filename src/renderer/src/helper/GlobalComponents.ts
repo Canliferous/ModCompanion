@@ -83,6 +83,14 @@ export const PanelComponentNames = [
 ];
 export type PanelComponentName = (typeof PanelComponentNames)[number];
 
+export const SpawnablePanelComponentNames = [
+    GlobalComponentNames.AssetBrowser,
+    GlobalComponentNames.FileBrowser,
+    GlobalComponentNames.MapList,
+    GlobalComponentNames.StrataConsole,
+];
+export type SpawnablePanelComponentName = (typeof SpawnablePanelComponentNames)[number];
+
 export interface PanelParams<T extends PanelModel> {
     model: T;
     panelName: PanelComponentName;
