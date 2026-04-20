@@ -43,10 +43,14 @@ import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 import { useAssetsFilter } from "~/composables/useFilter";
 import { computed, ref } from "vue";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { GlobalComponentNames, PanelComponentNames } from "~/helper/GlobalComponents.js";
+import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
 const assetGroupsStore = useAssetGroupsStore();
+const panelsStore = usePanelsStore();
 
 const table = useTemplateRef("table");
 
@@ -373,6 +377,12 @@ function handleDragStart(event: DragEvent, primaryEntry: AssetBrowserEntry, allE
 function handleEntryActivated(entry: AssetBrowserEntry): void {
     if (isAssetBrowserGroupEntry(entry)) {
         toggleCollapsed(entry.group.id);
+    } else {
+        panelsStore.spawnPanel<AssetInspectorModel>(
+            GlobalComponentNames.AssetInspector,
+            { assetId: entry.assetDef.id },
+            { position: { direction: "right" } },
+        );
     }
 }
 
