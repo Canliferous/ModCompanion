@@ -63,13 +63,24 @@ const selectedAssets = computed(() =>
     filteredEntries.value.filter((value) => selectedIds.value.includes(value.def.id)),
 );
 
+const expandedState = ref<Shared.AssetGroup.GroupId[]>([]);
+const activeGroupId = ref<Shared.AssetGroup.GroupId | undefined>();
+const activeGroup = computed(() => {
+    const v = activeGroupId.value;
+    if (!v) {
+        return undefined;
+    } else {
+        return assetGroupsStore.groups.get(v);
+    }
+});
+
 listStore.activateEvent.on((assetId) => {
     if (assetId === undefined) {
         table.value?.deactivate();
     } else {
         const group = assetGroupsStore.getGroupFromAssetId(assetId);
         if (group) {
-            assetGroupsStore.expand(group.id);
+            expand(group.id);
         }
         table.value?.activate((entry) => isAssetBrowserAssetEntry(entry) && entry.assetDef.id === assetId);
     }
@@ -82,7 +93,7 @@ listStore.selectEvent.on((assetIds) => {
         for (const assetId of assetIds) {
             const group = assetGroupsStore.getGroupFromAssetId(assetId);
             if (group) {
-                assetGroupsStore.expand(group.id);
+                expand(group.id);
             }
         }
         table.value?.select((entry) => isAssetBrowserAssetEntry(entry) && assetIds.includes(entry.assetDef.id));
@@ -112,8 +123,6 @@ const entries = computed(() => {
         assetIdsInGroups.push(...assetGroup.def.assets);
     }
 
-    console.log(listStore.assets);
-    console.log(filteredEntries.value);
     // Add remaining ungrouped asset
     for (const assets of filteredEntries.value) {
         if (assetIdsInGroups.includes(assets.def.id)) {
@@ -133,7 +142,7 @@ const entries = computed(() => {
 
 function treeChildFunc(entry: AssetBrowserEntry): AssetBrowserEntry[] | undefined {
     if (isAssetBrowserGroupEntry(entry)) {
-        if (!assetGroupsStore.isExpanded(entry.group.id)) return undefined;
+        if (!isExpanded(entry.group.id)) return undefined;
 
         const assets = listStore.getAssetsById(entry.group.def.assets);
         const entries = assets.map<AssetBrowserAssetEntry>((a) => ({
@@ -177,7 +186,9 @@ const columns: DataTableColumn<AssetBrowserEntry>[] = [
                     name: entry.group.def.displayName,
                     id: entry.group.id,
                     editing: editingGroup.value === entry.group.id,
+                    isExpanded: isExpanded(entry.group.id),
                     onStopEditing: stopEditing,
+                    onToggleCollapsed: () => toggleCollapsed(entry.group.id),
                 });
             }
 
@@ -209,9 +220,9 @@ function handleSelectionChanged(entries: AssetBrowserEntry[]): void {
 function handleActiveChanged(entry: AssetBrowserEntry | undefined): void {
     if (isAssetBrowserAssetEntry(entry)) {
         activeId.value = entry.assetDef.id;
-        assetGroupsStore.activateGroup(undefined);
+        activateGroup(undefined);
     } else if (isAssetBrowserGroupEntry(entry)) {
-        assetGroupsStore.activateGroup(entry.group.id);
+        activateGroup(entry.group.id);
         activeId.value = undefined;
     }
 }
@@ -220,7 +231,7 @@ const items = computed(() => {
     const options: ContextMenuItem[][] = [];
 
     {
-        const group = assetGroupsStore.activeGroup;
+        const group = activeGroup.value;
         if (group) {
             options.push([
                 {
@@ -361,7 +372,7 @@ function handleDragStart(event: DragEvent, primaryEntry: AssetBrowserEntry, allE
 
 function handleEntryActivated(entry: AssetBrowserEntry): void {
     if (isAssetBrowserGroupEntry(entry)) {
-        assetGroupsStore.toggleCollapsed(entry.group.id);
+        toggleCollapsed(entry.group.id);
     }
 }
 
@@ -392,6 +403,58 @@ function handleKeyDown(event: KeyboardEvent, entry: AssetBrowserEntry | undefine
             editingGroup.value = entry.group.id;
         }
     }
+}
+
+// groups
+
+function activateGroup(id: Shared.AssetGroup.GroupId | undefined): void {
+    activeGroupId.value = id;
+}
+
+function isExpanded(groupId: Shared.AssetGroup.GroupId) {
+    return expandedState.value.includes(groupId);
+}
+
+function isCollapsedAsset(assetId: Shared.Asset.AssetId) {
+    const id = assetGroupsStore.getGroupFromAssetId(assetId)?.id;
+    if (id === undefined) return false;
+    return !isExpanded(id);
+}
+
+function collapse(assetId: Shared.AssetGroup.GroupId) {
+    const idx = expandedState.value.indexOf(assetId);
+    if (idx >= 0) {
+        const newState = [...expandedState.value];
+        newState.splice(idx, 1);
+        expandedState.value = newState;
+    }
+}
+
+function expand(assetId: Shared.AssetGroup.GroupId) {
+    if (!isExpanded(assetId)) {
+        const newState = [...expandedState.value];
+        newState.push(assetId);
+        expandedState.value = newState;
+    }
+}
+
+function toggleCollapsed(assetId: Shared.AssetGroup.GroupId) {
+    const newState = [...expandedState.value];
+    const idx = newState.indexOf(assetId);
+    if (idx >= 0) {
+        newState.splice(idx, 1);
+    } else {
+        newState.push(assetId);
+    }
+    expandedState.value = newState;
+}
+
+function collapseAll() {
+    expandedState.value = [];
+}
+
+function expandAll() {
+    expandedState.value = Array.from(assetGroupsStore.groups.keys());
 }
 </script>
 

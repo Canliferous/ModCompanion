@@ -1,21 +1,10 @@
 import { defineStore } from "pinia";
-import { useRememberWorkspaceRef } from "~/composables/useRemember.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { getCommonPrefix, removeTrailing } from "~/helper/StringHelper.js";
 import * as Shared from "mod_companion_shared";
 
 export const useAssetGroupsStore = defineStore("asset-groups", () => {
     const groups = ref<Map<Shared.AssetGroup.GroupId, Shared.AssetGroup.SharedAssetGroup>>(new Map());
-    const expandedState = useRememberWorkspaceRef(ref<Shared.AssetGroup.GroupId[]>([]), "groups-expanded");
-    const activeGroupId = ref<Shared.AssetGroup.GroupId | undefined>();
-    const activeGroup = computed(() => {
-        const v = activeGroupId.value;
-        if (!v) {
-            return undefined;
-        } else {
-            return groups.value.get(v);
-        }
-    });
 
     window.electronAPI.assetGroups.subscribeRescanned((event) => {
         groups.value = event.groups;
@@ -53,10 +42,6 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
 
     function refresh(): void {
         window.electronAPI.assetGroups.forceRescan();
-    }
-
-    function activateGroup(id: Shared.AssetGroup.GroupId | undefined): void {
-        activeGroupId.value = id;
     }
 
     async function writeGroup(
@@ -132,74 +117,17 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
         return groups.value.get(groupId);
     }
 
-    function isExpanded(groupId: Shared.AssetGroup.GroupId) {
-        return expandedState.value.includes(groupId);
-    }
-
-    function isCollapsedAsset(assetId: Shared.Asset.AssetId) {
-        const id = getGroupFromAssetId(assetId)?.id;
-        if (id === undefined) return false;
-        return !isExpanded(id);
-    }
-
-    function collapse(assetId: Shared.AssetGroup.GroupId) {
-        const idx = expandedState.value.indexOf(assetId);
-        if (idx >= 0) {
-            const newState = [...expandedState.value];
-            newState.splice(idx, 1);
-            expandedState.value = newState;
-        }
-    }
-
-    function expand(assetId: Shared.AssetGroup.GroupId) {
-        if (!isExpanded(assetId)) {
-            const newState = [...expandedState.value];
-            newState.push(assetId);
-            expandedState.value = newState;
-        }
-    }
-
-    function toggleCollapsed(assetId: Shared.AssetGroup.GroupId) {
-        const newState = [...expandedState.value];
-        const idx = newState.indexOf(assetId);
-        if (idx >= 0) {
-            newState.splice(idx, 1);
-        } else {
-            newState.push(assetId);
-        }
-        expandedState.value = newState;
-    }
-
-    function collapseAll() {
-        expandedState.value = [];
-    }
-
-    function expandAll() {
-        expandedState.value = Array.from(groups.value.keys());
-    }
-
     return {
         groups,
-        activeGroupId,
-        activeGroup,
-        expandedState,
-        isExpanded,
-        isCollapsedAsset,
         createGroup,
         refresh,
-        activateGroup,
         writeGroup,
         writeAddAssetsToGroup,
         writeRemoveAssetsFromGroup,
         writeRemoveAssetsFromTheirGroups,
         isGrouped,
-        toggleCollapsed,
-        collapse,
-        expand,
         subscribeGroupsWritten,
         deleteGroup,
-        collapseAll,
-        expandAll,
         getGroupFromAssetId,
         getGroup,
     };
