@@ -23,6 +23,7 @@ import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser
 import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { MapsBehavior } from "~/components/panels/maps/Maps.model.js";
 import { StrataConsoleBehavior } from "~/components/panels/strataConsole/StrataConsole.model.js";
+import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 
 export const GlobalComponentNames = {
     AssetInspectorTexturePreview: "_AssetInspector_TexturePreview",
@@ -41,6 +42,7 @@ export const GlobalComponentNames = {
     ConversionDetails: "_ConversionDetails",
     StrataConsole: "_StrataConsole",
     PanelTab: "_PanelTab",
+    SubPanelTab: "_SubPanelTab",
     AddPanelAction: "_AddPanelAction",
     Watermark: "_Watermark",
 } as const;
@@ -64,6 +66,7 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
     _Conversions: ConversionsPanel,
     _ConversionDetails: ConversionDetailsPanel,
     _PanelTab: PanelTab,
+    _SubPanelTab: SubPanelTab,
     _AddPanelAction: AddPanelAction,
     _Watermark: WaterMark,
 };
@@ -96,6 +99,11 @@ export interface PanelParams<T extends PanelModel> {
     panelName: PanelComponentName;
     panelId: string;
     noClose: boolean;
+}
+
+export interface SubPanelParams {
+    icon?: string;
+    name: string;
 }
 
 export interface PanelBehavior<T extends PanelModel> {

@@ -9,8 +9,12 @@ export interface AssetInspectorModel extends PanelModel {
 }
 
 export const AssetInspectorBehavior = {
+    AssetInjectKey: Symbol() as InjectionKey<{
+        assetId: Shared.Asset.AssetId;
+    }>,
     TextureInjectKey: Symbol() as InjectionKey<{
         meta: MaybeRefOrGetter<Shared.ImageMeta.SharedImageMetaReport | undefined>;
+        assetId: Shared.Asset.AssetId;
     }>,
     PanelsInjectKey: Symbol() as InjectionKey<{
         visiblePanels: Reactive<Map<string, boolean>>;
