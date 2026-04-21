@@ -1,16 +1,11 @@
 <template>
-    <AssetInspectorTextureConvertRoot v-if="Shared.Asset.isTextureAsset(asset)" :asset="asset" />
-    <div v-else class="grid place-items-center">No Texture Selected</div>
+    <TextureProvider v-slot="{ asset }">
+        <AssetInspectorTextureConvertRoot :asset="asset" />
+    </TextureProvider>
 </template>
 
 <script setup lang="ts">
-import { useAssetListStore } from "~/store/AssetListStore.js";
-import * as Shared from "mod_companion_shared";
-import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
-const assetListStore = useAssetListStore();
-
-const inj = inject(AssetInspectorBehavior.AssetInjectKey);
-const asset = computed(() => assetListStore.getAssetById(inj?.assetId));
+import TextureProvider from "~/components/panels/assetInspector/TextureProvider.vue";
 </script>
 
 <style scoped></style>
