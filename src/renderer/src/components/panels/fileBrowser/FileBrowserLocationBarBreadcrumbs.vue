@@ -23,11 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-const fileBrowserStore = useFileBrowserStore();
-const pathSplits = computed(() => fileBrowserStore.currentDir.split("/"));
+const model = defineModel<string>({ required: true });
+const emit = defineEmits<{ clearSearch: [void] }>();
+
+const pathSplits = computed(() => model.value.split("/"));
 
 function handleClick(event: MouseEvent, index: number): void {
     event.stopPropagation();
@@ -37,14 +38,14 @@ function handleClick(event: MouseEvent, index: number): void {
         fullPath += pathSplits.value[i];
     }
 
-    fileBrowserStore.currentDir = fullPath;
-    fileBrowserStore.searchTerm = "";
+    model.value = fullPath;
+    model.value = "";
 }
 
 function handleHomeClick(event: MouseEvent): void {
     event.stopPropagation();
-    fileBrowserStore.setCurrentDir("");
-    fileBrowserStore.searchTerm = "";
+    model.value = "";
+    emit("clearSearch");
 }
 </script>
 

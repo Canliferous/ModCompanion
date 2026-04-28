@@ -1,7 +1,10 @@
 import { PanelBehavior, PanelModel } from "~/helper/GlobalComponents.js";
 import { AppDesign } from "~/design/AppDesign.js";
 
-export interface FileBrowserModel extends PanelModel {}
+export interface FileBrowserModel extends PanelModel {
+    currentDir?: string;
+    searchTerm?: string;
+}
 
 export const FileBrowserBehavior: PanelBehavior<FileBrowserModel> = {
     getIcon(model: FileBrowserModel | undefined): string {

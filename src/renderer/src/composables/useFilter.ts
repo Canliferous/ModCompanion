@@ -82,32 +82,34 @@ export function useAssetsFilter(
 }
 
 export function useFileFilter(
-    files: Reactive<Map<string, Shared.FileBrowser.FileEntry[]>>,
-    searchFilter: Ref<string>,
+    files: Map<string, Shared.FileBrowser.FileEntry[]>,
+    searchFilter: string | undefined,
     maxResults: number,
-) {
-    return computed<Shared.FileBrowser.FileEntry[]>(() => {
-        const result: Shared.FileBrowser.FileEntry[] = [];
+): Shared.FileBrowser.FileEntry[] {
+    if (!searchFilter) {
+        return Array.from(files.values()).flat();
+    }
 
-        let resultsCount = 0;
+    const result: Shared.FileBrowser.FileEntry[] = [];
 
-        const searchTerms = searchFilter.value.split(" ");
-        loop1: for (const [key, entry] of files.entries()) {
-            for (const e of entry) {
-                let match = true;
-                for (const term of searchTerms) {
-                    if (!e.name.includes(term)) {
-                        match = false;
-                    }
-                }
+    let resultsCount = 0;
 
-                if (match) {
-                    if (resultsCount++ > maxResults) break loop1;
-                    result.push(e);
+    const searchTerms = searchFilter.split(" ");
+    loop1: for (const [key, entry] of files.entries()) {
+        for (const e of entry) {
+            let match = true;
+            for (const term of searchTerms) {
+                if (!e.name.includes(term)) {
+                    match = false;
                 }
             }
-        }
 
-        return result;
-    });
+            if (match) {
+                if (resultsCount++ > maxResults) break loop1;
+                result.push(e);
+            }
+        }
+    }
+
+    return result;
 }

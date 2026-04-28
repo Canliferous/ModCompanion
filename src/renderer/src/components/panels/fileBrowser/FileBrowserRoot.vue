@@ -2,7 +2,11 @@
     <MPanelRoot no-scroll>
         <template #header>
             <div class="grid gap-1 grid-cols-[1fr_minmax(4rem,30%)]">
-                <FileBrowserLocationBar @focus-list="handleFocusList" />
+                <FileBrowserLocationBar
+                    v-model="currentDir"
+                    @clear-search="clearSearchTerm"
+                    @focus-list="handleFocusList"
+                />
                 <FileBrowserSearchBar />
             </div>
         </template>
@@ -39,12 +43,35 @@ import clipboardHelper from "~/helper/ClipboardHelper.js";
 import * as Shared from "mod_companion_shared";
 import FileBrowserSearchBar from "~/components/panels/fileBrowser/FileBrowserSearchBar.vue";
 import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEntryName.vue";
+import { useFileFilter } from "~/composables/useFilter";
+import { getRootRelativePath } from "~/helper/SourceFs";
+import { Logger } from "~/logger";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 const assetGroupsStore = useAssetGroupsStore();
 
-const entries = computed(() => fileBrowserStore.entriesToShow);
+const searchTerm = defineModel<string>("search");
+const currentDir = defineModel<string>("dir");
+
+const searchEntries = computed(() => useFileFilter(fileBrowserStore.fsEntries, searchTerm.value, 1000));
+const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
+    let e;
+    if (searchTerm.value) {
+        e = searchEntries.value;
+    } else if (currentDir.value) {
+        e = fileBrowserStore.fsEntries.get(currentDir.value) ?? [];
+    } else {
+        return [];
+    }
+
+    const { result } = Shared.FileBrowser.sortFileEntries(e);
+    return result;
+});
+
+const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);
+
+watch(currentDir, (dir) => (dir ? fileBrowserStore.refreshDir(dir) : undefined));
 
 const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
 
@@ -89,7 +116,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                     label: "New Empty Asset",
                     icon: AppDesign.Icons.ActionAdd,
                     onSelect() {
-                        window.electronAPI.asset.createEmpty(fileBrowserStore.currentDir);
+                        window.electronAPI.asset.createEmpty(currentDir.value);
                     },
                 },
             ],
@@ -98,8 +125,6 @@ const items = computed<ContextMenuItem[][]>(() => {
 
     const allFiles = !entries.some((e) => !e.isFile);
     const pathsArray = entries.map((e) => e.path);
-
-    const mcaFiles = entries.filter((e) => e.isFile && pathe.extname(e.path) === Shared.Asset.McaFileExt);
 
     return [
         [
@@ -125,7 +150,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionBrowseToFolder,
                 disabled: entries.length !== 1,
                 onSelect() {
-                    fileBrowserStore.setCurrentDir(pathe.dirname(entries[0].path));
+                    setCurrentDir(pathe.dirname(entries[0].path));
                 },
             },
         ],
@@ -135,7 +160,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect() {
-                    const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
+                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore.createAsset(primaryPath, otherPaths);
                 },
@@ -145,7 +170,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !allFiles,
                 onSelect() {
-                    const primaryPath = fileBrowserStore.activeEntry?.path ?? pathsArray[0];
+                    const primaryPath = activeEntry.value?.path ?? pathsArray[0];
                     const otherPaths = pathsArray.toSpliced(pathsArray.indexOf(primaryPath), 1);
                     assetListStore
                         .createAsset(primaryPath, otherPaths)
@@ -179,8 +204,13 @@ function handleFocusList(): void {
     dataTable.value?.focus();
 }
 
-function handleActivated(active: Shared.FileBrowser.FileEntry): void {
-    fileBrowserStore.onEntryActivated(active);
+function handleActivated(entry: Shared.FileBrowser.FileEntry): void {
+    if (entry.isFile) {
+        const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
+        window.electronAPI.fileBrowser.open(fullPath);
+    } else {
+        setCurrentDir(entry.path);
+    }
 }
 
 function handleSelectionChanged(entries: Shared.FileBrowser.FileEntry[]): void {
@@ -188,7 +218,7 @@ function handleSelectionChanged(entries: Shared.FileBrowser.FileEntry[]): void {
 }
 
 function handleActiveChanged(entry: Shared.FileBrowser.FileEntry | undefined): void {
-    fileBrowserStore.activeEntry = entry;
+    activeEntry.value = entry;
 }
 
 function handleDragStart(
@@ -198,6 +228,28 @@ function handleDragStart(
 ): void {
     const payload = allEntries.map((e) => e.path).join("\n");
     event.dataTransfer?.setData("text/plain", payload);
+}
+
+function setCurrentDir(dir: string): void {
+    let correctedPath = getRootRelativePath(dir);
+    if (correctedPath === undefined) {
+        Logger.warning(Shared.Log.Channel.Generic, `Cannot update path to ${dir} because it's invalid`);
+        return;
+    }
+
+    if (correctedPath.startsWith("/")) {
+        correctedPath = correctedPath.substring(1);
+    }
+    if (pathe.extname(correctedPath) !== "") {
+        correctedPath = pathe.dirname(correctedPath);
+    }
+
+    currentDir.value = correctedPath;
+    clearSearchTerm();
+}
+
+function clearSearchTerm() {
+    searchTerm.value = "";
 }
 </script>
 
