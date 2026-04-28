@@ -29,10 +29,7 @@ export const FileBrowserApi = {
 
         ipcMain.handle(
             Shared.Ipc.Channels.FileBrowser_ListFilesQuery,
-            async (
-                event: Electron.IpcMainInvokeEvent,
-                dirPath: string,
-            ): Promise<Shared.FileBrowser.SharedProjectListFilesReport> => {
+            async (event: Electron.IpcMainInvokeEvent, dirPath: string): Promise<Shared.FileBrowser.FileEntries> => {
                 const config = Core.ConfigSystem.getAppConfig();
                 const fullPath = path.join(config.rootPath, dirPath);
                 const results = await Core.FileBrowserSystem.listFiles(fullPath, dirPath);
@@ -60,20 +57,13 @@ export const FileBrowserApi = {
             },
         );
 
-        ipcMain.on(
-            Shared.Ipc.Channels.FileBrowser_SetCurrentPathAction,
-            (event: Electron.IpcMainEvent, dirPath: string): void => {
-                Core.FileBrowserSystem.setCurrentDir(dirPath);
-            },
-        );
-
         return true;
     },
 
-    notifyDirUpdated(dir: string, entries: Shared.FileBrowser.FileEntry[]) {
+    notifyDirUpdated(dir: string, entries: Shared.FileBrowser.FileEntries): void {
         IpcHelper.send(Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent, dir, entries);
     },
-    notifyIndexUpdated(index: Map<string, Shared.FileBrowser.FileEntry[]>) {
+    notifyIndexUpdated(index: Map<string, Shared.FileBrowser.FileEntry[]>): void {
         IpcHelper.send(Shared.Ipc.Channels.FileBrowser_IndexUpdatedEvent, index);
     },
 };

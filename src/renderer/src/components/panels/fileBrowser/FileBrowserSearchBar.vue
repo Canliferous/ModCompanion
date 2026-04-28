@@ -1,13 +1,7 @@
 <template>
-    <UInput
-        v-model="fileBrowserStore.searchTerm"
-        size="sm"
-        class="w-full *:h-8"
-        :icon="AppDesign.Icons.Search"
-        placeholder="Search"
-    >
-        <template v-if="fileBrowserStore.searchTerm.length > 0" #trailing>
-            <UButton :icon="AppDesign.Icons.Close" variant="link" size="xs" @click="fileBrowserStore.searchTerm = ''" />
+    <UInput v-model="model" size="sm" class="w-full *:h-8" :icon="AppDesign.Icons.Search" placeholder="Search">
+        <template v-if="model" #trailing>
+            <UButton :icon="AppDesign.Icons.Close" variant="link" size="xs" @click="handleClear" />
         </template>
     </UInput>
 </template>
@@ -15,7 +9,11 @@
 import { AppDesign } from "~/design/AppDesign.js";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 
-const fileBrowserStore = useFileBrowserStore();
+const model = defineModel<string>();
+
+function handleClear() {
+    model.value = "";
+}
 </script>
 
 <style scoped></style>

@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import * as Shared from "mod_companion_shared";
 
-const model = defineModel<string>({ required: true });
+const model = defineModel<string>();
 
 const showBreadcrumbs = ref(true);
 const inputText = ref("");
@@ -33,15 +33,15 @@ const emit = defineEmits<{
 
 function handleBgClicked(): void {
     showBreadcrumbs.value = false;
-    inputText.value = model.value;
+    inputText.value = model.value ?? "";
 }
 
 function handleBlur(): void {
-    _finish();
+    finish();
 }
 
 function handleEnter(event: KeyboardEvent): void {
-    _finish();
+    finish();
     event.stopPropagation();
 }
 
@@ -50,7 +50,7 @@ function handleDown(event: KeyboardEvent): void {
     event.stopPropagation();
 }
 
-function _finish() {
+function finish() {
     showBreadcrumbs.value = true;
     model.value = Shared.SourceFs.forwardSlashed(inputText.value);
 }

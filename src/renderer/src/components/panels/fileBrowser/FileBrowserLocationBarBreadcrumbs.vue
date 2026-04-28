@@ -25,13 +25,18 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 
-const model = defineModel<string>({ required: true });
+const model = defineModel<string>();
 const emit = defineEmits<{ clearSearch: [void] }>();
 
-const pathSplits = computed(() => model.value.split("/"));
+const pathSplits = computed(() => model.value?.split("/"));
 
 function handleClick(event: MouseEvent, index: number): void {
     event.stopPropagation();
+    if (!pathSplits.value) {
+        model.value = "";
+        return;
+    }
+
     let fullPath = "";
     for (let i = 0; i < index; i++) {
         if (i > 0) fullPath += "/";
@@ -39,7 +44,7 @@ function handleClick(event: MouseEvent, index: number): void {
     }
 
     model.value = fullPath;
-    model.value = "";
+    emit("clearSearch");
 }
 
 function handleHomeClick(event: MouseEvent): void {

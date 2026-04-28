@@ -18,16 +18,14 @@ contextBridge.exposeInMainWorld("electronAPI", {
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_CorrectPathQuery, dirPath),
         execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_ExecuteAction, filePath, base),
-        setCurrentPath: (dirPath: string) =>
-            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_SetCurrentPathAction, dirPath),
         browseToFile: (filePath: string, base: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath, base),
         open: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenAction, filePath, base),
-        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void) =>
+        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntries) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent,
-                (e: IpcRendererEvent, dir: string, entries: Shared.FileBrowser.FileEntry[]) => callback(dir, entries),
+                (e: IpcRendererEvent, dir: string, entries: Shared.FileBrowser.FileEntries) => callback(dir, entries),
             ),
         subscribeIndexUpdated: (callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void) =>
             ipcRenderer.on(

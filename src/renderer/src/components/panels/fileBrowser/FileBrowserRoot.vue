@@ -7,7 +7,7 @@
                     @clear-search="clearSearchTerm"
                     @focus-list="handleFocusList"
                 />
-                <FileBrowserSearchBar />
+                <FileBrowserSearchBar v-model="searchTerm" />
             </div>
         </template>
         <UContextMenu :items="items">
@@ -59,10 +59,8 @@ const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
     let e;
     if (searchTerm.value) {
         e = searchEntries.value;
-    } else if (currentDir.value) {
-        e = fileBrowserStore.fsEntries.get(currentDir.value) ?? [];
     } else {
-        return [];
+        e = fileBrowserStore.getEntries(currentDir.value);
     }
 
     const { result } = Shared.FileBrowser.sortFileEntries(e);
@@ -71,7 +69,10 @@ const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
 
 const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);
 
-watch(currentDir, (dir) => (dir ? fileBrowserStore.refreshDir(dir) : undefined));
+watch(currentDir, (dir) => {
+    console.log(dir);
+    return dir ? fileBrowserStore.refreshDir(dir) : undefined;
+});
 
 const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
 
@@ -109,14 +110,15 @@ const columns: DataTableColumn<Shared.FileBrowser.FileEntry>[] = [
 
 const items = computed<ContextMenuItem[][]>(() => {
     const entries = selectedEntries.value;
-    if (entries.length === 0) {
+    const dir = currentDir.value;
+    if (entries.length === 0 && dir) {
         return [
             [
                 {
                     label: "New Empty Asset",
                     icon: AppDesign.Icons.ActionAdd,
                     onSelect() {
-                        window.electronAPI.asset.createEmpty(currentDir.value);
+                        window.electronAPI.asset.createEmpty(dir);
                     },
                 },
             ],
@@ -183,7 +185,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Copy relative path",
                 icon: AppDesign.Icons.Copy,
                 disabled: entries.length !== 1,
-                onSelect(e: Event) {
+                onSelect() {
                     clipboardHelper.writeTextAndToast(entries[0].path);
                 },
             },
@@ -191,7 +193,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Copy full path",
                 icon: AppDesign.Icons.Copy,
                 disabled: entries.length !== 1,
-                onSelect(e: Event) {
+                onSelect() {
                     const fullPath = pathe.join(getAppConfig().rootPath, entries[0].path);
                     clipboardHelper.writeTextAndToast(fullPath);
                 },

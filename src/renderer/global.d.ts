@@ -13,9 +13,8 @@ declare global {
             };
 
             fileBrowser: {
-                listFiles: (dirPath: string) => Promise<Shared.FileBrowser.SharedProjectListFilesReport>;
+                listFiles: (dirPath: string) => Promise<Shared.FileBrowser.FileEntries>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
-                setCurrentPath: (dirPath: string) => void;
                 browseToFile: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
 
                 /**
@@ -30,10 +29,10 @@ declare global {
                  */
                 execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) => void;
                 subscribeDirUpdated: (
-                    callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void,
+                    callback: (dir: string, entries: Shared.FileBrowser.FileEntries) => void,
                 ) => IpcRenderer;
                 subscribeIndexUpdated: (
-                    callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void,
+                    callback: (index: Map<string, Shared.FileBrowser.FileEntries>) => void,
                 ) => IpcRenderer;
             };
 

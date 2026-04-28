@@ -1,4 +1,3 @@
-import { timeMillis } from "./SharedTiming.js";
 import { AppConfig } from "./SharedAppConfig.js";
 import pathe from "pathe";
 
@@ -9,28 +8,12 @@ export interface FileEntry {
     fileSize?: number;
 }
 
-export const SharedProjectListFilesReportTypes = {
-    Success: 0,
-    Invalid: 1,
-} as const;
-export type SharedProjectListFilesReportType =
-    (typeof SharedProjectListFilesReportTypes)[keyof typeof SharedProjectListFilesReportTypes];
-
-interface SharedProjectListFilesReportBase {
-    type: SharedProjectListFilesReportType;
-}
-
-export interface SharedProjectListFilesReportSuccess extends SharedProjectListFilesReportBase {
-    type: typeof SharedProjectListFilesReportTypes.Success;
+export interface FileEntries {
     entries: FileEntry[];
-}
-export interface SharedProjectListFilesReportInvalid extends SharedProjectListFilesReportBase {
-    type: typeof SharedProjectListFilesReportTypes.Invalid;
+    valid: boolean;
 }
 
-export type SharedProjectListFilesReport = SharedProjectListFilesReportSuccess | SharedProjectListFilesReportInvalid;
-
-export type DirUpdatedNotifyFunc = (dir: string, entries: FileEntry[]) => void;
+export type DirUpdatedNotifyFunc = (dir: string, entries: FileEntries) => void;
 
 export function isIgnoredPathName(name: string): boolean {
     return (
@@ -43,18 +26,20 @@ export function isIgnoredPathName(name: string): boolean {
     );
 }
 
-export function sortFileEntries(entries: FileEntry[]) {
-    return timeMillis(() =>
-        entries.toSorted((x, y) => {
-            const file1 = x.isFile;
-            const file2 = y.isFile;
-            if (file1 !== file2) {
-                return file1 ? 1 : -1;
-            } else {
-                return x.name.localeCompare(y.name);
-            }
-        }),
-    );
+export function sortFileEntries(entries: FileEntries): FileEntry[] {
+    if (!entries.valid || !entries.entries) {
+        return [];
+    }
+
+    return entries.entries.toSorted((x, y) => {
+        const file1 = x.isFile;
+        const file2 = y.isFile;
+        if (file1 !== file2) {
+            return file1 ? 1 : -1;
+        } else {
+            return x.name.localeCompare(y.name);
+        }
+    });
 }
 
 export const PathBases = {

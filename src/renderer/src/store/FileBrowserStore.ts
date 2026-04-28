@@ -2,15 +2,15 @@ import { defineStore } from "pinia";
 import * as Shared from "mod_companion_shared";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {
-    const fsEntries = reactive(new Map<string, Shared.FileBrowser.FileEntry[]>());
+    const fsEntries = reactive(new Map<string, Shared.FileBrowser.FileEntries>());
 
     async function refreshDir(dirName: string) {
         const report = await window.electronAPI.fileBrowser.listFiles(dirName);
-        window.electronAPI.fileBrowser.setCurrentPath(dirName);
+        fsEntries.set(dirName, report);
+    }
 
-        if (report.type === Shared.FileBrowser.SharedProjectListFilesReportTypes.Success) {
-            fsEntries.set(dirName, report.entries);
-        }
+    function getEntries(dirPath: string | undefined): Shared.FileBrowser.FileEntries {
+        return fsEntries.get(dirPath ?? "") ?? { valid: false, entries: [] };
     }
 
     window.electronAPI.fileBrowser.subscribeDirUpdated((dir, entries) => {
@@ -26,6 +26,7 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
 
     return {
         fsEntries,
+        getEntries,
         refreshDir,
     };
 });
