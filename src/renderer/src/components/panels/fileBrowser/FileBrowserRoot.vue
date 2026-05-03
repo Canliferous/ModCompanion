@@ -63,14 +63,12 @@ const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
         e = fileBrowserStore.getEntries(currentDir.value);
     }
 
-    const { result } = Shared.FileBrowser.sortFileEntries(e);
-    return result;
+    return Shared.FileBrowser.sortFileEntries(e);
 });
 
 const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);
 
 watch(currentDir, (dir) => {
-    console.log(dir);
     return dir ? fileBrowserStore.refreshDir(dir) : undefined;
 });
 

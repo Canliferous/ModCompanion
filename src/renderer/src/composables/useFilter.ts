@@ -1,4 +1,4 @@
-import { computed, Reactive, Ref } from "vue";
+import { computed, Ref } from "vue";
 import * as Shared from "mod_companion_shared";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
@@ -82,12 +82,13 @@ export function useAssetsFilter(
 }
 
 export function useFileFilter(
-    files: Map<string, Shared.FileBrowser.FileEntry[]>,
+    files: Map<string, Shared.FileBrowser.FileEntries>,
     searchFilter: string | undefined,
     maxResults: number,
-): Shared.FileBrowser.FileEntry[] {
+): Shared.FileBrowser.FileEntries {
     if (!searchFilter) {
-        return Array.from(files.values()).flat();
+        const entries = Array.from(files.values().map((f) => f.entries)).flat();
+        return { valid: true, entries };
     }
 
     const result: Shared.FileBrowser.FileEntry[] = [];
@@ -96,7 +97,7 @@ export function useFileFilter(
 
     const searchTerms = searchFilter.split(" ");
     loop1: for (const [key, entry] of files.entries()) {
-        for (const e of entry) {
+        for (const e of entry.entries) {
             let match = true;
             for (const term of searchTerms) {
                 if (!e.name.includes(term)) {
@@ -111,5 +112,5 @@ export function useFileFilter(
         }
     }
 
-    return result;
+    return { valid: true, entries: result };
 }
