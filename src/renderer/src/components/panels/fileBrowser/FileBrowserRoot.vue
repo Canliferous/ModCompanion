@@ -212,6 +212,7 @@ function handleFocusList(): void {
 function handleActivated(entry: Shared.FileBrowser.FileEntry, event?: KeyboardEvent | MouseEvent): void {
     if (!entry.isFile) {
         setCurrentDir(entry.path);
+        return;
     }
 
     if (event?.shiftKey) {
