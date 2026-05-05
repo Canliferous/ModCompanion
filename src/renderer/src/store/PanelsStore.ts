@@ -6,6 +6,7 @@ import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
 import * as uuid from "uuid";
+import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -52,6 +53,22 @@ export const usePanelsStore = defineStore("panels", () => {
         return api.value?.addPanel(op);
     }
 
+    function spawnPanelAtSimilar<T extends PanelModel>(
+        panelName: PanelComponentName,
+        model: T,
+        defaultDirection: Direction,
+    ): IDockviewPanel | undefined {
+        const options: Partial<AddPanelOptions<PanelParams<T>>> = {};
+
+        const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
+        if (existingPanelOfSameType) {
+            options.position = { direction: "within", referencePanel: existingPanelOfSameType.id };
+        } else {
+            options.position = { direction: defaultDirection };
+        }
+        return spawnPanel(panelName, model, options);
+    }
+
     function findOpenPanel(panelId: string): IDockviewPanel | undefined {
         return api.value?.panels.find((p) => p.id.startsWith(panelId));
     }
@@ -93,5 +110,5 @@ export const usePanelsStore = defineStore("panels", () => {
         return models.get(panelId) as T | undefined;
     }
 
-    return { api, handleReady, spawnPanel, getModel };
+    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, getModel };
 });
