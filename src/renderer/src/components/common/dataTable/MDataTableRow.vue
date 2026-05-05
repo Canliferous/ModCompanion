@@ -65,7 +65,7 @@ function handleContextMenu(event: MouseEvent): void {
 
 function handleDoubleClick(event: MouseEvent): void {
     event.stopPropagation();
-    entryAction?.onEntryActivated(props.idx);
+    entryAction?.onEntryActivated(props.idx, event);
 }
 
 function handleDown(event: KeyboardEvent): void {
@@ -80,7 +80,7 @@ function handleUp(event: KeyboardEvent): void {
 
 function handleEnter(event: KeyboardEvent): void {
     event.stopPropagation();
-    entryAction?.onEntryActivated(props.idx);
+    entryAction?.onEntryActivated(props.idx, event);
 }
 const rowHighlightClass = computed(() => ({
     "bg-neutral-750 hover:bg-neutral-600": isSelected.value && !isActive.value,

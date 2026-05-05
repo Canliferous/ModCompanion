@@ -46,10 +46,15 @@ import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEnt
 import { useFileFilter } from "~/composables/useFilter";
 import { getRootRelativePath } from "~/helper/SourceFs";
 import { Logger } from "~/logger";
+import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
+import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
 const assetGroupsStore = useAssetGroupsStore();
+const panelsStore = usePanelsStore();
 
 const searchTerm = defineModel<string>("search");
 const currentDir = defineModel<string>("dir");
@@ -204,12 +209,20 @@ function handleFocusList(): void {
     dataTable.value?.focus();
 }
 
-function handleActivated(entry: Shared.FileBrowser.FileEntry): void {
-    if (entry.isFile) {
+function handleActivated(entry: Shared.FileBrowser.FileEntry, event?: KeyboardEvent | MouseEvent): void {
+    if (!entry.isFile) {
+        setCurrentDir(entry.path);
+    }
+
+    if (event?.shiftKey) {
         const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
         window.electronAPI.fileBrowser.open(fullPath);
     } else {
-        setCurrentDir(entry.path);
+        panelsStore.spawnPanel<FileInspectorModel>(
+            GlobalComponentNames.FileInspector,
+            { file: entry.path },
+            { position: { direction: "right" } },
+        );
     }
 }
 
