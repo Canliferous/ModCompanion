@@ -124,5 +124,11 @@ export const usePanelsStore = defineStore("panels", () => {
         return models.get(panelId) as T | undefined;
     }
 
-    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, spawnTemporaryPanel, getModel };
+    function makeNonTemporary(panelId: string): void {
+        const panel = api.value?.getPanel(panelId);
+        if (!panel) return;
+        panel.update({ params: { ...panel.params, temporary: false } });
+    }
+
+    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, spawnTemporaryPanel, getModel, makeNonTemporary };
 });

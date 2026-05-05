@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose">
+    <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose" @dblclick="handleDoubleClick">
         <UIcon :name="behavior.getIcon(model)" />
         <span :class="{ italic: p.props.params.temporary }">{{ behavior.getTitle(model) }}</span>
         <UButton
@@ -29,6 +29,10 @@ function handleClose() {
     if (!p.props.params.noClose) {
         p.props.api.close();
     }
+}
+
+function handleDoubleClick() {
+    usePanelsStore().makeNonTemporary(p.props.params.panelId);
 }
 </script>
 
