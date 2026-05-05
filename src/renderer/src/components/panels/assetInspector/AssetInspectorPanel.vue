@@ -23,11 +23,11 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 
-const props = defineProps<{ params: IDockviewPanelProps<PanelParams<AssetInspectorModel>> }>();
-const model = usePanelsStore().getModel<AssetInspectorModel>(props.params.params.panelId);
+const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
+const model = computed(() => usePanelsStore().getModel<AssetInspectorModel>(props.params.params.panelId));
 
 const assetListStore = useAssetListStore();
-const asset = computed(() => assetListStore.getAssetById(model?.assetId));
+const asset = computed(() => assetListStore.getAssetById(model.value?.assetId));
 </script>
 
 <style scoped></style>

@@ -55,12 +55,12 @@ watch(
 );
 
 provide(AssetInspectorBehavior.AssetInjectKey, {
-    assetId: props.asset.def.id,
+    assetId: computed(() => props.asset.def.id),
 });
 
 provide(AssetInspectorBehavior.TextureInjectKey, {
     meta: textureMeta,
-    assetId: props.asset.def.id,
+    assetId: computed(() => props.asset.def.id),
 });
 
 provide(AssetInspectorBehavior.PanelsInjectKey, {

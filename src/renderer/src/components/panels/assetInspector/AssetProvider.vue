@@ -16,7 +16,7 @@ import MPanelFallbackMessage from "~/components/common/MPanelFallbackMessage.vue
 const assetListStore = useAssetListStore();
 
 const inj = inject(AssetInspectorBehavior.AssetInjectKey);
-const asset = computed(() => assetListStore.getAssetById(inj?.assetId));
+const asset = computed(() => assetListStore.getAssetById(inj?.assetId.value));
 
 defineSlots<{
     default(props: { asset: Shared.Asset.Asset }): any;
