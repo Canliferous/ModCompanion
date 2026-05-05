@@ -5,7 +5,7 @@
                 <div class="flex gap-2 w-full items-center">
                     <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
-                        <div>{{ pathe.basename(model) }}</div>
+                        <div>{{ fileName }}</div>
                         <!--                        <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">-->
                         <!--                            <span>{{ fileSize(entry.fileSize) }}</span>-->
                         <!--                            <span>{{ getFileTypeName(fileType) }}</span>-->
@@ -44,8 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
-import { fileSize } from "humanize-plus";
 import { AppDesign } from "~/design/AppDesign.js";
 import {
     FileInspectors,
@@ -53,15 +51,14 @@ import {
     getFileInspectorFromType,
     getFileType,
     getFileTypeIcon,
-    getFileTypeName,
 } from "~/helper/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 
-const model = defineModel<string>({ required: true });
-const fullPath = computed(() => pathe.join(getAppConfig().rootPath, model.value));
-
-const fileType = computed(() => getFileType(pathe.basename(model.value)));
+const props = defineProps<{ file: string }>();
+const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
+const fileName = computed(() => pathe.basename(props.file));
+const fileType = computed(() => getFileType(fileName.value));
 const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
 
 function handleExplore() {

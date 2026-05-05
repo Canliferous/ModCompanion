@@ -94,11 +94,11 @@ export const SpawnablePanelComponentNames = [
 ];
 export type SpawnablePanelComponentName = (typeof SpawnablePanelComponentNames)[number];
 
-export interface PanelParams<T extends PanelModel> {
-    model: T;
+export interface PanelParams {
     panelName: PanelComponentName;
     panelId: string;
     noClose: boolean;
+    temporary: boolean;
 }
 
 export interface SubPanelParams {

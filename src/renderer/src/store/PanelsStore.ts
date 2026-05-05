@@ -39,15 +39,16 @@ export const usePanelsStore = defineStore("panels", () => {
         panelName: PanelComponentName,
         model: T,
         options?: Partial<AddPanelOptions>,
+        params?: Partial<PanelParams>,
     ): IDockviewPanel | undefined {
         const panelId = panelName + ":" + uuid.v4();
         models.set(panelId, model);
-        const op: AddPanelOptions<PanelParams<T>> = {
+        const op: AddPanelOptions<PanelParams> = {
             ...options,
             id: panelId,
             component: panelName,
             tabComponent: GlobalComponentNames.PanelTab,
-            params: { model, panelName, panelId, noClose: false },
+            params: { panelName, panelId, noClose: false, temporary: false, ...params },
         };
 
         return api.value?.addPanel(op);
@@ -58,7 +59,7 @@ export const usePanelsStore = defineStore("panels", () => {
         model: T,
         defaultDirection: Direction,
     ): IDockviewPanel | undefined {
-        const options: Partial<AddPanelOptions<PanelParams<T>>> = {};
+        const options: Partial<AddPanelOptions<PanelParams>> = {};
 
         const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
         if (existingPanelOfSameType) {
@@ -69,8 +70,21 @@ export const usePanelsStore = defineStore("panels", () => {
         return spawnPanel(panelName, model, options);
     }
 
-    function findOpenPanel(panelId: string): IDockviewPanel | undefined {
-        return api.value?.panels.find((p) => p.id.startsWith(panelId));
+    function spawnTemporaryPanel<T extends PanelModel>(
+        panelName: PanelComponentName,
+        model: T,
+        defaultDirection: Direction,
+    ): IDockviewPanel | undefined {
+        const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
+        if (existingPanelOfSameType?.params?.temporary) {
+            models.set(existingPanelOfSameType.id, model);
+            const panel = api.value?.getPanel(existingPanelOfSameType.id);
+            if (panel) {
+                panel.focus();
+            }
+        } else {
+            return spawnPanel(panelName, model, { position: { direction: defaultDirection } }, { temporary: true });
+        }
     }
 
     function deserialize(): void {
@@ -87,7 +101,7 @@ export const usePanelsStore = defineStore("panels", () => {
                 api.value.clear();
             }
         } catch (err) {
-            console.warn("Failed to load layout", err);
+            Logger.warning(Shared.Log.Channel.Generic, "Failed to load layout", err);
         }
     }
 
@@ -110,5 +124,5 @@ export const usePanelsStore = defineStore("panels", () => {
         return models.get(panelId) as T | undefined;
     }
 
-    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, getModel };
+    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, spawnTemporaryPanel, getModel };
 });

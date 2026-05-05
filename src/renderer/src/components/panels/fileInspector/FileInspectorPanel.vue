@@ -1,6 +1,6 @@
 <template>
     <template v-if="model">
-        <FileInspectorRoot v-model="model.file" />
+        <FileInspectorRoot :file="model.file" />
     </template>
 </template>
 
@@ -11,8 +11,8 @@ import { PanelParams } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 
-const props = defineProps<{ params: IDockviewPanelProps<PanelParams<FileInspectorModel>> }>();
-const model = usePanelsStore().getModel<FileInspectorModel>(props.params.params.panelId);
+const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
+const model = computed(() => usePanelsStore().getModel<FileInspectorModel>(props.params.params.panelId));
 </script>
 
 <style scoped></style>

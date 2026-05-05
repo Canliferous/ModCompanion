@@ -219,7 +219,7 @@ function handleActivated(entry: Shared.FileBrowser.FileEntry, event?: KeyboardEv
         const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
         window.electronAPI.fileBrowser.open(fullPath);
     } else {
-        panelsStore.spawnPanelAtSimilar<FileInspectorModel>(
+        panelsStore.spawnTemporaryPanel<FileInspectorModel>(
             GlobalComponentNames.FileInspector,
             { file: entry.path },
             "right",

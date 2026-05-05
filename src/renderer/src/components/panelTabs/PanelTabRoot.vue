@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose">
-        <UIcon :name="behavior.getIcon(p.props.params.model)" />
-        <span>{{ behavior.getTitle(p.props.params.model) }}</span>
+        <UIcon :name="behavior.getIcon(model)" />
+        <span :class="{ italic: p.props.params.temporary }">{{ behavior.getTitle(model) }}</span>
         <UButton
             v-if="!p.props.params.noClose"
             :icon="AppDesign.Icons.Close"
@@ -17,10 +17,13 @@
 import { AppDesign } from "~/design/AppDesign.js";
 
 import { IDockviewPanelHeaderProps } from "dockview-vue";
-import { PanelParams, PanelsBehaviors } from "~/helper/GlobalComponents.js";
+import { PanelModel, PanelParams, PanelsBehaviors } from "~/helper/GlobalComponents.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 
-const p = defineProps<{ props: IDockviewPanelHeaderProps<PanelParams<any>> }>();
+const p = defineProps<{ props: IDockviewPanelHeaderProps<PanelParams> }>();
 const behavior = computed(() => PanelsBehaviors[p.props.params.panelName]);
+const model = computed(() => usePanelsStore().getModel<PanelModel>(p.props.params.panelId));
 
 function handleClose() {
     if (!p.props.params.noClose) {
