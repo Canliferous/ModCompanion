@@ -58,6 +58,7 @@ export const usePanelsStore = defineStore("panels", () => {
         panelName: PanelComponentName,
         model: T,
         defaultDirection: Direction,
+        params?: Partial<PanelParams>,
     ): IDockviewPanel | undefined {
         const options: Partial<AddPanelOptions<PanelParams>> = {};
 
@@ -67,7 +68,7 @@ export const usePanelsStore = defineStore("panels", () => {
         } else {
             options.position = { direction: defaultDirection };
         }
-        return spawnPanel(panelName, model, options);
+        return spawnPanel(panelName, model, options, params);
     }
 
     function spawnTemporaryPanel<T extends PanelModel>(
@@ -82,9 +83,11 @@ export const usePanelsStore = defineStore("panels", () => {
             if (panel) {
                 panel.focus();
             }
-        } else {
-            return spawnPanel(panelName, model, { position: { direction: defaultDirection } }, { temporary: true });
+
+            return;
         }
+
+        return spawnPanelAtSimilar(panelName, model, defaultDirection, { temporary: true });
     }
 
     function deserialize(): void {
