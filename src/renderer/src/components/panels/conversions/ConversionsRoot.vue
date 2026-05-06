@@ -1,7 +1,10 @@
 <template>
     <MPanelRoot no-scroll>
         <template v-if="conversionStore.conversionEvents.length > 0">
-            <ConversionsTable :history="conversionStore.conversionEvents" />
+            <div class="grid grid-cols-2 h-full">
+                <ConversionsTable :history="conversionStore.conversionEvents" />
+                <ConversionDetailsPanel />
+            </div>
         </template>
 
         <template v-else>
