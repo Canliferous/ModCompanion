@@ -14,7 +14,6 @@ import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.v
 import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
 import WaterMark from "~/components/panels/WaterMark.vue";
 import AddPanelAction from "~/components/panels/AddPanelAction.vue";
-import ConversionDetailsPanel from "~/components/panels/conversionDetails/ConversionDetailsPanel.vue";
 import AssetInspectorTextureHotspotEditorPanel from "~/components/panels/assetInspector/textureHotspotEditor/AssetInspectorTextureHotspotEditorPanel.vue";
 import { App as VueApp } from "vue";
 import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
@@ -40,7 +39,6 @@ export const GlobalComponentNames = {
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
     Conversions: "_Conversions",
-    ConversionDetails: "_ConversionDetails",
     StrataConsole: "_StrataConsole",
     PanelTab: "_PanelTab",
     SubPanelTab: "_SubPanelTab",
@@ -65,7 +63,6 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
     _MapCompileLog: MapCompileLogPanel,
     _StrataConsole: StrataConsolePanel,
     _Conversions: ConversionsPanel,
-    _ConversionDetails: ConversionDetailsPanel,
     _PanelTab: PanelTab,
     _SubPanelTab: SubPanelTab,
     _AddPanelAction: AddPanelAction,
@@ -83,7 +80,6 @@ export const PanelComponentNames = [
     // GlobalComponentNames.MapCompileLog,
     GlobalComponentNames.StrataConsole,
     GlobalComponentNames.Conversions,
-    // GlobalComponentNames.ConversionDetails,
 ];
 export type PanelComponentName = (typeof PanelComponentNames)[number];
 

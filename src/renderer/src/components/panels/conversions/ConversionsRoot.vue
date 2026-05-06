@@ -1,9 +1,14 @@
 <template>
     <MPanelRoot no-scroll>
         <template v-if="conversionStore.conversionEvents.length > 0">
-            <div class="grid grid-cols-2 h-full">
+            <div class="grid grid-cols-2 gap-2 h-full">
                 <ConversionsTable :history="conversionStore.conversionEvents" />
-                <ConversionDetailsPanel />
+                <template v-if="conversionStore.activeEvent">
+                    <ConversionsDetails :event="conversionStore.activeEvent" />
+                </template>
+                <template v-else>
+                    <div class="w-full h-full text-muted grid place-items-center">No event selected</div>
+                </template>
             </div>
         </template>
 
