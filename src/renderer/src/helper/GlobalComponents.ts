@@ -24,6 +24,7 @@ import { MapsBehavior } from "~/components/panels/maps/Maps.model.js";
 import { StrataConsoleBehavior } from "~/components/panels/strataConsole/StrataConsole.model.js";
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 import { ConversionsBehavior } from "~/components/panels/conversions/Conversions.model.js";
+import { MapCompileLogBehavior } from "~/components/panels/mapCompileLog/MapCompileLog.model.js";
 
 export const GlobalComponentNames = {
     AssetInspectorTexturePreview: "_AssetInspector_TexturePreview",
@@ -77,7 +78,7 @@ export const PanelComponentNames = [
     GlobalComponentNames.FileBrowser,
     GlobalComponentNames.FileInspector,
     GlobalComponentNames.MapList,
-    // GlobalComponentNames.MapCompileLog,
+    GlobalComponentNames.MapCompileLog,
     GlobalComponentNames.StrataConsole,
     GlobalComponentNames.Conversions,
 ];
@@ -87,6 +88,7 @@ export const SpawnablePanelComponentNames = [
     GlobalComponentNames.AssetBrowser,
     GlobalComponentNames.FileBrowser,
     GlobalComponentNames.MapList,
+    GlobalComponentNames.MapCompileLog,
     GlobalComponentNames.StrataConsole,
     GlobalComponentNames.Conversions,
 ];
@@ -117,6 +119,7 @@ export const PanelsBehaviors: Record<PanelComponentName, PanelBehavior<any>> = {
     [GlobalComponentNames.FileBrowser]: FileBrowserBehavior,
     [GlobalComponentNames.FileInspector]: FileInspectorBehavior,
     [GlobalComponentNames.MapList]: MapsBehavior,
+    [GlobalComponentNames.MapCompileLog]: MapCompileLogBehavior,
     [GlobalComponentNames.StrataConsole]: StrataConsoleBehavior,
     [GlobalComponentNames.Conversions]: ConversionsBehavior,
 };
