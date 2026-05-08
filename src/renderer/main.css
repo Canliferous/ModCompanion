@@ -73,7 +73,7 @@
 
     --dv-group-view-background-color: var(--color-neutral-900);
 
-    --dv-activegroup-visiblepanel-tab-background-color: var(--color-neutral-850);
+    --dv-activegroup-visiblepanel-tab-background-color: var(--color-neutral-750);
     --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-neutral-850);
     --dv-activegroup-hiddenpanel-tab-background-color: var(--color-neutral-900);
     --dv-inactivegroup-hiddenpanel-tab-background-color: var(--color-neutral-900);
@@ -98,6 +98,11 @@
         box-shadow: var(--inset-shadow-rim);
         border-radius: var(--radius-md);
         border-top-left-radius: 0;
+    }
+
+    .dv-active-group .dv-content-container {
+        outline: 2px solid var(--dv-activegroup-visiblepanel-tab-background-color);
+        outline-offset: -2px;
     }
 
     .dv-tabs-overflow-dropdown-default {
