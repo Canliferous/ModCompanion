@@ -27,7 +27,7 @@
         "@vue/eslint-config-typescript": "^14.5.0",
         "@vueuse/core": "^13.2.0",
         "@vueuse/integrations": "^13.2.0",
-        "dockview-vue": "^4.5.0",
+        "dockview-vue": "^6.0.1",
         "focus-trap": "^7.6.4",
         "humanize-plus": "^1.8.2",
         "idb-keyval": "^6.2.2",
