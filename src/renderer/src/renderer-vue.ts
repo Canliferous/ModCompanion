@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import ui from "@nuxt/ui/vue-plugin";
 import App from "~/components/App.vue";
-import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { createMemoryHistory, createRouter } from "vue-router";
@@ -31,7 +30,6 @@ export function initVue() {
 // These stores need to be initialized on app startup
 function _initSystemStores() {
     useMessageLogStore();
-    usePanelsManagerStore();
     useMapConsoleStore();
     useAssetConversionStore();
     useStrataInteropStore();

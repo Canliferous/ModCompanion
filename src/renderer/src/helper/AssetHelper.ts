@@ -1,6 +1,5 @@
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import { usePanelsManagerStore } from "~/store/PanelsManagerStore.js";
 import * as Shared from "mod_companion_shared";
 
 export function openMca(asset: Shared.Asset.Asset): void {
@@ -18,7 +17,7 @@ export function exploreToMca(asset: Shared.Asset.Asset): void {
 export function browseToMca(asset: Shared.Asset.Asset): void {
     const p = asset.defFilePath;
     if (!p) return;
-    usePanelsManagerStore().openFileBrowser(asset.defFilePath);
+    // TODO: Implement this
 }
 
 export function openAssociatedFile(associatedFile: string): void {
