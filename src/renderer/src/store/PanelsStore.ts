@@ -8,12 +8,13 @@ import * as Shared from "mod_companion_shared";
 import * as uuid from "uuid";
 import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
 import { useEventListener } from "@vueuse/core";
+import { useRememberWorkspaceReactiveMap, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
     const currentPanels = ref<IDockviewPanel[]>([]);
     const workspaceStore = useWorkspaceStore();
-    const models = reactive<Map<string, PanelModel>>(new Map());
+    const models = useRememberWorkspaceReactiveMap(reactive<Map<string, PanelModel>>(new Map()), "panel-models");
     const activePanel = ref<string | undefined>();
 
     watch(() => workspaceStore.activeWorkspace, deserialize);
@@ -23,7 +24,7 @@ export const usePanelsStore = defineStore("panels", () => {
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
 
-        // deserialize();
+        deserialize();
 
         event.api.onDidLayoutChange(() => {
             serialize();
@@ -107,6 +108,7 @@ export const usePanelsStore = defineStore("panels", () => {
 
         try {
             const panels = workspaceStore.workspacePanels[activeWorkspace];
+            console.log(panels);
             if (panels) {
                 api.value.fromJSON(panels);
             } else {
