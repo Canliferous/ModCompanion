@@ -7,14 +7,18 @@ import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
 import * as uuid from "uuid";
 import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
+import { useEventListener } from "@vueuse/core";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
     const currentPanels = ref<IDockviewPanel[]>([]);
     const workspaceStore = useWorkspaceStore();
     const models = reactive<Map<string, PanelModel>>(new Map());
+    const activePanel = ref<string | undefined>();
 
     watch(() => workspaceStore.activeWorkspace, deserialize);
+
+    useEventListener("keydown", (ev) => _relayKeyboardEventToActivePanel(ev));
 
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
@@ -33,6 +37,11 @@ export const usePanelsStore = defineStore("panels", () => {
 
         event.api.onDidRemovePanel(updatePanels);
         event.api.onDidAddPanel(updatePanels);
+        event.api.onDidActivePanelChange(handleActivePanelChanged);
+    }
+
+    function handleActivePanelChanged(panel: IDockviewPanel | undefined): void {
+        activePanel.value = panel?.id;
     }
 
     function spawnPanel<T extends PanelModel>(
@@ -133,5 +142,22 @@ export const usePanelsStore = defineStore("panels", () => {
         panel.update({ params: { ...panel.params, temporary: false } });
     }
 
-    return { api, handleReady, spawnPanel, spawnPanelAtSimilar, spawnTemporaryPanel, getModel, makeNonTemporary };
+    function _relayKeyboardEventToActivePanel(event: KeyboardEvent): void {
+        const id = activePanel.value;
+        if (!id) return;
+        const panel = models.get(id);
+        if (!panel) return;
+
+        panel.onKeyInput?.call(event);
+    }
+
+    return {
+        api,
+        handleReady,
+        spawnPanel,
+        spawnPanelAtSimilar,
+        spawnTemporaryPanel,
+        getModel,
+        makeNonTemporary,
+    };
 });

@@ -25,6 +25,7 @@ import { StrataConsoleBehavior } from "~/components/panels/strataConsole/StrataC
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 import { ConversionsBehavior } from "~/components/panels/conversions/Conversions.model.js";
 import { MapCompileLogBehavior } from "~/components/panels/mapCompileLog/MapCompileLog.model.js";
+import { EventHandler } from "~/composables/useEvent.js";
 
 export const GlobalComponentNames = {
     AssetInspectorTexturePreview: "_AssetInspector_TexturePreview",
@@ -70,7 +71,9 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
     _Watermark: WaterMark,
 };
 
-export type PanelModel = object;
+export interface PanelModel {
+    onKeyInput: EventHandler<KeyboardEvent>;
+}
 
 export const PanelComponentNames = [
     GlobalComponentNames.AssetInspector,

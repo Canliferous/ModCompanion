@@ -1,9 +1,14 @@
-export function useEvent<T>() {
-    type EventListenerFunc = (payload: T) => void;
-    const listeners: EventListenerFunc[] = [];
+export type EventListenerFunc<T> = (payload: T) => void;
+export interface EventHandler<T> {
+    on: (listener: EventListenerFunc<T>) => () => void;
+    call: (payload: T) => void;
+}
+
+export function useEvent<T>(): EventHandler<T> {
+    const listeners: EventListenerFunc<T>[] = [];
     let offFunc: (() => void) | undefined = undefined;
 
-    function on(listener: EventListenerFunc) {
+    function on(listener: EventListenerFunc<T>) {
         listeners.push(listener);
         const index = listeners.length - 1;
 
