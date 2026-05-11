@@ -11,6 +11,7 @@ export const Icons = {
     Loading: "mingcute:loading-line",
     Filter: "mingcute:filter-3-line",
     Search: "mingcute:search-2-line",
+    Save: "mingcute:save-2-fill",
     CollapseVertical: "mingcute:fold-vertical-line",
     ExpandVertical: "mingcute:unfold-vertical-line",
     ChevronUp: "mingcute:up-line",

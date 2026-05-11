@@ -39,7 +39,7 @@ declare global {
             };
 
             file: {
-                readString: (filePath: string) => Promise<string>;
+                readString: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<string>;
                 writeString: (
                     filePath: string,
                     data:
@@ -48,6 +48,7 @@ declare global {
                         | Iterable<string | NodeJS.ArrayBufferView>
                         | AsyncIterable<string | NodeJS.ArrayBufferView>
                         | Stream,
+                    base?: Shared.FileBrowser.PathBase,
                 ) => Promise<void>;
             };
 

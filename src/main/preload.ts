@@ -37,7 +37,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     file: {
-        readString: (filePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileReadString, filePath),
+        readString: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.invoke(Shared.Ipc.Channels.FileReadString, filePath),
         writeString: (
             filePath: string,
             data:
@@ -46,6 +47,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 | Iterable<string | NodeJS.ArrayBufferView>
                 | AsyncIterable<string | NodeJS.ArrayBufferView>
                 | Stream,
+            base?: Shared.FileBrowser.PathBase,
         ) => ipcRenderer.invoke(Shared.Ipc.Channels.FileWriteString, filePath, data),
     },
 
