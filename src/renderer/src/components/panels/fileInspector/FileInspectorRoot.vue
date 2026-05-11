@@ -6,10 +6,10 @@
                     <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
                         <div>{{ fileName }}</div>
-                        <!--                        <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">-->
-                        <!--                            <span>{{ fileSize(entry.fileSize) }}</span>-->
-                        <!--                            <span>{{ getFileTypeName(fileType) }}</span>-->
-                        <!--                        </div>-->
+                        <div v-if="entry?.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
+                            <span>{{ fileSize(entry.fileSize) }}</span>
+                            <span>{{ getFileTypeName(fileType) }}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -51,15 +51,24 @@ import {
     getFileInspectorFromType,
     getFileType,
     getFileTypeIcon,
+    getFileTypeName,
 } from "~/helper/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
+import * as Shared from "mod_companion_shared";
+import { fileSize } from "humanize-plus";
+import { computedAsync } from "@vueuse/core";
 
 const props = defineProps<{ file: string }>();
 const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
 const fileName = computed(() => pathe.basename(props.file));
 const fileType = computed(() => getFileType(fileName.value));
 const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
+
+const entry = computedAsync(
+    () => window.electronAPI.fileBrowser.getFileEntry(props.file, Shared.FileBrowser.PathBases.RootRelative),
+    undefined,
+);
 
 function handleExplore() {
     if (fullPath.value) {

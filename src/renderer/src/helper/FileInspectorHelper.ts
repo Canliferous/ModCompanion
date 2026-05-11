@@ -1,10 +1,11 @@
 import pathe from "pathe";
 import { DefineComponent } from "vue";
 import { AppDesign } from "~/design/AppDesign.js";
-import FileInspectorModelPreview from "~/components/panels/fileInspector/FileInspectorModelPreview.vue";
-import FileInspectorImagePreview from "~/components/panels/fileInspector/FileInspectorImagePreview.vue";
-import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";
-import FileInspectorMapPreview from "~/components/panels/fileInspector/FileInspectorMapPreview.vue";
+import FilePreviewModel from "~/components/panels/fileInspector/previews/FilePreviewModel.vue";
+import FilePreviewImage from "~/components/panels/fileInspector/previews/FilePreviewImage.vue";
+import FilePreviewText from "~/components/panels/fileInspector/previews/FilePreviewText.vue";
+import FilePreviewMap from "~/components/panels/fileInspector/previews/FilePreviewMap.vue";
+import FilePreviewChamberSign from "~/components/panels/fileInspector/previews/FilePreviewChamberSign.vue";
 
 export enum FileInspectors {
     Unknown,
@@ -13,6 +14,7 @@ export enum FileInspectors {
     Model,
     Texture,
     Map,
+    ChamberSign,
 }
 
 export enum FileType {
@@ -21,6 +23,7 @@ export enum FileType {
     TextVmt,
     TextQc,
     TextGeneric,
+    TextJsonChamberSign,
     ImagePng,
     ImageJpg,
     Mdl,
@@ -34,6 +37,7 @@ const FileTypeNames: Record<FileType, string> = {
     [FileType.TextVmt]: "Material",
     [FileType.TextQc]: "Model Compile Config",
     [FileType.TextGeneric]: "Text",
+    [FileType.TextJsonChamberSign]: "Chamber Sign Config",
     [FileType.ImagePng]: "PNG",
     [FileType.ImageJpg]: "JPG",
     [FileType.Mdl]: "Model Definition",
@@ -60,6 +64,10 @@ export function getFileTypeIcon(fileType: FileType): string {
 }
 
 export function getFileType(fileName: string): FileType {
+    if (fileName === "chamber_sign_config.json") {
+        return FileType.TextJsonChamberSign;
+    }
+
     const ext = pathe.extname(fileName);
     if (ext === ".mca") return FileType.TextMca;
     if (ext === ".vmt") return FileType.TextVmt;
@@ -104,6 +112,9 @@ export function getFileInspectorFromType(fileType: FileType): FileInspectors {
         case FileType.TextQc: {
             return FileInspectors.Text;
         }
+        case FileType.TextJsonChamberSign: {
+            return FileInspectors.ChamberSign;
+        }
         case FileType.ImagePng:
         case FileType.ImageJpg: {
             return FileInspectors.Image;
@@ -129,13 +140,15 @@ export type FileInspectorComponent = DefineComponent<{ path: string }, any, any>
 export function getFileInspectorComponent(inspector: FileInspectors): FileInspectorComponent | undefined {
     switch (inspector) {
         case FileInspectors.Text:
-            return FileInspectorTextPreview;
+            return FilePreviewText;
         case FileInspectors.Image:
-            return FileInspectorImagePreview;
+            return FilePreviewImage;
         case FileInspectors.Model:
-            return FileInspectorModelPreview;
+            return FilePreviewModel;
         case FileInspectors.Map:
-            return FileInspectorMapPreview;
+            return FilePreviewMap;
+        case FileInspectors.ChamberSign:
+            return FilePreviewChamberSign;
         default:
         case FileInspectors.Unknown:
             return undefined;

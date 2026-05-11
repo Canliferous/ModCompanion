@@ -4,6 +4,7 @@ import { IpcHelper } from "./MainApiHelper.js";
 
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
+import { FileEntry } from "mod_companion_shared/SharedFileBrowser.js";
 
 export const FileBrowserApi = {
     register(): boolean {
@@ -11,6 +12,17 @@ export const FileBrowserApi = {
             Shared.Ipc.Channels.FileBrowser_BrowseToFileAction,
             (event: Electron.IpcMainEvent, filePath: string, base?: Shared.FileBrowser.PathBase): void => {
                 Core.FileBrowseHelper.browseToFile(filePath, base);
+            },
+        );
+
+        ipcMain.handle(
+            Shared.Ipc.Channels.FileBrowser_FileEntryQuery,
+            (
+                event: Electron.IpcMainInvokeEvent,
+                filePath: string,
+                base?: Shared.FileBrowser.PathBase,
+            ): Promise<FileEntry | undefined> => {
+                return Core.FileBrowseHelper.getFileEntry(filePath, base);
             },
         );
 
