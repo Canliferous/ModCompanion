@@ -68,7 +68,6 @@ export function useRememberWorkspaceReactiveMap<V extends object>(map: Reactive<
             }
 
             const data = JSON.stringify(obj);
-            console.log(map, data);
             localStorage.setItem(`${keyName}+${workspaceStore.activeWorkspace}`, data);
         },
         { deep: true },
