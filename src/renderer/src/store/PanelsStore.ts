@@ -108,7 +108,6 @@ export const usePanelsStore = defineStore("panels", () => {
 
         try {
             const panels = workspaceStore.workspacePanels[activeWorkspace];
-            console.log(panels);
             if (panels) {
                 api.value.fromJSON(panels);
             } else {
