@@ -3,16 +3,10 @@
 </template>
 
 <script setup lang="ts">
+import { computedAsync } from "@vueuse/core";
 const props = defineProps<{ path: string }>();
 
-const text = ref("");
-
-watch(
-    () => props.path,
-    (val) => window.electronAPI.file.readString(val).then((r) => (text.value = r)),
-);
-
-window.electronAPI.file.readString(props.path).then((r) => (text.value = r));
+const text = computedAsync(() => window.electronAPI.file.readString(props.path), "");
 </script>
 
 <style scoped></style>

@@ -17,7 +17,6 @@
                 <!-- Register takeovers here -->
                 <MessageLogTakeOver />
                 <AssetWizardTakeOver />
-                <ChamberSignConfigTakeOver />
             </div>
             <TheFooter />
         </div>

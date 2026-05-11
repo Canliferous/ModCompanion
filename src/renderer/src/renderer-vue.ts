@@ -8,7 +8,6 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
-import { useChamberSignConfigStore } from "~/store/ChamberSignConfigStore.js";
 import { initGlobalComponents } from "~/helper/GlobalComponents.js";
 
 export function initVue() {
@@ -34,5 +33,4 @@ function _initSystemStores() {
     useAssetConversionStore();
     useStrataInteropStore();
     useTcArtifactsStore();
-    useChamberSignConfigStore();
 }
