@@ -41,6 +41,10 @@ export const Icons = {
     FsImage: "mingcute:pic-fill",
     FsCode: "mingcute:file-code-fill",
 
+    SystemMinimize: "mingcute:minimize-fill",
+    SystemMaximize: "mingcute:fullscreen-fill",
+    SystemClose: "mingcute:close-fill",
+
     ActionAdd: "mingcute:add-line",
     ActionRemove: "mingcute:minimize-line",
     ActionSend: "mingcute:send-fill",

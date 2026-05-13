@@ -243,6 +243,20 @@ export default function buildConfig(): NuxtUIOptions {
             icons: {
                 check: "mingcute:check-2-fill",
             },
+            navigationMenu: {
+                slots: {
+                    // Above dockview divider lines which are at 99
+                    content: "z-200",
+                    item: "cursor-pointer",
+                },
+                variants: {
+                    orientation: {
+                        horizontal: {
+                            item: "py-0",
+                        },
+                    },
+                },
+            },
         },
     };
 }

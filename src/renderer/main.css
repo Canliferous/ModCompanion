@@ -18,6 +18,8 @@
     --ui-color-neutral-800: var(--color-neutral-800);
     --ui-color-neutral-900: var(--color-neutral-900);
     --ui-color-neutral-950: var(--color-neutral-950);
+
+    font-size: 14px;
 }
 
 * {

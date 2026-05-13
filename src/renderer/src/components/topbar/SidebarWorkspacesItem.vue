@@ -4,7 +4,6 @@
             :label="label || '(unknown)'"
             variant="soft"
             :color="workspaceStore.activeWorkspace === id ? 'primary' : 'neutral'"
-            size="sm"
             @click="() => workspaceStore.activateWorkspace(id)"
         />
 
