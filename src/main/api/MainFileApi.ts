@@ -11,9 +11,13 @@ export function registerFileApi(): boolean {
             event: Electron.IpcMainInvokeEvent,
             filePath: string,
             base?: Shared.FileBrowser.PathBase,
-        ): Promise<string> => {
-            const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
-            return fs.readFile(fullPath, "utf-8");
+        ): Promise<string | undefined> => {
+            try {
+                const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+                return await fs.readFile(fullPath, "utf-8");
+            } catch (e) {
+                return undefined;
+            }
         },
     );
 

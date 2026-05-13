@@ -39,7 +39,7 @@ declare global {
             };
 
             file: {
-                readString: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<string>;
+                readString: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<string | undefined>;
                 writeString: (
                     filePath: string,
                     data:
