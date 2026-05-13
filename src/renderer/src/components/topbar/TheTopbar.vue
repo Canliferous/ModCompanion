@@ -1,9 +1,10 @@
 <template>
     <nav class="grid grid-cols-[auto_1fr_auto] p-1 border-b border-b-neutral-800 app-region-drag overflow-x-clip">
-        <div class="flex gap-1">
+        <div class="flex">
             <UDropdownMenu
                 :items="itemsMain"
                 size="sm"
+                :ui="{ content: 'min-w-40' }"
                 :content="{
                     align: 'start',
                 }"
@@ -16,8 +17,20 @@
             </UDropdownMenu>
 
             <UDropdownMenu
+                :items="itemsRun"
+                size="sm"
+                :ui="{ content: 'min-w-40' }"
+                :content="{
+                    align: 'start',
+                }"
+            >
+                <UButton size="sm" label="Run" variant="link" />
+            </UDropdownMenu>
+
+            <UDropdownMenu
                 :items="itemsAssets"
                 size="sm"
+                :ui="{ content: 'min-w-40' }"
                 :content="{
                     align: 'start',
                 }"
@@ -28,17 +41,21 @@
             <UDropdownMenu
                 :items="itemsTools"
                 size="sm"
+                :ui="{ content: 'min-w-40' }"
                 :content="{
                     align: 'start',
                 }"
             >
+                <template #fgd-leading>
+                    <UIcon :name="fgdIcon" :class="{ 'animate-spin': fgdStore.building }" />
+                </template>
                 <UButton size="sm" label="Tools" variant="link" />
             </UDropdownMenu>
 
-            <USeparator orientation="vertical" />
+            <USeparator orientation="vertical" class="mx-1 py-1" />
 
             <template v-for="id in workspaceStore.workspaces" :key="id">
-                <SidebarWorkspacesItem :id="id" />
+                <TopbarWorkspacesItem :id="id" />
             </template>
 
             <UTooltip text="New Workspace">
@@ -88,6 +105,11 @@ import * as Shared from "mod_companion_shared";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { NavigationMenuItem } from "@nuxt/ui";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
+import { SharedLauncherOptions } from "mod_companion_shared/SharedLaunchers.js";
+import { useRememberRef } from "~/composables/useRemember.js";
+import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
+import { TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
+import { useFgdStore } from "~/store/FgdStore.js";
 
 const workspaceStore = useWorkspaceStore();
 
@@ -105,9 +127,17 @@ function handleClose(event: MouseEvent): void {
     }
 }
 
-function launch(option: Shared.Launchers.SharedLauncherOption) {
-    window.electronAPI.app.launch(option.type, option.args);
-}
+const itemsRun = ref<DropdownMenuItem[][]>([
+    Shared.Launchers.SharedLauncherOptions.map(
+        (o) =>
+            ({
+                label: o.name,
+                onSelect(e: Event) {
+                    window.electronAPI.app.launch(o.type, o.args);
+                },
+            }) satisfies DropdownMenuItem,
+    ),
+]);
 
 const itemsMain = ref<DropdownMenuItem[][]>([
     [
@@ -121,27 +151,69 @@ const itemsMain = ref<DropdownMenuItem[][]>([
     ],
 ]);
 
-const itemsAssets = ref<DropdownMenuItem[][]>([
+const hotReloadEnabled = useRememberRef(ref(true), "hot-reload-enabled");
+window.electronAPI.hotReload.setEnabled(hotReloadEnabled.value);
+watch(hotReloadEnabled, (on) => {
+    window.electronAPI.hotReload.setEnabled(on);
+});
+
+const itemsAssets = computed<DropdownMenuItem[][]>(() => [
     [
+        {
+            label: "Create Asset",
+            icon: AppDesign.Icons.ActionAdd,
+            onSelect(e: Event) {
+                useTakeOverStore().open(TakeOverId.AssetWizard);
+            },
+        },
         {
             label: "Convert All",
             icon: AppDesign.Icons.ActionConvertAsset,
+            onSelect(e: Event) {
+                useAssetConversionStore().enqueueAll();
+            },
         },
         {
-            label: "Create Asset",
-            icon: AppDesign.Icons.ActionAdd,
-        },
-        {
-            label: "Create Asset",
-            icon: AppDesign.Icons.ActionAdd,
+            label: "Auto Hot Reload",
+            type: "checkbox" as const,
+            icon: "empty",
+            checked: hotReloadEnabled.value,
+            onUpdateChecked(checked) {
+                console.log("Ite happened!");
+                hotReloadEnabled.value = checked;
+            },
+            onSelect(e: Event) {
+                e.preventDefault();
+            },
         },
     ],
 ]);
 
-const itemsTools = ref<DropdownMenuItem[][]>([
+const fgdStore = useFgdStore();
+
+const fgdIcon = computed(() => {
+    if (fgdStore.building) {
+        return AppDesign.Icons.Loading;
+    }
+    if (fgdStore.result === true) {
+        return AppDesign.Icons.Check;
+    }
+    if (fgdStore.result === false) {
+        return AppDesign.Icons.Close;
+    }
+
+    return AppDesign.Icons.ActionPlay;
+});
+
+const itemsTools = computed<DropdownMenuItem[][]>(() => [
     [
         {
             label: "Build FGD",
+            slot: "fgd",
+            onSelect(e) {
+                e.preventDefault();
+                fgdStore.buildFgd();
+            },
         },
     ],
 ]);

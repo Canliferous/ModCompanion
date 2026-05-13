@@ -124,6 +124,7 @@ function _createWindow(hasTray: boolean): void {
 
     mainWindow.on("maximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, true));
     mainWindow.on("unmaximize", () => settings.set(SETTING_WINDOW_MAXIMIZED, false));
+    mainWindow.on("moved", () => _saveWindow());
 
     // Open the window
 
