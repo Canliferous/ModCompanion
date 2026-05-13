@@ -23,7 +23,7 @@
     "dependencies": {
         "@fontsource-variable/jetbrains-mono": "^5.2.5",
         "@fontsource/inter": "^5.2.5",
-        "@nuxt/ui": "^3.3.3",
+        "@nuxt/ui": "^3.3.7",
         "@vue/eslint-config-typescript": "^14.5.0",
         "@vueuse/core": "^13.2.0",
         "@vueuse/integrations": "^13.2.0",

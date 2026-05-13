@@ -9,7 +9,10 @@ declare global {
         electronAPI: {
             app: {
                 launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string | undefined) => void;
-                exit: () => void;
+                exitForReal: () => void;
+                closeWindow: () => void;
+                minimize: () => void;
+                maximize: () => void;
                 rendererReady: () => void;
             };
 

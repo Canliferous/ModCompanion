@@ -72,7 +72,7 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
 };
 
 export interface PanelModel {
-    onKeyInput: EventHandler<KeyboardEvent>;
+    onKeyInput?: EventHandler<KeyboardEvent>;
 }
 
 export const PanelComponentNames = [

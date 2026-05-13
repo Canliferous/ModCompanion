@@ -1,6 +1,6 @@
 <template>
     <UApp>
-        <div class="grid grid-rows-[auto_1fr_auto] h-screen bg-neutral-925">
+        <div class="grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen bg-neutral-925">
             <TheTopbar />
             <div class="h-full grid grid-cols-1 grid-rows-1 p-1 relative">
                 <DockviewVue

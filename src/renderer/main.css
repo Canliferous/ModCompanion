@@ -115,10 +115,6 @@
         box-shadow: var(--inset-shadow-rim);
         border-radius: var(--radius-md);
     }
-
-    .dv-dockview .dv-watermark-container {
-        z-index: auto;
-    }
 }
 
 .dockview-theme-modcomp--nested {

@@ -3,6 +3,7 @@
         <UButton
             :label="label || '(unknown)'"
             variant="soft"
+            size="sm"
             :color="workspaceStore.activeWorkspace === id ? 'primary' : 'neutral'"
             @click="() => workspaceStore.activateWorkspace(id)"
         />

@@ -1,6 +1,9 @@
 export const Channels = {
     AppLaunch: "app_launch",
-    AppExit: "app_exit",
+    AppExitForReal: "app_exit_for_real",
+    AppCloseWindow: "app_close_window",
+    AppMinimize: "app_minimize",
+    AppMaximize: "app_maximize",
     AppRendererReady: "app_renderer_ready",
 
     ClipboardWriteText: "clipboard_write_text",

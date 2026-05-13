@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full relative grid place-items-center">
         <div class="rounded-xl inset-shadow-cave bg-neutral-925 px-10 py-10 grid gap-7">
-            <div class="font-semibold text-center">Add Panel</div>
+            <div class="font-semibold text-center select-none">Add Panel</div>
 
             <MAddPanelsGrid button-size="xl" />
         </div>
