@@ -87,14 +87,16 @@
                 :icon="AppDesign.Icons.SystemMaximize"
                 @click="handleMaximize"
             />
-            <UButton
-                variant="ghost"
-                color="neutral"
-                class="text-neutral-400 hover:bg-error-500 hover:text-neutral-900 active:bg-error-700"
-                size="sm"
-                :icon="AppDesign.Icons.SystemClose"
-                @click="handleClose"
-            />
+            <UTooltip text="Hold Shift to fully close">
+                <UButton
+                    variant="ghost"
+                    color="neutral"
+                    class="text-neutral-400 hover:bg-error-500 hover:text-neutral-900 active:bg-error-700"
+                    size="sm"
+                    :icon="AppDesign.Icons.SystemClose"
+                    @click="handleClose"
+                />
+            </UTooltip>
         </div>
     </nav>
 </template>
