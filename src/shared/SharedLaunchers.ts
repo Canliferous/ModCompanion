@@ -13,7 +13,7 @@ export interface SharedLauncherOption {
     args?: string;
 }
 
-export const SharedLauncherOptions: SharedLauncherOption[] = [
+export const SharedGameLauncherOptions: SharedLauncherOption[] = [
     {
         name: "Game",
         type: SharedLaunchers.Game,
@@ -28,6 +28,9 @@ export const SharedLauncherOptions: SharedLauncherOption[] = [
         type: SharedLaunchers.Game,
         args: `-tools -netconport ${NetconPort}`,
     },
+] as const;
+
+export const SharedToolLauncherOptions: SharedLauncherOption[] = [
     {
         name: "Hammer",
         type: SharedLaunchers.Hammer,

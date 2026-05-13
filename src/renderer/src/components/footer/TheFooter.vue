@@ -10,8 +10,6 @@
                 <FooterTcArtifactsStatus />
                 <USeparator orientation="vertical" />
                 <FooterConversionStatus />
-                <USeparator orientation="vertical" />
-                <FooterInteropStatus />
             </div>
         </div>
     </div>
@@ -20,7 +18,6 @@
 <script setup lang="ts">
 import FooterConversionStatus from "~/components/footer/FooterConversionStatus.vue";
 import FooterLog from "~/components/footer/FooterLog.vue";
-import TopbarModcompButton from "~/components/topbar/TopbarModcompButton.vue";
 </script>
 
 <style scoped></style>

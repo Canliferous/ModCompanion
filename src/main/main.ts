@@ -9,6 +9,11 @@ import { notifyAssetGroupsUpdated } from "./api/MainAssetGroupsApi.js";
 import { notifyConversionsUpdated } from "./api/MainConversionApi.js";
 import { notifyMapCompileLog, notifyMapCompileProgress, notifyMapQueueUpdated } from "./api/MainMapCompileApi.js";
 import { FileBrowserApi } from "./api/MainFileBrowserApi.js";
+import {
+    notifyStrataInteropConnected,
+    notifyStrataInteropDisconnected,
+    notifyStrataInteropLog,
+} from "./api/MainStrataInteropApi.js";
 
 type SystemFunction = () => Promise<boolean> | boolean;
 interface System {
@@ -40,7 +45,15 @@ const systems: System[] = [
     },
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: () => Core.ConversionAgentSystem.initSystem(notifyConversionsUpdated) },
-    { name: "StrataInterop", initFunction: Core.StrataInteropSystem.initSystem },
+    {
+        name: "StrataInterop",
+        initFunction: () =>
+            Core.StrataInteropSystem.initSystem({
+                connectedFunc: notifyStrataInteropConnected,
+                disconnectedFunc: notifyStrataInteropDisconnected,
+                messageFunc: notifyStrataInteropLog,
+            }),
+    },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
 ];
