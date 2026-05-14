@@ -74,7 +74,10 @@ Or if you want to use real data, set root to your Portal Revolution 2 repository
 ### Install
 
 ```bash
-# --workspaces is very important to make sure you're installing the dependencies for all packages
+# Install packages for deployment and such
+npm ci
+
+# Install packages for all the app packages
 npm ci --workspaces
 ```
 
