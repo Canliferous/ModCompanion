@@ -13,6 +13,7 @@ import * as Shared from "mod_companion_shared";
 import { timeMillisAsync } from "mod_companion_shared/SharedTiming.js";
 import { FileBrowserSystem } from "../CoreFileBrowserSystem.js";
 import { createModelAssetDefinition } from "./CoreAssetCreateModel.js";
+import { forwardSlashed } from "mod_companion_shared/SharedSourceFs.js";
 
 let assetMap: Map<Shared.Asset.AssetId, Shared.Asset.Asset> = new Map();
 let potentialAssets: Shared.Asset.Asset[] = [];
@@ -220,7 +221,7 @@ async function _buildAssets(
 
             const asset: Shared.Asset.Asset = {
                 def: definition,
-                defFilePath: filePath.path,
+                defFilePath: forwardSlashed(filePath.path),
             };
             assets.set(definition.id, asset);
         }
