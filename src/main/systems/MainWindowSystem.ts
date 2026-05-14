@@ -207,7 +207,7 @@ function _buildTrayMenu() {
     template.push({ label: "Show", click: () => mainWindow?.show() });
     template.push({ type: "separator" });
 
-    for (const option of Shared.Launchers.SharedGameLauncherOptions) {
+    for (const option of Shared.Launchers.GameLauncherOptions) {
         template.push({
             label: `${option.name}`,
             click: () => Core.LauncherHelper.runLauncher(option.type, option.args),

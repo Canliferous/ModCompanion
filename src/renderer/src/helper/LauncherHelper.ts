@@ -8,11 +8,11 @@ import { filename } from "pathe/utils";
 export function openMapInGame(mapName: string): void {
     const n = filename(mapName);
     window.electronAPI.app.launch(
-        Shared.Launchers.SharedLaunchers.Game,
+        Shared.Launchers.Launchers.Game,
         `-dev -condebug -netconport ${Shared.StrataInterop.NetconPort} +map ${n}`,
     );
 }
 
 export function openMapInHammer(vmfPath: string): void {
-    window.electronAPI.app.launch(Shared.Launchers.SharedLaunchers.Hammer, vmfPath);
+    window.electronAPI.app.launch(Shared.Launchers.Launchers.Hammer, vmfPath);
 }

@@ -119,10 +119,10 @@ export const Icons = {
 
 export const BitmapIcon = {
     Launchers: {
-        [Shared.Launchers.SharedLaunchers.Game]: "revolution",
-        [Shared.Launchers.SharedLaunchers.Hammer]: "hammer",
-        [Shared.Launchers.SharedLaunchers.Faceposer]: "faceposer",
-        [Shared.Launchers.SharedLaunchers.Hlmv]: "hlmv",
+        [Shared.Launchers.Launchers.Game]: "revolution",
+        [Shared.Launchers.Launchers.Hammer]: "hammer",
+        [Shared.Launchers.Launchers.Faceposer]: "faceposer",
+        [Shared.Launchers.Launchers.Hlmv]: "hlmv",
     },
     ModCompanion: "mod_companion_192",
 } as const;

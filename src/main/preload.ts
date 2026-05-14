@@ -7,7 +7,7 @@ import * as Shared from "mod_companion_shared";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
-        launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string) =>
+        launch: (launcherType: Shared.Launchers.Launchers, launcherArgs: string) =>
             ipcRenderer.send(Shared.Ipc.Channels.AppLaunch, launcherType, launcherArgs),
         exitForReal: () => ipcRenderer.send(Shared.Ipc.Channels.AppExitForReal),
         closeWindow: () => ipcRenderer.send(Shared.Ipc.Channels.AppCloseWindow),

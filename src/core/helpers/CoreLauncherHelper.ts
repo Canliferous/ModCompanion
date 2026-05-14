@@ -4,7 +4,7 @@ import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import child_process from "node:child_process";
 
-export function runLauncher(type: Shared.Launchers.SharedLaunchers, args?: string) {
+export function runLauncher(type: Shared.Launchers.Launchers, args?: string) {
     const exe = _getLauncherExe(type);
     if (!exe) {
         console.warn("Unknown launcher type", type);
@@ -33,16 +33,16 @@ export function runLauncher(type: Shared.Launchers.SharedLaunchers, args?: strin
     });
 }
 
-function _getLauncherExe(launcherType: Shared.Launchers.SharedLaunchers): string | undefined {
+function _getLauncherExe(launcherType: Shared.Launchers.Launchers): string | undefined {
     const config = ConfigSystem.getAppConfig();
     switch (launcherType) {
-        case Shared.Launchers.SharedLaunchers.Game:
+        case Shared.Launchers.Launchers.Game:
             return config.gameExePath;
-        case Shared.Launchers.SharedLaunchers.Hammer:
+        case Shared.Launchers.Launchers.Hammer:
             return config.hammerPath;
-        case Shared.Launchers.SharedLaunchers.Hlmv:
+        case Shared.Launchers.Launchers.Hlmv:
             return config.hlmvPath;
-        case Shared.Launchers.SharedLaunchers.Faceposer:
+        case Shared.Launchers.Launchers.Faceposer:
             return config.faceposerPath;
         default:
             return undefined;

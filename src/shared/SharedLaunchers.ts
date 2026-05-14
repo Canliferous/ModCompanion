@@ -1,46 +1,46 @@
 import { NetconPort } from "./SharedStrataInterop.js";
 
-export enum SharedLaunchers {
+export enum Launchers {
     Game = "game",
     Hammer = "hammer",
     Hlmv = "hlmv",
     Faceposer = "faceposer",
 }
 
-export interface SharedLauncherOption {
+export interface LauncherOption {
     name: string;
-    type: SharedLaunchers;
+    type: Launchers;
     args?: string;
 }
 
-export const SharedGameLauncherOptions: SharedLauncherOption[] = [
+export const GameLauncherOptions: LauncherOption[] = [
     {
         name: "Game",
-        type: SharedLaunchers.Game,
+        type: Launchers.Game,
     },
     {
         name: "Game (Dev)",
-        type: SharedLaunchers.Game,
+        type: Launchers.Game,
         args: `-dev -condebug -novid -netconport ${NetconPort}`,
     },
     {
         name: "Game (Tools)",
-        type: SharedLaunchers.Game,
+        type: Launchers.Game,
         args: `-tools -netconport ${NetconPort}`,
     },
 ] as const;
 
-export const SharedToolLauncherOptions: SharedLauncherOption[] = [
+export const ToolLauncherOptions: LauncherOption[] = [
     {
         name: "Hammer",
-        type: SharedLaunchers.Hammer,
+        type: Launchers.Hammer,
     },
     {
         name: "Faceposer",
-        type: SharedLaunchers.Faceposer,
+        type: Launchers.Faceposer,
     },
     {
         name: "HLMV",
-        type: SharedLaunchers.Hlmv,
+        type: Launchers.Hlmv,
     },
 ] as const;

@@ -8,7 +8,7 @@ declare global {
     interface Window {
         electronAPI: {
             app: {
-                launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string | undefined) => void;
+                launch: (launcherType: Shared.Launchers.Launchers, launcherArgs: string | undefined) => void;
                 exitForReal: () => void;
                 closeWindow: () => void;
                 minimize: () => void;

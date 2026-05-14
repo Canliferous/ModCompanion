@@ -3,12 +3,12 @@
         <div class="flex gap-1">
             <UButton label="Open in Hammer" @click="handleEdit">
                 <template #leading>
-                    <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[SharedLaunchers.Hammer]" />
+                    <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[Shared.Launchers.Launchers.Hammer]" />
                 </template>
             </UButton>
             <UButton label="Play in Game" @click="handlePlay">
                 <template #leading>
-                    <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[SharedLaunchers.Game]" />
+                    <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[Shared.Launchers.Launchers.Game]" />
                 </template>
             </UButton>
         </div>
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
-import { SharedLaunchers } from "mod_companion_shared/SharedLaunchers.js";
+import * as Shared from "mod_companion_shared";
 import { openMapInGame, openMapInHammer } from "~/helper/LauncherHelper.js";
 import { getAppConfig } from "~/renderer-config.js";
 import pathe from "pathe";
