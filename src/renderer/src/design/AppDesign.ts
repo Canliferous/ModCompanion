@@ -33,6 +33,7 @@ export const Icons = {
     NetworkDisconnected: "mingcute:wifi-off-line",
     Cloud: "mingcute:cloud-fill",
     InteropConnected: "mingcute:transfer-fill",
+    LinkExternal: "mingcute:external-link-line",
 
     Conversion: "mingcute:lightning-fill",
 

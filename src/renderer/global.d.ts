@@ -13,6 +13,8 @@ declare global {
                 closeWindow: () => void;
                 minimize: () => void;
                 maximize: () => void;
+                openExternal: (payload: string) => void;
+                getAppVersion: () => Promise<string>;
                 rendererReady: () => void;
             };
 

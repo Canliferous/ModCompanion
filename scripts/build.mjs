@@ -2,33 +2,39 @@ import * as esbuild from "esbuild";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const mainOptions = {
-    entryPoints: ["./src/main/main.ts"],
-    bundle: true,
-    platform: "node",
-    outfile: "./build/main/main.cjs",
-    external: ["electron"],
-    define: {
-        "import.meta.url": "__IMPORT_META_URL__",
-    },
-    banner: {
-        js: "const __IMPORT_META_URL__ = 'file://' + __filename;",
-    },
-};
+function createMainOptions(version) {
+    return {
+        entryPoints: ["./src/main/main.ts"],
+        bundle: true,
+        platform: "node",
+        outfile: "./build/main/main.cjs",
+        external: ["electron"],
+        define: {
+            "import.meta.url": "__IMPORT_META_URL__",
+            __APP_VERSION__: JSON.stringify(version),
+        },
+        banner: {
+            js: "const __IMPORT_META_URL__ = 'file://' + __filename;",
+        },
+    };
+}
 
-const cliOptions = {
-    entryPoints: ["./src/cli/main.ts"],
-    bundle: true,
-    platform: "node",
-    outfile: "./build/cli/main.cjs",
-    external: ["electron"],
-    define: {
-        "import.meta.url": "__IMPORT_META_URL__",
-    },
-    banner: {
-        js: "const __IMPORT_META_URL__ = 'file://' + __filename;",
-    },
-};
+function createCliOptions(version) {
+    return {
+        entryPoints: ["./src/cli/main.ts"],
+        bundle: true,
+        platform: "node",
+        outfile: "./build/cli/main.cjs",
+        external: ["electron"],
+        define: {
+            "import.meta.url": "__IMPORT_META_URL__",
+            __APP_VERSION__: JSON.stringify(version),
+        },
+        banner: {
+            js: "const __IMPORT_META_URL__ = 'file://' + __filename;",
+        },
+    };
+}
 
 async function getWorkersOptions() {
     const workersDir = "./src/core/workers";
@@ -56,6 +62,13 @@ async function getWorkersOptions() {
 }
 
 async function run() {
+    const version = await fs.readFile("./version.txt", "utf-8");
+
+    console.log(`Embedding version into this build: '${version}'`);
+
+    const mainOptions = createMainOptions(version);
+    const cliOptions = createCliOptions(version);
+
     const doWatch = process.argv.length > 2 && process.argv[2] === "watch";
     if (doWatch) {
         const mainCtx = await esbuild.context(mainOptions);

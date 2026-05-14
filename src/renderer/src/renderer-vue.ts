@@ -9,6 +9,7 @@ import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
 import { initGlobalComponents } from "~/helper/GlobalComponents.js";
+import { useSystemStore } from "~/store/SystemStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -33,4 +34,5 @@ function _initSystemStores() {
     useAssetConversionStore();
     useStrataInteropStore();
     useTcArtifactsStore();
+    useSystemStore();
 }

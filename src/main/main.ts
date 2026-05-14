@@ -58,7 +58,9 @@ const systems: System[] = [
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
 ];
 
-async function startSystems() {
+async function startSystems(): Promise<void> {
+    Core.Logger.info(Shared.Log.Channel.MainSystems, `Starting Systems...`);
+
     let success = false;
     for (const system of systems) {
         const systemResult = system.initFunction();
@@ -109,16 +111,23 @@ function performPreStartChecks(): boolean {
     return true;
 }
 
-function start() {
+async function start() {
     app.setName("Mod Companion");
     if (!performPreStartChecks()) {
         return;
     }
-
-    Core.Logger.info(Shared.Log.Channel.MainSystems, "Starting Mod Companion");
+    Core.Logger.info(Shared.Log.Channel.MainSystems, `Starting Mod Companion`);
+    Core.Logger.info(
+        Shared.Log.Channel.MainSystems,
+        `Development build? ${process.env.NODE_ENV === "development" ? "Yes" : "No"}`,
+    );
+    Core.Logger.info(Shared.Log.Channel.MainSystems, `Current directory is ${process.cwd()}`);
     Core.Logger.info(Shared.Log.Channel.MainSystems, "App User Data", app.getPath("userData"));
 
-    startSystems();
+    await Core.AppVersionHelper.determineAppVersion();
+    Core.Logger.info(Shared.Log.Channel.MainSystems, `Version is ${Core.AppVersionHelper.getAppVersion()}`);
+
+    await startSystems();
 }
 
 start();

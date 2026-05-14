@@ -20,6 +20,7 @@ import { AssetRepositorySystem } from "./systems/asset/CoreAssetRepositorySystem
 
 import { ModelConverter } from "./helpers/converter/CoreModelConverter.js";
 import { TextureConverter } from "./helpers/converter/CoreTextureConverter.js";
+import * as AppVersionHelper from "./helpers/CoreAppVersionHelper.js";
 import * as FileBrowseHelper from "./helpers/CoreFileBrowseHelper.js";
 import * as FileSystem from "./helpers/CoreFilesystem.js";
 import * as LauncherHelper from "./helpers/CoreLauncherHelper.js";
@@ -48,6 +49,7 @@ export {
     TextureConverter,
     FileBrowseHelper,
     FileSystem,
+    AppVersionHelper,
     LauncherHelper,
     MdlInfoHelper,
     SourceFs,
