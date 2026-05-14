@@ -6,7 +6,7 @@
             </template>
             <MPanelFallbackMessage v-else>Asset has no texture</MPanelFallbackMessage>
         </template>
-        <MPanelFallbackMessage v-else>No Texture Selected</MPanelFallbackMessage>
+        <MPanelFallbackMessage v-else>This is not a texture asset</MPanelFallbackMessage>
     </div>
 </template>
 
@@ -20,7 +20,7 @@ const assetStore = useAssetListStore();
 const inj = inject(AssetInspectorBehavior.TextureInjectKey);
 
 const myMeta = computed(() => (inj !== undefined ? toValue(inj.meta) : undefined));
-const asset = computed(() => assetStore.getAssetById(inj?.assetId));
+const asset = computed(() => assetStore.getAssetById(inj?.assetId.value));
 
 defineSlots<{
     default(props: { meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.TextureAsset }): any;
