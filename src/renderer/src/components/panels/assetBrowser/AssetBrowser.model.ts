@@ -1,4 +1,20 @@
 import * as Shared from "mod_companion_shared";
+import { AppDesign } from "~/design/AppDesign.js";
+import { PanelBehavior, PanelModel } from "~/helper/GlobalComponents.js";
+
+export interface AssetBrowserModel extends PanelModel {
+    searchTerm?: string;
+    typeFilter?: Shared.Asset.Type[];
+}
+
+export const AssetBrowserBehavior: PanelBehavior<AssetBrowserModel> = {
+    getIcon(model: AssetBrowserModel | undefined): string {
+        return AppDesign.Icons.Panel_AssetBrowser;
+    },
+    getTitle(model: AssetBrowserModel | undefined): string {
+        return "Asset Browser";
+    },
+};
 
 export const AssetBrowserEntryTypes = {
     Unknown: 0,

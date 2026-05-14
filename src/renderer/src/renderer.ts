@@ -18,7 +18,7 @@ initIcons();
 function postInit() {
     useAssetGroupsStore().refresh();
     useTcArtifactsStore().refresh();
-    useFileBrowserStore().refresh();
+    useFileBrowserStore().refreshDir("");
 }
 
 postInit();

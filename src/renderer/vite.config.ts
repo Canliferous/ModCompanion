@@ -1,13 +1,12 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vueDevtools from "vite-plugin-vue-devtools";
 import ui from "@nuxt/ui/vite";
 import uiconfig from "./uiconfig.js";
 import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config
 export default defineConfig({
-    plugins: [vue(), vueDevtools(), ui(uiconfig())],
+    plugins: [vue(), ui(uiconfig())],
     base: "./",
     root: "src",
     build: {

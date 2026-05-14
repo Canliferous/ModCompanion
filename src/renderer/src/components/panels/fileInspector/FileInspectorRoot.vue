@@ -1,12 +1,12 @@
 <template>
     <MPanelRoot>
         <template #header>
-            <div v-if="entry" class="grid gap-2">
+            <div class="grid gap-2">
                 <div class="flex gap-2 w-full items-center">
                     <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
-                        <div>{{ entry.name }}</div>
-                        <div v-if="entry.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
+                        <div>{{ fileName }}</div>
+                        <div v-if="entry?.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
                             <span>{{ fileSize(entry.fileSize) }}</span>
                             <span>{{ getFileTypeName(fileType) }}</span>
                         </div>
@@ -37,36 +37,38 @@
                 </div>
             </div>
         </template>
-        <div v-if="entry" class="grid gap-2 h-full">
+        <div class="grid gap-2 h-full">
             <component :is="getFileInspectorComponent(fileInspector)" :path="fullPath" />
         </div>
-        <div v-else class="grid h-full place-items-center text-muted">No file selected</div>
     </MPanelRoot>
 </template>
 
 <script setup lang="ts">
-import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
-import { fileSize } from "humanize-plus";
 import { AppDesign } from "~/design/AppDesign.js";
 import {
     FileInspectors,
-    FileType,
     getFileInspectorComponent,
     getFileInspectorFromType,
     getFileType,
     getFileTypeIcon,
     getFileTypeName,
-} from "~/components/panels/fileInspector/FileInspectorHelper.js";
+} from "~/helper/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
-import FileInspectorTextPreview from "~/components/panels/fileInspector/FileInspectorTextPreview.vue";
+import * as Shared from "mod_companion_shared";
+import { fileSize } from "humanize-plus";
+import { computedAsync } from "@vueuse/core";
 
-const fileBrowserStore = useFileBrowserStore();
-const entry = computed(() => (fileBrowserStore.activeEntry?.isFile ? fileBrowserStore.activeEntry : undefined));
-const fullPath = computed(() => (entry.value ? pathe.join(getAppConfig().rootPath, entry.value?.path) : ""));
-
-const fileType = computed(() => (entry.value ? getFileType(entry.value?.name) : FileType.Unknown));
+const props = defineProps<{ file: string }>();
+const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
+const fileName = computed(() => pathe.basename(props.file));
+const fileType = computed(() => getFileType(fileName.value));
 const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
+
+const entry = computedAsync(
+    () => window.electronAPI.fileBrowser.getFileEntry(props.file, Shared.FileBrowser.PathBases.RootRelative),
+    undefined,
+);
 
 function handleExplore() {
     if (fullPath.value) {

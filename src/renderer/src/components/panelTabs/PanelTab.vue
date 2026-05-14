@@ -1,5 +1,5 @@
 <template>
-    <PanelTabRoot :params="params" />
+    <PanelTabRoot :props="params" />
 </template>
 
 <script setup lang="ts">

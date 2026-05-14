@@ -1,11 +1,11 @@
 <template>
-    <TextureMetaProvider v-slot="{ meta }">
+    <TextureProvider v-slot="{ meta }">
         <AssetInspectorTextureChannelsRoot :meta="meta" />
-    </TextureMetaProvider>
+    </TextureProvider>
 </template>
 
 <script setup lang="ts">
-import TextureMetaProvider from "~/components/panels/assetInspector/textureShared/TextureMetaProvider.vue";
+import TextureProvider from "~/components/panels/assetInspector/TextureProvider.vue";
 </script>
 
 <style scoped></style>

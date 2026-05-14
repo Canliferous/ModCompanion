@@ -2,12 +2,22 @@ import { ipcMain } from "electron";
 import fs from "node:fs/promises";
 import { Stream } from "node:stream";
 import * as Shared from "mod_companion_shared";
+import * as Core from "mod_companion_core";
 
 export function registerFileApi(): boolean {
     ipcMain.handle(
         Shared.Ipc.Channels.FileReadString,
-        async (event: Electron.IpcMainInvokeEvent, filePath: string): Promise<string> => {
-            return fs.readFile(filePath, "utf-8");
+        async (
+            event: Electron.IpcMainInvokeEvent,
+            filePath: string,
+            base?: Shared.FileBrowser.PathBase,
+        ): Promise<string | undefined> => {
+            try {
+                const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+                return await fs.readFile(fullPath, "utf-8");
+            } catch (e) {
+                return undefined;
+            }
         },
     );
 
@@ -22,8 +32,10 @@ export function registerFileApi(): boolean {
                 | Iterable<string | NodeJS.ArrayBufferView>
                 | AsyncIterable<string | NodeJS.ArrayBufferView>
                 | Stream,
+            base?: Shared.FileBrowser.PathBase,
         ): Promise<void> => {
-            return fs.writeFile(filePath, data);
+            const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+            return fs.writeFile(fullPath, data);
         },
     );
 

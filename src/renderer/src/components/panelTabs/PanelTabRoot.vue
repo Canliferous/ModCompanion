@@ -1,9 +1,9 @@
 <template>
-    <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose">
-        <UIcon :name="params.params.icon" />
-        <span>{{ title }}</span>
+    <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose" @dblclick="handleDoubleClick">
+        <UIcon :name="behavior.getIcon(model)" />
+        <span :class="{ italic: p.props.params.temporary }">{{ behavior.getTitle(model) }}</span>
         <UButton
-            v-if="!props.params.params.noClose"
+            v-if="!p.props.params.noClose"
             :icon="AppDesign.Icons.Close"
             variant="link"
             size="xs"
@@ -17,18 +17,22 @@
 import { AppDesign } from "~/design/AppDesign.js";
 
 import { IDockviewPanelHeaderProps } from "dockview-vue";
+import { PanelModel, PanelParams, PanelsBehaviors } from "~/helper/GlobalComponents.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
+import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 
-const props = defineProps<{ params: IDockviewPanelHeaderProps }>();
-
-const title = ref(props.params.api.title);
-props.params.api.onDidTitleChange((e) => {
-    title.value = e.title;
-});
+const p = defineProps<{ props: IDockviewPanelHeaderProps<PanelParams> }>();
+const behavior = computed(() => PanelsBehaviors[p.props.params.panelName]);
+const model = computed(() => usePanelsStore().getModel<PanelModel>(p.props.params.panelId));
 
 function handleClose() {
-    if (!props.params.params.noClose) {
-        props.params.api.close();
+    if (!p.props.params.noClose) {
+        p.props.api.close();
     }
+}
+
+function handleDoubleClick() {
+    usePanelsStore().makeNonTemporary(p.props.params.panelId);
 }
 </script>
 

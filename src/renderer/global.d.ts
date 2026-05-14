@@ -1,5 +1,6 @@
 import * as Shared from "mod_companion_shared";
 import { Stream } from "node:stream";
+import { FileEntry } from "mod_companion_shared/SharedFileBrowser.js";
 
 export {};
 
@@ -8,14 +9,19 @@ declare global {
         electronAPI: {
             app: {
                 launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string | undefined) => void;
-                exit: () => void;
+                exitForReal: () => void;
+                closeWindow: () => void;
+                minimize: () => void;
+                maximize: () => void;
+                openExternal: (payload: string) => void;
+                getAppVersion: () => Promise<string>;
                 rendererReady: () => void;
             };
 
             fileBrowser: {
-                listFiles: (dirPath: string) => Promise<Shared.FileBrowser.SharedProjectListFilesReport>;
+                listFiles: (dirPath: string) => Promise<Shared.FileBrowser.FileEntries>;
                 correctPath: (dirPath: string) => Promise<string | undefined>;
-                setCurrentPath: (dirPath: string) => void;
+                getFileEntry: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<FileEntry | undefined>;
                 browseToFile: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
 
                 /**
@@ -30,15 +36,15 @@ declare global {
                  */
                 execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) => void;
                 subscribeDirUpdated: (
-                    callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void,
+                    callback: (dir: string, entries: Shared.FileBrowser.FileEntries) => void,
                 ) => IpcRenderer;
                 subscribeIndexUpdated: (
-                    callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void,
+                    callback: (index: Map<string, Shared.FileBrowser.FileEntries>) => void,
                 ) => IpcRenderer;
             };
 
             file: {
-                readString: (filePath: string) => Promise<string>;
+                readString: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<string | undefined>;
                 writeString: (
                     filePath: string,
                     data:
@@ -47,6 +53,7 @@ declare global {
                         | Iterable<string | NodeJS.ArrayBufferView>
                         | AsyncIterable<string | NodeJS.ArrayBufferView>
                         | Stream,
+                    base?: Shared.FileBrowser.PathBase,
                 ) => Promise<void>;
             };
 

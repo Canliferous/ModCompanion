@@ -37,12 +37,12 @@ const props = defineProps<{
     name: string;
     id: Shared.AssetGroup.GroupId;
     editing?: boolean;
+    isExpanded?: boolean;
 }>();
 const emit = defineEmits<{
     stopEditing: [void];
+    toggleCollapsed: [void];
 }>();
-
-const isExpanded = computed(() => groupsStore.isExpanded(props.id));
 
 async function onDrop(files: File[] | null, event: DragEvent) {
     const data = event.dataTransfer?.getData("text/plain");
@@ -61,7 +61,7 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 });
 
 function handleToggleExpanded() {
-    groupsStore.toggleCollapsed(props.id);
+    emit("toggleCollapsed");
 }
 
 function handleNameChanged(newName: string) {

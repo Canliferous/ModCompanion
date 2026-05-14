@@ -1,17 +1,25 @@
 import { defineStore } from "pinia";
 import { DockviewApi, DockviewReadyEvent, IDockviewPanel } from "dockview-vue";
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import { ComponentDesc, PanelComponents, PanelIcons, PanelTitles } from "~/helper/PanelComponents.js";
+import { GlobalComponentNames, PanelComponentName, PanelModel, PanelParams } from "~/helper/GlobalComponents.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { Logger } from "~/logger.js";
 import * as Shared from "mod_companion_shared";
+import * as uuid from "uuid";
+import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
+import { useEventListener } from "@vueuse/core";
+import { useRememberWorkspaceReactiveMap, useRememberWorkspaceRef } from "~/composables/useRemember.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
     const currentPanels = ref<IDockviewPanel[]>([]);
     const workspaceStore = useWorkspaceStore();
+    const models = useRememberWorkspaceReactiveMap(reactive<Map<string, PanelModel>>(new Map()), "panel-models");
+    const activePanel = ref<string | undefined>();
 
     watch(() => workspaceStore.activeWorkspace, deserialize);
+
+    useEventListener("keydown", (ev) => _relayKeyboardEventToActivePanel(ev));
 
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
@@ -30,42 +38,66 @@ export const usePanelsStore = defineStore("panels", () => {
 
         event.api.onDidRemovePanel(updatePanels);
         event.api.onDidAddPanel(updatePanels);
+        event.api.onDidActivePanelChange(handleActivePanelChanged);
     }
 
-    function trySpawnPanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): IDockviewPanel | undefined {
-        const openPanel = findOpenPanel(panel.componentId);
-        if (openPanel) {
-            return openPanel;
-        }
+    function handleActivePanelChanged(panel: IDockviewPanel | undefined): void {
+        activePanel.value = panel?.id;
+    }
 
-        const op: AddPanelOptions = {
+    function spawnPanel<T extends PanelModel>(
+        panelName: PanelComponentName,
+        model: T,
+        options?: Partial<AddPanelOptions>,
+        params?: Partial<PanelParams>,
+    ): IDockviewPanel | undefined {
+        const panelId = panelName + ":" + uuid.v4();
+        models.set(panelId, model);
+        const op: AddPanelOptions<PanelParams> = {
             ...options,
-            id: panel.componentId,
-            component: panel.componentId,
-            title: PanelTitles[panel.componentId] ?? "",
-            tabComponent: PanelComponents.tabComponents.panelTab.componentId,
-            params: { icon: PanelIcons[panel.componentId] },
+            id: panelId,
+            component: panelName,
+            tabComponent: GlobalComponentNames.PanelTab,
+            params: { panelName, panelId, noClose: false, temporary: false, ...params },
         };
 
         return api.value?.addPanel(op);
     }
 
-    function togglePanel(panel: ComponentDesc): void {
-        const p = findOpenPanel(panel.componentId);
-        if (p) {
-            api.value?.removePanel(p);
+    function spawnPanelAtSimilar<T extends PanelModel>(
+        panelName: PanelComponentName,
+        model: T,
+        defaultDirection: Direction,
+        params?: Partial<PanelParams>,
+    ): IDockviewPanel | undefined {
+        const options: Partial<AddPanelOptions<PanelParams>> = {};
+
+        const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
+        if (existingPanelOfSameType) {
+            options.position = { direction: "within", referencePanel: existingPanelOfSameType.id };
         } else {
-            trySpawnPanel(panel);
+            options.position = { direction: defaultDirection };
         }
+        return spawnPanel(panelName, model, options, params);
     }
 
-    function findOpenPanel(panelId: string): IDockviewPanel | undefined {
-        return api.value?.panels.find((p) => p.id.startsWith(panelId));
-    }
+    function spawnTemporaryPanel<T extends PanelModel>(
+        panelName: PanelComponentName,
+        model: T,
+        defaultDirection: Direction,
+    ): IDockviewPanel | undefined {
+        const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
+        if (existingPanelOfSameType?.params?.temporary) {
+            models.set(existingPanelOfSameType.id, model);
+            const panel = api.value?.getPanel(existingPanelOfSameType.id);
+            if (panel) {
+                panel.focus();
+            }
 
-    function focusOrCreatePanel(panel: ComponentDesc, options?: Partial<AddPanelOptions>): void {
-        const p = trySpawnPanel(panel, options);
-        p?.focus();
+            return;
+        }
+
+        return spawnPanelAtSimilar(panelName, model, defaultDirection, { temporary: true });
     }
 
     function deserialize(): void {
@@ -82,7 +114,7 @@ export const usePanelsStore = defineStore("panels", () => {
                 api.value.clear();
             }
         } catch (err) {
-            console.warn("Failed to load layout", err);
+            Logger.warning(Shared.Log.Channel.Generic, "Failed to load layout", err);
         }
     }
 
@@ -101,5 +133,32 @@ export const usePanelsStore = defineStore("panels", () => {
         workspaceStore.updatePanels(activeWorkspace, serializedDockview);
     }
 
-    return { api, handleReady, trySpawnPanel, togglePanel, findOpenPanel, focusOrCreatePanel };
+    function getModel<T extends PanelModel>(panelId: string): T | undefined {
+        return models.get(panelId) as T | undefined;
+    }
+
+    function makeNonTemporary(panelId: string): void {
+        const panel = api.value?.getPanel(panelId);
+        if (!panel) return;
+        panel.update({ params: { ...panel.params, temporary: false } });
+    }
+
+    function _relayKeyboardEventToActivePanel(event: KeyboardEvent): void {
+        const id = activePanel.value;
+        if (!id) return;
+        const panel = models.get(id);
+        if (!panel) return;
+
+        panel.onKeyInput?.call(event);
+    }
+
+    return {
+        api,
+        handleReady,
+        spawnPanel,
+        spawnPanelAtSimilar,
+        spawnTemporaryPanel,
+        getModel,
+        makeNonTemporary,
+    };
 });

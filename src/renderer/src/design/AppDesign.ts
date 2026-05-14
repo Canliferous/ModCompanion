@@ -11,6 +11,7 @@ export const Icons = {
     Loading: "mingcute:loading-line",
     Filter: "mingcute:filter-3-line",
     Search: "mingcute:search-2-line",
+    Save: "mingcute:save-2-fill",
     CollapseVertical: "mingcute:fold-vertical-line",
     ExpandVertical: "mingcute:unfold-vertical-line",
     ChevronUp: "mingcute:up-line",
@@ -31,6 +32,8 @@ export const Icons = {
     NetworkConnected: "mingcute:wifi-line",
     NetworkDisconnected: "mingcute:wifi-off-line",
     Cloud: "mingcute:cloud-fill",
+    InteropConnected: "mingcute:transfer-fill",
+    LinkExternal: "mingcute:external-link-line",
 
     Conversion: "mingcute:lightning-fill",
 
@@ -39,6 +42,10 @@ export const Icons = {
     FsFile: "mingcute:file-fill",
     FsImage: "mingcute:pic-fill",
     FsCode: "mingcute:file-code-fill",
+
+    SystemMinimize: "mingcute:minimize-fill",
+    SystemMaximize: "mingcute:fullscreen-fill",
+    SystemClose: "mingcute:close-fill",
 
     ActionAdd: "mingcute:add-line",
     ActionRemove: "mingcute:minimize-line",

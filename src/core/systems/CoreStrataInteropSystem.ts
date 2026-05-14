@@ -1,9 +1,4 @@
 import net from "node:net";
-// import {
-//     notifyStrataInteropConnected,
-//     notifyStrataInteropDisconnected,
-//     notifyStrataInteropLog,
-// } from "../../main/api/MainStrataInteropApi.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 
@@ -12,9 +7,23 @@ const reconnect = true;
 let healthCheckInterval: NodeJS.Timeout | undefined = undefined;
 const healthCheckIntervalMs = 2000;
 
+let notifyConnectedFunc: (() => void) | undefined = undefined;
+let notifyDisconnectedFunc: (() => void) | undefined = undefined;
+let notifyMessageFunc: ((message: string) => void) | undefined = undefined;
+
+interface Props {
+    connectedFunc?: (() => void) | undefined;
+    disconnectedFunc?: (() => void) | undefined;
+    messageFunc?: ((message: string) => void) | undefined;
+}
+
 export const StrataInteropSystem = {
-    initSystem(): boolean {
+    initSystem(funcs?: Props): boolean {
         _initStrataInteropSocket();
+
+        notifyConnectedFunc = funcs?.connectedFunc;
+        notifyDisconnectedFunc = funcs?.disconnectedFunc;
+        notifyMessageFunc = funcs?.messageFunc;
         return true;
     },
     sendCommand(command: string) {
@@ -50,17 +59,17 @@ async function _healthcheck() {
                 s.on("close", () => {
                     socket = undefined;
                     Logger.info(Shared.Log.Channel.GameInterop, "Strata disconnected");
-                    // notifyStrataInteropDisconnected();
+                    notifyDisconnectedFunc?.();
                 });
 
                 s.on("data", (data) => {
                     const message = String(data);
-                    // notifyStrataInteropLog(message);
+                    notifyMessageFunc?.(message);
                 });
 
                 socket = s;
                 Logger.info(Shared.Log.Channel.GameInterop, "Strata connected");
-                // notifyStrataInteropConnected();
+                notifyConnectedFunc?.();
             }
         }
         return;

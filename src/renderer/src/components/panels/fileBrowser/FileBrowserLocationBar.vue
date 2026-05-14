@@ -3,7 +3,7 @@
         class="w-full h-8 outline-none cursor-text bg-neutral-900 border border-accented rounded inset-shadow-cave"
         @click="handleBgClicked()"
     >
-        <FileBrowserLocationBarBreadcrumbs v-if="showBreadcrumbs" />
+        <FileBrowserLocationBarBreadcrumbs v-if="showBreadcrumbs" v-model="model" @clear-search="emit('clearSearch')" />
         <UInput
             v-else
             v-model="inputText"
@@ -19,29 +19,29 @@
 </template>
 
 <script setup lang="ts">
-import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import * as Shared from "mod_companion_shared";
 
-const fileBrowserStore = useFileBrowserStore();
+const model = defineModel<string>();
 
 const showBreadcrumbs = ref(true);
 const inputText = ref("");
 
 const emit = defineEmits<{
     focusList: [void];
+    clearSearch: [void];
 }>();
 
 function handleBgClicked(): void {
     showBreadcrumbs.value = false;
-    inputText.value = fileBrowserStore.currentDir;
+    inputText.value = model.value ?? "";
 }
 
 function handleBlur(): void {
-    _finish();
+    finish();
 }
 
 function handleEnter(event: KeyboardEvent): void {
-    _finish();
+    finish();
     event.stopPropagation();
 }
 
@@ -50,9 +50,9 @@ function handleDown(event: KeyboardEvent): void {
     event.stopPropagation();
 }
 
-function _finish() {
+function finish() {
     showBreadcrumbs.value = true;
-    fileBrowserStore.setCurrentDir(Shared.SourceFs.forwardSlashed(inputText.value));
+    model.value = Shared.SourceFs.forwardSlashed(inputText.value);
 }
 </script>
 

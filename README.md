@@ -1,15 +1,63 @@
-# Mod companion
+# Mod Companion
 
 Modder's best friend <3
 
-## Prerequisites
+Mod Companion is a desktop app we built to help us create Portal: Revolution 2.
+
+## User Guide
+
+Want to use the app? Here's what you should expect.
+
+Mod Companion is opinionated and built for our needs first. It's not a general-purpose modding IDE. 
+There's no "New Mod" button. It's built to fit into our workflows and expects a certain folder structure and workflow.
+
+Our Portal: Revolution 2 development repository uses this folder structure. Mod Companion expects this exact setup and **will not work with other layouts**. 
+We have no plans to support other layouts or workflows. 
+
+```
+<root>
+  - game
+    - bin
+      - linux64
+      - win64                       <- revolution.exe, hammer.exe, hlmv.exe, faceposer.exe in here
+    - revolution                    <- Default search path. You should know what goes here
+      - maps
+      - materials
+      - models
+      ...
+  - content
+    - revolution
+      - _modcomp_asset_groups       <- Mod Companion puts some json files in here to group assets
+      - fgd_builder                 <- TeamSpen's FGD unifier tool lives here. Optional
+      - maps                        <- Map sources
+      - materialsrc                 <- Material sources. .png files and such. 
+                                       Mod Companion will put .mca files here
+      - models                      <- Model sources. .smd .qc .dmx .fbx files and such
+                                       Mod Companion will put .mca files here
+      - panorama                    <- Panorama sources that use our tsxml setup. Optional
+      ...
+  - tools                           <- We also put a bunch of other tools like teamcity scripts here
+    - mod_companion                 <- Extract the app here so the directory paths line up
+      - app                         <- Contains the JavaScript bundles that make the app what it is
+      - electron_runtime_linux64    <- Contains mod_companion executable and the electron runtime
+      - electron_runtime_win64      <- Contains mod_companion.exe and the electron runtime
+      - appconfig.json
+```
+
+## Development
+
+Want to contribute? Here's how you can build the app yourself.
+
+Mod Companion is an Electron app written in TypeScript. The frontend is built with VueJS, Nuxt UI and Tailwind.
+
+### Prerequisites
 
 You need
 
 - Node 22
 - NPM
 
-## Set up appconfig.json
+### Set up appconfig.json
 
 Some sample assets are included in the repository. **Don't push any changes you make to those, like when converting assets, unintentionally**
 
@@ -23,14 +71,14 @@ Or if you want to use real data, set root to your Portal Revolution 2 repository
 }
 ```
 
-## Install
+### Install
 
 ```bash
 # --workspaces is very important to make sure you're installing the dependencies for all packages
 npm ci --workspaces
 ```
 
-## Develop
+### Develop
 
 ```bash
 # Start hot reloading
@@ -46,24 +94,64 @@ Caveats:
 
 - `npm run dev` does not watch or reload changes to `preload.ts` or main assets. Restart the command when changing those
 
-## Test production build without deploying
+### Test production build without deploying
 ```bash
 npm run build
 
 npm run run-dist
 ```
 
-## Deploy
+### Deploy
 
 ```bash
 npm run deploy
 ```
 
-## Package overview
+### Package overview
 
-Mod companion is split into a whole load of individual npm packages. It used to just be one, but has been split apart to allow for a headless CLI application to exist that doesn't depend on Electron
+Mod Companion is split into a whole load of individual npm packages. It used to just be one, but has been split apart to allow for a headless CLI application to exist that doesn't depend on Electron
 
 1. Shared - Pure typescript that can run in browsers and node. Runtime agnostic. Renderer, main, core and CLI all depend on this. Put shared type definitions and small pieces of logic code here that every part of the app needs
 2. Core - Nodejs code that is shared by main and cli
 3. Main - The Electron main process. Should be a minimal layer that maps features from Core to Electron APIs
 4. Renderer - The Electron renderer process. Features browser code
+5. Cli - The command line for mod companion to run some tasks on automated services
+
+### Development FAQ
+
+Very verbose, yes. Technology just isn't very black and white all the time
+
+> __Q: Why electron, it's sooooo slow and bad!! Just use tauri or qt or wpf or.. 🤓☝__  
+> A: Mod Companion started its life as a C# Avalonia UI app, which I eventually gave up on and decided to 
+> rewrite everything in Electron. That rewrite offered better performance, smaller update bundles, 
+> faster startup times, faster development iteration times, better debuggability and flexibility. 
+> Different tech stacks are good for different things. Electron's main downside that can't be disputed 
+> is its huge ~200mb bundle, but for a productivity app that you install once to ship your game, that 
+> was a worthwhile tradeoff. 
+> Mod Companion is not a small utility to flash a USB stick, where such a massive bundle would feel like bloat, 
+> it's a productivity tool where I don't want to spend time implementing basic features.  
+> You go write it in rust... let's see who ships their game first.
+
+> __Q: Why is the app bundled so weirdly?__  
+> A: Normally Electron apps bundle all their JavaScript into an app.asar file or into the main executable.
+> This has the negative effect of requiring every user to update the entire 200mb Electron bundle every time a single line of JavaScript updates.
+> There are security reasons for this, but that workflow felt unnecessary to us.  
+> Mod Companion is rapidly iterated upon and that is a main pillar of our technology choices.
+> I need to be able to ship an update and get it to my team members in 3 minutes if necessary to address a bug right away.  
+> What we ship now is a minimal Electron bundle, which we call the production runtime. It contains no actual application logic. 
+> The app logic is bundled and shipped as individual loose files. When the production runtime starts, it loads those loose bundles and launches the app from there.  
+> This way, an app update consists of changing a few small JavaScript files, something Git is very good at handling. Team members then just need to pull a small diff consisting of a few kilobytes to get all the new functionality. No 200mb bundle update required. Results in FAR less LFS usage as well. (Your cool qt or wpf app would still need to ship a bunch of .dll files to LFS every update, wouldn't it?)
+
+> __Q: EWWW!! Why do you ship binaries to git??!__  
+> A: Because it's easy  
+> Q: Nooo! you need to build your own update channel and download manager!  
+> A: Simplicity is key. All files required to develop the game are contained in a single repository. 
+> Every team member can just  pull the repo and start working right away, no setup required on their system,
+> no additional downloads required. We don't use submodules for this reason either. We really don't need even more infra to maintain...  
+> LFS usage does increase of course, but so far we still only pay ~4€ per month for the 
+> entire Portal: Revolution 2 repository (which contains the entire git history for Portal: Revolution 1 as well mind you)
+> and I can tell you that binaries are far from the biggest contributors.  
+> Shipping all your binaries in git also has the added benefit that your entire team is always on the same
+> page. You don't have someone working with an old editor on file formats it does not understand yet. 
+> The biggest downside to this is that we currently have no clean way to ship preview versions or betas, or have multiple version streams in general. 
+> A system like Unreal Game Sync would be great for this but so far it's not been a big enough reason for us to invent a bunch of new tech for this rather niche problem. Remember, ultimately we're trying to ship a game here.

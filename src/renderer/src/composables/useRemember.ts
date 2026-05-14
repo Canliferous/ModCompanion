@@ -1,4 +1,4 @@
-import { Ref, watch } from "vue";
+import { Reactive, Ref, watch } from "vue";
 import { watchDeep } from "@vueuse/core";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
@@ -33,6 +33,53 @@ export function useRememberWorkspaceRef<T>(ref: Ref<T>, keyName: string) {
 
     ref.value = JSON.parse(val);
     return ref;
+}
+
+export function useRememberWorkspaceReactiveMap<V extends object>(map: Reactive<Map<string, V>>, keyName: string) {
+    const workspaceStore = useWorkspaceStore();
+
+    function updateMap(parsed: any) {
+        map.clear();
+        for (const [k, v] of Object.entries(parsed)) {
+            // @ts-expect-error i don't know what the fucking types are doing here man
+            map.set(k, v);
+        }
+    }
+
+    watch(
+        () => workspaceStore.activeWorkspace,
+        (w) => {
+            const val = localStorage.getItem(`${keyName}+${w}`);
+            if (val === null) {
+                return;
+            }
+
+            const parsed = JSON.parse(val);
+            updateMap(parsed);
+        },
+    );
+    watch(
+        () => map,
+        () => {
+            const rawMap = toRaw(map) as Map<string, V>;
+            const obj: Record<string, V> = {};
+            for (const [k, v] of rawMap.entries()) {
+                obj[k] = v;
+            }
+
+            const data = JSON.stringify(obj);
+            localStorage.setItem(`${keyName}+${workspaceStore.activeWorkspace}`, data);
+        },
+        { deep: true },
+    );
+
+    const val = localStorage.getItem(`${keyName}+${workspaceStore.activeWorkspace}`);
+    if (val === null) return map;
+
+    const parsed = JSON.parse(val);
+    updateMap(parsed);
+
+    return map;
 }
 
 export function useRememberStringArray<T extends string>(ref: Ref<T[]>, keyName: string): Ref<T[], T[]> {

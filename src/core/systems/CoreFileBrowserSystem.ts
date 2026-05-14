@@ -17,7 +17,7 @@ let dirUpdatedNotifyFunc: Shared.FileBrowser.DirUpdatedNotifyFunc | undefined = 
 
 function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.FileEntry[] }) {
     index.set(result.dir, result.entries);
-    dirUpdatedNotifyFunc?.(result.dir, result.entries);
+    dirUpdatedNotifyFunc?.(result.dir, { entries: result.entries, valid: true });
 }
 
 let indexDoneEvent: Event<Map<string, Shared.FileBrowser.FileEntry[]>> | undefined = undefined;
@@ -37,11 +37,8 @@ export const FileBrowserSystem = {
             }
 
             const result = await FileBrowserSystem.listFiles(currentPathAbsolute);
-            if (result.type !== Shared.FileBrowser.SharedProjectListFilesReportTypes.Success) {
-                return;
-            }
 
-            notifyFunc?.(currentPathRelative, result.entries);
+            notifyFunc?.(currentPathRelative, result);
         }
 
         watcher.on("add", _change);
@@ -86,18 +83,14 @@ export const FileBrowserSystem = {
         return index;
     },
 
-    async listFiles(
-        dirPath: string,
-        resultBaseRoot?: string,
-    ): Promise<Shared.FileBrowser.SharedProjectListFilesReport> {
-        if (!this.isProjectPath(dirPath)) return { type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Invalid };
+    async listFiles(dirPath: string, resultBaseRoot?: string): Promise<Shared.FileBrowser.FileEntries> {
+        if (!this.isProjectPath(dirPath)) return { valid: false, entries: [] };
 
         let paths: string[] = [];
         try {
             paths = await fs.readdir(dirPath);
         } catch (e) {
-            console.warn(e);
-            return { type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Invalid };
+            return { valid: false, entries: [] };
         }
         const entries: Shared.FileBrowser.FileEntry[] = [];
 
@@ -128,7 +121,7 @@ export const FileBrowserSystem = {
             }
         }
 
-        return { entries, type: Shared.FileBrowser.SharedProjectListFilesReportTypes.Success };
+        return { entries, valid: true };
     },
 
     indexFiles() {

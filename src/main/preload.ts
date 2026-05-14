@@ -7,27 +7,32 @@ import * as Shared from "mod_companion_shared";
 
 contextBridge.exposeInMainWorld("electronAPI", {
     app: {
-        exit: () => ipcRenderer.send(Shared.Ipc.Channels.AppExit),
         launch: (launcherType: Shared.Launchers.SharedLaunchers, launcherArgs: string) =>
             ipcRenderer.send(Shared.Ipc.Channels.AppLaunch, launcherType, launcherArgs),
+        exitForReal: () => ipcRenderer.send(Shared.Ipc.Channels.AppExitForReal),
+        closeWindow: () => ipcRenderer.send(Shared.Ipc.Channels.AppCloseWindow),
+        minimize: () => ipcRenderer.send(Shared.Ipc.Channels.AppMinimize),
+        maximize: () => ipcRenderer.send(Shared.Ipc.Channels.AppMaximize),
+        openExternal: (payload: string) => ipcRenderer.send(Shared.Ipc.Channels.AppOpenExternal, payload),
+        getAppVersion: () => ipcRenderer.invoke(Shared.Ipc.Channels.AppVersion),
         rendererReady: () => ipcRenderer.send(Shared.Ipc.Channels.AppRendererReady),
     },
 
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_ListFilesQuery, dirPath),
         correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_CorrectPathQuery, dirPath),
+        getFileEntry: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_FileEntryQuery, filePath, base),
         execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_ExecuteAction, filePath, base),
-        setCurrentPath: (dirPath: string) =>
-            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_SetCurrentPathAction, dirPath),
         browseToFile: (filePath: string, base: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath, base),
         open: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenAction, filePath, base),
-        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntry[]) => void) =>
+        subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntries) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent,
-                (e: IpcRendererEvent, dir: string, entries: Shared.FileBrowser.FileEntry[]) => callback(dir, entries),
+                (e: IpcRendererEvent, dir: string, entries: Shared.FileBrowser.FileEntries) => callback(dir, entries),
             ),
         subscribeIndexUpdated: (callback: (index: Map<string, Shared.FileBrowser.FileEntry[]>) => void) =>
             ipcRenderer.on(
@@ -37,7 +42,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     },
 
     file: {
-        readString: (filePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileReadString, filePath),
+        readString: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.invoke(Shared.Ipc.Channels.FileReadString, filePath),
         writeString: (
             filePath: string,
             data:
@@ -46,6 +52,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 | Iterable<string | NodeJS.ArrayBufferView>
                 | AsyncIterable<string | NodeJS.ArrayBufferView>
                 | Stream,
+            base?: Shared.FileBrowser.PathBase,
         ) => ipcRenderer.invoke(Shared.Ipc.Channels.FileWriteString, filePath, data),
     },
 

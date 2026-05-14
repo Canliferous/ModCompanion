@@ -5,6 +5,7 @@ import { existsSync } from "fs";
 import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
+import fs from "fs/promises";
 
 export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBase): void {
     const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
@@ -85,6 +86,22 @@ function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {
     return undefined;
 }
 
+export async function getFileEntry(
+    filePath: string,
+    base?: Shared.FileBrowser.PathBase,
+): Promise<Shared.FileBrowser.FileEntry | undefined> {
+    const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
+
+    try {
+        const stat = await fs.stat(fullPath);
+        if (!stat) return undefined;
+
+        return { path: fullPath, fileSize: stat.size, isFile: true, name: path.basename(filePath) };
+    } catch (e) {
+        return undefined;
+    }
+}
+
 export function openFile(filePath: string, base?: Shared.FileBrowser.PathBase): void {
     const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
     const platform = os.platform();
@@ -110,7 +127,7 @@ export function openFile(filePath: string, base?: Shared.FileBrowser.PathBase): 
 }
 
 export function executeFile(file: string, base?: Shared.FileBrowser.PathBase): void {
-    let p = Shared.FileBrowser.makeAbsolute(file, base, ConfigSystem.getAppConfig());
+    const p = Shared.FileBrowser.makeAbsolute(file, base, ConfigSystem.getAppConfig());
 
     Logger.info(Shared.Log.Channel.FileBrowser, "Executing file", p);
 

@@ -1,4 +1,4 @@
-import { computed, ComputedRef, Reactive, Ref } from "vue";
+import { computed, Ref } from "vue";
 import * as Shared from "mod_companion_shared";
 
 export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string, filter: Ref<string>) {
@@ -31,24 +31,23 @@ export function useFilter<T>(items: Ref<T[]>, accessorFunc: (item: T) => string,
 }
 
 export function useAssetsFilter(
-    assets: ComputedRef<Shared.Asset.Asset[]>,
-    searchFilter: Ref<string>,
-    typeFilter: Ref<Shared.Asset.Type[]>,
-) {
-    return computed(() => {
-        const typeFilterVal = typeFilter.value;
-        if (searchFilter.value === "" && typeFilterVal.length === 0) {
-            return assets.value;
+    assets: Iterable<Shared.Asset.Asset>,
+    searchFilter: string | undefined,
+    typeFilter: Shared.Asset.Type[] | undefined,
+): Shared.Asset.Asset[] {
+    if (!searchFilter && (!typeFilter || typeFilter.length === 0)) {
+        return Array.from(assets);
+    }
+
+    const filteredAssets: Shared.Asset.Asset[] = [];
+    for (const asset of assets) {
+        if (typeFilter && typeFilter.length > 0) {
+            const isIncluded = typeFilter.includes(asset.def.type);
+            if (!isIncluded) continue;
         }
 
-        const filteredAssets: Shared.Asset.Asset[] = [];
-        for (const asset of assets.value) {
-            if (typeFilterVal.length > 0) {
-                const isIncluded = typeFilter.value.includes(asset.def.type);
-                if (!isIncluded) continue;
-            }
-
-            const splits = searchFilter.value.split(" ");
+        if (searchFilter) {
+            const splits = searchFilter.split(" ");
 
             let match = true;
             for (const split of splits) {
@@ -62,51 +61,56 @@ export function useAssetsFilter(
             if (match) {
                 filteredAssets.push(asset);
             }
+        } else {
+            filteredAssets.push(asset);
+        }
+    }
+
+    filteredAssets.sort((a, b) => {
+        if (a.def.displayName !== undefined && b.def.displayName !== undefined) {
+            return a.def.displayName.localeCompare(b.def.displayName);
         }
 
-        filteredAssets.sort((a, b) => {
-            if (a.def.displayName !== undefined && b.def.displayName !== undefined) {
-                return a.def.displayName.localeCompare(b.def.displayName);
-            }
+        if (a.defFilePath !== undefined && b.defFilePath !== undefined) {
+            return a.defFilePath.localeCompare(b.defFilePath);
+        }
 
-            if (a.defFilePath !== undefined && b.defFilePath !== undefined) {
-                return a.defFilePath.localeCompare(b.defFilePath);
-            }
-
-            return a.def.id.localeCompare(b.def.id);
-        });
-
-        return filteredAssets;
+        return a.def.id.localeCompare(b.def.id);
     });
+
+    return filteredAssets;
 }
 
 export function useFileFilter(
-    files: Reactive<Map<string, Shared.FileBrowser.FileEntry[]>>,
-    searchFilter: Ref<string>,
+    files: Map<string, Shared.FileBrowser.FileEntries>,
+    searchFilter: string | undefined,
     maxResults: number,
-) {
-    return computed<Shared.FileBrowser.FileEntry[]>(() => {
-        const result: Shared.FileBrowser.FileEntry[] = [];
+): Shared.FileBrowser.FileEntries {
+    if (!searchFilter) {
+        const entries = Array.from(files.values().map((f) => f.entries)).flat();
+        return { valid: true, entries };
+    }
 
-        let resultsCount = 0;
+    const result: Shared.FileBrowser.FileEntry[] = [];
 
-        const searchTerms = searchFilter.value.split(" ");
-        loop1: for (const [key, entry] of files.entries()) {
-            for (const e of entry) {
-                let match = true;
-                for (const term of searchTerms) {
-                    if (!e.name.includes(term)) {
-                        match = false;
-                    }
-                }
+    let resultsCount = 0;
 
-                if (match) {
-                    if (resultsCount++ > maxResults) break loop1;
-                    result.push(e);
+    const searchTerms = searchFilter.split(" ");
+    loop1: for (const [key, entry] of files.entries()) {
+        for (const e of entry.entries) {
+            let match = true;
+            for (const term of searchTerms) {
+                if (!e.name.includes(term)) {
+                    match = false;
                 }
             }
-        }
 
-        return result;
-    });
+            if (match) {
+                if (resultsCount++ > maxResults) break loop1;
+                result.push(e);
+            }
+        }
+    }
+
+    return { valid: true, entries: result };
 }

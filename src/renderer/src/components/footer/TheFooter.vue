@@ -1,6 +1,5 @@
 <template>
     <div class="grid grid-cols-subgrid col-span-full gap-1 bg-neutral-850 py-1 px-2 h-full inset-shadow-rim">
-        <FooterModcompButton />
         <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
             <div>
                 <USeparator orientation="vertical" />
@@ -11,8 +10,6 @@
                 <FooterTcArtifactsStatus />
                 <USeparator orientation="vertical" />
                 <FooterConversionStatus />
-                <USeparator orientation="vertical" />
-                <FooterInteropStatus />
             </div>
         </div>
     </div>
@@ -21,7 +18,6 @@
 <script setup lang="ts">
 import FooterConversionStatus from "~/components/footer/FooterConversionStatus.vue";
 import FooterLog from "~/components/footer/FooterLog.vue";
-import FooterModcompButton from "~/components/footer/FooterModcompButton.vue";
 </script>
 
 <style scoped></style>

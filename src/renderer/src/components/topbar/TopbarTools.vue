@@ -1,0 +1,52 @@
+<template>
+    <UDropdownMenu
+        :items="itemsTools"
+        size="sm"
+        :ui="{ content: 'min-w-40' }"
+        :content="{
+            align: 'start',
+        }"
+    >
+        <template #fgd-leading>
+            <UIcon :name="fgdIcon" :class="{ 'animate-spin': fgdStore.building }" />
+        </template>
+        <UButton size="sm" label="Tools" variant="link" />
+    </UDropdownMenu>
+</template>
+
+<script setup lang="ts">
+import { AppDesign } from "~/design/AppDesign.js";
+import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
+import { useFgdStore } from "~/store/FgdStore.js";
+
+const fgdStore = useFgdStore();
+
+const fgdIcon = computed(() => {
+    if (fgdStore.building) {
+        return AppDesign.Icons.Loading;
+    }
+    if (fgdStore.result === true) {
+        return AppDesign.Icons.Check;
+    }
+    if (fgdStore.result === false) {
+        return AppDesign.Icons.Close;
+    }
+
+    return AppDesign.Icons.ActionPlay;
+});
+
+const itemsTools = computed<DropdownMenuItem[][]>(() => [
+    [
+        {
+            label: "Build FGD",
+            slot: "fgd",
+            onSelect(e) {
+                e.preventDefault();
+                fgdStore.buildFgd();
+            },
+        },
+    ],
+]);
+</script>
+
+<style scoped></style>

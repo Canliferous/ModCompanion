@@ -1,7 +1,7 @@
 <template>
     <MPanelRoot no-scroll>
         <template #header>
-            <div class="flex gap-1">
+            <div class="flex gap-1 flex-wrap">
                 <MapAddButton />
                 <MapPresetButton />
                 <UInput
@@ -18,9 +18,7 @@
                 <MapsTimeReportToggle />
             </div>
         </template>
-        <div class="overflow-x-auto">
-            <MapsDataGrid />
-        </div>
+        <MapsDataGrid />
     </MPanelRoot>
 </template>
 
