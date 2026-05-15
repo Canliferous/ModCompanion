@@ -249,6 +249,14 @@ const items = computed(() => {
                     color: "success",
                 },
                 {
+                    label: "Delete Group",
+                    onSelect(e: Event) {
+                        assetGroupsStore.deleteGroup(group.id);
+                    },
+                    icon: AppDesign.Icons.ActionDelete,
+                    color: "error",
+                },
+                {
                     label: "Copy Name",
                     icon: "empty",
                     onSelect() {
