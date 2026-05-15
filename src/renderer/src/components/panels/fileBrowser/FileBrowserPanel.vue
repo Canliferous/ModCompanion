@@ -35,14 +35,13 @@ if (model) {
         if (event.ctrlKey && event.key == "k") {
             shortcuts.onFocusSearch.call();
         }
-        if (event.key == "f5") {
+        if (event.key == "F5") {
             shortcuts.onRefresh.call();
         }
     });
 
     if (model.onClickInput === undefined) model.onClickInput = useEvent();
     model.onClickInput.on((event) => {
-        console.log(event);
         if (event.button === 3) {
             shortcuts.onBack.call();
         }

@@ -15,6 +15,7 @@
                             @click="goHistoryForward"
                         />
                     </UButtonGroup>
+                    <UButton :icon="AppDesign.Icons.ActionRefresh" @click="handleRefresh" />
                     <FileBrowserLocationBar
                         v-model="currentDir"
                         @clear-search="clearSearchTerm"
@@ -126,6 +127,13 @@ watch(entries, () => {
     dataTable.value?.deselect();
 });
 
+function handleRefresh(): void {
+    const dir = currentDir.value;
+    if (dir !== undefined) {
+        fileBrowserStore.refreshDir(dir);
+    }
+}
+
 function goHistoryBack(): void {
     if (history.length <= 1) return;
     if (historyIdx.value > 0) {
@@ -149,6 +157,7 @@ function goHistoryForward(): void {
 const shortcuts = inject(FileBrowserBehavior.ShortcutsInjectKey);
 shortcuts?.onBack.on(goHistoryBack);
 shortcuts?.onForward.on(goHistoryForward);
+shortcuts?.onRefresh.on(handleRefresh);
 
 const dataTable = useTemplateRef("dataTable");
 
