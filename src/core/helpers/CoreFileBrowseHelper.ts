@@ -45,7 +45,7 @@ function _getBrowseToFileSelectCommand(filePath: string): string | undefined {
     const platform = os.platform();
 
     if (platform === "win32") {
-        return `explorer.exe /select,"${filePath}"`;
+        return `explorer.exe /select,"${Shared.SourceFs.backSlashed(filePath)}"`;
     } else if (platform === "linux") {
         return _getBrowseToFileSelectCommandLinux(filePath);
     }

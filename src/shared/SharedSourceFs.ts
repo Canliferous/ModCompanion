@@ -60,6 +60,10 @@ export function forwardSlashed(str: string): string {
     return str.replace(/\\/g, "/");
 }
 
+export function backSlashed(str: string): string {
+    return str.replace(/\//g, "\\");
+}
+
 export function stripPathStart(filePath: string, prefix: string): string {
     return forwardSlashed(filePath.substring(prefix.length + 1));
 }
