@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center select-none gap-0.5 overflow-x-auto">
+    <div class="flex items-center select-none gap-0.5 overflow-x-hidden">
         <UButton
             size="sm"
             color="neutral"

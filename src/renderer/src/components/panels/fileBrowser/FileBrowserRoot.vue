@@ -1,7 +1,7 @@
 <template>
     <MPanelRoot no-scroll>
         <template #header>
-            <div class="grid gap-1 grid-cols-[1fr_minmax(4rem,30%)]">
+            <div class="grid gap-1 grid-cols-[minmax(0,1fr)_minmax(4rem,30%)]">
                 <div class="flex gap-1">
                     <UButtonGroup>
                         <UButton
