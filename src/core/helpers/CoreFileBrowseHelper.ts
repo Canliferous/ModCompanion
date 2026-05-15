@@ -35,6 +35,11 @@ export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBas
         },
         (error) => {
             if (error) {
+
+                // windows bullshit! explorer.exe *always* says it failed even when it succeeds! Woo microslop!
+                if(command?.startsWith("explorer.exe")) {
+                    return;
+                }
                 Logger.error(Shared.Log.Channel.FileBrowser, `Failed: ${error.message}`);
             }
         },
