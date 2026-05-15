@@ -1,5 +1,5 @@
 <template>
-    <div class="p-2 h-full flex items-stretch flex-col justify-stretch">
+    <div class="p-2 w-full h-full grid grid-cols-1 grid-rows-[auto_1fr_auto]">
         <div v-if="$slots.header" class="pb-1">
             <slot name="header" />
         </div>

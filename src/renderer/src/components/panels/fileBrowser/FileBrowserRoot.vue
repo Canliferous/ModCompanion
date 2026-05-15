@@ -170,7 +170,7 @@ const columns: DataTableColumn<Shared.FileBrowser.FileEntry>[] = [
     },
     {
         id: "name",
-        size: "1fr",
+        size: "minmax(0,1fr)",
         label: "Name",
         cell: (entry) => h(FileBrowserEntryName, { entry: entry }),
     },

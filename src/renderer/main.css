@@ -71,7 +71,7 @@
     --dv-drag-over-background-color: color-mix(in oklab, var(--color-neutral-400), transparent 75%);
     --dv-overlay-z-index: 10;
 
-    --dv-group-view-background-color: var(--color-neutral-900);
+    --dv-group-view-background-color: transparent;
 
     --dv-activegroup-visiblepanel-tab-background-color: var(--color-neutral-750);
     --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-neutral-850);
@@ -85,12 +85,19 @@
 
     .dv-tab {
         box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px 0px 1px rgba(0, 0, 0, 0.4);
-        border-top-left-radius: var(--radius-md);
-        border-top-right-radius: var(--radius-md);
+        border-start-start-radius: var(--radius-md);
+        border-start-end-radius: var(--radius-md);
         font-size: var(--text-xs);
 
         padding-inline: calc(var(--spacing) * 2);
         padding-block: 0;
+    }
+
+    .dv-vertical > .dv-tab {
+        border-start-start-radius: 0;
+        border-start-end-radius: 0;
+        border-end-start-radius: var(--radius-md);
+        border-end-end-radius: var(--radius-md);
     }
 
     .dv-content-container {
@@ -114,6 +121,18 @@
 
         box-shadow: var(--inset-shadow-rim);
         border-radius: var(--radius-md);
+    }
+
+    .dv-groupview-floating {
+        border-radius: var(--radius-lg);
+        border: 2px solid var(--color-neutral-925);
+        background-color: var(--color-neutral-900);
+
+        box-shadow: 0 4px 12px 0 rgba(8, 8, 8, 0.5);
+    }
+
+    .dv-groupview.dv-groupview-header-left {
+        justify-content: end;
     }
 }
 

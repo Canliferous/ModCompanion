@@ -4,10 +4,12 @@ export const themeModcomp: DockviewTheme = {
     name: "modcomp",
     className: "dockview-theme-modcomp",
     gap: 4,
+    edgeGroupCollapsedSize: 24,
 };
 
 export const themeModcompNested: DockviewTheme = {
     name: "modcomp",
     className: "dockview-theme-modcomp--nested",
     gap: 4,
+    edgeGroupCollapsedSize: 24,
 };

@@ -9,6 +9,7 @@ import * as uuid from "uuid";
 import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
 import { useEventListener } from "@vueuse/core";
 import { useRememberWorkspaceReactiveMap, useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { configInitializedEvent } from "~/renderer-config.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -22,10 +23,22 @@ export const usePanelsStore = defineStore("panels", () => {
     useEventListener("keydown", (ev) => _relayKeyboardEventToActivePanel(ev));
     useEventListener("mousedown", (ev) => _relayClickEventToActivePanel(ev));
 
+    // Deserialization needs to wait for the config to exist or some panels might try to read from it too soon and crash
+    configInitializedEvent.on(() => {
+        deserialize();
+    });
+
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
 
-        deserialize();
+        if (!api.value.getEdgeGroup("left")) {
+            api.value.addEdgeGroup("left", {
+                id: "left-group",
+                collapsed: true,
+                minimumSize: 200,
+                initialSize: 350,
+            });
+        }
 
         event.api.onDidLayoutChange(() => {
             serialize();

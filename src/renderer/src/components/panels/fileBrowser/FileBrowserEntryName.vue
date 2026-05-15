@@ -1,7 +1,5 @@
 <template>
-    <UTooltip :text="entry.path" :content="{ align: 'start' }">
-        <span>{{ entry.name }}</span>
-    </UTooltip>
+    <span class="text-ellipsis overflow-clip">{{ entry.name }}</span>
 </template>
 
 <script setup lang="ts">

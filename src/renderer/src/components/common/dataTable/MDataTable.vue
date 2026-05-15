@@ -1,6 +1,6 @@
 <template>
     <div
-        class="grid content-start w-full h-full"
+        class="grid content-start w-full h-full overflow-x-auto"
         :class="noHeader ? 'grid-rows-[minmax(0,1fr)]' : 'grid-rows-[auto_minmax(0,1fr)]'"
         :style="`grid-template-columns: ${columnTemplate}`"
         @click="handleClickEmptyArea"

@@ -1,7 +1,7 @@
 <template>
     <div
-        class="h-full p-1 bg-neutral-900 border border-accented rounded inset-shadow-cave overflow-y-scroll overflow-x-clip"
-        :class="{ 'overflow-x-scroll': horizScroll }"
+        class="h-full p-1 bg-neutral-900 border border-accented rounded inset-shadow-cave overflow-y-auto overflow-x-clip"
+        :class="{ 'overflow-x-auto': horizScroll }"
     >
         <pre
             class="whitespace-pre-wrap text-xs text-neutral-300"

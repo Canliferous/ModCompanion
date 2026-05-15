@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center h-full gap-1" @mousedown.middle="handleClose" @dblclick="handleDoubleClick">
+    <div class="flex items-center h-full w-full gap-1" @mousedown.middle="handleClose" @dblclick="handleDoubleClick">
         <UIcon :name="behavior.getIcon(model)" />
         <span :class="{ italic: p.props.params.temporary }">{{ behavior.getTitle(model) }}</span>
         <UButton
