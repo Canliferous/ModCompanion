@@ -8,7 +8,7 @@ import * as Shared from "mod_companion_shared";
 import * as uuid from "uuid";
 import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview.js";
 import { useEventListener } from "@vueuse/core";
-import { useRememberWorkspaceReactiveMap, useRememberWorkspaceRef } from "~/composables/useRemember.js";
+import { useRememberWorkspaceReactiveMap } from "~/composables/useRemember.js";
 import { configInitializedEvent } from "~/renderer-config.js";
 
 export const usePanelsStore = defineStore("panels", () => {
@@ -163,7 +163,7 @@ export const usePanelsStore = defineStore("panels", () => {
         const panel = models.get(id);
         if (!panel) return;
 
-        panel.onKeyInput?.call(event);
+        panel._onKeyInput?.call(event);
     }
 
     function _relayClickEventToActivePanel(event: MouseEvent): void {
@@ -172,7 +172,7 @@ export const usePanelsStore = defineStore("panels", () => {
         const panel = models.get(id);
         if (!panel) return;
 
-        panel.onClickInput?.call(event);
+        panel._onClickInput?.call(event);
     }
 
     return {

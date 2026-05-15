@@ -30,8 +30,10 @@ const shortcuts: FileBrowserShortcuts = {
 provide(FileBrowserBehavior.ShortcutsInjectKey, shortcuts);
 
 if (model) {
-    if (model.onKeyInput === undefined) model.onKeyInput = useEvent();
-    model.onKeyInput.on((event) => {
+    if (model._onKeyInput === undefined || Object.entries(model._onKeyInput).length === 0)
+        model._onKeyInput = useEvent();
+
+    model._onKeyInput.on((event) => {
         if (event.ctrlKey && event.key == "k") {
             shortcuts.onFocusSearch.call();
         }
@@ -40,8 +42,10 @@ if (model) {
         }
     });
 
-    if (model.onClickInput === undefined) model.onClickInput = useEvent();
-    model.onClickInput.on((event) => {
+    if (model._onClickInput === undefined || Object.entries(model._onClickInput).length === 0)
+        model._onClickInput = useEvent();
+
+    model._onClickInput.on((event) => {
         if (event.button === 3) {
             shortcuts.onBack.call();
         }

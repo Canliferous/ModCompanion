@@ -71,9 +71,15 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
     _Watermark: WaterMark,
 };
 
+/**
+ * The panel model represents the entire globally accessible state of the panel.
+ * All its behavior and representation is to be derived from nothing but the model
+ * Properties marked with and underscore will not be saved.
+ * These are still useful for globally accessible functions or event handlers that are created and managed at runtime
+ */
 export interface PanelModel {
-    onKeyInput?: EventHandler<KeyboardEvent>;
-    onClickInput?: EventHandler<MouseEvent>;
+    _onKeyInput?: EventHandler<KeyboardEvent>;
+    _onClickInput?: EventHandler<MouseEvent>;
 }
 
 export const PanelComponentNames = [
