@@ -10,6 +10,9 @@ export interface FileBrowserModel extends PanelModel {
 
 export interface FileBrowserShortcuts {
     onFocusSearch: EventHandler<void>;
+    onRefresh: EventHandler<void>;
+    onBack: EventHandler<void>;
+    onForward: EventHandler<void>;
 }
 
 export const FileBrowserBehavior = {

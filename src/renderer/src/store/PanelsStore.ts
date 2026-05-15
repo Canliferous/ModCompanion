@@ -20,6 +20,7 @@ export const usePanelsStore = defineStore("panels", () => {
     watch(() => workspaceStore.activeWorkspace, deserialize);
 
     useEventListener("keydown", (ev) => _relayKeyboardEventToActivePanel(ev));
+    useEventListener("mousedown", (ev) => _relayClickEventToActivePanel(ev));
 
     function handleReady(event: DockviewReadyEvent) {
         api.value = event.api;
@@ -150,6 +151,15 @@ export const usePanelsStore = defineStore("panels", () => {
         if (!panel) return;
 
         panel.onKeyInput?.call(event);
+    }
+
+    function _relayClickEventToActivePanel(event: MouseEvent): void {
+        const id = activePanel.value;
+        if (!id) return;
+        const panel = models.get(id);
+        if (!panel) return;
+
+        panel.onClickInput?.call(event);
     }
 
     return {

@@ -2,11 +2,25 @@
     <MPanelRoot no-scroll>
         <template #header>
             <div class="grid gap-1 grid-cols-[1fr_minmax(4rem,30%)]">
-                <FileBrowserLocationBar
-                    v-model="currentDir"
-                    @clear-search="clearSearchTerm"
-                    @focus-list="handleFocusList"
-                />
+                <div class="flex gap-1">
+                    <UButtonGroup>
+                        <UButton
+                            :icon="AppDesign.Icons.ChevronLeft"
+                            :disabled="historyIdx <= 0"
+                            @click="goHistoryBack"
+                        />
+                        <UButton
+                            :icon="AppDesign.Icons.ChevronRight"
+                            :disabled="historyIdx >= history.length - 1"
+                            @click="goHistoryForward"
+                        />
+                    </UButtonGroup>
+                    <FileBrowserLocationBar
+                        v-model="currentDir"
+                        @clear-search="clearSearchTerm"
+                        @focus-list="handleFocusList"
+                    />
+                </div>
                 <FileBrowserSearchBar v-model="searchTerm" />
             </div>
         </template>
@@ -46,10 +60,10 @@ import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEnt
 import { useFileFilter } from "~/composables/useFilter";
 import { getRootRelativePath } from "~/helper/SourceFs";
 import { Logger } from "~/logger";
-import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
 import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
+import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -73,8 +87,37 @@ const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
 
 const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);
 
+const history = reactive<string[]>([currentDir.value || "/"]); // || is intentional because we also want to turn empty string into "/"
+const historyIdx = ref<number>(0);
+const suppressHistoryPush = ref(false);
+
 watch(currentDir, (dir) => {
-    return dir ? fileBrowserStore.refreshDir(dir) : undefined;
+    // Correct empty or undefined paths to be /
+    if (!dir) {
+        currentDir.value = dir = "/";
+    } else if (dir.length > 1 && dir.startsWith("/")) {
+        currentDir.value = dir.substring(1);
+    } else {
+        // And as for the correct paths, remember them in the history
+
+        if (suppressHistoryPush.value) {
+            suppressHistoryPush.value = false;
+        } else {
+            // Destroy the future history just like back to the future 2 taught us
+            if (historyIdx.value !== history.length - 1) {
+                history.splice(historyIdx.value + 1);
+            }
+
+            // Don't add duplicates
+            const alreadyAtLast = history[history.length - 1] === dir;
+            if (!alreadyAtLast) {
+                history.push(dir);
+                historyIdx.value = history.length - 1;
+            }
+        }
+    }
+
+    fileBrowserStore.refreshDir(dir);
 });
 
 const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
@@ -82,6 +125,30 @@ const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
 watch(entries, () => {
     dataTable.value?.deselect();
 });
+
+function goHistoryBack(): void {
+    if (history.length <= 1) return;
+    if (historyIdx.value > 0) {
+        historyIdx.value--;
+    }
+
+    suppressHistoryPush.value = true;
+    currentDir.value = history[historyIdx.value];
+}
+
+function goHistoryForward(): void {
+    if (history.length <= 1) return;
+    if (historyIdx.value < history.length) {
+        historyIdx.value++;
+    }
+
+    suppressHistoryPush.value = true;
+    currentDir.value = history[historyIdx.value];
+}
+
+const shortcuts = inject(FileBrowserBehavior.ShortcutsInjectKey);
+shortcuts?.onBack.on(goHistoryBack);
+shortcuts?.onForward.on(goHistoryForward);
 
 const dataTable = useTemplateRef("dataTable");
 

@@ -28,7 +28,12 @@ import { AppDesign } from "~/design/AppDesign.js";
 const model = defineModel<string>();
 const emit = defineEmits<{ clearSearch: [void] }>();
 
-const pathSplits = computed(() => model.value?.split("/"));
+const pathSplits = computed(() => {
+    if (model.value === "/" || !model.value) {
+        return [""];
+    }
+    return model.value?.split("/");
+});
 
 function handleClick(event: MouseEvent, index: number): void {
     event.stopPropagation();
@@ -49,7 +54,7 @@ function handleClick(event: MouseEvent, index: number): void {
 
 function handleHomeClick(event: MouseEvent): void {
     event.stopPropagation();
-    model.value = "";
+    model.value = "/";
     emit("clearSearch");
 }
 </script>

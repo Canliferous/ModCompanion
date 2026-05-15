@@ -73,6 +73,7 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
 
 export interface PanelModel {
     onKeyInput?: EventHandler<KeyboardEvent>;
+    onClickInput?: EventHandler<MouseEvent>;
 }
 
 export const PanelComponentNames = [

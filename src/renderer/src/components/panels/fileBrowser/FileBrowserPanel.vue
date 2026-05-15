@@ -23,14 +23,31 @@ const model = usePanelsStore().getModel<FileBrowserModel>(props.params.params.pa
 
 const shortcuts: FileBrowserShortcuts = {
     onFocusSearch: useEvent(),
+    onRefresh: useEvent(),
+    onBack: useEvent(),
+    onForward: useEvent(),
 };
 provide(FileBrowserBehavior.ShortcutsInjectKey, shortcuts);
 
 if (model) {
-    model.onKeyInput = useEvent();
+    if (model.onKeyInput === undefined) model.onKeyInput = useEvent();
     model.onKeyInput.on((event) => {
         if (event.ctrlKey && event.key == "k") {
             shortcuts.onFocusSearch.call();
+        }
+        if (event.key == "f5") {
+            shortcuts.onRefresh.call();
+        }
+    });
+
+    if (model.onClickInput === undefined) model.onClickInput = useEvent();
+    model.onClickInput.on((event) => {
+        console.log(event);
+        if (event.button === 3) {
+            shortcuts.onBack.call();
+        }
+        if (event.button === 4) {
+            shortcuts.onForward.call();
         }
     });
 }
