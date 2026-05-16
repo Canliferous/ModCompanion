@@ -37,7 +37,7 @@
                 </div>
             </div>
         </template>
-        <div class="grid gap-2 h-full">
+        <div class="grid grid-cols-1 grid-rows-1 gap-2 h-full">
             <component :is="getFileInspectorComponent(fileInspector)" :path="fullPath" />
         </div>
     </MPanelRoot>

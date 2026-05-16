@@ -1,10 +1,10 @@
 <template>
-    <div class="p-2 w-full h-full grid grid-cols-1 grid-rows-[auto_1fr_auto]">
+    <div class="p-2 w-full h-full grid grid-cols-1 grid-rows-[auto_minmax(0,1fr)_auto]">
         <div v-if="$slots.header" class="pb-1">
             <slot name="header" />
         </div>
         <div
-            class="grow pr-1"
+            class="pr-1"
             :class="noScroll ? 'overflow-y-hidden' : alwaysShowScroll ? 'overflow-y-scroll' : 'overflow-y-auto'"
         >
             <slot />
