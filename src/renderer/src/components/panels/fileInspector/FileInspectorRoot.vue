@@ -1,7 +1,7 @@
 <template>
     <MPanelRoot>
         <template #header>
-            <div class="grid gap-2">
+            <div class="grid gap-2 grid-cols-2 items-start justify-items-end">
                 <div class="flex gap-2 w-full items-center">
                     <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
