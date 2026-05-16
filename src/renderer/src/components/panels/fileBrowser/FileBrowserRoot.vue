@@ -92,34 +92,38 @@ const history = reactive<string[]>([currentDir.value || "/"]); // || is intentio
 const historyIdx = ref<number>(0);
 const suppressHistoryPush = ref(false);
 
-watch(currentDir, (dir) => {
-    // Correct empty or undefined paths to be /
-    if (!dir) {
-        currentDir.value = dir = "/";
-    } else if (dir.length > 1 && dir.startsWith("/")) {
-        currentDir.value = dir.substring(1);
-    } else {
-        // And as for the correct paths, remember them in the history
-
-        if (suppressHistoryPush.value) {
-            suppressHistoryPush.value = false;
+watch(
+    currentDir,
+    (dir) => {
+        // Correct empty or undefined paths to be /
+        if (!dir) {
+            currentDir.value = dir = "/";
+        } else if (dir.length > 1 && dir.startsWith("/")) {
+            currentDir.value = dir.substring(1);
         } else {
-            // Destroy the future history just like back to the future 2 taught us
-            if (historyIdx.value !== history.length - 1) {
-                history.splice(historyIdx.value + 1);
-            }
+            // And as for the correct paths, remember them in the history
 
-            // Don't add duplicates
-            const alreadyAtLast = history[history.length - 1] === dir;
-            if (!alreadyAtLast) {
-                history.push(dir);
-                historyIdx.value = history.length - 1;
+            if (suppressHistoryPush.value) {
+                suppressHistoryPush.value = false;
+            } else {
+                // Destroy the future history just like back to the future 2 taught us
+                if (historyIdx.value !== history.length - 1) {
+                    history.splice(historyIdx.value + 1);
+                }
+
+                // Don't add duplicates
+                const alreadyAtLast = history[history.length - 1] === dir;
+                if (!alreadyAtLast) {
+                    history.push(dir);
+                    historyIdx.value = history.length - 1;
+                }
             }
         }
-    }
 
-    fileBrowserStore.refreshDir(dir);
-});
+        fileBrowserStore.refreshDir(dir);
+    },
+    { immediate: true },
+);
 
 const selectedEntries = ref<Shared.FileBrowser.FileEntry[]>([]);
 
