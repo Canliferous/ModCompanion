@@ -134,6 +134,14 @@
     .dv-groupview.dv-groupview-header-left {
         justify-content: end;
     }
+
+    .dv-dockview .dv-watermark-container {
+        z-index: auto;
+
+        + .dv-branch-node {
+            display: none;
+        }
+    }
 }
 
 .dockview-theme-modcomp--nested {
