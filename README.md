@@ -6,13 +6,19 @@ Mod Companion is a desktop app we built to help us create Portal: Revolution 2.
 
 ## User Guide
 
-Want to use the app? Here's what you should expect.
+Want to use the app? Here's what you should expect and how you can set it up for your mod
+
+### Folder structure
 
 Mod Companion is opinionated and built for our needs first. It's not a general-purpose modding IDE. 
 There's no "New Mod" button. It's built to fit into our workflows and expects a certain folder structure and workflow.
 
 Our Portal: Revolution 2 development repository uses this folder structure. Mod Companion expects this exact setup and **will not work with other layouts**. 
 We have no plans to support other layouts or workflows. 
+
+This is what your development repository should look like. The content/game structure is based on what Valve
+used. It's also embedded into some Source Engine tools like Color Correction Editor. If you're still working
+with a Sourcemod-based, now's the time to upgrade.
 
 ```
 <root>
@@ -41,8 +47,19 @@ We have no plans to support other layouts or workflows.
       - app                         <- Contains the JavaScript bundles that make the app what it is
       - electron_runtime_linux64    <- Contains mod_companion executable and the electron runtime
       - electron_runtime_win64      <- Contains mod_companion.exe and the electron runtime
-      - appconfig.json
+      - appconfig.json              <- Mod Companion config
 ```
+
+### To .gitignore or not to .gitignore
+
+(Applies to other version control systems of course)
+
+- The whole `mod_companion` directory should be checked into git, as well as any updates, so your whole team as access
+- `appconfig.json` should be checked in
+- `.mca` files and the source files they reference should be checked in
+- `_modcomp_asset_groups` should be checked in
+- `.vtf .mdl .phy...` files in the game directory should be IGNORED! Mod Companion will build these on demand, saving you LFS usage (On Portal: Revolution 2, we only gitignore those files in an `_hr` subdirectory, we still check in Portal 2 assets that we don't have sources for)
+- `.bsp` files should be IGNORED
 
 ## Development
 
@@ -148,9 +165,9 @@ Very verbose, yes. Technology just isn't very black and white all the time
 > __Q: EWWW!! Why do you ship binaries to git??!__  
 > A: Because it's easy  
 > Q: Nooo! you need to build your own update channel and download manager!  
-> A: Simplicity is key. All files required to develop the game are contained in a single repository. 
+> A: Simplicity is key. All files needed to develop the game are contained in a single repository. 
 > Every team member can just  pull the repo and start working right away, no setup required on their system,
-> no additional downloads required. We don't use submodules for this reason either. We really don't need even more infra to maintain...  
+> and no additional downloads. We don't use submodules for this reason either. We really don't need even more infra to maintain...  
 > LFS usage does increase of course, but so far we still only pay ~4€ per month for the 
 > entire Portal: Revolution 2 repository (which contains the entire git history for Portal: Revolution 1 as well mind you)
 > and I can tell you that binaries are far from the biggest contributors.  
