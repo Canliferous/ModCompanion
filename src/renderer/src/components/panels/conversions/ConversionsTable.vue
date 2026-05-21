@@ -21,6 +21,7 @@ import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import ConversionsCellAsset from "~/components/panels/conversions/ConversionsCellAsset.vue";
 import * as Shared from "mod_companion_shared";
+import * as _ from "lodash";
 
 const conversionStore = useAssetConversionStore();
 
@@ -45,7 +46,7 @@ const columns: DataTableColumn<Shared.Conversion.ConversionEvent>[] = [
         label: "Status",
         cell: (entry) =>
             h(MConversionStateBadge, {
-                state: entry.stateHistory[Math.max(entry.stateHistory.length - 1, 0)],
+                state: _.last(entry.stateHistory) ?? Shared.Conversion.State.Unknown,
                 class: "min-w-24",
                 variant: "label",
             }),
