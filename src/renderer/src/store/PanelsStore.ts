@@ -68,7 +68,9 @@ export const usePanelsStore = defineStore("panels", () => {
         const panelId = panelName + ":" + uuid.v4();
         models.set(panelId, model);
         const op: AddPanelOptions<PanelParams> = {
+            position: { direction: "within" },
             ...options,
+            floating: false,
             id: panelId,
             component: panelName,
             tabComponent: GlobalComponentNames.PanelTab,
