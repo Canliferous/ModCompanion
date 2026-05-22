@@ -26,6 +26,7 @@ const shortcuts: FileBrowserShortcuts = {
     onRefresh: useEvent(),
     onBack: useEvent(),
     onForward: useEvent(),
+    onDelete: useEvent(),
 };
 provide(FileBrowserBehavior.ShortcutsInjectKey, shortcuts);
 
@@ -36,9 +37,10 @@ if (model) {
     model._onKeyInput.on((event) => {
         if (event.ctrlKey && event.key == "k") {
             shortcuts.onFocusSearch.call();
-        }
-        if (event.key == "F5") {
+        } else if (event.key == "F5") {
             shortcuts.onRefresh.call();
+        } else if (event.key === "Delete") {
+            shortcuts.onDelete.call();
         }
     });
 

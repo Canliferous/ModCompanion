@@ -54,6 +54,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
                 | Stream,
             base?: Shared.FileBrowser.PathBase,
         ) => ipcRenderer.invoke(Shared.Ipc.Channels.FileWriteString, filePath, data),
+        delete: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
+            ipcRenderer.invoke(Shared.Ipc.Channels.FileDelete, filePath, base),
     },
 
     config: {

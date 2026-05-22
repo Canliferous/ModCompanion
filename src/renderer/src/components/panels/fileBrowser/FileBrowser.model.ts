@@ -13,6 +13,7 @@ export interface FileBrowserShortcuts {
     onRefresh: EventHandler<void>;
     onBack: EventHandler<void>;
     onForward: EventHandler<void>;
+    onDelete: EventHandler<void>;
 }
 
 export const FileBrowserBehavior = {

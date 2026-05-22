@@ -15,7 +15,7 @@
                             @click="goHistoryForward"
                         />
                     </UButtonGroup>
-                    <UButton :icon="AppDesign.Icons.ActionRefresh" @click="handleRefresh" />
+                    <UButton :icon="AppDesign.Icons.ActionRefresh" @click="refresh" />
                     <FileBrowserLocationBar
                         v-model="currentDir"
                         @clear-search="clearSearchTerm"
@@ -131,7 +131,7 @@ watch(entries, () => {
     dataTable.value?.deselect();
 });
 
-function handleRefresh(): void {
+function refresh(): void {
     const dir = currentDir.value;
     if (dir !== undefined) {
         fileBrowserStore.refreshDir(dir);
@@ -161,7 +161,8 @@ function goHistoryForward(): void {
 const shortcuts = inject(FileBrowserBehavior.ShortcutsInjectKey);
 shortcuts?.onBack.on(goHistoryBack);
 shortcuts?.onForward.on(goHistoryForward);
-shortcuts?.onRefresh.on(handleRefresh);
+shortcuts?.onRefresh.on(refresh);
+shortcuts?.onDelete.on(handleDeleteShortcut);
 
 const dataTable = useTemplateRef("dataTable");
 
@@ -218,8 +219,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionLaunchFile,
                 disabled: !allFiles,
                 onSelect() {
-                    const fullPaths = pathsArray.map((p) => pathe.join(getAppConfig().rootPath, p));
-                    window.electronAPI.fileBrowser.open(fullPaths);
+                    window.electronAPI.fileBrowser.open(pathsArray, Shared.FileBrowser.PathBases.RootRelative);
                 },
             },
             {
@@ -227,7 +227,10 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionBrowseToFolder,
                 disabled: entries.length !== 1,
                 onSelect() {
-                    window.electronAPI.fileBrowser.browseToFile(pathe.join(getAppConfig().rootPath, entries[0].path));
+                    window.electronAPI.fileBrowser.browseToFile(
+                        entries[0].path,
+                        Shared.FileBrowser.PathBases.RootRelative,
+                    );
                 },
             },
         ],
@@ -274,8 +277,30 @@ const items = computed<ContextMenuItem[][]>(() => {
                 },
             },
         ],
+        [
+            {
+                label: "Delete",
+                icon: AppDesign.Icons.ActionDelete,
+                onSelect() {
+                    deleteFiles(entries.map((e) => e.path));
+                },
+            },
+        ],
     ] satisfies ContextMenuItem[][];
 });
+
+function handleDeleteShortcut(): void {
+    deleteFiles(selectedEntries.value.filter((e) => e.isFile).map((e) => e.path));
+}
+
+async function deleteFiles(files: Iterable<string>): Promise<void> {
+    const promises: Promise<boolean>[] = [];
+    for (const sel of files) {
+        promises.push(window.electronAPI.file.delete(sel, Shared.FileBrowser.PathBases.RootRelative));
+    }
+    await Promise.allSettled(promises);
+    refresh();
+}
 
 function handleFocusList(): void {
     dataTable.value?.focus();

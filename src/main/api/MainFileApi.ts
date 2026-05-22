@@ -39,5 +39,22 @@ export function registerFileApi(): boolean {
         },
     );
 
+    ipcMain.handle(
+        Shared.Ipc.Channels.FileDelete,
+        async (
+            event: Electron.IpcMainInvokeEvent,
+            filePath: string,
+            base?: Shared.FileBrowser.PathBase,
+        ): Promise<boolean> => {
+            const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+            try {
+                await fs.rm(fullPath);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        },
+    );
+
     return true;
 }

@@ -55,6 +55,7 @@ declare global {
                         | Stream,
                     base?: Shared.FileBrowser.PathBase,
                 ) => Promise<void>;
+                delete: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<boolean>;
             };
 
             config: {

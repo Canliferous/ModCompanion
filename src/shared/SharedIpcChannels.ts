@@ -21,6 +21,7 @@ export const Channels = {
 
     FileReadString: "file_read_string",
     FileWriteString: "file_write_string",
+    FileDelete: "file_delete",
 
     ConfigGet: "config_get",
 
