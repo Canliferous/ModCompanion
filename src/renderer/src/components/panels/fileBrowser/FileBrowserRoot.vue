@@ -75,15 +75,21 @@ const searchTerm = defineModel<string>("search");
 const currentDir = defineModel<string>("dir");
 
 const searchEntries = computed(() => useFileFilter(fileBrowserStore.fsEntries, searchTerm.value, 1000));
-const entries: ComputedRef<Shared.FileBrowser.FileEntry[]> = computed(() => {
-    let e;
+const entries = computed<Shared.FileBrowser.FileEntry[]>(() => {
+    let result;
     if (searchTerm.value) {
-        e = searchEntries.value;
+        result = searchEntries.value;
     } else {
-        e = fileBrowserStore.getEntries(currentDir.value);
+        if (!currentDir.value) return [];
+        const e = fileBrowserStore.fsEntries.get(currentDir.value);
+        if (!e) {
+            return [];
+        } else {
+            result = e;
+        }
     }
 
-    return Shared.FileBrowser.sortFileEntries(e);
+    return Shared.FileBrowser.sortFileEntries(result);
 });
 
 const activeEntry = ref<Shared.FileBrowser.FileEntry | undefined>(undefined);

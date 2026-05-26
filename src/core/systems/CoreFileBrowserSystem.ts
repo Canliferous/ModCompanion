@@ -8,8 +8,6 @@ import { createWorker, Worker } from "../helpers/CoreWorkerHelper.js";
 import { createEvent, Event } from "../helpers/CoreEventHelper.js";
 
 let watcher: FSWatcher | undefined;
-let currentPathAbsolute: string | undefined = undefined;
-let currentPathRelative: string | undefined = undefined;
 
 const index: Map<string, Shared.FileBrowser.FileEntry[]> = new Map();
 
@@ -28,39 +26,34 @@ export const FileBrowserSystem = {
         this.indexFiles();
         indexDoneEvent = createEvent();
 
-        watcher = chokidar.watch([], { ignoreInitial: true, awaitWriteFinish: true, depth: 0 });
+        watcher = chokidar.watch(ConfigSystem.getAppConfig().rootPath, {
+            ignoreInitial: true,
+            awaitWriteFinish: true,
+            depth: 0,
+        });
 
-        async function _change(filePath: string) {
-            Logger.debug(Shared.Log.Channel.FileBrowser, "File changed", filePath);
-            if (!currentPathAbsolute || !currentPathRelative) {
-                return;
+        async function _change(filePath: string): Promise<void> {
+            const dir = path.dirname(filePath);
+
+            const result = await FileBrowserSystem.listFiles(dir);
+
+            let finalDir = dir.substring(ConfigSystem.getAppConfig().rootPath.length);
+            if (!finalDir) {
+                finalDir = "/";
             }
-
-            const result = await FileBrowserSystem.listFiles(currentPathAbsolute);
-
-            notifyFunc?.(currentPathRelative, result);
+            notifyFunc?.(finalDir, result);
         }
+
+        async function _delete(filePath: string): Promise<void> {}
 
         watcher.on("add", _change);
         watcher.on("change", _change);
         watcher.on("unlink", _change);
         return true;
     },
+
     getIndexDoneEvent() {
         return indexDoneEvent;
-    },
-    setCurrentDir(currentDir: string) {
-        const config = ConfigSystem.getAppConfig();
-        const fullPath = path.join(config.rootPath, currentDir);
-
-        Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullPath);
-        if (currentPathAbsolute) {
-            watcher?.unwatch(currentPathAbsolute);
-        }
-        currentPathAbsolute = fullPath;
-        currentPathRelative = currentDir;
-
-        watcher?.add(fullPath);
     },
 
     isProjectPath(p: string): boolean {

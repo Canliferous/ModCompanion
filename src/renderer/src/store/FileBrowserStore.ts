@@ -9,10 +9,6 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         fsEntries.set(dirName, report);
     }
 
-    function getEntries(dirPath: string | undefined): Shared.FileBrowser.FileEntries {
-        return fsEntries.get(dirPath ?? "") ?? { valid: false, entries: [] };
-    }
-
     window.electronAPI.fileBrowser.subscribeDirUpdated((dir, entries) => {
         fsEntries.set(dir, entries);
     });
@@ -26,7 +22,6 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
 
     return {
         fsEntries,
-        getEntries,
         refreshDir,
     };
 });
