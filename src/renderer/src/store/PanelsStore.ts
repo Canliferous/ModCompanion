@@ -10,6 +10,7 @@ import { Direction } from "dockview-core/dist/cjs/gridview/baseComponentGridview
 import { useEventListener } from "@vueuse/core";
 import { useRememberWorkspaceReactiveMap } from "~/composables/useRemember.js";
 import { configInitializedEvent } from "~/renderer-config.js";
+import { useEvent } from "~/composables/useEvent.js";
 
 export const usePanelsStore = defineStore("panels", () => {
     const api = ref<DockviewApi>();
@@ -17,6 +18,8 @@ export const usePanelsStore = defineStore("panels", () => {
     const workspaceStore = useWorkspaceStore();
     const models = useRememberWorkspaceReactiveMap(reactive<Map<string, PanelModel>>(new Map()), "panel-models");
     const activePanel = ref<string | undefined>();
+
+    const modelsInitializedEvent = useEvent<void>();
 
     watch(() => workspaceStore.activeWorkspace, deserialize);
 
@@ -119,6 +122,7 @@ export const usePanelsStore = defineStore("panels", () => {
     function deserialize(): void {
         const activeWorkspace = workspaceStore.activeWorkspace;
         if (!activeWorkspace || !api.value) {
+            modelsInitializedEvent.call();
             return;
         }
 
@@ -131,6 +135,8 @@ export const usePanelsStore = defineStore("panels", () => {
             }
         } catch (err) {
             Logger.warning(Shared.Log.Channel.Generic, "Failed to load layout", err);
+        } finally {
+            modelsInitializedEvent.call();
         }
     }
 
@@ -177,6 +183,11 @@ export const usePanelsStore = defineStore("panels", () => {
         panel._onClickInput?.call(event);
     }
 
+    function getPanels(panelName: PanelComponentName) {
+        const panelsOfSameType = api.value?.panels.filter((p) => p.params?.panelName === panelName);
+        return panelsOfSameType;
+    }
+
     return {
         api,
         handleReady,
@@ -185,5 +196,7 @@ export const usePanelsStore = defineStore("panels", () => {
         spawnTemporaryPanel,
         getModel,
         makeNonTemporary,
+        getPanels,
+        modelsInitializedEvent,
     };
 });

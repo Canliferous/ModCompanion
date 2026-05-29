@@ -127,6 +127,7 @@ watch(
         }
 
         fileBrowserStore.refreshDir(dir);
+        fileBrowserStore.updateOpenedDirs();
     },
     { immediate: true },
 );

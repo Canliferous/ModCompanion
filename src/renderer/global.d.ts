@@ -30,6 +30,8 @@ declare global {
                  * */
                 open: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) => void;
 
+                updateOpenedDirs: (dirs: string[]) => void;
+
                 /**
                  * Launches one or more executables. To open a file with its default application, use openFile
                  * @see open

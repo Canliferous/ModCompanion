@@ -69,6 +69,13 @@ export const FileBrowserApi = {
             },
         );
 
+        ipcMain.on(
+            Shared.Ipc.Channels.FileBrowser_UpdateOpenedDirsAction,
+            (event: Electron.IpcMainEvent, dirs: string[]): void => {
+                Core.FileBrowserSystem.updateOpenedDirs(dirs);
+            },
+        );
+
         return true;
     },
 

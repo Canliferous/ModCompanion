@@ -15,6 +15,7 @@ export const Channels = {
     FileBrowser_FileEntryQuery: "filebrowser_file_entry",
     FileBrowser_ExecuteAction: "filebrowser_execute",
     FileBrowser_BrowseToFileAction: "filebrowser_browse_to_file",
+    FileBrowser_UpdateOpenedDirsAction: "filebrowser_update_opened_dirs",
     FileBrowser_OpenAction: "filebrowser_open",
     FileBrowser_DirUpdatedEvent: "filebrowser_update_dir",
     FileBrowser_IndexUpdatedEvent: "filebrowser_update_index",

@@ -11,6 +11,8 @@ let watcher: FSWatcher | undefined;
 
 const index: Map<string, Shared.FileBrowser.FileEntry[]> = new Map();
 
+let openDirs: string[] = [];
+
 let dirUpdatedNotifyFunc: Shared.FileBrowser.DirUpdatedNotifyFunc | undefined = undefined;
 
 function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.FileEntry[] }) {
@@ -33,6 +35,7 @@ export const FileBrowserSystem = {
         });
 
         async function _change(filePath: string): Promise<void> {
+            Logger.info(Shared.Log.Channel.FileBrowser, "CHANGE", filePath);
             const dir = path.dirname(filePath);
 
             const result = await FileBrowserSystem.listFiles(dir);
@@ -44,11 +47,17 @@ export const FileBrowserSystem = {
             notifyFunc?.(finalDir, result);
         }
 
-        async function _delete(filePath: string): Promise<void> {}
+        async function _delete(filePath: string): Promise<void> {
+            Logger.info(Shared.Log.Channel.FileBrowser, "DELETED", filePath);
+        }
 
-        watcher.on("add", _change);
+        async function _add(filePath: string): Promise<void> {
+            Logger.info(Shared.Log.Channel.FileBrowser, "ADDED", filePath);
+        }
+
+        watcher.on("add", _add);
         watcher.on("change", _change);
-        watcher.on("unlink", _change);
+        watcher.on("unlink", _delete);
         return true;
     },
 
@@ -70,6 +79,28 @@ export const FileBrowserSystem = {
         if (ind !== 0) return undefined;
 
         return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
+    },
+
+    async updateOpenedDirs(dirs: string[]) {
+        openDirs = dirs;
+
+        if (!watcher) return;
+
+        const watched = watcher.getWatched();
+        for (const [k, v] of Object.entries(watched)) {
+            watcher.unwatch(k);
+        }
+
+        for (const openDir of openDirs) {
+            const p = Shared.FileBrowser.makeAbsolute(
+                openDir,
+                Shared.FileBrowser.PathBases.RootRelative,
+                ConfigSystem.getAppConfig(),
+            );
+
+            Logger.info(Shared.Log.Channel.FileBrowser, "Watching", p);
+            watcher.add(p);
+        }
     },
 
     getIndex(): Map<string, Shared.FileBrowser.FileEntry[]> {

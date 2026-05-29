@@ -29,6 +29,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath, base),
         open: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenAction, filePath, base),
+        updateOpenedDirs: (dirs: string[]) =>
+            ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_UpdateOpenedDirsAction, dirs),
         subscribeDirUpdated: (callback: (dir: string, entries: Shared.FileBrowser.FileEntries) => void) =>
             ipcRenderer.on(
                 Shared.Ipc.Channels.FileBrowser_DirUpdatedEvent,
