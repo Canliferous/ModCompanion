@@ -13,8 +13,11 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
+import { watchDeep } from "@vueuse/core";
 
 const props = defineProps<{ path: string }>();
+
+const emit = defineEmits<{ hasChanged: [boolean] }>();
 
 const model = ref<Shared.ChamberSignConfig.SharedChamberSignConfig | undefined>(undefined);
 
@@ -34,6 +37,10 @@ watch(
     },
     { immediate: true },
 );
+
+watchDeep(model, () => {
+    emit("hasChanged", true);
+});
 
 async function handleSave() {
     if (model.value) {
