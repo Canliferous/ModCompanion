@@ -91,6 +91,7 @@ function _createWindow(hasTray: boolean): void {
         icon: fs.existsSync(iconPath) ? iconPath : undefined,
         darkTheme: true,
         titleBarStyle: "hidden",
+        backgroundColor: "#121212",
     });
 
     // Event listeners
