@@ -25,6 +25,10 @@ watch(
             props.path,
             Shared.FileBrowser.PathBases.Absolute,
         );
+        if (!fileContents) {
+            return;
+        }
+
         const parsed = JSON.parse(fileContents);
         model.value = parsed;
     },
@@ -38,6 +42,7 @@ async function handleSave() {
             JSON.stringify(model.value, null, 4),
             Shared.FileBrowser.PathBases.Absolute,
         );
+        window.electronAPI.hotReload.reloadChamberSignConfig();
     }
 }
 </script>
