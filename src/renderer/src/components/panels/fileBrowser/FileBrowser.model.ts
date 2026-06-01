@@ -2,13 +2,14 @@ import { PanelBehavior, PanelModel } from "~/helper/GlobalComponents.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 import { EventHandler } from "~/composables/useEvent.js";
+import { PanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 export interface FileBrowserModel extends PanelModel {
     currentDir?: string;
     searchTerm?: string;
 }
 
-export interface FileBrowserShortcuts {
+export interface FileBrowserShortcuts extends PanelShortcuts {
     onFocusSearch: EventHandler<void>;
     onRefresh: EventHandler<void>;
     onBack: EventHandler<void>;

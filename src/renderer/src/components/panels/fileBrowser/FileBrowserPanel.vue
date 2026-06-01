@@ -16,46 +16,19 @@ import {
     FileBrowserModel,
     FileBrowserShortcuts,
 } from "~/components/panels/fileBrowser/FileBrowser.model.js";
-import { useEvent } from "~/composables/useEvent.js";
+import { usePanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
 const model = usePanelsStore().getModel<FileBrowserModel>(props.params.params.panelId);
 
-const shortcuts: FileBrowserShortcuts = {
-    onFocusSearch: useEvent(),
-    onRefresh: useEvent(),
-    onBack: useEvent(),
-    onForward: useEvent(),
-    onDelete: useEvent(),
-};
+const shortcuts = usePanelShortcuts<FileBrowserShortcuts>(model, {
+    onFocusSearch: "ctrl_k",
+    onDelete: "Delete",
+    onRefresh: "F5",
+    onBack: "mouse3",
+    onForward: "mouse4",
+});
 provide(FileBrowserBehavior.ShortcutsInjectKey, shortcuts);
-
-if (model) {
-    if (model._onKeyInput === undefined || Object.entries(model._onKeyInput).length === 0)
-        model._onKeyInput = useEvent();
-
-    model._onKeyInput.on((event) => {
-        if (event.ctrlKey && event.key == "k") {
-            shortcuts.onFocusSearch.call();
-        } else if (event.key == "F5") {
-            shortcuts.onRefresh.call();
-        } else if (event.key === "Delete") {
-            shortcuts.onDelete.call();
-        }
-    });
-
-    if (model._onClickInput === undefined || Object.entries(model._onClickInput).length === 0)
-        model._onClickInput = useEvent();
-
-    model._onClickInput.on((event) => {
-        if (event.button === 3) {
-            shortcuts.onBack.call();
-        }
-        if (event.button === 4) {
-            shortcuts.onForward.call();
-        }
-    });
-}
 </script>
 
 <style scoped></style>

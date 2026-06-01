@@ -19,27 +19,16 @@ import {
 
 import { TooltipProvider } from "reka-ui";
 import { useEvent } from "~/composables/useEvent.js";
-import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import { FileBrowserBehavior, FileBrowserShortcuts } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import { usePanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
 const model = usePanelsStore().getModel<FileInspectorModel>(props.params.params.panelId);
 
-const shortcuts: FileInspectorShortcuts = {
-    onSave: useEvent(),
-};
-
+const shortcuts = usePanelShortcuts<FileInspectorShortcuts>(model, {
+    onSave: "ctrl_s",
+});
 provide(FileInspectorBehavior.ShortcutsInjectKey, shortcuts);
-
-if (model) {
-    if (model._onKeyInput === undefined || Object.entries(model._onKeyInput).length === 0)
-        model._onKeyInput = useEvent();
-
-    model._onKeyInput.on((event) => {
-        if (event.ctrlKey && event.key == "s") {
-            shortcuts.onSave.call();
-        }
-    });
-}
 </script>
 
 <style scoped></style>

@@ -4,12 +4,13 @@ import pathe from "pathe";
 import { Reactive } from "vue";
 import { EventHandler } from "~/composables/useEvent.js";
 import { FileBrowserShortcuts } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import { PanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 export interface FileInspectorModel extends PanelModel {
     file: string;
 }
 
-export interface FileInspectorShortcuts {
+export interface FileInspectorShortcuts extends PanelShortcuts {
     onSave: EventHandler<void>;
 }
 
