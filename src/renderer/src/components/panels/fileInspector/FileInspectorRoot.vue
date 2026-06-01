@@ -33,7 +33,11 @@
             </div>
         </template>
         <div class="grid grid-cols-1 grid-rows-1 gap-2 h-full">
-            <component :is="getFileInspectorComponent(fileInspector)" @hasChanged="handleHasChanged" :path="fullPath" />
+            <component
+                :is="getFileInspectorComponent(fileInspector)"
+                :path="fullPath"
+                @has-changed="handleHasChanged"
+            />
         </div>
     </MPanelRoot>
 </template>
