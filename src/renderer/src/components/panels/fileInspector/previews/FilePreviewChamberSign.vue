@@ -1,7 +1,6 @@
 <template>
     <div>
         <template v-if="model">
-            <UButton label="Save" :icon="AppDesign.Icons.Save" @click="handleSave" />
             <ChamberSignConfigRoot v-model="model" />
         </template>
         <template v-else>
@@ -11,10 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
+import { watchDeep } from "@vueuse/core";
+import * as _ from "lodash";
+import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
 
 const props = defineProps<{ path: string }>();
+
+const emit = defineEmits<{ hasChanged: [boolean] }>();
 
 const model = ref<Shared.ChamberSignConfig.SharedChamberSignConfig | undefined>(undefined);
 
@@ -35,7 +38,27 @@ watch(
     { immediate: true },
 );
 
-async function handleSave() {
+const injected = inject(FileInspectorBehavior.FileEditorInjectKey);
+if (injected) {
+    injected.saveEvent.on(() => {
+        save();
+    });
+}
+
+const savedModel = ref<Shared.ChamberSignConfig.SharedChamberSignConfig | undefined>(undefined);
+
+watchDeep(model, (newValue, oldModel) => {
+    // Initial value
+    if (oldModel === undefined) {
+        savedModel.value = structuredClone(toRaw(newValue));
+        return;
+    }
+
+    const isEqual = _.isEqual(toRaw(newValue), toRaw(savedModel.value));
+    emit("hasChanged", !isEqual);
+});
+
+async function save() {
     if (model.value) {
         await window.electronAPI.file.writeString(
             props.path,
@@ -43,6 +66,8 @@ async function handleSave() {
             Shared.FileBrowser.PathBases.Absolute,
         );
         window.electronAPI.hotReload.reloadChamberSignConfig();
+        savedModel.value = structuredClone(toRaw(model.value));
+        emit("hasChanged", false);
     }
 }
 </script>

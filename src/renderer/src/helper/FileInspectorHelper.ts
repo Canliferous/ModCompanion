@@ -154,3 +154,9 @@ export function getFileInspectorComponent(inspector: FileInspectors): FileInspec
             return undefined;
     }
 }
+
+export function hasEditor(inspector: FileInspectors): boolean {
+    if (inspector === FileInspectors.ChamberSign) return true;
+
+    return false;
+}

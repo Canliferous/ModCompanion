@@ -15,19 +15,14 @@
 
                 <div class="flex gap-2">
                     <UButton
-                        v-if="fileInspector === FileInspectors.Text"
+                        v-if="editing"
                         size="xs"
-                        label="Edit"
-                        :icon="AppDesign.Icons.ActionEdit"
-                        @click="handleOpen"
+                        label="Save"
+                        :icon="AppDesign.Icons.Save"
+                        :disabled="!unsavedChanges"
+                        @click="handleSave"
                     />
-                    <UButton
-                        v-else
-                        size="xs"
-                        label="Open"
-                        :icon="AppDesign.Icons.ActionLaunchFile"
-                        @click="handleOpen"
-                    />
+                    <UButton size="xs" label="Open" :icon="AppDesign.Icons.ActionLaunchFile" @click="handleOpen" />
                     <UButton
                         size="xs"
                         label="Explore to"
@@ -38,7 +33,11 @@
             </div>
         </template>
         <div class="grid grid-cols-1 grid-rows-1 gap-2 h-full">
-            <component :is="getFileInspectorComponent(fileInspector)" :path="fullPath" />
+            <component
+                :is="getFileInspectorComponent(fileInspector)"
+                :path="fullPath"
+                @has-changed="handleHasChanged"
+            />
         </div>
     </MPanelRoot>
 </template>
@@ -46,24 +45,42 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 import {
-    FileInspectors,
     getFileInspectorComponent,
     getFileInspectorFromType,
     getFileType,
     getFileTypeIcon,
     getFileTypeName,
+    hasEditor,
 } from "~/helper/FileInspectorHelper.js";
 import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
 import { fileSize } from "humanize-plus";
 import { computedAsync } from "@vueuse/core";
+import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
+import { useEvent } from "~/composables/useEvent.js";
+import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 
 const props = defineProps<{ file: string }>();
 const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
 const fileName = computed(() => pathe.basename(props.file));
 const fileType = computed(() => getFileType(fileName.value));
 const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
+
+const editing = computed(() => hasEditor(fileInspector.value));
+const unsavedChanges = ref(false);
+
+const saveEvent = useEvent<void>();
+provide(FileInspectorBehavior.FileEditorInjectKey, {
+    saveEvent,
+});
+
+const shortcuts = inject(FileInspectorBehavior.ShortcutsInjectKey);
+shortcuts?.onSave.on(() => saveEvent.call());
+
+function handleHasChanged(changed: boolean): void {
+    unsavedChanges.value = changed;
+}
 
 const entry = computedAsync(
     () => window.electronAPI.fileBrowser.getFileEntry(props.file, Shared.FileBrowser.PathBases.RootRelative),
@@ -79,6 +96,12 @@ function handleExplore() {
 function handleOpen() {
     if (fullPath.value) {
         window.electronAPI.fileBrowser.open(fullPath.value);
+    }
+}
+
+function handleSave() {
+    if (fullPath.value) {
+        saveEvent.call();
     }
 }
 </script>
