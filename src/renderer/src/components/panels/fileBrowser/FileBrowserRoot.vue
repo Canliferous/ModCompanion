@@ -33,6 +33,7 @@
                 :entries="entries"
                 :draggable="true"
                 no-scroll
+                no-header
                 @on-entry-activated="handleActivated"
                 @on-selection-changed="handleSelectionChanged"
                 @on-active-changed="handleActiveChanged"
@@ -65,6 +66,7 @@ import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -184,18 +186,13 @@ const columns: DataTableColumn<Shared.FileBrowser.FileEntry>[] = [
         id: "name",
         size: "minmax(0,1fr)",
         label: "Name",
-        cell: (entry) => h(FileBrowserEntryName, { entry: entry }),
+        cell: (entry) => h(FileBrowserEntryName, { name: entry.name }),
     },
     {
         id: "size",
         size: "auto",
         label: "Size",
-        cell: (entry) =>
-            h(
-                "span",
-                { class: "text-right font-mono whitespace-nowrap" },
-                entry.fileSize ? Humanize.fileSize(Math.max(entry.fileSize, 1024)) : "",
-            ),
+        cell: (entry) => h(FileBrowserEntrySize, { size: entry.fileSize }),
     },
 ];
 

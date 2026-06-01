@@ -1,10 +1,9 @@
 <template>
-    <span class="text-ellipsis overflow-clip">{{ entry.name }}</span>
+    <span class="text-ellipsis overflow-clip">{{ name }}</span>
 </template>
 
 <script setup lang="ts">
-import * as Shared from "mod_companion_shared";
-defineProps<{ entry: Shared.FileBrowser.FileEntry }>();
+defineProps<{ name: string }>();
 </script>
 
 <style scoped></style>
