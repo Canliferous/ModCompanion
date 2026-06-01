@@ -35,6 +35,7 @@ export function registerFileApi(): boolean {
             base?: Shared.FileBrowser.PathBase,
         ): Promise<void> => {
             const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+            Core.Logger.info(Shared.Log.Channel.FileBrowser, "Writing to ", fullPath);
             return fs.writeFile(fullPath, data);
         },
     );
@@ -48,9 +49,11 @@ export function registerFileApi(): boolean {
         ): Promise<boolean> => {
             const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
             try {
+                Core.Logger.info(Shared.Log.Channel.FileBrowser, "Deleting", fullPath);
                 await fs.rm(fullPath);
                 return true;
             } catch (e) {
+                Core.Logger.warning(Shared.Log.Channel.FileBrowser, "Failed to delete", fullPath);
                 return false;
             }
         },

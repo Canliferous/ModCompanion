@@ -57,6 +57,9 @@ import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
 import { fileSize } from "humanize-plus";
 import { computedAsync } from "@vueuse/core";
+import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
+import { useEvent } from "~/composables/useEvent.js";
+import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 
 const props = defineProps<{ file: string }>();
 const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
@@ -67,8 +70,16 @@ const fileInspector = computed(() => getFileInspectorFromType(fileType.value));
 const editing = computed(() => hasEditor(fileInspector.value));
 const unsavedChanges = ref(false);
 
+const saveEvent = useEvent<void>();
+provide(FileInspectorBehavior.FileEditorInjectKey, {
+    saveEvent,
+});
+
+const shortcuts = inject(FileInspectorBehavior.ShortcutsInjectKey);
+shortcuts?.onSave.on(() => saveEvent.call());
+
 function handleHasChanged(changed: boolean): void {
-    unsavedChanges.value = true;
+    unsavedChanges.value = changed;
 }
 
 const entry = computedAsync(
@@ -90,7 +101,7 @@ function handleOpen() {
 
 function handleSave() {
     if (fullPath.value) {
-        // window.electronAPI.fileBrowser.open(fullPath.value);
+        saveEvent.call();
     }
 }
 </script>
