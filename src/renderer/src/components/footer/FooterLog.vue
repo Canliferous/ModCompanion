@@ -7,7 +7,10 @@
                         class="flex justify-start items-center gap-1 text-nowrap w-full"
                         :class="getLogTypeTextColorWarnings(logStore.latestEvent.type)"
                     >
-                        <UIcon :name="isOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight" />
+                        <UIcon
+                            class="shrink-0"
+                            :name="isOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight"
+                        />
                         <MLogTypeIcon :type="logStore.latestEvent.type" />
                         <span>
                             {{ Shared.Log.getLogPrefix(logStore.latestEvent, true, true) }}

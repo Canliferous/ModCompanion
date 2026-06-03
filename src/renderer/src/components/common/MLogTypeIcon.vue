@@ -1,5 +1,5 @@
 <template>
-    <UIcon :name="getLogTypeIcon(type)" :class="getLogTypeTextColor(type)" />
+    <UIcon class="shrink-0" :name="getLogTypeIcon(type)" :class="getLogTypeTextColor(type)" />
 </template>
 
 <script setup lang="ts">
