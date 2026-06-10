@@ -86,7 +86,7 @@ export const usePanelsStore = defineStore("panels", () => {
     function spawnPanelAtSimilar<T extends PanelModel>(
         panelName: PanelComponentName,
         model: T,
-        defaultDirection: Direction,
+        defaultDirection: Direction = "right",
         params?: Partial<PanelParams>,
     ): IDockviewPanel | undefined {
         const options: Partial<AddPanelOptions<PanelParams>> = {};
@@ -103,17 +103,8 @@ export const usePanelsStore = defineStore("panels", () => {
     function spawnTemporaryPanel<T extends PanelModel>(
         panelName: PanelComponentName,
         model: T,
-        defaultDirection: Direction,
+        defaultDirection: Direction = "right",
     ): IDockviewPanel | undefined {
-        const existingTempPanel = api.value?.panels?.find((p) => p.params?.temporary);
-        if (existingTempPanel) {
-            return spawnPanel(
-                panelName,
-                model,
-                { position: { direction: "within", referencePanel: existingTempPanel.id } },
-                { temporary: true },
-            );
-        }
         const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
         if (existingPanelOfSameType?.params?.temporary) {
             models.set(existingPanelOfSameType.id, model);
@@ -123,6 +114,16 @@ export const usePanelsStore = defineStore("panels", () => {
             }
 
             return;
+        }
+
+        const existingTempPanel = api.value?.panels?.find((p) => p.params?.temporary);
+        if (existingTempPanel) {
+            return spawnPanel(
+                panelName,
+                model,
+                { position: { direction: "within", referencePanel: existingTempPanel.id } },
+                { temporary: true },
+            );
         }
 
         return spawnPanelAtSimilar(panelName, model, defaultDirection, { temporary: true });
@@ -192,9 +193,13 @@ export const usePanelsStore = defineStore("panels", () => {
         panel._onClickInput?.call(event);
     }
 
-    function getPanels(panelName: PanelComponentName) {
+    function getPanels(panelName: PanelComponentName): IDockviewPanel[] | undefined {
         const panelsOfSameType = api.value?.panels.filter((p) => p.params?.panelName === panelName);
         return panelsOfSameType;
+    }
+
+    function focus(panelId: string): void {
+        api.value?.getPanel(panelId)?.focus();
     }
 
     return {
@@ -207,5 +212,6 @@ export const usePanelsStore = defineStore("panels", () => {
         makeNonTemporary,
         getPanels,
         modelsInitializedEvent,
+        focus,
     };
 });

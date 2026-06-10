@@ -320,11 +320,13 @@ function handleActivated(entry: Shared.FileBrowser.FileEntry, event?: KeyboardEv
         const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
         window.electronAPI.fileBrowser.open(fullPath);
     } else {
-        panelsStore.spawnTemporaryPanel<FileInspectorModel>(
-            GlobalComponentNames.FileInspector,
-            { file: entry.path },
-            "right",
-        );
+        const inspectors = panelsStore.getPanels(GlobalComponentNames.FileInspector);
+        const existingInspector = inspectors?.find((i) => i.params?.model?.currentDir === entry.path);
+        if (existingInspector) {
+            const panelId = existingInspector!.params!.panelId;
+            panelsStore.focus(panelId);
+            panelsStore.makeNonTemporary(panelId);
+        }
     }
 }
 
@@ -334,6 +336,9 @@ function handleSelectionChanged(entries: Shared.FileBrowser.FileEntry[]): void {
 
 function handleActiveChanged(entry: Shared.FileBrowser.FileEntry | undefined): void {
     activeEntry.value = entry;
+    if (entry?.isFile) {
+        panelsStore.spawnTemporaryPanel<FileInspectorModel>(GlobalComponentNames.FileInspector, { file: entry.path });
+    }
 }
 
 function handleDragStart(
