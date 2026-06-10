@@ -105,6 +105,15 @@ export const usePanelsStore = defineStore("panels", () => {
         model: T,
         defaultDirection: Direction,
     ): IDockviewPanel | undefined {
+        const existingTempPanel = api.value?.panels?.find((p) => p.params?.temporary);
+        if (existingTempPanel) {
+            return spawnPanel(
+                panelName,
+                model,
+                { position: { direction: "within", referencePanel: existingTempPanel.id } },
+                { temporary: true },
+            );
+        }
         const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
         if (existingPanelOfSameType?.params?.temporary) {
             models.set(existingPanelOfSameType.id, model);
