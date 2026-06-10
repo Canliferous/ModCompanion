@@ -45,7 +45,7 @@ export default function buildConfig(): NuxtUIOptions {
                     {
                         color: "neutral",
                         variant: "solid",
-                        class: "bg-neutral-800 hover:bg-neutral-750 active:bg-neutral-850 disabled:bg-neutral-900 text-neutral-100 shadow-xs shadow-neutral-950/50 disabled:inset-shadow-none disabled:text-neutral-600",
+                        class: "bg-neutral-800 hover:bg-neutral-750 active:bg-neutral-850 disabled:bg-neutral-800 text-neutral-100 shadow-xs shadow-neutral-950/50 disabled:text-neutral-600",
                     },
                 ],
                 defaultVariants: {
