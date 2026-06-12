@@ -14,8 +14,10 @@ import * as MdlInfo from "./SharedMdlInfoReport.js";
 import * as PlayPauseStop from "./SharedPlayPauseStopState.js";
 import * as SourceFs from "./SharedSourceFs.js";
 import * as StrataInterop from "./SharedStrataInterop.js";
+import * as String from "./SharedString.js";
 import * as TcArtifacts from "./SharedTcArtifacts.js";
 import * as Timing from "./SharedTiming.js";
+import * as Vmt from "./SharedVmt.js";
 import * as Vtf from "./SharedVtf.js";
 
 export {
@@ -35,7 +37,9 @@ export {
     PlayPauseStop,
     SourceFs,
     StrataInterop,
+    String,
     TcArtifacts,
     Timing,
+    Vmt,
     Vtf,
 };

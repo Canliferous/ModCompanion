@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { useAssetListStore } from "~/store/AssetListStore.js";
-import { getCommonPrefix, removeTrailing } from "~/helper/StringHelper.js";
 import * as Shared from "mod_companion_shared";
 
 export const useAssetGroupsStore = defineStore("asset-groups", () => {
@@ -24,7 +23,7 @@ export const useAssetGroupsStore = defineStore("asset-groups", () => {
     async function createGroup(assetIds: Shared.Asset.AssetId[]) {
         const assets = useAssetListStore().getAssetsById(assetIds);
         const displayNames = assets.map((a) => a.def.displayName).filter((n) => n !== undefined);
-        const prefix = removeTrailing(getCommonPrefix(displayNames), "_");
+        const prefix = Shared.String.removeTrailing(Shared.String.getCommonPrefix(displayNames), "_");
         let groupName = `New Group (${assetIds.length} assets)`;
         if (prefix) {
             groupName = prefix;

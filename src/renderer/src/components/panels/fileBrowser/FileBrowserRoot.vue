@@ -67,6 +67,7 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
+import { createAutoMaterial } from "mod_companion_shared/SharedVmt.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -215,6 +216,8 @@ const items = computed<ContextMenuItem[][]>(() => {
 
     const allFiles = !entries.some((e) => !e.isFile);
     const pathsArray = entries.map((e) => e.path);
+    const allVtfs = !entries.some((e) => !e.isFile || pathe.extname(e.name) !== ".vtf");
+    const autoMaterial = allVtfs ? Shared.Vmt.createAutoMaterial(pathsArray) : undefined;
 
     return [
         [
@@ -260,6 +263,12 @@ const items = computed<ContextMenuItem[][]>(() => {
                         .createAsset(primaryPath, otherPaths)
                         .then((assets) => assetGroupsStore.createGroup(assets.map((s) => s.def.id)));
                 },
+            },
+            {
+                label: "Create VMT",
+                icon: AppDesign.Icons.ActionCreateAsset,
+                disabled: !autoMaterial,
+                onSelect(e: Event) {},
             },
         ],
         [

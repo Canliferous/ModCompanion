@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getCommonPrefix, removeTrailing } from "~/helper/StringHelper.js";
+import { getCommonPrefix, removeTrailing } from "../shared/SharedString.js";
 
 test("Common Prefix empty array", () => {
     const prefix = getCommonPrefix([]);
