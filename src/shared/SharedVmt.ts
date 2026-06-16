@@ -1,4 +1,3 @@
-import { filename } from "pathe/utils";
 import { forwardSlashed } from "./SharedSourceFs.js";
 import { getCommonPrefix, removeTrailing } from "./SharedString.js";
 
@@ -6,48 +5,54 @@ export interface VmtFile {
     // Root relative
     filePath: string;
     contents: Record<string, any>;
+    shaderName: string;
 }
 
 export function createAutoMaterial(vtfs: string[]): VmtFile | undefined {
-    const vtfNames = vtfs.map((v) => filename(v)!);
+    const textureNames = vtfs.map(vtfPathToVmtTexturePath);
 
-    const baseTexture = vtfNames.find(isMaybeBaseTexture);
-    const normalMap = vtfNames.find(isMaybeNormalMap);
-    const mraoMap = vtfNames.find(isMaybeMraoMap);
+    const baseTexture = textureNames.find(isMaybeBaseTexture);
+    const normalMap = textureNames.find(isMaybeNormalMap);
+    const mraoMap = textureNames.find(isMaybeMraoMap);
 
     const isProbablyModelMaterial = isMaybeModelMaterial(vtfs);
     const isProbablyPbr = baseTexture && normalMap && mraoMap;
-    const isProbablyLightmappedGeneric = baseTexture && isProbablyModelMaterial;
-    const isProbablyVertexlitGeneric = baseTexture && !isProbablyModelMaterial;
+    const isProbablyLightmappedGeneric = baseTexture && !isProbablyModelMaterial;
+    const isProbablyVertexlitGeneric = baseTexture && isProbablyModelMaterial;
 
-    const filePath = guessMaterialPath(vtfs);
+    const filePath = guessMaterialPath(vtfs) + ".vmt";
 
     if (isProbablyPbr) {
-        const pbrMaterial = {
+        const pbrMaterial: Record<string, any> = {
             $basetexture: baseTexture,
             $bumpmap: normalMap,
             $mraotexture: mraoMap,
-            $model: isProbablyModelMaterial ? 1 : 0,
         };
-        return { filePath, contents: pbrMaterial };
+        if (isProbablyModelMaterial) {
+            pbrMaterial["$model"] = 1;
+        }
+        return { filePath, contents: pbrMaterial, shaderName: "PBR" };
     } else if (isProbablyLightmappedGeneric) {
         const lightmappedMaterial = {
             $basetexture: baseTexture,
             ...(normalMap ? { $bumpmap: normalMap } : {}),
         };
-        return { filePath, contents: lightmappedMaterial };
+        return { filePath, contents: lightmappedMaterial, shaderName: "LightMappedGeneric" };
     } else if (isProbablyVertexlitGeneric) {
         const vertexlitMaterial = {
             $basetexture: baseTexture,
             ...(normalMap ? { $bumpmap: normalMap } : {}),
         };
-        return { filePath, contents: vertexlitMaterial };
+        return { filePath, contents: vertexlitMaterial, shaderName: "VertexLitGeneric" };
     }
 
     return undefined;
 }
 
 export function guessMaterialPath(vtfs: string[]): string {
+    if (vtfs.length === 1) {
+        return vtfs[0].replace(".vtf", "");
+    }
     const commonPrefix = removeTrailing(getCommonPrefix(vtfs), "_");
     return commonPrefix;
 }
@@ -73,6 +78,8 @@ export function isMaybeBaseTexture(fileNameWithoutExt: string) {
     if (fileNameWithoutExt.endsWith("_colour")) return true;
     if (fileNameWithoutExt.endsWith("_basecolor")) return true;
     if (fileNameWithoutExt.endsWith("_basecolour")) return true;
+    if (fileNameWithoutExt.endsWith("_diffuse")) return true;
+    if (fileNameWithoutExt.endsWith("_d")) return true;
     return false;
 }
 
@@ -87,4 +94,18 @@ export function isMaybeMraoMap(fileNameWithoutExit: string) {
     if (fileNameWithoutExit.endsWith("_mrao")) return true;
     if (fileNameWithoutExit.endsWith("_mrao_tintmask")) return true;
     return false;
+}
+
+export function vtfPathToVmtTexturePath(vtfPath: string): string {
+    const result = vtfPath.replace(".vtf", "");
+    const splits = forwardSlashed(result).split("/");
+    for (let i = 0; i < splits.length; i++) {
+        const split = splits[i];
+        if (split === "materials") {
+            const trimmed = splits.slice(i + 1).join("/");
+            return trimmed;
+        }
+    }
+
+    return result;
 }

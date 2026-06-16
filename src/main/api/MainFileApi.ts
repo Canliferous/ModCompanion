@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import fs from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { Stream } from "node:stream";
 import * as Shared from "mod_companion_shared";
 import * as Core from "mod_companion_core";
@@ -56,6 +57,14 @@ export function registerFileApi(): boolean {
                 Core.Logger.warning(Shared.Log.Channel.FileBrowser, "Failed to delete", fullPath);
                 return false;
             }
+        },
+    );
+
+    ipcMain.handle(
+        Shared.Ipc.Channels.FileExists,
+        (event: Electron.IpcMainInvokeEvent, filePath: string, base?: Shared.FileBrowser.PathBase): boolean => {
+            const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, Core.ConfigSystem.getAppConfig());
+            return existsSync(fullPath);
         },
     );
 

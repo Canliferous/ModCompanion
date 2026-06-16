@@ -58,6 +58,7 @@ declare global {
                     base?: Shared.FileBrowser.PathBase,
                 ) => Promise<void>;
                 delete: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<boolean>;
+                exists: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<boolean>;
             };
 
             config: {

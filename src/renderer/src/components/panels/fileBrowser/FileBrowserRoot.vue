@@ -44,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import Humanize from "humanize-plus";
 import pathe from "pathe";
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
@@ -67,7 +66,7 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
-import { createAutoMaterial } from "mod_companion_shared/SharedVmt.js";
+import { KvSerializer } from "@sourcelib/kv";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -268,7 +267,14 @@ const items = computed<ContextMenuItem[][]>(() => {
                 label: "Create VMT",
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !autoMaterial,
-                onSelect(e: Event) {},
+                onSelect(e: Event) {
+                    // TODO: Move this out
+                    const data = KvSerializer.serialize(autoMaterial!.contents, {
+                        name: autoMaterial!.shaderName,
+                        indentSpaces: 4,
+                    });
+                    fileBrowserStore.createFile(autoMaterial!.filePath, data).then(refresh);
+                },
             },
         ],
         [
