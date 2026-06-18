@@ -18,6 +18,7 @@ function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.
     dirUpdatedNotifyFunc?.(result.dir, { entries: result.entries, valid: true });
 }
 
+let alwaysWatcher: FSWatcher | undefined = undefined;
 let indexDoneEvent: Event<Map<string, Shared.FileBrowser.FileEntry[]>> | undefined = undefined;
 
 export const FileBrowserSystem = {
@@ -25,6 +26,21 @@ export const FileBrowserSystem = {
         dirUpdatedNotifyFunc = notifyFunc;
         this.indexFiles();
         indexDoneEvent = createEvent();
+
+        {
+            const config = ConfigSystem.getAppConfig();
+            const alwaysWatchedPaths = [config.textureOutputPath];
+
+            for (const p of alwaysWatchedPaths) {
+                Logger.info(Shared.Log.Channel.FileBrowser, "Registering always watched path", p);
+            }
+
+            alwaysWatcher = chokidar.watch(alwaysWatchedPaths, { ignoreInitial: true, awaitWriteFinish: true });
+            alwaysWatcher.on("add", _add);
+            alwaysWatcher.on("change", _change);
+            alwaysWatcher.on("unlink", _delete);
+        }
+
         return true;
     },
 

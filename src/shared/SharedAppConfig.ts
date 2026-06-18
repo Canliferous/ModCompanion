@@ -27,10 +27,28 @@ export interface AppConfig {
      * */
     gameRootPath: string;
 
+    /**
+     * Path to the materials content folder
+     * Represents: <repo>/content/<search_path>/materialsrc
+     * */
     textureSourcePath: string;
+
+    /**
+     * Path to the materials game folder
+     * Represents: <repo>/game/<search_path>/materials
+     * */
     textureOutputPath: string;
 
+    /**
+     * Path to the models content folder
+     * Represents: <repo>/game/<search_path>/models
+     * */
     modelSourcePath: string;
+
+    /**
+     * Path to the models game folder
+     * Represents: <repo>/game/<search_path>/models
+     * */
     modelOutputPath: string;
 
     mapSourcePath: string;
@@ -54,8 +72,7 @@ export interface AppConfig {
     postcompilerArgs: string;
     cubemapArgs: string;
 
-    chamberSignConfigJson: string;
-
+    /** Default search path. e.g. "revolution" */
     gameName: string;
 
     mapSourceDirs?: string[];
