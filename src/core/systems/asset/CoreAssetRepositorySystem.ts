@@ -10,10 +10,8 @@ import { ConversionAgentSystem } from "../conversion/CoreConversionAgentSystem.j
 import { existsSync } from "fs";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import { timeMillisAsync } from "mod_companion_shared/SharedTiming.js";
 import { FileBrowserSystem } from "../CoreFileBrowserSystem.js";
 import { createModelAssetDefinition } from "./CoreAssetCreateModel.js";
-import { forwardSlashed } from "mod_companion_shared/SharedSourceFs.js";
 
 let assetMap: Map<Shared.Asset.AssetId, Shared.Asset.Asset> = new Map();
 let potentialAssets: Shared.Asset.Asset[] = [];
@@ -36,7 +34,7 @@ export const AssetRepositorySystem = {
         Logger.info(Shared.Log.Channel.Assets, "Rescanning assets...");
 
         const fileIndex = index ?? FileBrowserSystem.getIndex();
-        const { millis } = await timeMillisAsync(async () => {
+        const { millis } = await Shared.Timing.timeMillisAsync(async () => {
             assetMap = await _buildAssets(fileIndex);
             potentialAssets = _detectPotentialAssets(fileIndex.keys());
         });
@@ -221,7 +219,7 @@ async function _buildAssets(
 
             const asset: Shared.Asset.Asset = {
                 def: definition,
-                defFilePath: forwardSlashed(filePath.path),
+                defFilePath: Shared.SourceFs.forwardSlashed(filePath.path),
             };
             assets.set(definition.id, asset);
         }

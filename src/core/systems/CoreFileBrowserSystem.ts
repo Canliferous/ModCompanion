@@ -72,7 +72,7 @@ export const FileBrowserSystem = {
 
             try {
                 const s = await fs.stat(path.join(dirPath, p));
-                const entryPath = path.join(resultBaseRoot ?? dirPath, p).replaceAll("\\", "/");
+                const entryPath = Shared.SourceFs.forwardSlashed(path.join(resultBaseRoot ?? dirPath, p));
                 if (s.isFile()) {
                     entries.push({
                         name: p,

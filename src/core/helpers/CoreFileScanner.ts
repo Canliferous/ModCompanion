@@ -31,7 +31,7 @@ async function _listFilesRecursive(baseDirLength: number, dir: string): Promise<
         }
 
         if (stat.isFile()) {
-            const file = entryPath.substring(baseDirLength).replaceAll("\\", "/");
+            const file = Shared.SourceFs.forwardSlashed(entryPath.substring(baseDirLength));
             files.push(file);
         }
     }
