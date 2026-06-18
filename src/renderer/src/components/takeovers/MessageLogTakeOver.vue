@@ -12,6 +12,14 @@
                 value-key="id"
                 placeholder="Filter Type"
             />
+            <USelect
+                v-model="channelFilter"
+                size="sm"
+                class="min-w-50"
+                multiple
+                :items="Shared.Log.AllChannels"
+                placeholder="Channels"
+            />
             <UButton
                 variant="soft"
                 size="sm"
@@ -45,6 +53,7 @@ import { Logger } from "~/logger.js";
 import { useRememberRef } from "~/composables/useRemember.js";
 import { TakeOverId } from "~/store/TakeOverStore.js";
 import * as Shared from "mod_companion_shared";
+import { AllChannels } from "mod_companion_shared/SharedLog.js";
 
 const logStore = useMessageLogStore();
 
@@ -57,7 +66,9 @@ function handleTestLog() {
 
 const showTime = useRememberRef(ref(true), "log-show-time");
 
-const events = computed(() => logStore.logEvents.filter((e) => passesTypeFilter(e.type)));
+const events = computed(() =>
+    logStore.logEvents.filter((e) => passesTypeFilter(e.type) && passesChannelFilter(e.channel)),
+);
 
 const typeFilter = useRememberRef(ref<Shared.Log.Type[]>([]), "log-type-filter");
 const typeFilterItems = Shared.Log.AllTypes.map((t) => ({
@@ -66,6 +77,11 @@ const typeFilterItems = Shared.Log.AllTypes.map((t) => ({
 }));
 function passesTypeFilter(logType: Shared.Log.Type): boolean {
     return typeFilter.value.length === 0 ? true : typeFilter.value.includes(logType);
+}
+
+const channelFilter = useRememberRef(ref<Shared.Log.Channel[]>([]), "log-channel-filter");
+function passesChannelFilter(logChannel: Shared.Log.Channel): boolean {
+    return channelFilter.value.length === 0 ? true : channelFilter.value.includes(logChannel);
 }
 
 const scroller = useTemplateRef("scroller");

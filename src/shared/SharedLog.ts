@@ -16,6 +16,22 @@ export enum Channel {
     Cli = "CLI",
 }
 
+export const AllChannels = [
+    Channel.Generic,
+    Channel.GameInterop,
+    Channel.ConversionAgent,
+    Channel.FileBrowser,
+    Channel.Assets,
+    Channel.Fgd,
+    Channel.MapCompile,
+    Channel.MareTF,
+    Channel.HotReload,
+    Channel.MainSystems,
+    Channel.Hotspot,
+    Channel.TcArtifacts,
+    Channel.Cli,
+];
+
 export enum Type {
     Debug,
     Info,
