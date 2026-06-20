@@ -106,9 +106,7 @@ async function _runAgent(): Promise<void> {
             promises.push(_startConversion(id));
         }
 
-        return Promise.allSettled(promises).then(() => {
-            HotReloadSystem.requestHotReload(assetsToConvert);
-        });
+        return Promise.allSettled(promises);
     }
 
     const event: Shared.Conversion.UpdateEvent = {
