@@ -5,7 +5,6 @@ import { ModelConverter } from "../../helpers/converter/CoreModelConverter.js";
 import { makeContentPathAbsolute, makeGamePathAbsolute } from "../../helpers/CoreSourceFs.js";
 import { ConversionChecksumSystem } from "./CoreConversionChecksumSystem.js";
 import { ConversionEventSystem } from "./CoreConversionEventSystem.js";
-import { HotReloadSystem } from "../CoreHotReloadSystem.js";
 import { AssetWatcherSystem } from "../CoreAssetWatcherSystem.js";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -106,7 +105,8 @@ async function _runAgent(): Promise<void> {
             promises.push(_startConversion(id));
         }
 
-        return Promise.allSettled(promises);
+        await Promise.allSettled(promises);
+        return;
     }
 
     const event: Shared.Conversion.UpdateEvent = {
