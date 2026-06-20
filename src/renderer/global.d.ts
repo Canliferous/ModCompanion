@@ -121,7 +121,6 @@ declare global {
 
             hotReload: {
                 setEnabled: (enable: boolean) => void;
-                reloadChamberSignConfig: () => void;
             };
 
             webUtils: {

@@ -66,6 +66,7 @@ function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.AppCon
         modelOutputPath: path.join(root, "game", c.searchPath, "models"),
         mapSourcePath: path.join(root, "content", c.searchPath, "maps"),
         mapOutputPath: path.join(root, "game", c.searchPath, "maps"),
+        scriptsPath: path.join(root, "game", c.searchPath, "scripts"),
 
         studioMdlPath: _buildBinaryPath(root, "studiomdl"),
         hlmvPath: _buildBinaryPath(root, "hlmv", true),

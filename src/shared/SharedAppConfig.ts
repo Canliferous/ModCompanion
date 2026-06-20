@@ -51,6 +51,12 @@ export interface AppConfig {
      * */
     modelOutputPath: string;
 
+    /**
+     * Path to the scripts game folder
+     * Represents: <repo>/game/<search_path>/scripts
+     * */
+    scriptsPath: string;
+
     mapSourcePath: string;
     mapOutputPath: string;
 

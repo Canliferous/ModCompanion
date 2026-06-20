@@ -56,6 +56,7 @@ const systems: System[] = [
     },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
+    { name: "HotReload", initFunction: Core.HotReloadSystem.initSystem },
 ];
 
 async function startSystems(): Promise<void> {

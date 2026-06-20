@@ -1,5 +1,6 @@
 import { forwardSlashed } from "./SharedSourceFs.js";
 import { getCommonPrefix, removeTrailing } from "./SharedString.js";
+import * as pathe from "pathe";
 
 export interface VmtFile {
     // Root relative
@@ -9,7 +10,7 @@ export interface VmtFile {
 }
 
 export function createAutoMaterial(vtfs: string[]): VmtFile | undefined {
-    const textureNames = vtfs.map(vtfPathToVmtTexturePath);
+    const textureNames = vtfs.map(absolutePathToMaterialPath);
 
     const baseTexture = textureNames.find(isMaybeBaseTexture);
     const normalMap = textureNames.find(isMaybeNormalMap);
@@ -96,8 +97,9 @@ export function isMaybeMraoMap(fileNameWithoutExit: string) {
     return false;
 }
 
-export function vtfPathToVmtTexturePath(vtfPath: string): string {
-    const result = vtfPath.replace(".vtf", "");
+export function absolutePathToMaterialPath(vtfPath: string): string {
+    const ext = pathe.extname(vtfPath);
+    const result = vtfPath.replace(ext, "");
     const splits = forwardSlashed(result).split("/");
     for (let i = 0; i < splits.length; i++) {
         const split = splits[i];

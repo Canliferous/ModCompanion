@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { createWorker, Worker } from "../helpers/CoreWorkerHelper.js";
-import { createEvent, Event } from "../helpers/CoreEventHelper.js";
+import { createEvent } from "../helpers/CoreEventHelper.js";
 
 let watcher: FSWatcher | undefined;
 
@@ -19,17 +19,20 @@ function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.
 }
 
 let alwaysWatcher: FSWatcher | undefined = undefined;
-let indexDoneEvent: Event<Map<string, Shared.FileBrowser.FileEntry[]>> | undefined = undefined;
+const indexDoneEvent = createEvent<Map<string, Shared.FileBrowser.FileEntry[]>>();
+const fileChangedEvent = createEvent<string>();
 
 export const FileBrowserSystem = {
     initSystem(notifyFunc?: Shared.FileBrowser.DirUpdatedNotifyFunc) {
         dirUpdatedNotifyFunc = notifyFunc;
         this.indexFiles();
-        indexDoneEvent = createEvent();
 
         {
             const config = ConfigSystem.getAppConfig();
-            const alwaysWatchedPaths = [config.textureOutputPath];
+            const alwaysWatchedPaths = [
+                config.textureOutputPath,
+                path.join(config.scriptsPath, Shared.FileNames.chamberSignConfig),
+            ];
 
             for (const p of alwaysWatchedPaths) {
                 Logger.info(Shared.Log.Channel.FileBrowser, "Registering always watched path", p);
@@ -42,6 +45,10 @@ export const FileBrowserSystem = {
         }
 
         return true;
+    },
+
+    getFileChangedEvent() {
+        return fileChangedEvent;
     },
 
     getIndexDoneEvent() {
@@ -139,6 +146,8 @@ export const FileBrowserSystem = {
 async function _change(filePath: string): Promise<void> {
     Logger.info(Shared.Log.Channel.FileBrowser, "CHANGE", filePath);
     const dir = path.dirname(filePath);
+
+    fileChangedEvent.call(filePath);
 
     const result = await FileBrowserSystem.listFiles(dir);
 

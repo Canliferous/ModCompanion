@@ -3,8 +3,9 @@ import * as Asset from "./SharedAsset.js";
 import * as AssetGroup from "./SharedAssetGroup.js";
 import * as ChamberSignConfig from "./SharedChamberSignConfig.js";
 import * as Conversion from "./SharedConversion.js";
-import * as FileEndings from "./SharedFileEndings.js";
 import * as FileBrowser from "./SharedFileBrowser.js";
+import * as FileEndings from "./SharedFileEndings.js";
+import * as FileNames from "./SharedFileNames.js";
 import * as ImageMeta from "./SharedImageMetaReport.js";
 import * as Ipc from "./SharedIpcChannels.js";
 import * as Launchers from "./SharedLaunchers.js";
@@ -26,8 +27,9 @@ export {
     AssetGroup,
     ChamberSignConfig,
     Conversion,
-    FileEndings,
     FileBrowser,
+    FileEndings,
+    FileNames,
     ImageMeta,
     Ipc,
     Launchers,

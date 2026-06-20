@@ -58,7 +58,6 @@ export const Channels = {
 
     HotReloadSetEnabled: "hotreload_set_enabled",
     HotReloadTriggered: "hotreload_triggered",
-    HotReloadChamberSignConfig: "hotreload_chamber_sign_config",
 
     InteropSendCommand: "interop_send_command",
     InteropConnected: "interop_connected",

@@ -6,6 +6,7 @@ import FilePreviewImage from "~/components/panels/fileInspector/previews/FilePre
 import FilePreviewText from "~/components/panels/fileInspector/previews/FilePreviewText.vue";
 import FilePreviewMap from "~/components/panels/fileInspector/previews/FilePreviewMap.vue";
 import FilePreviewChamberSign from "~/components/panels/fileInspector/previews/FilePreviewChamberSign.vue";
+import * as Shared from "mod_companion_shared";
 
 export enum FileInspectors {
     Unknown,
@@ -64,7 +65,7 @@ export function getFileTypeIcon(fileType: FileType): string {
 }
 
 export function getFileType(fileName: string): FileType {
-    if (fileName === "chamber_sign_config.json") {
+    if (fileName === Shared.FileNames.chamberSignConfig) {
         return FileType.TextJsonChamberSign;
     }
 

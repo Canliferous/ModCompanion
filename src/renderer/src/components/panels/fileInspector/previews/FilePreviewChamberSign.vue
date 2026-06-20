@@ -65,7 +65,6 @@ async function save() {
             JSON.stringify(model.value, null, 4),
             Shared.FileBrowser.PathBases.Absolute,
         );
-        window.electronAPI.hotReload.reloadChamberSignConfig();
         savedModel.value = structuredClone(toRaw(model.value));
         emit("hasChanged", false);
     }
