@@ -108,11 +108,6 @@ export const usePanelsStore = defineStore("panels", () => {
         const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
         if (existingPanelOfSameType?.params?.temporary) {
             models.set(existingPanelOfSameType.id, model);
-            const panel = api.value?.getPanel(existingPanelOfSameType.id);
-            if (panel) {
-                panel.focus();
-            }
-
             return;
         }
 
