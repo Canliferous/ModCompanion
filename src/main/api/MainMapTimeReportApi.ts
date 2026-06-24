@@ -2,15 +2,13 @@ import { ipcMain } from "electron";
 import path from "path";
 import fs from "fs/promises";
 import { existsSync } from "fs";
-import * as kv from "@sourcelib/kv";
+import * as sourcelib from "sourcelib";
 
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 
 export function registerMapTimeReportApi(): boolean {
-    ipcMain.handle(Shared.Ipc.Channels.MapCreateTimeReport, (e, maps: string[]) =>
-        _createTimeReport(maps),
-    );
+    ipcMain.handle(Shared.Ipc.Channels.MapCreateTimeReport, (e, maps: string[]) => _createTimeReport(maps));
     return true;
 }
 
@@ -67,7 +65,7 @@ async function _createTimeReport(maps: string[]): Promise<Shared.Map.TimeReport>
 }
 
 function _getCompileTimeSeconds(logContents: string): number | undefined {
-    const doc = kv.parseText(logContents);
+    const doc = sourcelib.kv.parseText(logContents);
     for (const root of doc.getRootItems()) {
         if (root.getKey().getUnquotedContent() !== "report") continue;
 

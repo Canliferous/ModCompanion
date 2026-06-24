@@ -21,12 +21,12 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.922.0",
-        "@sourcelib/kv": "^0.9.1",
         "chokidar": "^4.0.3",
         "exifreader": "^4.36.2",
         "humanize-plus": "^1.8.2",
         "mod_companion_shared": "../shared",
         "pathe": "^2.0.3",
+        "sourcelib": "^0.1.1",
         "uuid": "^13.0.0"
     }
 }

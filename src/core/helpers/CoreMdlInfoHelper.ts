@@ -1,7 +1,7 @@
 import child_process from "node:child_process";
-import { KvSerializer, parseText } from "@sourcelib/kv";
-import { ConfigSystem } from "../systems/CoreConfigSystem.js";
+import * as sourcelib from "sourcelib";
 import * as Shared from "mod_companion_shared";
+import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 
 export const MdlInfoHelper = {
     async run(mdlFilePath: string): Promise<Shared.MdlInfo.SharedMdlInfoReport> {
@@ -18,7 +18,9 @@ export const MdlInfoHelper = {
             proc.on("exit", (code: number) => {
                 if (code === 0) {
                     const kvFile = output.join("\n");
-                    const result = KvSerializer.deserialize(parseText(kvFile), { detectArrays: true });
+                    const result = sourcelib.kv.KvSerializer.deserialize(sourcelib.kv.parseText(kvFile), {
+                        detectArrays: true,
+                    });
                     if (result.length !== 1) {
                         reject();
                     }

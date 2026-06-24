@@ -66,7 +66,7 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
-import { KvSerializer } from "@sourcelib/kv";
+import * as sourcelib from "sourcelib";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -269,7 +269,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: !autoMaterial,
                 onSelect(e: Event) {
                     // TODO: Move this out
-                    const data = KvSerializer.serialize(autoMaterial!.contents, {
+                    const data = sourcelib.kv.KvSerializer.serialize(autoMaterial!.contents, {
                         name: autoMaterial!.shaderName,
                         indentSpaces: 4,
                     });
