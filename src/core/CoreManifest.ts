@@ -8,6 +8,7 @@ import { MapCompileSystem } from "./systems/CoreMapCompileSystem.js";
 import { MareTfSystem } from "./systems/CoreMaretfSystem.js";
 import { StrataInteropSystem } from "./systems/CoreStrataInteropSystem.js";
 import { TcArtifactsSystem } from "./systems/CoreTcArtifactsSystem.js";
+import { WorkerSystem } from "./systems/CoreWorkerSystem.js";
 
 import { ConversionAgentSystem } from "./systems/conversion/CoreConversionAgentSystem.js";
 import { ConversionChecksumSystem } from "./systems/conversion/CoreConversionChecksumSystem.js";
@@ -38,6 +39,7 @@ export {
     MareTfSystem,
     StrataInteropSystem,
     TcArtifactsSystem,
+    WorkerSystem,
     ConversionAgentSystem,
     ConversionChecksumSystem,
     ConversionEventSystem,

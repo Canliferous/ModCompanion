@@ -3,6 +3,8 @@ import path from "node:path";
 import settings from "electron-settings";
 import fs from "node:fs";
 
+import {} from "../main.js";
+
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
 import { Logger } from "mod_companion_core";
@@ -14,12 +16,16 @@ const SETTING_DEVTOOLS_OPEN = "devtools.open";
 let mainWindow: BrowserWindow | undefined;
 let tray: Tray | undefined;
 let preventClose = true;
+let isShutdown = false;
+
+let shutdownCallback: (() => void) | undefined;
 
 export const WindowSystem = {
     getMainWindow(): BrowserWindow | undefined {
-        return mainWindow;
+        return isShutdown ? undefined : mainWindow;
     },
-    async initSystem(): Promise<boolean> {
+    async initSystem(onShutdownCallback?: () => void): Promise<boolean> {
+        shutdownCallback = onShutdownCallback;
         await app.whenReady();
         // If needed, add a way to start the app without tray
         const noTray = false;
@@ -29,8 +35,10 @@ export const WindowSystem = {
         return true;
     },
     exitForReal(): void {
+        isShutdown = true;
         preventClose = false;
         Logger.info(Shared.Log.Channel.Generic, "Shutting down... Goodbye!");
+        shutdownCallback?.();
         app.exit();
     },
     closeWindow(): void {
@@ -102,6 +110,7 @@ function _createWindow(hasTray: boolean): void {
             mainWindow?.hide();
         } else {
             _saveWindow();
+            mainWindow = undefined;
         }
     });
 

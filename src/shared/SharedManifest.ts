@@ -20,6 +20,7 @@ import * as TcArtifacts from "./SharedTcArtifacts.js";
 import * as Timing from "./SharedTiming.js";
 import * as Vmt from "./SharedVmt.js";
 import * as Vtf from "./SharedVtf.js";
+import * as Workers from "./SharedWorkers.js";
 
 export {
     AppConfig,
@@ -44,4 +45,5 @@ export {
     Timing,
     Vmt,
     Vtf,
+    Workers,
 };

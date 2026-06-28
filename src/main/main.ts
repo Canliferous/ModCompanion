@@ -15,9 +15,11 @@ import {
     notifyStrataInteropLog,
 } from "./api/MainStrataInteropApi.js";
 
-type SystemFunction = () => Promise<boolean> | boolean;
+type SystemInitFunction = () => Promise<boolean> | boolean;
+type SystemShutdownFunction = () => Promise<void> | void;
 interface System {
-    initFunction: SystemFunction;
+    initFunction: SystemInitFunction;
+    shutdownFunction?: SystemShutdownFunction;
     name: string;
 }
 const systems: System[] = [
@@ -29,7 +31,7 @@ const systems: System[] = [
         initFunction: () => Core.AssetRepositorySystem.initSystem(AssetRepositoryApi.notifyAssetsRescanned),
     },
     { name: "Api", initFunction: initApiSystem },
-    { name: "Window", initFunction: WindowSystem.initSystem },
+    { name: "Window", initFunction: () => WindowSystem.initSystem(stopSystems) },
     {
         name: "MapCompile",
         initFunction: () =>
@@ -57,6 +59,7 @@ const systems: System[] = [
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
     { name: "HotReload", initFunction: Core.HotReloadSystem.initSystem },
+    { name: "Workers", initFunction: Core.WorkerSystem.initSystem, shutdownFunction: Core.WorkerSystem.deinitSystem },
 ];
 
 async function startSystems(): Promise<void> {
@@ -90,6 +93,15 @@ async function startSystems(): Promise<void> {
         Core.Logger.info(Shared.Log.Channel.MainSystems, "All systems started successfully!");
     } else {
         app.quit();
+    }
+}
+
+function stopSystems() {
+    for (const system of systems) {
+        if (system.shutdownFunction) {
+            Core.Logger.info(Shared.Log.Channel.MainSystems, "Shutting down", system.name, "system");
+            system.shutdownFunction();
+        }
     }
 }
 

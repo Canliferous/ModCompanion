@@ -4,8 +4,8 @@ import path from "path";
 import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import { createWorker, Worker } from "../helpers/CoreWorkerHelper.js";
 import { createEvent } from "../helpers/CoreEventHelper.js";
+import { WorkerSystem } from "./CoreWorkerSystem.js";
 
 let watcher: FSWatcher | undefined;
 
@@ -123,7 +123,10 @@ export const FileBrowserSystem = {
     indexFiles() {
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing files...");
         const timeStart = new Date().getTime();
-        const worker = createWorker(Worker.IndexFilesystem, ConfigSystem.getAppConfig().rootPath);
+        const worker = WorkerSystem.createWorker(
+            Shared.Workers.WorkerFile.IndexFilesystem,
+            ConfigSystem.getAppConfig().rootPath,
+        );
         worker.on("message", _handleIndexMessage);
         worker.on("exit", () => {
             const timeEnd = new Date().getTime();
