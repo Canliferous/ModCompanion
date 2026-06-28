@@ -65,7 +65,7 @@ async function _createTimeReport(maps: string[]): Promise<Shared.Map.TimeReport>
 }
 
 function _getCompileTimeSeconds(logContents: string): number | undefined {
-    const doc = sourcelib.kv.parseText(logContents);
+    const doc = sourcelib.kv.KvParser.parseText(logContents);
     for (const root of doc.getRootItems()) {
         if (root.getKey().getUnquotedContent() !== "report") continue;
 
