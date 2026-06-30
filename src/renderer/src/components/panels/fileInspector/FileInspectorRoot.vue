@@ -56,12 +56,14 @@ import pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
 import { fileSize } from "humanize-plus";
-import { computedAsync } from "@vueuse/core";
+import { computedAsync, watchImmediate } from "@vueuse/core";
 import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { useEvent } from "~/composables/useEvent.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import { usePanelsStore } from "~/store/PanelsStore.js";
 
-const props = defineProps<{ file: string }>();
+const panelsStore = usePanelsStore();
+const props = defineProps<{ file: string; panelId: string }>();
 const fullPath = computed(() => pathe.join(getAppConfig().rootPath, props.file));
 const fileName = computed(() => pathe.basename(props.file));
 const fileType = computed(() => getFileType(fileName.value));
@@ -76,10 +78,18 @@ provide(FileInspectorBehavior.FileEditorInjectKey, {
 });
 
 const shortcuts = inject(FileInspectorBehavior.ShortcutsInjectKey);
-shortcuts?.onSave.on(() => saveEvent.call());
+if (shortcuts) {
+    watchImmediate(shortcuts, (s) => {
+        s.onSave.on(() => saveEvent.call());
+    });
+}
 
 function handleHasChanged(changed: boolean): void {
     unsavedChanges.value = changed;
+    if (changed) {
+        panelsStore.makeNonTemporary(props.panelId);
+    }
+    panelsStore.makeUnsaved(props.panelId, changed);
 }
 
 const entry = computedAsync(

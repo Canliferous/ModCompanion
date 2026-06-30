@@ -74,7 +74,7 @@ watch(entriesHierarchy, () => {
 });
 
 const emit = defineEmits<{
-    onEntryActivated: [entry: T];
+    onEntryActivated: [entry: T, event: MouseEvent | KeyboardEvent];
     onEntryContextMenu: [entry: T];
     onActiveChanged: [entry: T | undefined];
     onSelectionChanged: [entries: T[]];
@@ -112,7 +112,8 @@ provide(DataTableSelectionInjectKey, {
 });
 
 provide(DataTableEntryActionInjectKey, {
-    onEntryActivated: (idx: number) => emit("onEntryActivated", entriesHierarchy.value[idx].entry),
+    onEntryActivated: (idx: number, event: MouseEvent | KeyboardEvent) =>
+        emit("onEntryActivated", entriesHierarchy.value[idx].entry, event),
     onEntryContextMenu: (event: MouseEvent, idx: number) => {
         // Make the right-clicked item active
         activeIdx.value = idx;

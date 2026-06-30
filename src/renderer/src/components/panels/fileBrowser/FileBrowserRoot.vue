@@ -61,12 +61,13 @@ import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEnt
 import { useFileFilter } from "~/composables/useFilter";
 import { getRootRelativePath } from "~/helper/SourceFs";
 import { Logger } from "~/logger";
-import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
+import { GlobalComponentNames, PanelComponentNames } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
 import * as sourcelib from "sourcelib";
+import { watchImmediate } from "@vueuse/core";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -168,10 +169,14 @@ function goHistoryForward(): void {
 }
 
 const shortcuts = inject(FileBrowserBehavior.ShortcutsInjectKey);
-shortcuts?.onBack.on(goHistoryBack);
-shortcuts?.onForward.on(goHistoryForward);
-shortcuts?.onRefresh.on(refresh);
-shortcuts?.onDelete.on(handleDeleteShortcut);
+if (shortcuts) {
+    watchImmediate(shortcuts, (s) => {
+        s.onBack.on(goHistoryBack);
+        s.onForward.on(goHistoryForward);
+        s.onRefresh.on(refresh);
+        s.onDelete.on(handleDeleteShortcut);
+    });
+}
 
 const dataTable = useTemplateRef("dataTable");
 
@@ -335,8 +340,11 @@ function handleActivated(entry: Shared.FileBrowser.FileEntry, event?: KeyboardEv
         const fullPath = pathe.join(getAppConfig().rootPath, entry.path);
         window.electronAPI.fileBrowser.open(fullPath);
     } else {
+        // When double clicking a file that's already open as a temporary editor, make it non-temporary
         const inspectors = panelsStore.getPanels(GlobalComponentNames.FileInspector);
-        const existingInspector = inspectors?.find((i) => i.params?.model?.currentDir === entry.path);
+        const existingInspector = inspectors?.find(
+            (i) => usePanelsStore().getModel<FileInspectorModel>(i.params?.panelId)?.file === entry.path,
+        );
         if (existingInspector) {
             const panelId = existingInspector!.params!.panelId;
             panelsStore.focus(panelId);

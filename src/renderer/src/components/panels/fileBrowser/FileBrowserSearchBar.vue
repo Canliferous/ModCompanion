@@ -15,14 +15,21 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
+import { watchImmediate } from "@vueuse/core";
 
 const model = defineModel<string>();
 
 const inputRef = useTemplateRef("input");
 
-inject(FileBrowserBehavior.ShortcutsInjectKey)?.onFocusSearch.on(() => {
-    inputRef.value?.inputRef?.focus();
-});
+const shortcuts = inject(FileBrowserBehavior.ShortcutsInjectKey);
+
+if (shortcuts) {
+    watchImmediate(shortcuts, (s) => {
+        s.onFocusSearch.on(() => {
+            inputRef.value?.inputRef?.focus();
+        });
+    });
+}
 
 function handleClear() {
     model.value = "";

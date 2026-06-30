@@ -77,7 +77,7 @@ export const usePanelsStore = defineStore("panels", () => {
             id: panelId,
             component: panelName,
             tabComponent: GlobalComponentNames.PanelTab,
-            params: { panelName, panelId, noClose: false, temporary: false, ...params },
+            params: { panelName, panelId, noClose: false, temporary: false, unsaved: false, ...params },
         };
 
         return api.value?.addPanel(op);
@@ -105,9 +105,11 @@ export const usePanelsStore = defineStore("panels", () => {
         model: T,
         defaultDirection: Direction = "right",
     ): IDockviewPanel | undefined {
-        const existingPanelOfSameType = api.value?.panels?.find((p) => p.params?.panelName === panelName);
-        if (existingPanelOfSameType?.params?.temporary) {
-            models.set(existingPanelOfSameType.id, model);
+        const existingTemporaryPanelOfSameType = api.value?.panels?.find(
+            (p) => p.params?.panelName === panelName && p.params?.temporary,
+        );
+        if (existingTemporaryPanelOfSameType) {
+            models.set(existingTemporaryPanelOfSameType.id, model);
             return;
         }
 
@@ -170,6 +172,17 @@ export const usePanelsStore = defineStore("panels", () => {
         panel.update({ params: { ...panel.params, temporary: false } });
     }
 
+    function makeUnsaved(panelId: string, unsaved: boolean): void {
+        const panel = api.value?.getPanel(panelId);
+        if (!panel) return;
+        panel.update({ params: { ...panel.params, unsaved } });
+    }
+
+    function isUnsaved(panelId: string): boolean {
+        const panel = api.value?.getPanel(panelId);
+        return Boolean(panel?.params?.unsaved);
+    }
+
     function _relayKeyboardEventToActivePanel(event: KeyboardEvent): void {
         const id = activePanel.value;
         if (!id) return;
@@ -205,6 +218,8 @@ export const usePanelsStore = defineStore("panels", () => {
         spawnTemporaryPanel,
         getModel,
         makeNonTemporary,
+        makeUnsaved,
+        isUnsaved,
         getPanels,
         modelsInitializedEvent,
         focus,

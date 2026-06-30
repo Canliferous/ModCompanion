@@ -19,15 +19,17 @@ import {
 import { usePanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
-const model = usePanelsStore().getModel<FileBrowserModel>(props.params.params.panelId);
+const model = computed(() => usePanelsStore().getModel<FileBrowserModel>(props.params.params.panelId));
 
-const shortcuts = usePanelShortcuts<FileBrowserShortcuts>(model, {
-    onFocusSearch: "ctrl_k",
-    onDelete: "Delete",
-    onRefresh: "F5",
-    onBack: "mouse3",
-    onForward: "mouse4",
-});
+const shortcuts = computed(() =>
+    usePanelShortcuts<FileBrowserShortcuts>(model.value, {
+        onFocusSearch: "ctrl_k",
+        onDelete: "Delete",
+        onRefresh: "F5",
+        onBack: "mouse3",
+        onForward: "mouse4",
+    }),
+);
 provide(FileBrowserBehavior.ShortcutsInjectKey, shortcuts);
 </script>
 

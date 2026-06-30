@@ -24,5 +24,5 @@ export const FileBrowserBehavior = {
     getTitle(model: FileBrowserModel | undefined): string {
         return "File Browser";
     },
-    ShortcutsInjectKey: Symbol() as InjectionKey<FileBrowserShortcuts>,
+    ShortcutsInjectKey: Symbol() as InjectionKey<ComputedRef<FileBrowserShortcuts>>,
 } satisfies PanelBehavior<FileBrowserModel>;

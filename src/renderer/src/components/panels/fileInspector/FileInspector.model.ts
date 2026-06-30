@@ -28,5 +28,5 @@ export const FileInspectorBehavior = {
     FileEditorInjectKey: Symbol() as InjectionKey<{
         saveEvent: EventHandler<void>;
     }>,
-    ShortcutsInjectKey: Symbol() as InjectionKey<FileInspectorShortcuts>,
+    ShortcutsInjectKey: Symbol() as InjectionKey<ComputedRef<FileInspectorShortcuts>>,
 } satisfies PanelBehavior<FileInspectorModel>;

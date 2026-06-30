@@ -109,6 +109,7 @@ export interface PanelParams {
     panelId: string;
     noClose: boolean;
     temporary: boolean;
+    unsaved: boolean;
 }
 
 export interface SubPanelParams {

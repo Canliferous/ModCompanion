@@ -1,7 +1,7 @@
 <template>
     <TooltipProvider>
         <template v-if="model">
-            <FileInspectorRoot :file="model.file" />
+            <FileInspectorRoot :file="model.file" :panel-id="params.params.panelId" />
         </template>
     </TooltipProvider>
 </template>
@@ -23,11 +23,13 @@ import { FileBrowserBehavior, FileBrowserShortcuts } from "~/components/panels/f
 import { usePanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
-const model = usePanelsStore().getModel<FileInspectorModel>(props.params.params.panelId);
+const model = computed(() => usePanelsStore().getModel<FileInspectorModel>(props.params.params.panelId));
 
-const shortcuts = usePanelShortcuts<FileInspectorShortcuts>(model, {
-    onSave: "ctrl_s",
-});
+const shortcuts = computed(() =>
+    usePanelShortcuts<FileInspectorShortcuts>(model.value, {
+        onSave: "ctrl_s",
+    }),
+);
 provide(FileInspectorBehavior.ShortcutsInjectKey, shortcuts);
 </script>
 
