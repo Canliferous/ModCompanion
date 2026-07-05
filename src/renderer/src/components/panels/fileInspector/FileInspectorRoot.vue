@@ -3,7 +3,7 @@
         <template #header>
             <div class="grid gap-2 grid-cols-2 items-start justify-items-end">
                 <div class="flex gap-2 w-full items-center">
-                    <UIcon class="size-10 text-blue-300" :name="getFileTypeIcon(fileType)" />
+                    <UIcon class="size-10 text-blue-300 shrink-0" :name="getFileTypeIcon(fileType)" />
                     <div class="grow shrink select-none">
                         <div>{{ fileName }}</div>
                         <div v-if="entry?.fileSize !== undefined" class="text-sm tabular-nums flex gap-2">
