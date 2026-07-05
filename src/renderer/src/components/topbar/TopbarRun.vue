@@ -1,5 +1,5 @@
 <template>
-    <div class="flex gap-1">
+    <div class="flex gap-1 overflow-x-hidden justify-end">
         <UButtonGroup>
             <UButton
                 size="sm"

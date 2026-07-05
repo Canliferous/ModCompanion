@@ -12,7 +12,7 @@
 
         <div class="app-region-drag-important"></div>
 
-        <div class="flex gap-1">
+        <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-1">
             <TopbarRun />
 
             <TopbarSystemButtons />
