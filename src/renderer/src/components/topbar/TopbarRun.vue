@@ -8,7 +8,10 @@
                 @click="handleClickGame"
             >
                 <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[Shared.Launchers.Launchers.Game]" />
-                <span :class="interopStore.connected ? 'text-success' : 'text-muted'">
+                <span
+                    class="text-nowrap overflow-x-clip text-ellipsis max-md:hidden"
+                    :class="interopStore.connected ? 'text-success' : 'text-muted'"
+                >
                     {{ Shared.Launchers.GameLauncherOptions[lastRunGameConfig]?.name }}
                 </span>
                 <UIcon v-if="interopStore.connected" :name="AppDesign.Icons.InteropConnected" class="text-success" />
