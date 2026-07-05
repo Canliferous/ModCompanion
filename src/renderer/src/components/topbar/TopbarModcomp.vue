@@ -7,9 +7,12 @@
             align: 'start',
         }"
     >
-        <UButton size="sm" label="Mod Companion" variant="link">
+        <UButton size="sm" variant="ghost">
             <template #leading>
                 <MBitmapIcon name="mod_companion_192" class="h-4 w-4" />
+            </template>
+            <template #default>
+                <span class="text-nowrap max-md:hidden text-muted">Mod Companion</span>
             </template>
         </UButton>
 
