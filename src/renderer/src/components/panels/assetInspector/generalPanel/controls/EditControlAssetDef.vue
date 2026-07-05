@@ -1,39 +1,20 @@
 <template>
-    <UFormField label="MCA File" class="col-span-2">
-        <UInput :model-value="asset.defFilePath" disabled class="w-full" size="xs" />
-        <template #hint>
-            <UButtonGroup>
-                <UButton size="xs" label="Open" :icon="AppDesign.Icons.ActionOpenFileMca" @click="handleOpen" />
-                <UButton size="xs" label="Browse to" :icon="AppDesign.Icons.ActionBrowseToMca" @click="handleBrowse" />
-                <UButton
-                    size="xs"
-                    label="Explore to"
-                    :icon="AppDesign.Icons.ActionExploreToMca"
-                    @click="handleExplore"
-                />
-            </UButtonGroup>
-        </template>
+    <UFormField class="col-span-2">
+        <template #label><span class="text-nowrap">MCA File</span></template>
+        <MFilePathInputNoEdit
+            :model-value="asset.defFilePath"
+            disabled
+            class="w-full"
+            size="xs"
+            :base="Shared.FileBrowser.PathBases.RootRelative"
+        />
     </UFormField>
 </template>
 
 <script setup lang="ts">
-import { browseToMca, exploreToMca, openMca } from "~/helper/AssetHelper.js";
-import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
 const props = defineProps<{ asset: Shared.Asset.Asset }>();
-
-function handleOpen() {
-    openMca(props.asset);
-}
-
-function handleExplore() {
-    exploreToMca(props.asset);
-}
-
-function handleBrowse() {
-    browseToMca(props.asset);
-}
 </script>
 
 <style scoped></style>

@@ -22,19 +22,7 @@
                         size="sm"
                         @change="emit('change', model ?? '')"
                     />
-                    <UButton
-                        :icon="AppDesign.Icons.ActionBrowseToFolder"
-                        size="sm"
-                        variant="link"
-                        @click="handleBrowse"
-                    />
-                    <UButton
-                        :icon="AppDesign.Icons.ActionLaunchFile"
-                        size="sm"
-                        variant="link"
-                        class="mr-1"
-                        @click="handleLaunch"
-                    />
+                    <MFilePathInputActions :path="fullFilePath" />
                     <slot name="default" />
                 </template>
             </div>
@@ -43,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { AppDesign } from "~/design/AppDesign.js";
 import { useGlobalDragging } from "~/composables/useGlobalDragging.js";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
+import MFilePathInputActions from "~/components/common/MFilePathInputActions.vue";
 
 const model = defineModel<string>({ required: false });
 const emit = defineEmits<{ change: [string] }>();
@@ -56,14 +44,6 @@ const props = defineProps<{ placeholder?: string; base?: Shared.FileBrowser.Path
 const { isDragging } = useGlobalDragging();
 
 const fullFilePath = computed(() => Shared.FileBrowser.makeAbsolute(model.value ?? "", props.base, getAppConfig()));
-
-function handleBrowse(): void {
-    window.electronAPI.fileBrowser.browseToFile(fullFilePath.value);
-}
-
-function handleLaunch(): void {
-    window.electronAPI.fileBrowser.open(fullFilePath.value);
-}
 </script>
 
 <style scoped></style>
