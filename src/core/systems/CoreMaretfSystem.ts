@@ -7,6 +7,8 @@ import { runConverter } from "../helpers/converter/CoreSharedConverter.js";
 import { ConfigSystem } from "./CoreConfigSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
+import { createVtfInfo, SharedVtfInfo, SharedVtfInfoRawOutput } from "mod_companion_shared/SharedVtf.js";
+import * as sourcelib from "sourcelib";
 
 let binary = "";
 
@@ -45,7 +47,66 @@ export const MareTfSystem = {
 
         return runConverter(cmd, ConfigSystem.getAppConfig().gamePath, "MareTF");
     },
+    async getVtfInfo(inputPath: string): Promise<SharedVtfInfo> {
+        const infoText = await _runMaretfInfo(inputPath);
+
+        if (!infoText) {
+            throw new Error("Failed to get vtf info");
+        }
+
+        // maretf outputs multiple root nodes and it's easier to parse this way.
+        // should probably have sourcelib output this better
+        const fullKv = `"info"{\n${infoText}\n}`;
+        const parsed = sourcelib.kv.KvSerializer.deserialize(sourcelib.kv.KvParser.parseText(fullKv));
+        if (parsed.length === 0) {
+            throw new Error("Failed to parse vtf info output");
+        }
+        const raw = parsed[0] as unknown as SharedVtfInfoRawOutput;
+        return createVtfInfo(raw);
+    },
 };
+
+function _runMaretfInfo(inputPath: string): Promise<string> {
+    const cmd = `${binary} info --verbose --info-output-mode=kv1 ${inputPath}`;
+    return new Promise<string>((resolve, reject) => {
+        try {
+            const data: string[] = [];
+            // console.log(cmd);
+            const proc = child_process.exec(
+                cmd,
+                { cwd: ConfigSystem.getAppConfig().gamePath },
+                (error, stdout, stderr) => {
+                    if (stdout) {
+                        data.push(stdout.toString());
+                    } else if (error) {
+                        reject("MareTF failed: " + error.message);
+                    } else if (stderr) {
+                        reject("MareTF failed: " + stderr);
+                    }
+                },
+            );
+            if (proc.pid !== undefined) {
+                os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
+            }
+            proc.on("exit", (code) => {
+                if (code === 0) {
+                    resolve(data.join("\n"));
+                } else {
+                    reject();
+                }
+            });
+            proc.on("error", (e) => {
+                reject(e);
+            });
+        } catch (e) {
+            if (typeof e === "string") {
+                reject(e);
+            } else {
+                reject("MareTF info exited with unknown error");
+            }
+        }
+    });
+}
 
 function _buildMateTfCreateCommand(
     inputPath: string,
