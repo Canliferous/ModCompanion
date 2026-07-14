@@ -1,7 +1,10 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
-// import { S3ClientConfig } from "@aws-sdk/client-s3";
 import { SharedMapPresets } from "./SharedMap.js";
 
+/**
+ * Runtime representation of the app's config. This is not data directly loaded from disk or meant to be saved, but
+ * it represents some common file paths and game or app related configurations that can be accessed from anywhere
+ * */
 export interface AppConfig {
     /**
      * Path of the repo root directory
