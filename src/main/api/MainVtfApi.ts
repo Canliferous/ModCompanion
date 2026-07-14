@@ -11,6 +11,13 @@ export const VtfApi = {
             },
         );
 
+        ipcMain.handle(
+            Shared.Ipc.Channels.VtfExtractQuery,
+            (event: Electron.IpcMainInvokeEvent, absFilePath: string): Promise<string> => {
+                return Core.MareTfSystem.getVtfExtract(absFilePath);
+            },
+        );
+
         return true;
     },
 };

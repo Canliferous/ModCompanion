@@ -1,7 +1,10 @@
 <template>
     <div>
-        <template v-if="!error && !loading && info">
-            <MTextArea horiz-scroll>{{ info }}</MTextArea>
+        <template v-if="!error && !loading">
+            <div>
+                <img :src="`data:image/png;base64,${extract}`" />
+                <MTextArea horiz-scroll>{{ info }}</MTextArea>
+            </div>
         </template>
         <template v-else-if="loading">
             <div class="h-full grid place-items-center text-center">
@@ -25,13 +28,14 @@ import * as Shared from "mod_companion_shared";
 import { AppDesign } from "~/design/AppDesign.js";
 import { Logger } from "~/logger.js";
 import { Channel } from "mod_companion_shared/SharedLog.js";
-import { watchImmediate } from "@vueuse/core";
+import { useBase64, watchImmediate } from "@vueuse/core";
 
 const props = defineProps<{ path: string }>();
 
 const loading = ref(false);
 const error = ref(false);
 const info = ref<Shared.Vtf.SharedVtfInfo | undefined>(undefined);
+const extract = ref<string | undefined>(undefined);
 
 watchImmediate(() => props.path, loadInfo);
 
@@ -45,10 +49,11 @@ async function loadInfo() {
     info.value = undefined;
     try {
         info.value = await window.electronAPI.vtf.getInfo(props.path);
+        extract.value = await window.electronAPI.vtf.getExtract(props.path);
         loading.value = true;
     } catch (e) {
         error.value = true;
-        Logger.warning(Channel.MareTF, "Failed to load VTF info for", props.path, e);
+        Logger.warning(Channel.MareTF, "Failed to load VTF for", props.path, e);
     } finally {
         loading.value = false;
     }

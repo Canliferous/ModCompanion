@@ -9,6 +9,7 @@ import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { createVtfInfo, SharedVtfInfo, SharedVtfInfoRawOutput } from "mod_companion_shared/SharedVtf.js";
 import * as sourcelib from "sourcelib";
+import { runProcess } from "../helpers/CoreRunProcess.js";
 
 let binary = "";
 
@@ -64,47 +65,19 @@ export const MareTfSystem = {
         const raw = parsed[0] as unknown as SharedVtfInfoRawOutput;
         return createVtfInfo(raw);
     },
+    async getVtfExtract(inputPath: string): Promise<string> {
+        return _runMaretfExtract(inputPath);
+    },
 };
 
 function _runMaretfInfo(inputPath: string): Promise<string> {
     const cmd = `${binary} info --verbose --info-output-mode=kv1 ${inputPath}`;
-    return new Promise<string>((resolve, reject) => {
-        try {
-            const data: string[] = [];
-            const proc = child_process.exec(
-                cmd,
-                { cwd: ConfigSystem.getAppConfig().gamePath },
-                (error, stdout, stderr) => {
-                    if (stdout) {
-                        data.push(stdout.toString());
-                    } else if (error) {
-                        reject("MareTF failed: " + error.message);
-                    } else if (stderr) {
-                        reject("MareTF failed: " + stderr);
-                    }
-                },
-            );
-            if (proc.pid !== undefined) {
-                os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
-            }
-            proc.on("close", (code) => {
-                if (code === 0) {
-                    resolve(data.join("\n"));
-                } else {
-                    reject();
-                }
-            });
-            proc.on("error", (e) => {
-                reject(e);
-            });
-        } catch (e) {
-            if (typeof e === "string") {
-                reject(e);
-            } else {
-                reject("MareTF info exited with unknown error");
-            }
-        }
-    });
+    return runProcess(cmd, "MareTF Info");
+}
+
+function _runMaretfExtract(inputPath: string): Promise<string> {
+    const cmd = `${binary} extract --verbose --extract-stdout ${inputPath}`;
+    return runProcess(cmd, "MareTF Extract");
 }
 
 function _buildMateTfCreateCommand(

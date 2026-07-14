@@ -198,5 +198,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     vtf: {
         getInfo: (absFilePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.VtfInfoQuery, absFilePath),
+        getExtract: (absFilePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.VtfExtractQuery, absFilePath),
     },
 });

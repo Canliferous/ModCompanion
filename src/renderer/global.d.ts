@@ -159,6 +159,7 @@ declare global {
 
             vtf: {
                 getInfo: (absFilePath: string) => Promise<Shared.Vtf.SharedVtfInfo | undefined>;
+                getExtract: (absFilePath: string) => Promise<string>;
             };
         };
     }
