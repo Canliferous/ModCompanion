@@ -71,7 +71,6 @@ function _runMaretfInfo(inputPath: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         try {
             const data: string[] = [];
-            // console.log(cmd);
             const proc = child_process.exec(
                 cmd,
                 { cwd: ConfigSystem.getAppConfig().gamePath },
@@ -88,7 +87,7 @@ function _runMaretfInfo(inputPath: string): Promise<string> {
             if (proc.pid !== undefined) {
                 os.setPriority(proc.pid, os.constants.priority.PRIORITY_LOW);
             }
-            proc.on("exit", (code) => {
+            proc.on("close", (code) => {
                 if (code === 0) {
                     resolve(data.join("\n"));
                 } else {
