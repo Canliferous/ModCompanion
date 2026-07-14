@@ -1,4 +1,25 @@
 {
-	"root": "sample",
-	"searchPath": "my_game"
+    "root": "./sample",
+    "searchPath": "my_game",
+    "teamCityArtifactCloud": {
+        "credentials": {
+            "accessKeyId": "",
+            "secretAccessKey": ""
+        },
+        "region": "",
+        "endpoint": ""
+    },
+    "teamCityArtifactCloudBucket": "",
+    "assetDefaults": {
+        "vtfOptions": {
+            "version": "7.6",
+            "format": "BC7",
+            "compressionMethod": "DEFLATE",
+            "filter": "KAISER"
+        }
+    },
+    "mapSourceDirs": ["revolution2", "revolution2_concepts", "revolution2_styleguide", "revolution2_pbr"],
+    "mapPresets": {
+        "All Campaign": ["revolution2/r2_a1_begin"]
+    }
 }
