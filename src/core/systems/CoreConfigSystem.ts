@@ -6,7 +6,11 @@ import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import * as pathe from "pathe";
 
-interface ConfigFile {
+interface AppConfigFile {
+    project: string;
+}
+
+interface ProjectConfigFile {
     root?: string;
     searchPath?: string;
     launcherName?: string;
@@ -30,14 +34,14 @@ export const ConfigSystem = {
     },
 
     async initConfigSystem(): Promise<boolean> {
-        let cfgFile = await _loadConfig();
+        const projectConfig = await _loadProjectConfig();
 
-        if (cfgFile === undefined) {
-            Logger.info(Shared.Log.Channel.MainSystems, "Starting with default config");
-            cfgFile = _createDefaultConfig();
+        if (projectConfig === undefined) {
+            Logger.error(Shared.Log.Channel.MainSystems, "No project config found. Qutting");
+            return false;
         }
 
-        const cfg = _createRevolutionStandardConfig(cfgFile);
+        const cfg = _createConfig(projectConfig.cfg, projectConfig.cfgPath);
         if (!cfg) return false;
 
         config = cfg;
@@ -45,7 +49,7 @@ export const ConfigSystem = {
     },
 };
 
-function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.AppConfig | undefined {
+function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.AppConfig | undefined {
     if (!c.root) {
         return undefined;
     }
@@ -53,7 +57,7 @@ function _createRevolutionStandardConfig(c: ConfigFile): Shared.AppConfig.AppCon
         return undefined;
     }
 
-    const root = pathe.resolve(c.root);
+    const root = pathe.resolve(path.join(pathe.dirname(cfgPath), c.root));
     return {
         gameName: c.searchPath,
         rootPath: root,
@@ -107,37 +111,55 @@ function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): s
     }
 
     Logger.info(Shared.Log.Channel.MainSystems, "Unsupported operating system platform", platform);
-    return path.join(root, binaryName);
+    return pathe.join(root, binaryName);
 }
 
-function _getConfigPath(): string {
-    return path.normalize("./appconfig.json");
+function _getAppConfigPath(): string {
+    return pathe.normalize("./appconfig.json");
 }
 
-function _createDefaultConfig(): ConfigFile {
-    return {
-        root: "sample",
-        searchPath: "my_game",
-    };
-}
-
-async function _loadConfig(): Promise<ConfigFile | undefined> {
+async function _loadAppConfig(): Promise<AppConfigFile | undefined> {
     try {
-        const rawCfg = await fs.readFile(_getConfigPath());
+        const rawCfg = await fs.readFile(_getAppConfigPath(), "utf-8");
+        const cfgAny = JSON.parse(rawCfg);
+        if (!cfgAny.project || typeof cfgAny.project !== "string") {
+            Logger.error(Shared.Log.Channel.MainSystems, "Error loading app config. Project property not set");
+            return undefined;
+        }
+        return cfgAny as AppConfigFile;
+    } catch (e) {
+        Logger.error(Shared.Log.Channel.MainSystems, "Error loading app config", e);
+        return undefined;
+    }
+}
 
-        const cfgAny = JSON.parse(rawCfg.toString("utf-8"));
+async function _loadProjectConfig(): Promise<{ cfg: ProjectConfigFile; cfgPath: string } | undefined> {
+    const appConfig = await _loadAppConfig();
+    if (!appConfig) {
+        Logger.error(Shared.Log.Channel.MainSystems, "Error loading project config. App config is missing");
+        return undefined;
+    }
+
+    const projectConfigPath = pathe.normalize(appConfig?.project);
+
+    try {
+        const rawCfg = await fs.readFile(projectConfigPath, "utf8");
+
+        const cfgAny = JSON.parse(rawCfg);
 
         if (!cfgAny.root || typeof cfgAny.root !== "string") {
+            Logger.error(Shared.Log.Channel.MainSystems, "Error loading project config. root property not set");
             return undefined;
         }
 
         if (!cfgAny.searchPath || typeof cfgAny.searchPath !== "string") {
+            Logger.error(Shared.Log.Channel.MainSystems, "Error loading project config. searchPath property not set");
             return undefined;
         }
 
-        return cfgAny;
+        return { cfg: cfgAny as ProjectConfigFile, cfgPath: projectConfigPath };
     } catch (e) {
-        Logger.error(Shared.Log.Channel.MainSystems, "Error loading config", e);
+        Logger.error(Shared.Log.Channel.MainSystems, "Error loading project config", e);
         return undefined;
     }
 }
