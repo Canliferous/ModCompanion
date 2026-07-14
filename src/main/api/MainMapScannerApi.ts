@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 import fs from "fs/promises";
-import path from "path";
+import * as pathe from "pathe";
 
 import * as Core from "mod_companion_core";
 import * as Shared from "mod_companion_shared";
@@ -25,7 +25,7 @@ export async function listMapSourceDirs(): Promise<Shared.Map.SharedMapSourceDir
         if (!config.mapSourceDirs.includes(r)) continue;
 
         let dirContents = await fs.readdir(fullDirPath);
-        dirContents = dirContents.filter((f) => path.extname(f) === ".vmf");
+        dirContents = dirContents.filter((f) => pathe.extname(f) === ".vmf");
         const dir: Shared.Map.SharedMapSourceDir = {
             dirName: r,
             vmfNames: dirContents,
