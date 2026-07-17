@@ -1,0 +1,25 @@
+name: CI Test
+
+on:
+    push:
+        branches:
+            - "master"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Install Packages
+              run: npm ci --workspaces; npm ci
+
+            - name: Type check
+              run: npm run check
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Test
+              run: npm test
