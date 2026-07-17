@@ -71,7 +71,7 @@ Mod Companion is an Electron app written in TypeScript. The frontend is built wi
 
 You need
 
-- Node 22
+- Node 26
 - NPM
 
 ### Set up appconfig.json
