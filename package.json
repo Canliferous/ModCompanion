@@ -26,7 +26,8 @@
         "deploy": "npm run build && node scripts/deploy.cjs",
         "test": "vitest",
         "lint": "eslint src",
-        "lint-fix": "eslint src --fix"
+        "lint-fix": "eslint src --fix",
+        "check": "cd src/shared; npm run check; cd ../core; npm run check; cd ../main; npm run check; cd ../renderer; npm run check"
     },
     "devDependencies": {
         "concurrently": "^9.2.1",

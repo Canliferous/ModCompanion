@@ -11,7 +11,7 @@
     "scripts": {
         "dev": "tsc --watch --preserveWatchOutput",
         "build": "tsc",
-        "check": "tsc --noEmit SharedManifest.ts"
+        "check": "tsc --noEmit"
     },
     "main": "SharedManifest.ts",
     "dependencies": {
