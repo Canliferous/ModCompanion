@@ -10,7 +10,8 @@
     },
     "scripts": {
         "dev": "tsc --watch --preserveWatchOutput",
-        "build": "tsc"
+        "build": "tsc",
+        "check": "tsc --noEmit"
     },
     "dependencies": {
         "electron": "^43.0.0",
@@ -18,7 +19,7 @@
         "mod_companion_core": "../core",
         "mod_companion_shared": "../shared",
         "pathe": "^2.0.3",
-        "sourcelib": "^0.2.0"
+        "sourcelib": "^0.4.1"
     },
     "devDependencies": {
         "@types/node": "^25.3.5",
