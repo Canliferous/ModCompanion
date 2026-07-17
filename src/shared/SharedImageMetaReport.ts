@@ -1,6 +1,9 @@
-import exifreader from "exifreader";
+export interface ImageMetaReportTag {
+    value: string;
+    description: string;
+}
 
-export interface SharedImageMetaReport {
+export interface ImageMetaReport {
     filePath: string;
-    tags?: exifreader.Tags;
+    tags?: Record<string, ImageMetaReportTag>;
 }

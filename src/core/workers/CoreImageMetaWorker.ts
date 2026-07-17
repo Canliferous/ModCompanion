@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import exifreader from "exifreader";
 import * as Shared from "mod_companion_shared";
 
-async function runImageMetaWorker(input: any): Promise<Shared.ImageMeta.SharedImageMetaReport | undefined> {
+async function runImageMetaWorker(input: any): Promise<Shared.ImageMeta.ImageMetaReport | undefined> {
     if (typeof input !== "string") {
         return undefined;
     }
@@ -11,7 +11,7 @@ async function runImageMetaWorker(input: any): Promise<Shared.ImageMeta.SharedIm
     try {
         const data = await fs.readFile(input);
         const tags = exifreader.load(data);
-        const result: Shared.ImageMeta.SharedImageMetaReport = {
+        const result: Shared.ImageMeta.ImageMetaReport = {
             filePath: input,
             tags,
         };

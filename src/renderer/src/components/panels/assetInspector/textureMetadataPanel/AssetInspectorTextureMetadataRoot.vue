@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import * as Shared from "mod_companion_shared";
 
-const props = defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport }>();
+const props = defineProps<{ meta: Shared.ImageMeta.ImageMetaReport }>();
 
 const items = computed(() =>
     Object.entries(props.meta.tags ?? {})

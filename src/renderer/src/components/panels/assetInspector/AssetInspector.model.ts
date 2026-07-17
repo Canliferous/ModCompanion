@@ -14,7 +14,7 @@ export const AssetInspectorBehavior = {
         assetId: ComputedRef<Shared.Asset.AssetId>;
     }>,
     TextureInjectKey: Symbol() as InjectionKey<{
-        meta: MaybeRefOrGetter<Shared.ImageMeta.SharedImageMetaReport | undefined>;
+        meta: MaybeRefOrGetter<Shared.ImageMeta.ImageMetaReport | undefined>;
         assetId: ComputedRef<Shared.Asset.AssetId>;
     }>,
     PanelsInjectKey: Symbol() as InjectionKey<{

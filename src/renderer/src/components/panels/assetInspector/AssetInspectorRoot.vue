@@ -27,7 +27,7 @@ const workspaceStore = useWorkspaceStore();
 const api = ref<DockviewApi>();
 const lastType = ref<Shared.Asset.Type | undefined>();
 
-const textureMeta = ref<Shared.ImageMeta.SharedImageMetaReport | undefined>(undefined);
+const textureMeta = ref<Shared.ImageMeta.ImageMetaReport | undefined>(undefined);
 const visiblePanels = reactive<Map<string, boolean>>(new Map());
 
 function handleReady(e: DockviewReadyEvent): void {

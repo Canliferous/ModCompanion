@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import * as Shared from "mod_companion_shared";
 
-defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport }>();
+defineProps<{ meta: Shared.ImageMeta.ImageMetaReport }>();
 </script>
 
 <style scoped></style>

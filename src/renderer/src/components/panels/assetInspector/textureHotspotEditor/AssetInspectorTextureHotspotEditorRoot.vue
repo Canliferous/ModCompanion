@@ -93,7 +93,7 @@ const id = useId();
 
 const canvasRef = useTemplateRef("canvasRef");
 
-const props = defineProps<{ meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.TextureAsset }>();
+const props = defineProps<{ meta: Shared.ImageMeta.ImageMetaReport; asset: Shared.Asset.TextureAsset }>();
 
 const { width, height } = useElementSize(canvasRef);
 const editMode = useRememberRef(ref(HotspotEditMode.Select), "hotspot-editor-mode");
@@ -208,7 +208,7 @@ onMounted(() => {
     });
 });
 
-function updateEditorTexture(meta: Shared.ImageMeta.SharedImageMetaReport, editor: HotspotEditor) {
+function updateEditorTexture(meta: Shared.ImageMeta.ImageMetaReport, editor: HotspotEditor) {
     if (meta.filePath && meta.tags) {
         const w = meta.tags["Image Width"]?.value;
         const h = meta.tags["Image Height"]?.value;

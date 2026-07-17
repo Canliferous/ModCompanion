@@ -23,7 +23,7 @@ const myMeta = computed(() => (inj !== undefined ? toValue(inj.meta) : undefined
 const asset = computed(() => assetStore.getAssetById(inj?.assetId.value));
 
 defineSlots<{
-    default(props: { meta: Shared.ImageMeta.SharedImageMetaReport; asset: Shared.Asset.TextureAsset }): any;
+    default(props: { meta: Shared.ImageMeta.ImageMetaReport; asset: Shared.Asset.TextureAsset }): any;
 }>();
 </script>
 

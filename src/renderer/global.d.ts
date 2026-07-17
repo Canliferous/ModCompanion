@@ -106,7 +106,7 @@ declare global {
             };
 
             image: {
-                getMeta: (imageFilePath: string) => Promise<Shared.ImageMeta.SharedImageMetaReport | undefined>;
+                getMeta: (imageFilePath: string) => Promise<Shared.ImageMeta.ImageMetaReport | undefined>;
             };
 
             conversion: {
