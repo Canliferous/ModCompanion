@@ -5,8 +5,8 @@
         value-key="id"
         :icon="icon"
         class="w-full"
-        @change="updateType"
         :disabled="asset.isTransient"
+        @change="updateType"
     />
 </template>
 
