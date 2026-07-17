@@ -11,7 +11,7 @@ import { AssetBrowserModel } from "~/components/panels/assetBrowser/AssetBrowser
 import { PanelParams } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 
-const props = defineProps<{ params: IDockviewPanelProps<PanelParams<AssetBrowserModel>> }>();
+const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();
 const model = usePanelsStore().getModel<AssetBrowserModel>(props.params.params.panelId);
 </script>
 

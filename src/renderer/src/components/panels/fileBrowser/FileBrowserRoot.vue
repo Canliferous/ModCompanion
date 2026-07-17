@@ -45,6 +45,9 @@
 
 <script setup lang="ts">
 import pathe from "pathe";
+import * as sourcelib from "sourcelib";
+import { watchImmediate } from "@vueuse/core";
+import * as Shared from "mod_companion_shared";
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
@@ -55,19 +58,16 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { getAppConfig } from "~/renderer-config.js";
 import clipboardHelper from "~/helper/ClipboardHelper.js";
-import * as Shared from "mod_companion_shared";
 import FileBrowserSearchBar from "~/components/panels/fileBrowser/FileBrowserSearchBar.vue";
 import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEntryName.vue";
-import { useFileFilter } from "~/composables/useFilter";
-import { getRootRelativePath } from "~/helper/SourceFs";
-import { Logger } from "~/logger";
-import { GlobalComponentNames, PanelComponentNames } from "~/helper/GlobalComponents.js";
+import { useFileFilter } from "~/composables/useFilter.js";
+import { getRootRelativePath } from "~/helper/SourceFs.js";
+import { Logger } from "~/logger.js";
+import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
-import * as sourcelib from "sourcelib";
-import { watchImmediate } from "@vueuse/core";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();

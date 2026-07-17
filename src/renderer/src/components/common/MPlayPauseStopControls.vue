@@ -4,19 +4,19 @@
             :icon="AppDesign.Icons.ActionPlay"
             :color="compileStore.state !== Shared.PlayPauseStop.State.Playing ? 'success' : 'neutral'"
             :disabled="compileStore.state === Shared.PlayPauseStop.State.Playing"
-            @click="compileStore.state = Shared.PlayPauseStop.State.Playing"
+            @click="handleClickPlay"
         />
         <UButton
             :icon="AppDesign.Icons.ActionPause"
             :color="compileStore.state === Shared.PlayPauseStop.State.Playing ? 'warning' : 'neutral'"
             :disabled="compileStore.state !== Shared.PlayPauseStop.State.Playing"
-            @click="compileStore.state = Shared.PlayPauseStop.State.Paused"
+            @click="handleClickPause"
         />
         <UButton
             :icon="AppDesign.Icons.ActionStop"
             :color="compileStore.state !== Shared.PlayPauseStop.State.Stopped ? 'error' : 'neutral'"
             :disabled="compileStore.state === Shared.PlayPauseStop.State.Stopped"
-            @click="compileStore.state = Shared.PlayPauseStop.State.Stopped"
+            @click="handleClickStop"
         />
     </UButtonGroup>
 </template>
@@ -27,6 +27,18 @@ import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
 const compileStore = useMapCompileStore();
+
+function handleClickPlay() {
+    compileStore.state = Shared.PlayPauseStop.State.Playing;
+}
+
+function handleClickPause() {
+    compileStore.state = Shared.PlayPauseStop.State.Paused;
+}
+
+function handleClickStop() {
+    compileStore.state = Shared.PlayPauseStop.State.Stopped;
+}
 </script>
 
 <style scoped></style>

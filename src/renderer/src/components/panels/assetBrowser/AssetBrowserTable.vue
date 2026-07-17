@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
@@ -41,8 +42,7 @@ import ClipboardHelper from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
-import { useAssetsFilter } from "~/composables/useFilter";
-import { computed, ref } from "vue";
+import { useAssetsFilter } from "~/composables/useFilter.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
@@ -61,10 +61,9 @@ const filteredEntries = computed(() =>
 );
 
 const activeId = ref<Shared.Asset.AssetId | undefined>();
-const activeAsset = computed(() => (activeId.value ? listStore.assets.get(activeId.value) : undefined));
 const selectedIds = ref<Shared.Asset.AssetId[]>([]);
 const selectedAssets = computed(() =>
-    filteredEntries.value.filter((value) => selectedIds.value.includes(value.def.id)),
+    filteredEntries.value.filter((value: Shared.Asset.Asset) => selectedIds.value.includes(value.def.id)),
 );
 
 const expandedState = ref<Shared.AssetGroup.GroupId[]>([]);
@@ -271,8 +270,12 @@ const items = computed(() => {
     {
         const selAssets = selectedAssets.value;
         if (selAssets.length > 0) {
-            const isAnyGrouped = selAssets.some((selected) => assetGroupsStore.isGrouped(selected.def.id));
-            const isAllGrouped = selAssets.every((selected) => assetGroupsStore.isGrouped(selected.def.id));
+            const isAnyGrouped = selAssets.some((selected: Shared.Asset.Asset) =>
+                assetGroupsStore.isGrouped(selected.def.id),
+            );
+            const isAllGrouped = selAssets.every((selected: Shared.Asset.Asset) =>
+                assetGroupsStore.isGrouped(selected.def.id),
+            );
             options.push([
                 {
                     label: "Convert",
@@ -287,7 +290,7 @@ const items = computed(() => {
                 {
                     label: "Create Asset Group",
                     onSelect() {
-                        assetGroupsStore.createGroup(selAssets.map((s) => s.def.id));
+                        assetGroupsStore.createGroup(selAssets.map((s: Shared.Asset.Asset) => s.def.id));
                         table.value?.deselect();
                     },
                     icon: AppDesign.Icons.ActionCreateAssetGroup,

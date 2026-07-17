@@ -61,7 +61,6 @@ const emit = defineEmits<{
 const asset = computed(() => listStore.getAssetById(props.assetId));
 
 function handleClickAsset() {
-    groupsStore.expand(props.groupId);
     listStore.activate(props.assetId);
 }
 </script>

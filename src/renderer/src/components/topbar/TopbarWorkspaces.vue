@@ -5,12 +5,7 @@
         </template>
 
         <UTooltip text="New Workspace">
-            <UButton
-                :icon="AppDesign.Icons.ActionAdd"
-                variant="link"
-                size="xs"
-                @click="workspaceStore.createWorkspace()"
-            />
+            <UButton :icon="AppDesign.Icons.ActionAdd" variant="link" size="xs" @click="handleCreateWorkspace" />
         </UTooltip>
     </div>
 </template>
@@ -20,6 +15,10 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 
 const workspaceStore = useWorkspaceStore();
+
+function handleCreateWorkspace() {
+    workspaceStore.createWorkspace();
+}
 </script>
 
 <style scoped></style>

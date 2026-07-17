@@ -13,8 +13,8 @@ watch(
     () => props.text,
     () => {
         nextTick(() => {
-            if (scroller.value) {
-                scroller.value.scrollTop = scroller.value.scrollHeight;
+            if (scroller.value && scroller.value.rootEl) {
+                scroller.value.rootEl.scrollTop = scroller.value.rootEl.scrollHeight;
             }
         });
     },

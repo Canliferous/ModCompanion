@@ -13,19 +13,19 @@
                                 label="Select"
                                 :icon="AppDesign.Icons.ActionSelectCursor"
                                 :color="editMode === HotspotEditMode.Select ? 'info' : 'neutral'"
-                                @click="editMode = HotspotEditMode.Select"
+                                @click="setEditMode(HotspotEditMode.Select)"
                             />
                             <UButton
                                 label="Draw"
                                 :icon="AppDesign.Icons.ActionEditPencil"
                                 :color="editMode === HotspotEditMode.Draw ? 'info' : 'neutral'"
-                                @click="editMode = HotspotEditMode.Draw"
+                                @click="setEditMode(HotspotEditMode.Draw)"
                             />
                             <UButton
                                 label="Delete"
                                 :icon="AppDesign.Icons.ActionDelete"
                                 :color="editMode === HotspotEditMode.Delete ? 'info' : 'neutral'"
-                                @click="editMode = HotspotEditMode.Delete"
+                                @click="setEditMode(HotspotEditMode.Delete)"
                             />
                         </UButtonGroup>
                     </UFormField>
@@ -41,32 +41,32 @@
                                 <UButton
                                     label="8"
                                     :color="gridSnapSize === 8 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 8"
+                                    @click="setGridSnapSize(8)"
                                 />
                                 <UButton
                                     label="16"
                                     :color="gridSnapSize === 16 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 16"
+                                    @click="setGridSnapSize(16)"
                                 />
                                 <UButton
                                     label="32"
                                     :color="gridSnapSize === 32 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 32"
+                                    @click="setGridSnapSize(32)"
                                 />
                                 <UButton
                                     label="64"
                                     :color="gridSnapSize === 64 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 64"
+                                    @click="setGridSnapSize(64)"
                                 />
                                 <UButton
                                     label="128"
                                     :color="gridSnapSize === 128 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 128"
+                                    @click="setGridSnapSize(128)"
                                 />
                                 <UButton
                                     label="256"
                                     :color="gridSnapSize === 256 ? 'info' : 'neutral'"
-                                    @click="gridSnapSize = 256"
+                                    @click="setGridSnapSize(256)"
                                 />
                             </UButtonGroup>
 
@@ -109,6 +109,14 @@ function handleChanged(flags: Shared.Vtf.SharedVtfHotspotRectFlags) {
     if (selectedRectIdx.value) {
         editor.value?.updateRectFlags(selectedRectIdx.value, toRaw(flags));
     }
+}
+
+function setGridSnapSize(size: number) {
+    gridSnapSize.value = size;
+}
+
+function setEditMode(mode: HotspotEditMode) {
+    editMode.value = mode;
 }
 
 // TODO: Feed this from main process
@@ -213,7 +221,9 @@ function updateEditorTexture(meta: Shared.ImageMeta.ImageMetaReport, editor: Hot
         const w = meta.tags["Image Width"]?.value;
         const h = meta.tags["Image Height"]?.value;
         if (w && h) {
-            editor.updateTexture(`file://${meta.filePath}`, w, h);
+            const wNum = typeof w === "number" ? w : Number.parseInt(w);
+            const hNum = typeof h === "number" ? h : Number.parseInt(h);
+            editor.updateTexture(`file://${meta.filePath}`, wNum, hNum);
         }
     } else {
         Logger.warning(

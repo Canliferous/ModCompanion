@@ -1,5 +1,5 @@
 export interface ImageMetaReportTag {
-    value: string;
+    value: string | number;
     description: string;
 }
 

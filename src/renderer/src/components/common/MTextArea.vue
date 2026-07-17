@@ -1,5 +1,6 @@
 <template>
     <div
+        ref="root"
         class="h-full p-1 bg-neutral-900 border border-accented rounded inset-shadow-cave overflow-y-auto overflow-x-clip"
         :class="{ 'overflow-x-auto': horizScroll }"
     >
@@ -12,6 +13,10 @@
 
 <script setup lang="ts">
 defineProps<{ horizScroll?: boolean }>();
+
+const rootEl = useTemplateRef("root");
+
+defineExpose({ rootEl });
 </script>
 
 <style scoped></style>
