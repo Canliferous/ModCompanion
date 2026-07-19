@@ -14,8 +14,5 @@ export function registerImageMetaApi(): boolean {
 }
 
 export async function getImageMeta(imageFilePath: string): Promise<Shared.ImageMeta.ImageMetaReport | undefined> {
-    return new Promise((resolve) => {
-        const worker = Core.WorkerSystem.createWorker(Shared.Workers.WorkerFile.ImageMeta, imageFilePath);
-        worker.on("message", (result) => resolve(result));
-    });
+    return Core.WorkerSystem.createResultWorker(Shared.Workers.WorkerFile.ImageMeta, { filePath: imageFilePath });
 }

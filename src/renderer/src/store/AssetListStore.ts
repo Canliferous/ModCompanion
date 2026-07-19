@@ -6,8 +6,7 @@ import * as Shared from "mod_companion_shared";
 import { Channel } from "mod_companion_shared/SharedLog.js";
 
 export const useAssetListStore = defineStore("asset-list", () => {
-    const assets = ref<Map<Shared.Asset.AssetId, Shared.Asset.Asset>>(new Map());
-    const potentialAssets = ref<Shared.Asset.Asset[]>([]);
+    const assets = ref<Shared.Asset.AssetMap>(new Map());
     const refreshing = ref(false);
 
     const activateEvent = useEvent<Shared.Asset.AssetId | undefined>();
@@ -99,7 +98,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
 
     return {
         assets,
-        potentialAssets,
         refreshing,
         createAsset,
         deleteAsset,

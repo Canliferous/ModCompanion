@@ -2,6 +2,7 @@ import { SharedVtfCreateOptions } from "./SharedVtf.js";
 import pathe from "pathe";
 
 export type AssetId = string;
+export type AssetMap = Map<AssetId, Asset>;
 
 export const McaFileExt = ".mca"; // Mod Companion Asset
 export const QcFileExt = ".qc";
@@ -111,7 +112,6 @@ export interface TextureAsset extends Asset {
 
 export interface AssetRescanEvent {
     assets: Map<AssetId, Asset>;
-    potentialAssets: Asset[];
     totalTimeMillis?: number;
 }
 

@@ -6,7 +6,7 @@ import * as Shared from "mod_companion_shared";
 export const AssetRepositoryApi = {
     register(): boolean {
         ipcMain.on(Shared.Ipc.Channels.AssetForceRescan, () => {
-            return Core.AssetRepositorySystem.rescan();
+            return Core.AssetRepositorySystem.scan();
         });
 
         ipcMain.handle(

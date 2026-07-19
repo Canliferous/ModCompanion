@@ -124,10 +124,9 @@ export const FileBrowserSystem = {
     indexFiles() {
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing files...");
         const timeStart = new Date().getTime();
-        const worker = WorkerSystem.createWorker(
-            Shared.Workers.WorkerFile.IndexFilesystem,
-            ConfigSystem.getAppConfig().rootPath,
-        );
+        const worker = WorkerSystem.createWorker(Shared.Workers.WorkerFile.IndexFilesystem, {
+            startDir: ConfigSystem.getAppConfig().rootPath,
+        });
         worker.on("message", _handleIndexMessage);
         worker.on("exit", () => {
             const timeEnd = new Date().getTime();

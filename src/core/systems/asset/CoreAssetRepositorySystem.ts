@@ -11,18 +11,16 @@ import { existsSync } from "fs";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { FileBrowserSystem } from "../CoreFileBrowserSystem.js";
-import * as sourcelib from "sourcelib";
-import { createModelAssetDefinition } from "./CoreAssetCreateModel.js";
+import { WorkerSystem } from "../CoreWorkerSystem.js";
 
-let assetMap: Map<Shared.Asset.AssetId, Shared.Asset.Asset> = new Map();
-let potentialAssets: Shared.Asset.Asset[] = [];
+let assetMap: Shared.Asset.AssetMap = new Map();
 
 let assetRescanNotifyFunc: Shared.Asset.AssetRescanNotifyFunc | undefined = undefined;
 export const AssetRepositorySystem = {
     initSystem(notifyFunc?: Shared.Asset.AssetRescanNotifyFunc): boolean {
         assetRescanNotifyFunc = notifyFunc;
         FileBrowserSystem.getIndexDoneEvent()?.on((payload) => {
-            AssetRepositorySystem.rescan(payload);
+            AssetRepositorySystem.scan(payload);
         });
         return true;
     },
@@ -31,17 +29,24 @@ export const AssetRepositorySystem = {
         return assetMap;
     },
 
-    async rescan(index?: Map<string, Shared.FileBrowser.FileEntry[]>): Promise<void> {
-        Logger.info(Shared.Log.Channel.Assets, "Rescanning assets...");
+    async scan(index?: Map<string, Shared.FileBrowser.FileEntry[]>): Promise<void> {
+        Logger.info(Shared.Log.Channel.Assets, "Scanning assets...");
 
         const fileIndex = index ?? FileBrowserSystem.getIndex();
+
         const { millis } = await Shared.Timing.timeMillisAsync(async () => {
-            assetMap = await _buildAssets(fileIndex);
-            potentialAssets = _detectPotentialAssets(fileIndex.keys());
+            const result = await WorkerSystem.createResultWorker(Shared.Workers.WorkerFile.AssetScanner, {
+                index: fileIndex,
+            });
+            if (result) {
+                assetMap = result;
+            } else {
+                Logger.warning(Shared.Log.Channel.Assets, "Failed to scan assets");
+            }
         });
 
-        Logger.info(Shared.Log.Channel.Assets, "Asset rescan done. Found", assetMap.size, "assets in", millis, "ms");
-        assetRescanNotifyFunc?.({ assets: assetMap, potentialAssets, totalTimeMillis: millis });
+        Logger.info(Shared.Log.Channel.Assets, "Asset scan done. Found", assetMap.size, "assets in", millis, "ms");
+        assetRescanNotifyFunc?.({ assets: assetMap, totalTimeMillis: millis });
 
         await ConversionChecksumSystem.initChecksums(assetMap);
         await ConversionAgentSystem.initStates(assetMap);
@@ -173,103 +178,3 @@ export const AssetRepositorySystem = {
         }
     },
 };
-
-async function _buildAssets(
-    index: Map<string, Shared.FileBrowser.FileEntry[]>,
-): Promise<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
-    const assets = new Map<Shared.Asset.AssetId, Shared.Asset.Asset>();
-    const rootPath = ConfigSystem.getAppConfig().rootPath;
-
-    for (const filePaths of index.values()) {
-        for (const filePath of filePaths) {
-            if (!filePath.path.startsWith("content")) continue;
-
-            let definition: Shared.Asset.AssetDef | undefined;
-            let isTransient = false;
-
-            if (Shared.Asset.isMcaFile(filePath.path)) {
-                definition = await _readMcaFile(filePath.path, rootPath);
-            } else if (Shared.Asset.isQcFile(filePath.path)) {
-                definition = await _readQcFile(filePath.path, rootPath);
-                isTransient = true;
-            } else {
-                continue;
-            }
-
-            if (definition === undefined) {
-                Logger.warning(Shared.Log.Channel.Assets, "Asset", filePath, "is invalid and will be ignored");
-                continue;
-            }
-
-            const duplicateOther = assets.get(definition.id);
-            if (duplicateOther !== undefined) {
-                Logger.warning(
-                    Shared.Log.Channel.Assets,
-                    "Asset definition file",
-                    filePath,
-                    "has the same id as",
-                    duplicateOther.def.id,
-                    definition.id,
-                    "and will be ignored",
-                );
-                continue;
-            }
-
-            const asset: Shared.Asset.Asset = {
-                def: definition,
-                defFilePath: Shared.SourceFs.forwardSlashed(filePath.path),
-                isTransient,
-            };
-            assets.set(definition.id, asset);
-        }
-    }
-
-    return assets;
-}
-
-function _detectPotentialAssets(contentTree: Iterable<string>): Shared.Asset.Asset[] {
-    const assets: Shared.Asset.Asset[] = [];
-    for (const file of contentTree) {
-        const isTexture = Shared.FileEndings.isTextureFileEnding(pathe.extname(file));
-        if (isTexture) {
-            if (!file.includes("_hr")) continue;
-            if (AssetRepositorySystem.getAssetFromFile(file) !== undefined) continue;
-
-            assets.push({
-                defFilePath: file,
-                def: createTextureAssetDefinition(file),
-            });
-        }
-    }
-    return assets;
-}
-
-async function _readMcaFile(fileName: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
-    const fullPath = pathe.join(fileRootPath, fileName);
-    const text = await fs.readFile(fullPath, "utf-8");
-    const unk = JSON.parse(text);
-
-    if (unk.type === undefined) {
-        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no type");
-        return undefined;
-    }
-    if (unk.id === undefined) {
-        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no id");
-        return undefined;
-    }
-    if (!Shared.Asset.isValidAssetType(unk.type)) {
-        Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has invalid type ", unk.type);
-        return undefined;
-    }
-
-    return unk;
-}
-
-async function _readQcFile(fileName: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
-    const fullQcPath = pathe.join(fileRootPath, fileName);
-    const text = await fs.readFile(fullQcPath, "utf-8");
-    const qcDoc = sourcelib.qc.QcParser.parseText(text);
-    const refs = sourcelib.qc.QcUtils.getAllReferencedModelInputFiles(qcDoc);
-
-    return createModelAssetDefinition(fullQcPath, refs);
-}
