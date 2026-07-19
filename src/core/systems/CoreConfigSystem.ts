@@ -5,6 +5,7 @@ import { S3ClientConfig } from "@aws-sdk/client-s3";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import * as pathe from "pathe";
+import { existsSync } from "fs";
 
 interface AppConfigFile {
     project: string;
@@ -140,9 +141,22 @@ async function _loadProjectConfig(): Promise<{ cfg: ProjectConfigFile; cfgPath: 
         return undefined;
     }
 
-    const projectConfigPath = pathe.normalize(appConfig?.project);
+    const projectConfigPath = pathe.resolve(appConfig?.project);
+    if (!existsSync(projectConfigPath)) {
+        Logger.error(Shared.Log.Channel.MainSystems, `Project config '${projectConfigPath}' does not exist`);
+        return undefined;
+    }
 
     try {
+        const stat = await fs.stat(projectConfigPath);
+        if (!stat.isFile()) {
+            Logger.error(
+                Shared.Log.Channel.MainSystems,
+                `Project config '${projectConfigPath}' is a directory. Must be a file path. Probably called projectconfig.json`,
+            );
+            return undefined;
+        }
+
         const rawCfg = await fs.readFile(projectConfigPath, "utf8");
 
         const cfgAny = JSON.parse(rawCfg);
