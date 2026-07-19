@@ -1,4 +1,4 @@
-import {useEvent} from "~/composables/useEvent.js";
+import { useEvent } from "~/composables/useEvent.js";
 import * as Shared from "../../../../shared/SharedManifest.js";
 
 export interface RectAndIdx {

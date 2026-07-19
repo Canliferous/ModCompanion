@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { computed, ref } from "vue";
 import { useMapCompileStore } from "~/store/MapCompileStore.js";

@@ -52,14 +52,13 @@ import {
     getFileTypeName,
     hasEditor,
 } from "~/helper/FileInspectorHelper.js";
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
 import { fileSize } from "humanize-plus";
 import { computedAsync, watchImmediate } from "@vueuse/core";
 import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { useEvent } from "~/composables/useEvent.js";
-import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 
 const panelsStore = usePanelsStore();

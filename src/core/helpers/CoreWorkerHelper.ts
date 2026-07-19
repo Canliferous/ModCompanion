@@ -1,6 +1,5 @@
 import * as Shared from "mod_companion_shared";
 import * as worker_threads from "node:worker_threads";
-import { AppWorkerData } from "mod_companion_shared/SharedWorkers.js";
 
 /** Helper function to manage IO *inside* the worker */
 export function useWorkerThreadData<K extends Shared.Workers.WorkerFile>(): Shared.Workers.AppWorkerData<

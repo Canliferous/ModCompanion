@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
-import { getFileTypeIcon, getFileType } from "~/helper/FileInspectorHelper.js";
+import { getFileType, getFileTypeIcon } from "~/helper/FileInspectorHelper.js";
 
 defineProps<{ entry: Shared.FileBrowser.FileEntry }>();
 </script>

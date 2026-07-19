@@ -28,7 +28,7 @@ import * as Shared from "mod_companion_shared";
 import { AppDesign } from "~/design/AppDesign.js";
 import { Logger } from "~/logger.js";
 import { Channel } from "mod_companion_shared/SharedLog.js";
-import { useBase64, watchImmediate } from "@vueuse/core";
+import { watchImmediate } from "@vueuse/core";
 
 const props = defineProps<{ path: string }>();
 

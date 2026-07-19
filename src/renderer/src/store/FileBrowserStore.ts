@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import * as Shared from "mod_companion_shared";
 import { usePanelsStore } from "~/store/PanelsStore.js";
-import { GlobalComponentNames, PanelComponentNames } from "~/helper/GlobalComponents.js";
+import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { FileBrowserModel } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 
 export const useFileBrowserStore = defineStore("file-browser", () => {

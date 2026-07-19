@@ -1,10 +1,9 @@
-import path from "path";
+import * as pathe from "pathe";
 import fs from "fs/promises";
 import os from "node:os";
 import { S3ClientConfig } from "@aws-sdk/client-s3";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
-import * as pathe from "pathe";
 import { existsSync } from "fs";
 
 interface AppConfigFile {
@@ -58,7 +57,7 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
         return undefined;
     }
 
-    const root = pathe.resolve(path.join(pathe.dirname(cfgPath), c.root));
+    const root = pathe.resolve(pathe.join(pathe.dirname(cfgPath), c.root));
     return {
         gameName: c.searchPath,
         rootPath: root,
@@ -104,11 +103,11 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
 function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): string {
     const platform = os.platform();
     if (platform === "linux" && !proton) {
-        return path.join(root, "game/bin/linux64", binaryName);
+        return pathe.join(root, "game/bin/linux64", binaryName);
     }
 
     if (platform === "win32" || proton) {
-        return path.join(root, "game/bin/win64", binaryName + ".exe");
+        return pathe.join(root, "game/bin/win64", binaryName + ".exe");
     }
 
     Logger.info(Shared.Log.Channel.MainSystems, "Unsupported operating system platform", platform);

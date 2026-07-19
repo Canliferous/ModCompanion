@@ -1,4 +1,4 @@
-import path from "path";
+import * as pathe from "pathe";
 import { MareTfSystem } from "../../systems/CoreMaretfSystem.js";
 import { ConfigSystem } from "../../systems/CoreConfigSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -16,10 +16,10 @@ export const TextureConverter = {
         if (!this.isValid(asset)) return undefined;
         const srcFileRel = asset.contentFiles![0];
         const config = ConfigSystem.getAppConfig();
-        const srcFile = path.join(config.contentPath, srcFileRel);
+        const srcFile = pathe.join(config.contentPath, srcFileRel);
 
         const outFileRel = asset.gameFiles![0];
-        const outFile = path.join(config.gamePath, outFileRel);
+        const outFile = pathe.join(config.gamePath, outFileRel);
 
         let options = config.assetDefaults?.vtfOptions ?? {};
         options = { ...options, ...asset.vtfOptions };

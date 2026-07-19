@@ -6,6 +6,7 @@
 import { AssetInspectorTextureConvertInjectKey } from "~/components/panels/assetInspector/textureConvert/AssetInspectorTextureConvert.model.js";
 
 import * as Shared from "mod_companion_shared";
+
 const props = defineProps<{
     options: Shared.Vtf.SharedVtfCreateOptions;
     field: Shared.Vtf.SharedVtfCreateNumberOptions;

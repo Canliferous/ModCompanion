@@ -1,4 +1,4 @@
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
 

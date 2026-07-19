@@ -1,4 +1,4 @@
-import path from "path";
+import * as pathe from "pathe";
 import { runConverter } from "./CoreSharedConverter.js";
 import { Logger } from "../../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -12,7 +12,7 @@ export const ModelConverter = {
     async convert(asset: Shared.Asset.ModelAssetDef): Promise<string | undefined> {
         const qcFile = this.getQcFile(asset);
         if (!qcFile) return undefined;
-        const fullQcFile = path.join(ConfigSystem.getAppConfig().contentPath, qcFile);
+        const fullQcFile = pathe.join(ConfigSystem.getAppConfig().contentPath, qcFile);
 
         Logger.info(Shared.Log.Channel.ConversionAgent, `Converting model ${fullQcFile}`);
         return this.createMdl(fullQcFile);

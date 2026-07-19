@@ -1,5 +1,5 @@
 import { ConfigSystem } from "../CoreConfigSystem.js";
-import path from "path";
+import * as pathe from "pathe";
 import fs from "fs/promises";
 import crypto from "node:crypto";
 import { Logger } from "../CoreLogSystem.js";
@@ -30,7 +30,7 @@ export const ConversionChecksumSystem = {
         const contentPath = ConfigSystem.getAppConfig().contentPath;
 
         const promises = contentFiles.map(async (f) => {
-            const p = path.join(contentPath, f);
+            const p = pathe.join(contentPath, f);
             const fileContents = await fs.readFile(p, "base64");
             const hash = crypto.createHash("sha1").update(fileContents).digest("base64");
             return hash;

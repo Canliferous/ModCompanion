@@ -18,8 +18,6 @@ import {
 } from "~/components/panels/fileInspector/FileInspector.model.js";
 
 import { TooltipProvider } from "reka-ui";
-import { useEvent } from "~/composables/useEvent.js";
-import { FileBrowserBehavior, FileBrowserShortcuts } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import { usePanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 const props = defineProps<{ params: IDockviewPanelProps<PanelParams> }>();

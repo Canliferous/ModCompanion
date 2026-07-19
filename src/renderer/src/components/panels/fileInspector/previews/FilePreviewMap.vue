@@ -20,7 +20,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 import { openMapInGame, openMapInHammer } from "~/helper/LauncherHelper.js";
 import { getAppConfig } from "~/renderer-config.js";
-import pathe from "pathe";
+import * as pathe from "pathe";
 
 const props = defineProps<{ path: string }>();
 

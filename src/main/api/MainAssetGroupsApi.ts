@@ -6,10 +6,7 @@ import * as Shared from "mod_companion_shared";
 export function registerAssetGroupsApi(): boolean {
     ipcMain.handle(
         Shared.Ipc.Channels.AssetGroupsCreate,
-        (
-            event,
-            groupDef: Shared.AssetGroup.GroupDefinition,
-        ): Promise<Shared.AssetGroup.SharedAssetGroup> => {
+        (event, groupDef: Shared.AssetGroup.GroupDefinition): Promise<Shared.AssetGroup.SharedAssetGroup> => {
             return Core.AssetGroupsSystem.write(Core.AssetGroupsSystem.generateId(), groupDef);
         },
     );

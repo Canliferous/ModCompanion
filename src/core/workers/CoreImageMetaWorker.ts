@@ -1,4 +1,4 @@
-import { parentPort, workerData } from "worker_threads";
+import { parentPort } from "worker_threads";
 import fs from "fs/promises";
 import exifreader from "exifreader";
 import * as Shared from "mod_companion_shared";

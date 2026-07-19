@@ -1,4 +1,4 @@
-import path from "path";
+import * as pathe from "pathe";
 import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import * as Shared from "mod_companion_shared";
 
@@ -37,10 +37,10 @@ export function isAbsoluteGameFile(filePath: string): boolean {
 
 export function makeContentPathAbsolute(contentRelativePath: string): string {
     const config = ConfigSystem.getAppConfig();
-    return path.join(config.contentPath, contentRelativePath);
+    return pathe.join(config.contentPath, contentRelativePath);
 }
 
 export function makeGamePathAbsolute(gameRelativePath: string): string {
     const config = ConfigSystem.getAppConfig();
-    return path.join(config.gamePath, gameRelativePath);
+    return pathe.join(config.gamePath, gameRelativePath);
 }

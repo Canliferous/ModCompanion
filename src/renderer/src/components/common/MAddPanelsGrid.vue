@@ -13,12 +13,7 @@
 
 <script setup lang="ts">
 import { AddPanelOptions } from "dockview-core/dist/cjs/dockview/options.js";
-import {
-    PanelComponentName,
-    PanelComponentNames,
-    PanelsBehaviors,
-    SpawnablePanelComponentNames,
-} from "~/helper/GlobalComponents.js";
+import { PanelComponentName, PanelsBehaviors, SpawnablePanelComponentNames } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 
 const panelsStore = usePanelsStore();

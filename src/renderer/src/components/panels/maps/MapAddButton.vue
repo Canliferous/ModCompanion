@@ -9,7 +9,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { filename } from "pathe/utils";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { useMapListStore } from "~/store/MapListStore.js";
-import pathe from "pathe";
+import * as pathe from "pathe";
 import * as Shared from "mod_companion_shared";
 
 const listStore = useMapListStore();

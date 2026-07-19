@@ -53,7 +53,6 @@ import { Logger } from "~/logger.js";
 import { useRememberRef } from "~/composables/useRemember.js";
 import { TakeOverId } from "~/store/TakeOverStore.js";
 import * as Shared from "mod_companion_shared";
-import { AllChannels } from "mod_companion_shared/SharedLog.js";
 
 const logStore = useMessageLogStore();
 

@@ -1,4 +1,4 @@
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { DefineComponent } from "vue";
 import { AppDesign } from "~/design/AppDesign.js";
 import FilePreviewModel from "~/components/panels/fileInspector/previews/FilePreviewModel.vue";

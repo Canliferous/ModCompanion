@@ -1,8 +1,8 @@
 import fs from "fs/promises";
-import path from "path";
+import * as pathe from "pathe";
 import { existsSync } from "fs";
 import { ConfigSystem } from "./CoreConfigSystem.js";
-import { v4 } from "uuid";
+import * as uuid from "uuid";
 import { filename } from "pathe/utils";
 import * as Shared from "mod_companion_shared";
 import { Logger } from "./CoreLogSystem.js";
@@ -22,20 +22,20 @@ export const AssetGroupsSystem = {
         return true;
     },
     generateId(): Shared.AssetGroup.GroupId {
-        return v4();
+        return uuid.v4();
     },
     async write(
         id: Shared.AssetGroup.GroupId,
         assetGroupDef: Shared.AssetGroup.GroupDefinition,
     ): Promise<Shared.AssetGroup.SharedAssetGroup> {
-        const filePath = path.join(_getAssetGroupDir(), id + ".json");
+        const filePath = pathe.join(_getAssetGroupDir(), id + ".json");
         const contents = JSON.stringify(assetGroupDef);
         await fs.writeFile(filePath, contents);
         Logger.info(Shared.Log.Channel.Assets, "Wrote asset group", filePath, assetGroupDef);
         return { filePath, def: assetGroupDef, id };
     },
     delete(id: Shared.AssetGroup.GroupId) {
-        const filePath = path.join(_getAssetGroupDir(), id + ".json");
+        const filePath = pathe.join(_getAssetGroupDir(), id + ".json");
         return fs.rm(filePath);
     },
     async scan() {
@@ -45,7 +45,7 @@ export const AssetGroupsSystem = {
         const dirItems = await fs.readdir(dir);
         for (const dirItem of dirItems) {
             if (!dirItem.endsWith(".json")) continue;
-            const dirItemFull = path.join(dir, dirItem);
+            const dirItemFull = pathe.join(dir, dirItem);
             const stat = await fs.stat(dirItemFull);
             if (!stat.isFile()) continue;
 
@@ -72,5 +72,5 @@ export const AssetGroupsSystem = {
 };
 
 function _getAssetGroupDir(): string {
-    return path.join(ConfigSystem.getAppConfig().contentPath, "_modcomp_asset_groups");
+    return pathe.join(ConfigSystem.getAppConfig().contentPath, "_modcomp_asset_groups");
 }

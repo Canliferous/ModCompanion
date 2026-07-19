@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import pathe from "pathe";
+import * as pathe from "pathe";
 import * as sourcelib from "sourcelib";
 import { watchImmediate } from "@vueuse/core";
 import * as Shared from "mod_companion_shared";

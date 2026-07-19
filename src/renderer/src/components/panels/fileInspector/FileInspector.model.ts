@@ -1,9 +1,7 @@
 import { PanelBehavior, PanelModel } from "~/helper/GlobalComponents.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import pathe from "pathe";
-import { Reactive } from "vue";
+import * as pathe from "pathe";
 import { EventHandler } from "~/composables/useEvent.js";
-import { FileBrowserShortcuts } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import { PanelShortcuts } from "~/composables/usePanelShortcuts.js";
 
 export interface FileInspectorModel extends PanelModel {

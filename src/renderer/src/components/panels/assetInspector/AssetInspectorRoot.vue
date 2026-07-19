@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { DockviewApi, DockviewReadyEvent, DockviewVue, SerializedDockview } from "dockview-vue";
 import { AssetInspectorBehavior } from "~/components/panels/assetInspector/AssetInspector.model.js";
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { getAppConfig } from "~/renderer-config.js";
 import { useWorkspaceStore } from "~/store/WorkspaceStore.js";
 import { fetchImageMeta } from "~/store/ImageCacheStore.js";

@@ -19,7 +19,6 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { IDockviewPanelHeaderProps } from "dockview-vue";
 import { PanelModel, PanelParams, PanelsBehaviors } from "~/helper/GlobalComponents.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
-import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 
 const p = defineProps<{ props: IDockviewPanelHeaderProps<PanelParams> }>();
 const behavior = computed(() => PanelsBehaviors[p.props.params.panelName]);

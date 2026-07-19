@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { TooltipProvider } from "reka-ui";
 import { PanelModel } from "~/helper/GlobalComponents.js";
+
 const props = defineProps<{ model?: PanelModel }>();
 </script>
 

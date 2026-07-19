@@ -1,4 +1,4 @@
-import pathe from "pathe";
+import * as pathe from "pathe";
 
 export function getRelativePath(
     filePath: string,

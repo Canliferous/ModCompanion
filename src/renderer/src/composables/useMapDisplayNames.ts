@@ -1,4 +1,4 @@
-import pathe from "pathe";
+import * as pathe from "pathe";
 import { filename } from "pathe/utils";
 
 // The intent is to not show the map's folder "prefix" if all maps share are in the same folder.

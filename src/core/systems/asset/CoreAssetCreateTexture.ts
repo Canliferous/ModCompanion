@@ -1,6 +1,6 @@
 import { filename } from "pathe/utils";
+import * as pathe from "pathe";
 import { AssetRepositorySystem } from "./CoreAssetRepositorySystem.js";
-import path from "path";
 import { getContentRelativePath } from "../../helpers/CoreSourceFs.js";
 import * as Shared from "mod_companion_shared";
 
@@ -8,20 +8,20 @@ function _disassembleTextureName(contentFile: string): { sub: string; name: stri
     const materialsrc = "materialsrc";
     const start = contentFile.indexOf(materialsrc) + materialsrc.length + 1;
     const sub = contentFile.substring(start);
-    const name = filename(sub) ?? path.basename(sub);
+    const name = filename(sub) ?? pathe.basename(sub);
 
     return { sub, name };
 }
 
 export function deriveTextureGameFileName(contentFile: string): string {
     const { sub, name } = _disassembleTextureName(contentFile);
-    const stripped = path.join("materials", path.dirname(sub), name) + ".vtf";
+    const stripped = pathe.join("materials", pathe.dirname(sub), name) + ".vtf";
     return Shared.SourceFs.forwardSlashed(stripped);
 }
 
 export function deriveTextureDisplayName(contentFile: string): string {
     const { sub, name } = _disassembleTextureName(contentFile);
-    const stripped = path.join(path.dirname(sub), name);
+    const stripped = pathe.join(pathe.dirname(sub), name);
     return Shared.SourceFs.forwardSlashed(stripped);
 }
 

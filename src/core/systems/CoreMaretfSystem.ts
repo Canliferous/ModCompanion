@@ -1,6 +1,6 @@
 import os from "node:os";
 import fs from "node:fs";
-import path from "node:path";
+import * as pathe from "pathe";
 import * as child_process from "node:child_process";
 import { getMainAssetsDir } from "../helpers/CoreFilesystem.js";
 import { runConverter } from "../helpers/converter/CoreSharedConverter.js";
@@ -16,13 +16,13 @@ let binary = "";
 export const MareTfSystem = {
     initSystem(): boolean {
         if (os.type().toLowerCase() === "linux") {
-            binary = path.join(getMainAssetsDir(), "lib", "maretf");
+            binary = pathe.join(getMainAssetsDir(), "lib", "maretf");
 
             child_process.spawnSync(`chmod +x ${binary}`, { shell: true });
             return true;
         }
         if (os.type().toLowerCase() === "windows_nt") {
-            binary = path.join(getMainAssetsDir(), "lib", "maretf.exe");
+            binary = pathe.join(getMainAssetsDir(), "lib", "maretf.exe");
             return true;
         }
 
@@ -40,7 +40,7 @@ export const MareTfSystem = {
         const cmd = _buildMateTfCreateCommand(inputPath, outputPath, options);
 
         try {
-            const dir = path.dirname(outputPath);
+            const dir = pathe.dirname(outputPath);
             fs.mkdirSync(dir, { recursive: true });
         } catch (e) {
             // Nobody cares if the dir already exists

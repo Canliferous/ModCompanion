@@ -1,4 +1,4 @@
-import path from "path";
+import * as pathe from "pathe";
 import * as os from "node:os";
 import * as child_process from "node:child_process";
 import { existsSync } from "fs";
@@ -13,7 +13,7 @@ export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBas
 
     if (!existsSync(fullPath)) {
         Logger.info(Shared.Log.Channel.FileBrowser, "Browsing to file that doesn't exist, opening folder", fullPath);
-        command = _getBrowseToDirectoryCommand(path.dirname(fullPath));
+        command = _getBrowseToDirectoryCommand(pathe.dirname(fullPath));
     } else {
         command = _getBrowseToFileSelectCommand(fullPath);
     }
@@ -35,9 +35,8 @@ export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBas
         },
         (error) => {
             if (error) {
-
                 // windows bullshit! explorer.exe *always* says it failed even when it succeeds! Woo microslop!
-                if(command?.startsWith("explorer.exe")) {
+                if (command?.startsWith("explorer.exe")) {
                     return;
                 }
                 Logger.error(Shared.Log.Channel.FileBrowser, `Failed: ${error.message}`);
@@ -63,7 +62,7 @@ export function _getBrowseToFileSelectCommandLinux(filePath: string): string | u
         { mime: "org.kde.dolphin.desktop", cmd: (p: string) => `dolphin --select "${p}"` },
         { mime: "org.gnome.Nautilus.desktop", cmd: (p: string) => `nautilus --select "${p}"` },
         { mime: "nemo.desktop", cmd: (p: string) => `nemo "${p}"` },
-        { mime: "thunar.desktop", cmd: (p: string) => `thunar "${path.dirname(p)}"` },
+        { mime: "thunar.desktop", cmd: (p: string) => `thunar "${pathe.dirname(p)}"` },
     ];
 
     // get the default file manager
@@ -75,7 +74,7 @@ export function _getBrowseToFileSelectCommandLinux(filePath: string): string | u
     }
 
     // fallback
-    return `xdg-open "${path.dirname(filePath)}"`;
+    return `xdg-open "${pathe.dirname(filePath)}"`;
 }
 
 function _getBrowseToDirectoryCommand(dirPath: string): string | undefined {
@@ -101,7 +100,7 @@ export async function getFileEntry(
         const stat = await fs.stat(fullPath);
         if (!stat) return undefined;
 
-        return { path: fullPath, fileSize: stat.size, isFile: true, name: path.basename(filePath) };
+        return { path: fullPath, fileSize: stat.size, isFile: true, name: pathe.basename(filePath) };
     } catch (e) {
         return undefined;
     }

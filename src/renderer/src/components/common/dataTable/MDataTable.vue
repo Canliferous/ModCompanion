@@ -27,8 +27,8 @@
 import {
     DataTableColumn,
     DataTableEntryActionInjectKey,
-    DataTableSelectionInjectKey,
     DataTableHierarchyEntry,
+    DataTableSelectionInjectKey,
 } from "~/components/common/dataTable/MDataTable.model.js";
 import MDataTableHeader from "~/components/common/dataTable/MDataTableHeader.vue";
 

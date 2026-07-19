@@ -3,7 +3,7 @@ import { ConfigSystem } from "./CoreConfigSystem.js";
 import { filename } from "pathe/utils";
 import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
-import path from "path";
+import * as pathe from "pathe";
 import { pipeline } from "node:stream/promises";
 import { Logger } from "./CoreLogSystem.js";
 import humanizePlus from "humanize-plus";
@@ -105,9 +105,9 @@ export const TcArtifactsSystem = {
                 Logger.info(Shared.Log.Channel.TcArtifacts, `Map file is ${humanizePlus.fileSize(a.ContentLength)}`);
             }
 
-            const fullPath = path.join(
+            const fullPath = pathe.join(
                 ConfigSystem.getAppConfig().mapOutputPath,
-                path.basename(mapName).replace(".vmf", ".bsp"),
+                pathe.basename(mapName).replace(".vmf", ".bsp"),
             );
             try {
                 await fs.rm(fullPath);

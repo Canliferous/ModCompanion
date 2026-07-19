@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import path from "path";
+import * as pathe from "pathe";
 import fs from "fs/promises";
 import { existsSync } from "fs";
 import * as sourcelib from "sourcelib";
@@ -46,7 +46,7 @@ async function _createTimeReport(maps: string[]): Promise<Shared.Map.TimeReport>
             const extension = _getReportExtension(step);
             if (!extension) continue;
 
-            const reportPath = path.join(srcPath, map.replace(".vmf", extension));
+            const reportPath = pathe.join(srcPath, map.replace(".vmf", extension));
 
             if (!existsSync(reportPath)) continue;
 

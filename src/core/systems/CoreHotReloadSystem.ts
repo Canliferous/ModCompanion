@@ -2,7 +2,7 @@ import { StrataInteropSystem } from "./CoreStrataInteropSystem.js";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { FileBrowserSystem } from "./CoreFileBrowserSystem.js";
-import path from "path";
+import * as pathe from "pathe";
 
 let hotReloadEnabled = false;
 
@@ -19,8 +19,8 @@ export const HotReloadSystem = {
 function _handleFileChanged(filePath: string) {
     if (!hotReloadEnabled || !StrataInteropSystem.isConnected()) return;
 
-    const name = path.basename(filePath);
-    const ext = path.extname(name);
+    const name = pathe.basename(filePath);
+    const ext = pathe.extname(name);
 
     if (name === Shared.FileNames.chamberSignConfig) {
         Logger.info(Shared.Log.Channel.HotReload, "Reloading chamber sign config");

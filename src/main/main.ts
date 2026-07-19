@@ -14,7 +14,6 @@ import {
     notifyStrataInteropDisconnected,
     notifyStrataInteropLog,
 } from "./api/MainStrataInteropApi.js";
-import * as child_process from "node:child_process";
 
 type SystemInitFunction = () => Promise<boolean> | boolean;
 type SystemShutdownFunction = () => Promise<void> | void;

@@ -1,6 +1,6 @@
 import chokidar, { FSWatcher } from "chokidar";
 import { ConfigSystem } from "./CoreConfigSystem.js";
-import path from "path";
+import * as pathe from "pathe";
 import fs from "fs/promises";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -32,7 +32,7 @@ export const FileBrowserSystem = {
             const config = ConfigSystem.getAppConfig();
             const alwaysWatchedPaths = [
                 config.textureOutputPath,
-                path.join(config.scriptsPath, Shared.FileNames.chamberSignConfig),
+                pathe.join(config.scriptsPath, Shared.FileNames.chamberSignConfig),
             ];
 
             for (const p of alwaysWatchedPaths) {
@@ -58,12 +58,12 @@ export const FileBrowserSystem = {
 
     isProjectPath(p: string): boolean {
         const config = ConfigSystem.getAppConfig();
-        return path.resolve(p).startsWith(config.rootPath);
+        return pathe.resolve(p).startsWith(config.rootPath);
     },
 
     correctProjectPath(somePath: string) {
         const config = ConfigSystem.getAppConfig();
-        if (!path.isAbsolute(somePath)) {
+        if (!pathe.isAbsolute(somePath)) {
             return somePath;
         }
         const ind = somePath.indexOf(config.rootPath);
@@ -95,8 +95,8 @@ export const FileBrowserSystem = {
             if (Shared.FileBrowser.isIgnoredPathName(p)) continue;
 
             try {
-                const s = await fs.stat(path.join(dirPath, p));
-                const entryPath = Shared.SourceFs.forwardSlashed(path.join(resultBaseRoot ?? dirPath, p));
+                const s = await fs.stat(pathe.join(dirPath, p));
+                const entryPath = Shared.SourceFs.forwardSlashed(pathe.join(resultBaseRoot ?? dirPath, p));
                 if (s.isFile()) {
                     entries.push({
                         name: p,
@@ -148,7 +148,7 @@ export const FileBrowserSystem = {
 
 async function _change(filePath: string): Promise<void> {
     Logger.info(Shared.Log.Channel.FileBrowser, "CHANGE", filePath);
-    const dir = path.dirname(filePath);
+    const dir = pathe.dirname(filePath);
 
     fileChangedEvent.call(filePath);
 
@@ -175,7 +175,7 @@ async function _recreateWatcher(dirs: string[]) {
     }
 
     const rootPath = ConfigSystem.getAppConfig().rootPath;
-    const fullDirs = dirs.map((d) => path.join(rootPath, d));
+    const fullDirs = dirs.map((d) => pathe.join(rootPath, d));
 
     Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullDirs.join(", "));
 

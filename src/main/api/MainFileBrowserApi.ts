@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import path from "path";
+import * as pathe from "pathe";
 import { IpcHelper } from "./MainApiHelper.js";
 
 import * as Core from "mod_companion_core";
@@ -43,7 +43,7 @@ export const FileBrowserApi = {
             Shared.Ipc.Channels.FileBrowser_ListFilesQuery,
             async (event: Electron.IpcMainInvokeEvent, dirPath: string): Promise<Shared.FileBrowser.FileEntries> => {
                 const config = Core.ConfigSystem.getAppConfig();
-                const fullPath = path.join(config.rootPath, dirPath);
+                const fullPath = pathe.join(config.rootPath, dirPath);
                 const results = await Core.FileBrowserSystem.listFiles(fullPath, dirPath);
                 return results;
             },

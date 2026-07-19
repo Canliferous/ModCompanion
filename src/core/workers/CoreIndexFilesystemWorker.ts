@@ -1,4 +1,4 @@
-import { parentPort, workerData } from "worker_threads";
+import { parentPort } from "worker_threads";
 import fs from "node:fs/promises";
 import * as pathe from "pathe";
 import * as Shared from "mod_companion_shared";

@@ -1,5 +1,5 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
-import pathe from "pathe";
+import * as pathe from "pathe";
 
 export type AssetId = string;
 export type AssetMap = Map<AssetId, Asset>;

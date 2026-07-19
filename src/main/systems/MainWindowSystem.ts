@@ -1,13 +1,11 @@
-import { app, BrowserWindow, Menu, Rectangle, Tray, nativeTheme, session } from "electron";
-import path from "node:path";
+import { app, BrowserWindow, Menu, nativeTheme, Rectangle, Tray } from "electron";
 import settings from "electron-settings";
 import fs from "node:fs";
-
-import {} from "../main.js";
+import * as pathe from "pathe";
 
 import * as Core from "mod_companion_core";
-import * as Shared from "mod_companion_shared";
 import { Logger } from "mod_companion_core";
+import * as Shared from "mod_companion_shared";
 
 const SETTING_WINDOW_BOUNDS = "window.bounds";
 const SETTING_WINDOW_MAXIMIZED = "window.maximized";
@@ -69,7 +67,7 @@ function _getSettingsBounds(): WindowRect {
 }
 
 function _getAppIconPath() {
-    return path.join(Core.FileSystem.getMainAssetsDir(), "mod_companion_192.png");
+    return pathe.join(Core.FileSystem.getMainAssetsDir(), "mod_companion_192.png");
 }
 
 function _saveWindow() {
@@ -91,7 +89,7 @@ function _createWindow(hasTray: boolean): void {
         x: bounds.x,
         y: bounds.y,
         webPreferences: {
-            preload: path.join(Core.FileSystem.getRootDir(), "preload.js"),
+            preload: pathe.join(Core.FileSystem.getRootDir(), "preload.js"),
             contextIsolation: true,
             nodeIntegration: false,
             webSecurity: false,
@@ -145,7 +143,7 @@ function _createWindow(hasTray: boolean): void {
             mainWindow.webContents.openDevTools();
         }
     } else {
-        mainWindow.loadFile(path.join(Core.FileSystem.getRendererDir(), `index.html`));
+        mainWindow.loadFile(pathe.join(Core.FileSystem.getRendererDir(), `index.html`));
     }
 
     mainWindow.removeMenu();

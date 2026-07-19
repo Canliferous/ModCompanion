@@ -1,6 +1,6 @@
 import * as child_process from "node:child_process";
 import { ConfigSystem } from "../systems/CoreConfigSystem.js";
-import path from "path";
+import * as pathe from "pathe";
 import fs from "fs/promises";
 import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
@@ -53,10 +53,10 @@ export const runDone: MapCompilerAction = async (
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> => {
     const config = ConfigSystem.getAppConfig();
-    const sourceBsp = path.extname(mapPath) === ".vmf" ? mapPath.replace(".vmf", ".bsp") : mapPath + ".bsp";
-    const outBsp = path.basename(sourceBsp);
-    const from = path.join(config.mapSourcePath, sourceBsp);
-    const to = path.join(config.mapOutputPath, outBsp);
+    const sourceBsp = pathe.extname(mapPath) === ".vmf" ? mapPath.replace(".vmf", ".bsp") : mapPath + ".bsp";
+    const outBsp = pathe.basename(sourceBsp);
+    const from = pathe.join(config.mapSourcePath, sourceBsp);
+    const to = pathe.join(config.mapOutputPath, outBsp);
 
     try {
         await fs.copyFile(from, to);
@@ -76,8 +76,8 @@ function _runMapCompiler(
     onStdErr?: (msg: string) => void,
 ): Promise<boolean> {
     const config = ConfigSystem.getAppConfig();
-    const map = path.join(config.mapSourcePath, mapPath);
-    const cwd = path.join(config.rootPath, "game");
+    const map = pathe.join(config.mapSourcePath, mapPath);
+    const cwd = pathe.join(config.rootPath, "game");
 
     return _runCommand(exePath, [...args.split(" "), map], cwd, onStdOut, onStdErr);
 }
