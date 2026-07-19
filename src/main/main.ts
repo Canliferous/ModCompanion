@@ -1,4 +1,4 @@
-import { app } from "electron";
+import { app, dialog } from "electron";
 import { WindowSystem } from "./systems/MainWindowSystem.js";
 import { initApiSystem } from "./systems/MainApiSystem.js";
 import * as Core from "mod_companion_core";
@@ -14,6 +14,7 @@ import {
     notifyStrataInteropDisconnected,
     notifyStrataInteropLog,
 } from "./api/MainStrataInteropApi.js";
+import * as child_process from "node:child_process";
 
 type SystemInitFunction = () => Promise<boolean> | boolean;
 type SystemShutdownFunction = () => Promise<void> | void;
@@ -31,7 +32,7 @@ const systems: System[] = [
         initFunction: () => Core.AssetRepositorySystem.initSystem(AssetRepositoryApi.notifyAssetsRescanned),
     },
     { name: "Api", initFunction: initApiSystem },
-    { name: "Window", initFunction: () => WindowSystem.initSystem(stopSystems) },
+    { name: "Window", initFunction: () => WindowSystem.initSystem(_stopSystems) },
     {
         name: "MapCompile",
         initFunction: () =>
@@ -62,10 +63,11 @@ const systems: System[] = [
     { name: "Workers", initFunction: Core.WorkerSystem.initSystem, shutdownFunction: Core.WorkerSystem.deinitSystem },
 ];
 
-async function startSystems(): Promise<void> {
+async function _startSystems(): Promise<void> {
     Core.Logger.info(Shared.Log.Channel.MainSystems, `Starting Systems...`);
 
     let success = false;
+    const failedSystems: string[] = [];
     for (const system of systems) {
         const systemResult = system.initFunction();
 
@@ -83,6 +85,7 @@ async function startSystems(): Promise<void> {
 
         if (!success) {
             Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System FAIL`);
+            failedSystems.push(system.name);
             break;
         } else {
             Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System OK`);
@@ -92,11 +95,12 @@ async function startSystems(): Promise<void> {
     if (success) {
         Core.Logger.info(Shared.Log.Channel.MainSystems, "All systems started successfully!");
     } else {
+        await _showStartupFailureWindow(failedSystems);
         app.quit();
     }
 }
 
-function stopSystems() {
+function _stopSystems() {
     for (const system of systems) {
         if (system.shutdownFunction) {
             Core.Logger.info(Shared.Log.Channel.MainSystems, "Shutting down", system.name, "system");
@@ -105,7 +109,20 @@ function stopSystems() {
     }
 }
 
-function performPreStartChecks(): boolean {
+async function _showStartupFailureWindow(failedSystems: string[]) {
+    const errorLog = Core.Logger.getErrorLogs()
+        .map((l) => Shared.Log.stringifyLog(l, true, true))
+        .join("\n");
+
+    return dialog.showMessageBox({
+        type: "error",
+        title: "Startup Error",
+        message: `Failed to start systems: ${failedSystems.join(", ")}`,
+        detail: errorLog,
+    });
+}
+
+function _performPreStartChecks(): boolean {
     const lock = app.requestSingleInstanceLock();
     if (!lock) {
         return false;
@@ -124,9 +141,9 @@ function performPreStartChecks(): boolean {
     return true;
 }
 
-async function start() {
+async function _start() {
     app.setName("Mod Companion");
-    if (!performPreStartChecks()) {
+    if (!_performPreStartChecks()) {
         return;
     }
     Core.Logger.info(Shared.Log.Channel.MainSystems, `Starting Mod Companion`);
@@ -140,7 +157,7 @@ async function start() {
     await Core.AppVersionHelper.determineAppVersion();
     Core.Logger.info(Shared.Log.Channel.MainSystems, `Version is ${Core.AppVersionHelper.getAppVersion()}`);
 
-    await startSystems();
+    await _startSystems();
 }
 
-start();
+_start();

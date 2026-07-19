@@ -1,7 +1,8 @@
-// import { notifyLogFromMain } from "../../main/api/MainLoggerApi.js";
 import * as Shared from "mod_companion_shared";
 
 let notifyFunc: Shared.Log.NotifyFunc | undefined = undefined;
+
+const errorLogs: Shared.Log.Event[] = [];
 
 export const Logger = {
     initSystem(func?: Shared.Log.NotifyFunc): boolean {
@@ -9,6 +10,10 @@ export const Logger = {
         return true;
     },
     processLog(logEvent: Shared.Log.Event, replicateToRenderer: boolean = false) {
+        if (logEvent.type === Shared.Log.Type.Error) {
+            errorLogs.push(logEvent);
+        }
+
         Shared.Log.printLogEvent(logEvent);
 
         if (replicateToRenderer) {
@@ -26,5 +31,8 @@ export const Logger = {
     },
     error(channel: Shared.Log.Channel, ...data: any[]) {
         Logger.processLog({ data, channel, time: new Date(), type: Shared.Log.Type.Error }, true);
+    },
+    getErrorLogs(): Shared.Log.Event[] {
+        return errorLogs;
     },
 };
