@@ -56,22 +56,6 @@ export const FileBrowserSystem = {
         return indexDoneEvent;
     },
 
-    isProjectPath(p: string): boolean {
-        const config = ConfigSystem.getAppConfig();
-        return pathe.resolve(p).startsWith(config.rootPath);
-    },
-
-    correctProjectPath(somePath: string) {
-        const config = ConfigSystem.getAppConfig();
-        if (!pathe.isAbsolute(somePath)) {
-            return somePath;
-        }
-        const ind = somePath.indexOf(config.rootPath);
-        if (ind !== 0) return undefined;
-
-        return Shared.SourceFs.stripPathStart(somePath, config.rootPath);
-    },
-
     async updateOpenedDirs(dirs: string[]) {
         return _recreateWatcher(dirs);
     },
@@ -81,7 +65,9 @@ export const FileBrowserSystem = {
     },
 
     async listFiles(dirPath: string, resultBaseRoot?: string): Promise<Shared.FileBrowser.FileEntries> {
-        if (!this.isProjectPath(dirPath)) return { valid: false, entries: [] };
+        if (!Shared.SourceFs.isProjectPath(dirPath, ConfigSystem.getAppConfig().rootPath)) {
+            return { valid: false, entries: [] };
+        }
 
         let paths: string[] = [];
         try {

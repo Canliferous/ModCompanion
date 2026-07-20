@@ -49,13 +49,6 @@ export const FileBrowserApi = {
             },
         );
 
-        ipcMain.handle(
-            Shared.Ipc.Channels.FileBrowser_CorrectPathQuery,
-            async (event: Electron.IpcMainInvokeEvent, somePath: string): Promise<string | undefined> => {
-                return Core.FileBrowserSystem.correctProjectPath(somePath);
-            },
-        );
-
         ipcMain.on(
             Shared.Ipc.Channels.FileBrowser_ExecuteAction,
             (event: Electron.IpcMainEvent, filePath: string | string[], base?: Shared.FileBrowser.PathBase): void => {

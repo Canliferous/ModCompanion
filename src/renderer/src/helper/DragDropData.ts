@@ -1,4 +1,5 @@
 import * as Shared from "mod_companion_shared";
+import { getAppConfig } from "~/renderer-config.js";
 
 export interface AssetDragDropTransferData {
     assetIds: Shared.Asset.AssetId[];
@@ -31,8 +32,7 @@ export function deserializeAssetDragDropTransferData(transferData: string): Asse
 export async function handleDrop(files: File[] | null, event: DragEvent) {
     if (files !== null && files.length === 1) {
         const fullPath = window.electronAPI.webUtils.getPathForFile(files[0]);
-        const correctPath = await window.electronAPI.fileBrowser.correctPath(fullPath);
-        return correctPath;
+        return Shared.SourceFs.correctProjectPath(fullPath, getAppConfig().rootPath);
     }
 
     const plaintext = event.dataTransfer?.getData("text/plain");

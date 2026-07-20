@@ -20,7 +20,6 @@ declare global {
 
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileBrowser.FileEntries>;
-                correctPath: (dirPath: string) => Promise<string | undefined>;
                 getFileEntry: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<FileEntry | undefined>;
                 browseToFile: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
 

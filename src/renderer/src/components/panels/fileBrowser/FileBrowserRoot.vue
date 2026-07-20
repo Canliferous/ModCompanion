@@ -103,7 +103,12 @@ const suppressHistoryPush = ref(false);
 
 watch(
     currentDir,
-    (dir) => {
+    (d) => {
+        let dir = d ?? "";
+        if (dir && Shared.SourceFs.isProjectPath(dir, getAppConfig().rootPath)) {
+            currentDir.value = dir = Shared.SourceFs.correctProjectPath(dir, getAppConfig().rootPath) ?? "";
+        }
+
         // Correct empty or undefined paths to be /
         if (!dir) {
             currentDir.value = dir = "/";

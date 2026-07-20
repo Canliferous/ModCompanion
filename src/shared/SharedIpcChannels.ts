@@ -11,7 +11,6 @@ export const Channels = {
     ClipboardWriteText: "clipboard_write_text",
 
     FileBrowser_ListFilesQuery: "filebrowser_list_files",
-    FileBrowser_CorrectPathQuery: "filebrowser_correct_path",
     FileBrowser_FileEntryQuery: "filebrowser_file_entry",
     FileBrowser_ExecuteAction: "filebrowser_execute",
     FileBrowser_BrowseToFileAction: "filebrowser_browse_to_file",

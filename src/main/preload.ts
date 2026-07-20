@@ -20,7 +20,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     fileBrowser: {
         listFiles: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_ListFilesQuery, dirPath),
-        correctPath: (dirPath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_CorrectPathQuery, dirPath),
         getFileEntry: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_FileEntryQuery, filePath, base),
         execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) =>

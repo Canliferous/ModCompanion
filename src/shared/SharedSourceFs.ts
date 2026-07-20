@@ -1,4 +1,5 @@
 import * as pathe from "pathe";
+import * as Shared from "./SharedManifest.js";
 
 export function getRelativePath(
     filePath: string,
@@ -66,4 +67,19 @@ export function backSlashed(str: string): string {
 
 export function stripPathStart(filePath: string, prefix: string): string {
     return forwardSlashed(filePath.substring(prefix.length + 1));
+}
+
+export function isProjectPath(p: string, rootPath: string): boolean {
+    return pathe.resolve(p).startsWith(rootPath);
+}
+
+export function correctProjectPath(somePath: string, rootPath: string) {
+    const p = Shared.SourceFs.forwardSlashed(somePath);
+    if (!pathe.isAbsolute(p)) {
+        return p;
+    }
+    const ind = p.indexOf(rootPath);
+    if (ind !== 0) return undefined;
+
+    return Shared.SourceFs.stripPathStart(p, rootPath);
 }
