@@ -221,6 +221,16 @@ function _buildTrayMenu() {
             click: () => Core.LauncherHelper.runLauncher(option.type, option.args),
         });
     }
+
+    template.push({ type: "separator" });
+
+    for (const option of Shared.Launchers.ToolLauncherOptions) {
+        template.push({
+            label: `${option.name}`,
+            click: () => Core.LauncherHelper.runLauncher(option.type, option.args),
+        });
+    }
+
     template.push({ type: "separator" });
     template.push({ label: "Quit", click: () => WindowSystem.exitForReal() });
     return Menu.buildFromTemplate(template);
