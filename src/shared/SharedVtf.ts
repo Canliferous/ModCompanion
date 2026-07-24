@@ -38,7 +38,6 @@ export interface SharedVtfCreateOptions {
     filter?: SharedVtfFilter;
     flags?: SharedVtfFlag[];
     noMips?: boolean;
-    noAnimation?: boolean;
     noThumbnail?: boolean;
     compressionMethod?: SharedVtfCompressionMethod;
     compressionLevel?: number;
@@ -284,9 +283,6 @@ export function buildMareTfCreateArgs(options: SharedVtfCreateOptions): string {
     }
     if (options.noMips) {
         a += ` --no-mips`;
-    }
-    if (options.noAnimation) {
-        a += ` --no-animation`;
     }
     if (options.noThumbnail) {
         a += ` --no-thumbnail`;
