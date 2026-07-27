@@ -1,6 +1,10 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
 import { SharedMapPresets } from "./SharedMap.js";
 
+export interface AppConfigAssetDefaults {
+    vtfOptions?: SharedVtfCreateOptions;
+}
+
 /**
  * Runtime representation of the app's config. This is not data directly loaded from disk or meant to be saved, but
  * it represents some common file paths and game or app related configurations that can be accessed from anywhere
@@ -87,9 +91,7 @@ export interface AppConfig {
     mapSourceDirs?: string[];
     mapPresets?: SharedMapPresets;
 
-    assetDefaults?: {
-        vtfOptions?: SharedVtfCreateOptions;
-    };
+    assetDefaults?: AppConfigAssetDefaults;
 
     teamCityArtifactCloud?: any; //S3ClientConfig;
     teamCityArtifactCloudBucket?: string;

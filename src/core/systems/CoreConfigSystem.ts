@@ -5,26 +5,31 @@ import { S3ClientConfig } from "@aws-sdk/client-s3";
 import { Logger } from "./CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { existsSync } from "fs";
+import * as z from "zod";
 
-interface AppConfigFile {
-    project: string;
-}
+const AppConfigFileSchema = z.object({
+    project: z.string(),
+});
 
-interface ProjectConfigFile {
-    root?: string;
-    searchPath?: string;
-    launcherName?: string;
+type AppConfigFile = z.infer<typeof AppConfigFileSchema>;
 
-    assetDefaults?: {
-        vtfOptions?: Shared.Vtf.SharedVtfCreateOptions;
-    };
+const ProjectConfigFileSchema = z.object({
+    root: z.optional(z.string()),
+    searchPath: z.optional(z.string()),
+    steamAppId: z.optional(z.coerce.number()),
+    launcherName: z.optional(z.string()),
+    assetDefaults: z.optional(
+        z.object({
+            vtfOptions: z.optional(z.object<Shared.Vtf.SharedVtfCreateOptions>()),
+        }),
+    ),
+    teamCityArtifactCloud: z.optional(z.object<S3ClientConfig>()),
+    teamCityArtifactCloudBucket: z.optional(z.string()),
+    mapSourceDirs: z.optional(z.array(z.string())),
+    mapPresets: z.optional(z.record(z.string(), z.array(z.string()))),
+});
 
-    teamCityArtifactCloud?: S3ClientConfig;
-    teamCityArtifactCloudBucket?: string;
-
-    mapSourceDirs?: string[];
-    mapPresets?: Shared.Map.SharedMapPresets;
-}
+type ProjectConfigFile = z.infer<typeof ProjectConfigFileSchema>;
 
 let config: Shared.AppConfig.AppConfig = null!;
 
@@ -94,7 +99,7 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
         mapSourceDirs: c.mapSourceDirs,
         mapPresets: c.mapPresets,
 
-        assetDefaults: c.assetDefaults,
+        assetDefaults: c.assetDefaults as Shared.AppConfig.AppConfigAssetDefaults,
         teamCityArtifactCloud: c.teamCityArtifactCloud,
         teamCityArtifactCloudBucket: c.teamCityArtifactCloudBucket,
     };
@@ -119,14 +124,17 @@ function _getAppConfigPath(): string {
 }
 
 async function _loadAppConfig(): Promise<AppConfigFile | undefined> {
+    const cfgPath = _getAppConfigPath();
     try {
-        const rawCfg = await fs.readFile(_getAppConfigPath(), "utf-8");
+        const rawCfg = await fs.readFile(cfgPath, "utf-8");
         const cfgAny = JSON.parse(rawCfg);
-        if (!cfgAny.project || typeof cfgAny.project !== "string") {
-            Logger.error(Shared.Log.Channel.MainSystems, "Error loading app config. Project property not set");
+        const parsedCfg = AppConfigFileSchema.safeParse(cfgAny);
+        if (!parsedCfg.success) {
+            Logger.error(Shared.Log.Channel.MainSystems, `Failed to parse ${cfgPath}`, parsedCfg.error.message);
             return undefined;
         }
-        return cfgAny as AppConfigFile;
+
+        return parsedCfg.data;
     } catch (e) {
         Logger.error(Shared.Log.Channel.MainSystems, "Error loading app config", e);
         return undefined;
