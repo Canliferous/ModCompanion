@@ -42,6 +42,7 @@ export function getAssetTypeName(type: Type): string {
 }
 
 export const ValidTypes = [Types.Texture, Types.Model];
+export const UserSelectableTypes = [Types.Texture];
 
 export interface AssetDefFileArrays {
     readonly contentFiles?: string[];

@@ -26,7 +26,7 @@ watch(
     },
 );
 
-const selectItems = Object.values(Shared.Asset.Types).map<SelectItem>((t) => ({
+const selectItems = Object.values(Shared.Asset.UserSelectableTypes).map<SelectItem>((t) => ({
     id: t,
     label: getAssetTypeName(t),
     icon: getAssetTypeIcon(t),
