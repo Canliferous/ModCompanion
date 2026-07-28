@@ -13,7 +13,7 @@ export const Channels = {
     FileBrowser_ListFilesQuery: "filebrowser_list_files",
     FileBrowser_FileEntryQuery: "filebrowser_file_entry",
     FileBrowser_ExecuteAction: "filebrowser_execute",
-    FileBrowser_BrowseToFileAction: "filebrowser_browse_to_file",
+    FileBrowser_BrowseToFileAction: "filebrowser_browse_to",
     FileBrowser_UpdateOpenedDirsAction: "filebrowser_update_opened_dirs",
     FileBrowser_OpenAction: "filebrowser_open",
     FileBrowser_DirUpdatedEvent: "filebrowser_update_dir",

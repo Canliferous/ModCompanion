@@ -98,7 +98,7 @@ const entry = computedAsync(
 
 function handleExplore() {
     if (fullPath.value) {
-        window.electronAPI.fileBrowser.browseToFile(fullPath.value);
+        window.electronAPI.fileBrowser.browseTo(fullPath.value);
     }
 }
 

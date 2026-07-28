@@ -9,7 +9,7 @@ import { AppDesign } from "~/design/AppDesign.js";
 const props = defineProps<{ path: string }>();
 
 function handleBrowse(): void {
-    window.electronAPI.fileBrowser.browseToFile(props.path);
+    window.electronAPI.fileBrowser.browseTo(props.path);
 }
 
 function handleLaunch(): void {

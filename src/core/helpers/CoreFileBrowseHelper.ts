@@ -6,14 +6,23 @@ import { ConfigSystem } from "../systems/CoreConfigSystem.js";
 import { Logger } from "../systems/CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import fs from "fs/promises";
+import { Stats } from "node:fs";
 
-export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBase): void {
+export async function browseTo(filePath: string, base?: Shared.FileBrowser.PathBase): Promise<void> {
     const fullPath = Shared.FileBrowser.makeAbsolute(filePath, base, ConfigSystem.getAppConfig());
     let command: string | undefined = undefined;
 
-    if (!existsSync(fullPath)) {
-        Logger.info(Shared.Log.Channel.FileBrowser, "Browsing to file that doesn't exist, opening folder", fullPath);
+    const stat = await _tryStat(fullPath);
+
+    if (!stat) {
+        Logger.info(
+            Shared.Log.Channel.FileBrowser,
+            "Browsing to path that doesn't exist, opening containing directory",
+            fullPath,
+        );
         command = _getBrowseToDirectoryCommand(pathe.dirname(fullPath));
+    } else if (!stat.isFile()) {
+        command = _getBrowseToDirectoryCommand(fullPath);
     } else {
         command = _getBrowseToFileSelectCommand(fullPath);
     }
@@ -43,6 +52,14 @@ export function browseToFile(filePath: string, base?: Shared.FileBrowser.PathBas
             }
         },
     );
+}
+
+async function _tryStat(path: string): Promise<Stats | undefined> {
+    try {
+        return await fs.stat(path);
+    } catch (e) {
+        return undefined;
+    }
 }
 
 function _getBrowseToFileSelectCommand(filePath: string): string | undefined {

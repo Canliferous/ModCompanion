@@ -11,7 +11,7 @@ export const FileBrowserApi = {
         ipcMain.on(
             Shared.Ipc.Channels.FileBrowser_BrowseToFileAction,
             (event: Electron.IpcMainEvent, filePath: string, base?: Shared.FileBrowser.PathBase): void => {
-                Core.FileBrowseHelper.browseToFile(filePath, base);
+                Core.FileBrowseHelper.browseTo(filePath, base);
             },
         );
 

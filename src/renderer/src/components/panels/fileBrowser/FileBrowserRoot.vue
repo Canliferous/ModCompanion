@@ -243,10 +243,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.ActionBrowseToFolder,
                 disabled: entries.length !== 1,
                 onSelect() {
-                    window.electronAPI.fileBrowser.browseToFile(
-                        entries[0].path,
-                        Shared.FileBrowser.PathBases.RootRelative,
-                    );
+                    window.electronAPI.fileBrowser.browseTo(entries[0].path, Shared.FileBrowser.PathBases.RootRelative);
                 },
             },
         ],

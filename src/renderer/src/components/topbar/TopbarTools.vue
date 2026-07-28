@@ -18,6 +18,8 @@
 import { AppDesign } from "~/design/AppDesign.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { useFgdStore } from "~/store/FgdStore.js";
+import { getAppConfig } from "~/renderer-config.js";
+import * as Shared from "mod_companion_shared";
 
 const fgdStore = useFgdStore();
 
@@ -37,6 +39,20 @@ const fgdIcon = computed(() => {
 
 const itemsTools = computed<DropdownMenuItem[][]>(() => [
     [
+        {
+            label: "Open Directory",
+            children: [
+                {
+                    label: "Project Root",
+                    onSelect() {
+                        window.electronAPI.fileBrowser.browseTo(
+                            getAppConfig().rootPath,
+                            Shared.FileBrowser.PathBases.Absolute,
+                        );
+                    },
+                },
+            ],
+        },
         {
             label: "Build FGD",
             slot: "fgd",

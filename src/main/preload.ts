@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.invoke(Shared.Ipc.Channels.FileBrowser_FileEntryQuery, filePath, base),
         execute: (filePath: string | string[], base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_ExecuteAction, filePath, base),
-        browseToFile: (filePath: string, base: Shared.FileBrowser.PathBase) =>
+        browseTo: (filePath: string, base: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_BrowseToFileAction, filePath, base),
         open: (filePath: string, base?: Shared.FileBrowser.PathBase) =>
             ipcRenderer.send(Shared.Ipc.Channels.FileBrowser_OpenAction, filePath, base),

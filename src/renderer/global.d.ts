@@ -21,7 +21,7 @@ declare global {
             fileBrowser: {
                 listFiles: (dirPath: string) => Promise<Shared.FileBrowser.FileEntries>;
                 getFileEntry: (filePath: string, base?: Shared.FileBrowser.PathBase) => Promise<FileEntry | undefined>;
-                browseToFile: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
+                browseTo: (filePath: string, base?: Shared.FileBrowser.PathBase) => void;
 
                 /**
                  * Open one or more files with their default application. To execute a binaries, use launchFile

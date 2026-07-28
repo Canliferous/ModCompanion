@@ -66,7 +66,7 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
             icon: AppDesign.Icons.ActionBrowseToFolder,
             onSelect() {
                 const filePath = pathe.join(getAppConfig().mapSourcePath, props.mapPath);
-                window.electronAPI.fileBrowser.browseToFile(filePath);
+                window.electronAPI.fileBrowser.browseTo(filePath);
             },
         },
         {
@@ -75,7 +75,7 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
             onSelect() {
                 const bspName = pathe.basename(props.mapPath).replace(".vmf", ".bsp");
                 const filePath = pathe.join(getAppConfig().mapOutputPath, bspName);
-                window.electronAPI.fileBrowser.browseToFile(filePath);
+                window.electronAPI.fileBrowser.browseTo(filePath);
             },
         },
     ],
