@@ -108,6 +108,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
             ipcRenderer.on(Shared.Ipc.Channels.AssetNavigateToId, (e: IpcRendererEvent, assetHash: string) =>
                 callback(assetHash),
             ),
+        subscribeScanProgress: (callback: (progressNorm: number) => void) =>
+            ipcRenderer.on(Shared.Ipc.Channels.AssetScanProgressEvent, (e: IpcRendererEvent, progressNorm: number) =>
+                callback(progressNorm),
+            ),
         createAsset: (primaryFile: string, otherFiles: string[]) =>
             ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreate, primaryFile, otherFiles),
         createEmpty: (mcaFilePath: string) => ipcRenderer.invoke(Shared.Ipc.Channels.AssetCreateEmpty, mcaFilePath),

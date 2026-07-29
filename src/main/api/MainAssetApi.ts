@@ -91,4 +91,7 @@ export const AssetRepositoryApi = {
     notifyNavigateToAssetId(assetId: string): void {
         IpcHelper.send(Shared.Ipc.Channels.AssetNavigateToId, assetId);
     },
+    notifyScanProgress(progressNorm: number): void {
+        IpcHelper.send(Shared.Ipc.Channels.AssetScanProgressEvent, progressNorm);
+    },
 };

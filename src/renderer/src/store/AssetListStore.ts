@@ -8,6 +8,7 @@ import { Channel } from "mod_companion_shared/SharedLog.js";
 export const useAssetListStore = defineStore("asset-list", () => {
     const assets = ref<Shared.Asset.AssetMap>(new Map());
     const refreshing = ref(false);
+    const scanProgress = ref<number>(0);
 
     const activateEvent = useEvent<Shared.Asset.AssetId | undefined>();
     const selectEvent = useEvent<Shared.Asset.AssetId[]>();
@@ -32,6 +33,10 @@ export const useAssetListStore = defineStore("asset-list", () => {
     window.electronAPI.asset.subscribeRescanned((event) => {
         refreshing.value = false;
         assets.value = event.assets;
+    });
+
+    window.electronAPI.asset.subscribeScanProgress((progressNorm) => {
+        scanProgress.value = progressNorm;
     });
 
     async function createAsset(primaryFile: string, otherFiles: string[]): Promise<Shared.Asset.Asset[]> {
@@ -109,5 +114,6 @@ export const useAssetListStore = defineStore("asset-list", () => {
         activateEvent,
         selectEvent,
         writtenEvent,
+        scanProgress,
     };
 });

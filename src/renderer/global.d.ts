@@ -81,6 +81,7 @@ declare global {
                 subscribeAdded: (callback: (event: Shared.Asset.AssetAddedEvent) => void) => IpcRenderer;
                 subscribeUpdated: (callback: (event: Shared.Asset.AssetUpdatedEvent) => void) => IpcRenderer;
                 subscribeNavigateToHash: (callback: (assetHash: string) => void) => IpcRenderer;
+                subscribeScanProgress: (callback: (progressNorm: number) => void) => IpcRenderer;
                 createAsset: (
                     primaryFile: string,
                     otherFiles: string[],

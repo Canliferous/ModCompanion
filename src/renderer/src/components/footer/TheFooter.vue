@@ -9,7 +9,12 @@
                 <USeparator orientation="vertical" />
                 <FooterTcArtifactsStatus />
                 <USeparator orientation="vertical" />
-                <FooterConversionStatus />
+                <template v-if="assetListStore.refreshing">
+                    <FooterAssetScanProgress />
+                </template>
+                <template v-else>
+                    <FooterConversionStatus />
+                </template>
             </div>
         </div>
     </div>
@@ -18,6 +23,10 @@
 <script setup lang="ts">
 import FooterConversionStatus from "~/components/footer/FooterConversionStatus.vue";
 import FooterLog from "~/components/footer/FooterLog.vue";
+import { useAssetListStore } from "~/store/AssetListStore.js";
+import FooterAssetScanProgress from "~/components/footer/FooterAssetScanProgress.vue";
+
+const assetListStore = useAssetListStore();
 </script>
 
 <style scoped></style>

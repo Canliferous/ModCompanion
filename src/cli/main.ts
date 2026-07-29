@@ -33,7 +33,7 @@ program
 
         Core.FileBrowserSystem.initSystem(undefined, true);
         await new Promise<Shared.Asset.AssetRescanEvent>((resolve) => {
-            Core.AssetRepositorySystem.initSystem(resolve);
+            Core.AssetRepositorySystem.initSystem({ scanFunc: resolve });
         });
         const assets = Core.AssetRepositorySystem.getAssetMap();
 
@@ -227,7 +227,7 @@ program
         Core.FileBrowserSystem.initSystem(undefined, true);
         Core.Logger.info(Shared.Log.Channel.Cli, "Scanning assets...");
         await new Promise<Shared.Asset.AssetRescanEvent>((resolve) => {
-            Core.AssetRepositorySystem.initSystem(resolve);
+            Core.AssetRepositorySystem.initSystem({ scanFunc: resolve });
         });
 
         Core.Logger.info(Shared.Log.Channel.Cli, "Scanning asset groups...");

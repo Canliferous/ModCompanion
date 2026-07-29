@@ -60,10 +60,16 @@ export const WorkerSystem = {
     createResultWorker<K extends Shared.Workers.WorkerFile>(
         workerFile: K,
         workerArgs: Shared.Workers.WorkerArgs[K],
+        postCallback?: (payload: Shared.Workers.WorkerPostMessages[K]) => void,
     ): Promise<Shared.Workers.WorkerDoneMessages[K] | undefined> {
         return new Promise((resolve) => {
             let result: Shared.Workers.WorkerDoneMessages[K] | undefined = undefined;
-            const worker = WorkerSystem.createWorker(workerFile, workerArgs, (payload) => (result = payload));
+            const worker = WorkerSystem.createWorker(
+                workerFile,
+                workerArgs,
+                (payload) => (result = payload),
+                postCallback,
+            );
             worker.on("exit", () => resolve(result));
         });
     },

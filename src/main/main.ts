@@ -28,7 +28,11 @@ const systems: System[] = [
     { name: "FileBrowser", initFunction: () => Core.FileBrowserSystem.initSystem(FileBrowserApi.notifyDirUpdated) },
     {
         name: "AssetRepository",
-        initFunction: () => Core.AssetRepositorySystem.initSystem(AssetRepositoryApi.notifyAssetsRescanned),
+        initFunction: () =>
+            Core.AssetRepositorySystem.initSystem({
+                scanFunc: AssetRepositoryApi.notifyAssetsRescanned,
+                scanProgressFunc: AssetRepositoryApi.notifyScanProgress,
+            }),
     },
     { name: "Api", initFunction: initApiSystem },
     { name: "Window", initFunction: () => WindowSystem.initSystem(_stopSystems) },

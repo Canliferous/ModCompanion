@@ -1,6 +1,6 @@
 <template>
     <UPopover v-model:open="open">
-        <UButton size="sm" variant="ghost">
+        <UButton size="xs" variant="ghost">
             <span v-if="status === 'idle'" class="text-muted">Conversion Agent Idle</span>
             <span v-if="status === 'working'" class="text-info flex items-center gap-1">
                 <MConversionStateIcon :state="Shared.Conversion.State.InProgress" />

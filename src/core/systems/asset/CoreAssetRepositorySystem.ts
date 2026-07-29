@@ -16,9 +16,14 @@ import { WorkerSystem } from "../CoreWorkerSystem.js";
 let assetMap: Shared.Asset.AssetMap = new Map();
 
 let assetRescanNotifyFunc: Shared.Asset.AssetRescanNotifyFunc | undefined = undefined;
+let assetScanProgressFunc: Shared.Asset.AssetScanProgressNotifyFunc | undefined = undefined;
 export const AssetRepositorySystem = {
-    initSystem(notifyFunc?: Shared.Asset.AssetRescanNotifyFunc): boolean {
-        assetRescanNotifyFunc = notifyFunc;
+    initSystem(funcs?: {
+        scanFunc?: Shared.Asset.AssetRescanNotifyFunc;
+        scanProgressFunc?: Shared.Asset.AssetScanProgressNotifyFunc;
+    }): boolean {
+        assetRescanNotifyFunc = funcs?.scanFunc;
+        assetScanProgressFunc = funcs?.scanProgressFunc;
         FileBrowserSystem.getIndexDoneEvent()?.on((payload) => {
             AssetRepositorySystem.scan(payload);
         });
@@ -35,9 +40,15 @@ export const AssetRepositorySystem = {
         const fileIndex = index ?? FileBrowserSystem.getIndex();
 
         const { millis } = await Shared.Timing.timeMillisAsync(async () => {
-            const result = await WorkerSystem.createResultWorker(Shared.Workers.WorkerFile.AssetScanner, {
-                index: fileIndex,
-            });
+            const result = await WorkerSystem.createResultWorker(
+                Shared.Workers.WorkerFile.AssetScanner,
+                {
+                    index: fileIndex,
+                },
+                (payload) => {
+                    assetScanProgressFunc?.(payload.progressNorm);
+                },
+            );
             if (result) {
                 assetMap = result;
             } else {
