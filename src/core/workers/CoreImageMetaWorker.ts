@@ -1,12 +1,12 @@
-import { parentPort } from "worker_threads";
 import fs from "fs/promises";
 import exifreader from "exifreader";
 import * as Shared from "mod_companion_shared";
-import { useWorkerThreadData } from "../helpers/CoreWorkerHelper.js";
+import { useWorkerThreadData, useWorkerThreadMessages } from "../helpers/CoreWorkerHelper.js";
 
 const data = useWorkerThreadData<typeof Shared.Workers.WorkerFile.ImageMeta>();
+const messages = useWorkerThreadMessages<typeof Shared.Workers.WorkerFile.ImageMeta>();
 
-runImageMetaWorker(data.args.filePath).then((result) => parentPort?.postMessage(result));
+runImageMetaWorker(data.args.filePath).then((result) => messages.done(result));
 
 async function runImageMetaWorker(filePath: any): Promise<Shared.ImageMeta.ImageMetaReport | undefined> {
     if (typeof filePath !== "string") {
@@ -19,7 +19,7 @@ async function runImageMetaWorker(filePath: any): Promise<Shared.ImageMeta.Image
         const result: Shared.ImageMeta.ImageMetaReport = { filePath, tags };
         return result;
     } catch (e) {
-        console.warn("Failed to read image metadata from", filePath, e);
+        messages.log.warning(Shared.Log.Channel.Generic, "Failed to read image metadata from", filePath, e);
         return undefined;
     }
 }

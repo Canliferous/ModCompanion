@@ -1,10 +1,10 @@
-import { parentPort } from "worker_threads";
 import fs from "node:fs/promises";
 import * as pathe from "pathe";
 import * as Shared from "mod_companion_shared";
-import { useWorkerThreadData } from "../helpers/CoreWorkerHelper.js";
+import { useWorkerThreadData, useWorkerThreadMessages } from "../helpers/CoreWorkerHelper.js";
 
 const data = useWorkerThreadData<typeof Shared.Workers.WorkerFile.IndexFilesystem>();
+const messages = useWorkerThreadMessages<typeof Shared.Workers.WorkerFile.IndexFilesystem>();
 
 indexFiles(data.args.startDir);
 
@@ -37,7 +37,7 @@ async function indexFiles(startDir: string): Promise<void> {
             }
         }
 
-        parentPort?.postMessage({ dir: dir.substring(startDirLen), entries });
+        messages.post({ dir: dir.substring(startDirLen), entries });
     }
 
     await walkFolder(startDir, startDir.length + 1);

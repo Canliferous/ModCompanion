@@ -13,7 +13,7 @@ const index: Map<string, Shared.FileBrowser.FileEntry[]> = new Map();
 
 let dirUpdatedNotifyFunc: Shared.FileBrowser.DirUpdatedNotifyFunc | undefined = undefined;
 
-function _handleIndexMessage(result: { dir: string; entries: Shared.FileBrowser.FileEntry[] }) {
+function _handleIndexMessage(result: Shared.FileBrowser.FileIndexMessage) {
     const dir = Shared.SourceFs.forwardSlashed(result.dir);
     index.set(dir, result.entries);
     dirUpdatedNotifyFunc?.(dir, { entries: result.entries, valid: true });
@@ -110,10 +110,14 @@ export const FileBrowserSystem = {
     indexFiles() {
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing files...");
         const timeStart = new Date().getTime();
-        const worker = WorkerSystem.createWorker(Shared.Workers.WorkerFile.IndexFilesystem, {
-            startDir: ConfigSystem.getAppConfig().rootPath,
-        });
-        worker.on("message", _handleIndexMessage);
+        const worker = WorkerSystem.createWorker(
+            Shared.Workers.WorkerFile.IndexFilesystem,
+            {
+                startDir: ConfigSystem.getAppConfig().rootPath,
+            },
+            undefined,
+            _handleIndexMessage,
+        );
         worker.on("exit", () => {
             const timeEnd = new Date().getTime();
             const totalEntries = index.values().reduce((sum, a) => sum + a.length, 0);

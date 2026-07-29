@@ -4,6 +4,7 @@ import * as Shared from "mod_companion_shared";
 import { getRootDir } from "../helpers/CoreFilesystem.js";
 import { AppWorkerData } from "mod_companion_shared/SharedWorkers.js";
 import { ConfigSystem } from "./CoreConfigSystem.js";
+import { Logger } from "./CoreLogSystem.js";
 
 const workerList: worker_threads.Worker[] = [];
 
@@ -19,6 +20,8 @@ export const WorkerSystem = {
     createWorker<K extends Shared.Workers.WorkerFile>(
         workerFile: K,
         workerArgs: Shared.Workers.WorkerArgs[K],
+        doneCallback?: (payload: Shared.Workers.WorkerDoneMessages[K]) => void,
+        postCallback?: (payload: Shared.Workers.WorkerPostMessages[K]) => void,
     ): worker_threads.Worker {
         const data: AppWorkerData<Shared.Workers.WorkerArgs[K]> = {
             args: workerArgs,
@@ -42,16 +45,25 @@ export const WorkerSystem = {
             }
         });
 
+        worker.on("message", (data: Shared.Workers.WorkerMessage<Shared.Workers.MessageType, any>) => {
+            if (data.type === Shared.Workers.MessageType.Log) {
+                Logger.processLog(data.payload, true);
+            } else if (data.type === Shared.Workers.MessageType.Done) {
+                doneCallback?.(data.payload as Shared.Workers.WorkerDoneMessages[K]);
+            } else if (data.type === Shared.Workers.MessageType.Post) {
+                postCallback?.(data.payload as Shared.Workers.WorkerPostMessages[K]);
+            }
+        });
+
         return worker;
     },
     createResultWorker<K extends Shared.Workers.WorkerFile>(
         workerFile: K,
         workerArgs: Shared.Workers.WorkerArgs[K],
-    ): Promise<Shared.Workers.WorkerResults[K] | undefined> {
+    ): Promise<Shared.Workers.WorkerDoneMessages[K] | undefined> {
         return new Promise((resolve) => {
-            let result: Shared.Workers.WorkerResults[K] | undefined = undefined;
-            const worker = WorkerSystem.createWorker(workerFile, workerArgs);
-            worker.on("message", (r) => (result = r));
+            let result: Shared.Workers.WorkerDoneMessages[K] | undefined = undefined;
+            const worker = WorkerSystem.createWorker(workerFile, workerArgs, (payload) => (result = payload));
             worker.on("exit", () => resolve(result));
         });
     },

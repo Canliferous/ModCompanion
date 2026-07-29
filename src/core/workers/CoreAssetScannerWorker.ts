@@ -2,18 +2,20 @@ import * as Shared from "mod_companion_shared";
 import * as pathe from "pathe";
 import fs from "node:fs/promises";
 import * as sourcelib from "sourcelib";
-import { useWorkerThreadData } from "../helpers/CoreWorkerHelper.js";
-import { parentPort } from "worker_threads";
+import { useWorkerThreadData, useWorkerThreadMessages } from "../helpers/CoreWorkerHelper.js";
 
 const data = useWorkerThreadData<typeof Shared.Workers.WorkerFile.AssetScanner>();
+const messages = useWorkerThreadMessages<typeof Shared.Workers.WorkerFile.AssetScanner>();
 
-_buildAssets(data.args.index).then((result) => parentPort?.postMessage(result));
+_buildAssets(data.args.index).then((result) => messages.done(result));
 
 async function _buildAssets(
     index: Map<string, Shared.FileBrowser.FileEntry[]>,
 ): Promise<Map<Shared.Asset.AssetId, Shared.Asset.Asset>> {
     const assets = new Map<Shared.Asset.AssetId, Shared.Asset.Asset>();
 
+    const progressTotal = index.size;
+    let progressNow = 0;
     for (const filePaths of index.values()) {
         for (const filePath of filePaths) {
             let asset: Shared.Asset.Asset | undefined = undefined;
@@ -27,23 +29,29 @@ async function _buildAssets(
             if (!asset) continue;
             const duplicateOther = assets.get(asset.def.id);
             if (duplicateOther !== undefined) {
-                // Logger.warning(
-                //     Shared.Log.Channel.Assets,
-                //     "Asset definition file",
-                //     filePath,
-                //     "has the same id as",
-                //     duplicateOther.def.id,
-                //     definition.id,
-                //     "and will be ignored",
-                // );
+                messages.log.warning(
+                    Shared.Log.Channel.Assets,
+                    "Asset",
+                    filePath,
+                    "has the same id as",
+                    duplicateOther.def.id,
+                    asset.def.id,
+                    "and will be ignored",
+                );
                 continue;
             }
 
             assets.set(asset.def.id, asset);
         }
+
+        _postProgress(progressTotal, ++progressNow);
     }
 
     return assets;
+}
+
+function _postProgress(progressTotal: number, progressNow: number) {
+    messages.post({ progressNorm: progressTotal / progressNow });
 }
 
 async function _scanContentFile(filePath: Shared.FileBrowser.FileEntry): Promise<Shared.Asset.Asset | undefined> {
@@ -60,7 +68,7 @@ async function _scanContentFile(filePath: Shared.FileBrowser.FileEntry): Promise
     }
 
     if (def === undefined) {
-        // Logger.warning(Shared.Log.Channel.Assets, "Asset", filePath, "is invalid and will be ignored");
+        messages.log.warning(Shared.Log.Channel.Assets, "Asset", filePath, "is invalid and will be ignored");
         return undefined;
     }
 
@@ -93,15 +101,21 @@ async function _readMcaFile(fileName: string, fileRootPath: string): Promise<Sha
     const unk = JSON.parse(text);
 
     if (unk.type === undefined) {
-        // Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no type");
+        messages.log.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no type");
         return undefined;
     }
     if (unk.id === undefined) {
-        // Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no id");
+        messages.log.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has no id");
         return undefined;
     }
     if (!Shared.Asset.isValidAssetType(unk.type)) {
-        // Logger.warning(Shared.Log.Channel.Assets, "Asset definition file", fileName, "has invalid type ", unk.type);
+        messages.log.warning(
+            Shared.Log.Channel.Assets,
+            "Asset definition file",
+            fileName,
+            "has invalid type ",
+            unk.type,
+        );
         return undefined;
     }
 

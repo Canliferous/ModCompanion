@@ -13,6 +13,11 @@ export interface FileEntries {
     valid: boolean;
 }
 
+export interface FileIndexMessage {
+    dir: string;
+    entries: FileEntry[];
+}
+
 export type DirUpdatedNotifyFunc = (dir: string, entries: FileEntries) => void;
 
 export function isIgnoredPathName(name: string): boolean {
