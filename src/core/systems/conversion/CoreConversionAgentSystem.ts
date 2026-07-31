@@ -85,7 +85,10 @@ export const ConversionAgentSystem = {
                 _setState(asset.def.id, Shared.Conversion.State.NotConvertible);
                 continue;
             }
-            if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
+
+            const valid = _isValidAsset(asset.def);
+            const contentExists = _doContentFilesExist(asset.def);
+            if (!valid || !contentExists) {
                 _setState(asset.def.id, Shared.Conversion.State.Invalid);
                 continue;
             }
@@ -230,7 +233,11 @@ function _isConvertible(asset: Shared.Asset.AssetDef): boolean {
 
 function _doContentFilesExist(asset: Shared.Asset.AssetDef): boolean {
     if (asset.contentFiles === undefined) return false;
-    return !asset.contentFiles.map((c) => existsSync(makeContentPathAbsolute(c))).some((c) => !c);
+    for (const c of asset.contentFiles) {
+        const absPath = makeContentPathAbsolute(c);
+        if (!existsSync(absPath)) return false;
+    }
+    return true;
 }
 
 function _onJobPromiseDone(id: Shared.Asset.AssetId, stateAfter: Shared.Conversion.State, log: string | undefined) {
