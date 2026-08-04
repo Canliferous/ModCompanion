@@ -95,6 +95,17 @@ export interface AssetDef extends AssetDefFileArrays {
     credits?: string;
 }
 
+export interface Asset {
+    /** Asset definition data read from the mca file or generated implicitly */
+    readonly def: AssetDef;
+
+    /** Path to the asset's source file like .mca or .qc path */
+    readonly defFilePath?: string;
+
+    /** When true, this asset was generated at app start and doesn't live in disk */
+    readonly isTransient?: boolean;
+}
+
 export interface AssociatedFiles {
     substanceDesigner?: string;
     substancePainter?: string;
@@ -129,22 +140,6 @@ export function getAssociatedEntryName(field: keyof AssociatedFiles) {
     return AssociatedFilesEntries.find((value) => value.field === field);
 }
 
-export interface Asset {
-    /** Asset definition data read from the mca file or generated implicitly */
-    readonly def: AssetDef;
-
-    /** Path to the asset's source file like .mca or .qc path */
-    readonly defFilePath?: string;
-
-    /** When true, this asset was generated at app start and doesn't live in disk */
-    readonly isTransient?: boolean;
-}
-
-export interface TextureAsset extends Asset {
-    /** @inheritDoc */
-    readonly def: TextureAssetDef;
-}
-
 export interface AssetRescanEvent {
     assets: Map<AssetId, Asset>;
     totalTimeMillis?: number;
@@ -159,6 +154,11 @@ export interface AssetAddedEvent {
 
 export interface AssetUpdatedEvent {
     assets: Asset[];
+}
+
+export interface TextureAsset extends Asset {
+    /** @inheritDoc */
+    readonly def: TextureAssetDef;
 }
 
 export type AssetUpdatedNotifyFunc = (event: AssetUpdatedEvent) => void;
@@ -180,13 +180,31 @@ export interface ModelAssetDef extends AssetDef {
     type: typeof Types.Model;
 }
 
+export interface ModelAsset extends Asset {
+    /** @inheritDoc */
+    readonly def: ModelAssetDef;
+}
+
+export function isModelAssetDef(asset: AssetDef | undefined): asset is ModelAssetDef {
+    return asset?.type === Types.Model;
+}
+
 export interface MaterialAssetDef extends AssetDef {
     type: typeof Types.Material;
     vmtDocument?: VmtDocument;
 }
 
-export function isModelAssetDef(asset: AssetDef | undefined): asset is ModelAssetDef {
-    return asset?.type === Types.Model;
+export interface MaterialAsset extends Asset {
+    /** @inheritDoc */
+    readonly def: MaterialAssetDef;
+}
+
+export function isMaterialAssetDef(asset: AssetDef | undefined): asset is MaterialAssetDef {
+    return asset?.type === Types.Material;
+}
+
+export function isMaterialAsset(asset: Asset | undefined): asset is MaterialAsset {
+    return isMaterialAssetDef(asset?.def);
 }
 
 // ------------------------
