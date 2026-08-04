@@ -166,8 +166,10 @@ async function _recreateWatcher(dirs: string[]) {
 
     const rootPath = ConfigSystem.getAppConfig().rootPath;
     const fullDirs = dirs.map((d) => pathe.join(rootPath, d));
+    const timeStart = new Date().getTime();
 
-    Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullDirs.join(", "));
+    const fullDirsConcat = fullDirs.join(", ");
+    Logger.info(Shared.Log.Channel.FileBrowser, "Watching", fullDirsConcat);
 
     watcher = chokidar.watch(fullDirs, {
         ignoreInitial: true,
@@ -178,4 +180,16 @@ async function _recreateWatcher(dirs: string[]) {
     watcher.on("add", _add);
     watcher.on("change", _change);
     watcher.on("unlink", _delete);
+    watcher.on("ready", () => {
+        const timeEnd = new Date().getTime();
+        const durationMillis = timeEnd - timeStart;
+        Logger.info(
+            Shared.Log.Channel.FileBrowser,
+            "File watcher for",
+            fullDirsConcat,
+            "ready in",
+            durationMillis,
+            "ms",
+        );
+    });
 }
