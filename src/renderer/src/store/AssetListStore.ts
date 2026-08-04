@@ -36,6 +36,7 @@ export const useAssetListStore = defineStore("asset-list", () => {
     });
 
     window.electronAPI.asset.subscribeScanProgress((progressNorm) => {
+        refreshing.value = true;
         scanProgress.value = progressNorm;
     });
 
