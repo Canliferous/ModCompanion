@@ -75,7 +75,9 @@ async function _startSystems(): Promise<void> {
 
     let success = false;
     const failedSystems: string[] = [];
+    let totalStartupTimeMillis = 0;
     for (const system of systems) {
+        const timeStart = new Date().getTime();
         const systemResult = system.initFunction();
 
         success = false;
@@ -89,18 +91,24 @@ async function _startSystems(): Promise<void> {
             Core.Logger.error(Shared.Log.Channel.MainSystems, e);
             success = false;
         }
+        const timeEnd = new Date().getTime();
+        const totalMillis = timeEnd - timeStart;
+        totalStartupTimeMillis += totalMillis;
 
         if (!success) {
-            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System FAIL`);
+            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System FAIL (${totalMillis}ms)`);
             failedSystems.push(system.name);
             break;
         } else {
-            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System OK`);
+            Core.Logger.info(Shared.Log.Channel.MainSystems, `${system.name} System OK (${totalMillis}ms)`);
         }
     }
 
     if (success) {
-        Core.Logger.info(Shared.Log.Channel.MainSystems, "All systems started successfully!");
+        Core.Logger.info(
+            Shared.Log.Channel.MainSystems,
+            `All systems started successfully! (${totalStartupTimeMillis}ms)`,
+        );
     } else {
         await _showStartupFailureWindow(failedSystems);
         app.quit();

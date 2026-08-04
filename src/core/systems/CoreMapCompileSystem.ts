@@ -42,7 +42,7 @@ export const MapCompileSystem = {
         workerInterval = setInterval(_workQueue, 200);
 
         const config = ConfigSystem.getAppConfig();
-        child_process.spawnSync(
+        child_process.spawn(
             `chmod +x ${config.vbspExePath} ${config.postcompilerExePath} ${config.vvisExePath} ${config.vradExePath}`,
             {
                 shell: true,

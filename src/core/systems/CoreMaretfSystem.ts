@@ -18,7 +18,7 @@ export const MareTfSystem = {
         if (os.type().toLowerCase() === "linux") {
             binary = pathe.join(getMainAssetsDir(), "lib", "maretf");
 
-            child_process.spawnSync(`chmod +x ${binary}`, { shell: true });
+            child_process.spawn(`chmod +x ${binary}`, { shell: true });
             return true;
         }
         if (os.type().toLowerCase() === "windows_nt") {
