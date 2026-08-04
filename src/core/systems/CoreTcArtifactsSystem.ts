@@ -21,23 +21,6 @@ export const TcArtifactsSystem = {
         if (!config.teamCityArtifactCloud || !config.teamCityArtifactCloudBucket) {
             console.warn("TeamCity artifact cloud not configured. Disabling system");
             unconfigured = true;
-            return true;
-        }
-        const client = new AWS.S3(config.teamCityArtifactCloud);
-
-        try {
-            const response = await client.listBuckets();
-            const bucketFound = response.Buckets?.some((b) => b.Name === config.teamCityArtifactCloudBucket);
-            if (!bucketFound) {
-                console.warn(
-                    `TeamCity artifact cloud system connected but couldn't find bucket ${config.teamCityArtifactCloudBucket}. Buckets are: ${response.Buckets?.map((b) => b.Name).join(", ") ?? "<none>"}`,
-                );
-            } else {
-                s3Client = client;
-                s3Bucket = config.teamCityArtifactCloudBucket;
-            }
-        } catch (e) {
-            console.warn("Couldn't connect to TeamCity artifact cloud service", e);
         }
 
         return true;
@@ -130,6 +113,25 @@ function _sleep(timeMs: number): Promise<void> {
     });
 }
 
+async function _connect() {
+    const config = ConfigSystem.getAppConfig();
+    const client = new AWS.S3(config.teamCityArtifactCloud);
+
+    try {
+        const response = await client.listBuckets();
+        const bucketFound = response.Buckets?.some((b) => b.Name === config.teamCityArtifactCloudBucket);
+        if (!bucketFound) {
+            Logger.warning(
+                Shared.Log.Channel.TcArtifacts,
+                `TeamCity artifact cloud system connected but couldn't find bucket ${config.teamCityArtifactCloudBucket}. Buckets are: ${response.Buckets?.map((b) => b.Name).join(", ") ?? "<none>"}`,
+            );
+        } else {
+            s3Client = client;
+            s3Bucket = config.teamCityArtifactCloudBucket;
+        }
+    } catch (e) {}
+}
+
 async function _useS3<T>(callback: (client: AWS.S3, bucket: string) => Promise<T>): Promise<T | undefined> {
     if (unconfigured) return undefined;
 
@@ -138,7 +140,7 @@ async function _useS3<T>(callback: (client: AWS.S3, bucket: string) => Promise<T
             return callback(s3Client, s3Bucket);
         }
 
-        await TcArtifactsSystem.initSystem();
+        await _connect();
         await _sleep(2000);
     }
 
