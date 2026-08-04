@@ -4,6 +4,7 @@ import { ConfigSystem } from "./systems/CoreConfigSystem.js";
 import { FileBrowserSystem } from "./systems/CoreFileBrowserSystem.js";
 import { HotReloadSystem } from "./systems/CoreHotReloadSystem.js";
 import { Logger } from "./systems/CoreLogSystem.js";
+import { MaterialSystem } from "./systems/CoreMaterialSystem.js";
 import { MapCompileSystem } from "./systems/CoreMapCompileSystem.js";
 import { MareTfSystem } from "./systems/CoreMaretfSystem.js";
 import { StrataInteropSystem } from "./systems/CoreStrataInteropSystem.js";
@@ -35,6 +36,7 @@ export {
     FileBrowserSystem,
     HotReloadSystem,
     Logger,
+    MaterialSystem,
     MapCompileSystem,
     MareTfSystem,
     StrataInteropSystem,

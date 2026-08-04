@@ -30,7 +30,10 @@ const systems: System[] = [
         name: "AssetRepository",
         initFunction: () =>
             Core.AssetRepositorySystem.initSystem({
-                scanFunc: AssetRepositoryApi.notifyAssetsRescanned,
+                scanFunc: (event) => {
+                    AssetRepositoryApi.notifyAssetsRescanned(event);
+                    Core.MaterialSystem.buildMaterialTextureIndex(event.assets);
+                },
                 scanProgressFunc: AssetRepositoryApi.notifyScanProgress,
             }),
     },
@@ -64,6 +67,7 @@ const systems: System[] = [
     { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
     { name: "HotReload", initFunction: Core.HotReloadSystem.initSystem },
     { name: "Workers", initFunction: Core.WorkerSystem.initSystem, shutdownFunction: Core.WorkerSystem.deinitSystem },
+    { name: "Materials", initFunction: Core.MaterialSystem.initSystem },
 ];
 
 async function _startSystems(): Promise<void> {

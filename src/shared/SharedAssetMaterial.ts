@@ -2,7 +2,8 @@ import { AppConfig } from "./SharedAppConfig.js";
 import { MaterialAssetDef, Types } from "./SharedAsset.js";
 import { forwardSlashed, getRootRelativePath } from "./SharedSourceFs.js";
 
-export type VmtDocument = {};
+// todo: find a proper way to expose this type from sourcelib
+export type VmtDocument = Record<string, object | number | string | boolean>;
 
 function _deriveMaterialDisplayName(vmtFile: string): string {
     const typeDir = "materials";
