@@ -77,15 +77,18 @@ export const TcArtifactsSystem = {
     async downloadMap(objectKey: string, mapName: string): Promise<boolean> {
         const result = await _useS3(async (client, bucket): Promise<boolean> => {
             Logger.info(Shared.Log.Channel.TcArtifacts, `Downloading map object ${objectKey} to ${mapName}`);
-            const a = await client.getObject({ Bucket: bucket, Key: objectKey });
-            const s3Stream = a.Body as NodeJS.ReadableStream;
+            const response = await client.getObject({ Bucket: bucket, Key: objectKey });
+            const s3Stream = response.Body as NodeJS.ReadableStream;
             if (!s3Stream) {
                 Logger.warning(Shared.Log.Channel.TcArtifacts, "Failed to establish S3 stream");
                 return false;
             }
 
-            if (a.ContentLength) {
-                Logger.info(Shared.Log.Channel.TcArtifacts, `Map file is ${humanizePlus.fileSize(a.ContentLength)}`);
+            if (response.ContentLength) {
+                Logger.info(
+                    Shared.Log.Channel.TcArtifacts,
+                    `Map file is ${humanizePlus.fileSize(response.ContentLength)}`,
+                );
             }
 
             const fullPath = pathe.join(
@@ -101,6 +104,14 @@ export const TcArtifactsSystem = {
             const writeStream = createWriteStream(fullPath);
             await pipeline(s3Stream, writeStream);
             Logger.info(Shared.Log.Channel.TcArtifacts, `Download complete`);
+            return true;
+        });
+        return result ?? false;
+    },
+    async deleteMap(objectKey: string): Promise<boolean> {
+        const result = await _useS3(async (client, bucket): Promise<boolean> => {
+            Logger.info(Shared.Log.Channel.TcArtifacts, "Deleting map object", objectKey);
+            const response = await client.deleteObject({ Bucket: bucket, Key: objectKey });
             return true;
         });
         return result ?? false;

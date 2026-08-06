@@ -124,11 +124,15 @@ program
     .command("tc-artifacts")
     .option("-l, --list", "List all artifacts")
     .option("-m, --list-maps", "List all maps and show them pretty")
-    .option("-y, --get-latest-maps", "Download latest campaign maps (Those starting with r2_)")
+    .option("-y, --get-latest-maps", "Download latest campaign maps (Those starting with r2_a)")
+    .option("-c, --clean", "Delete all non-campaign maps and old campaign maps (60 days or older)")
+    .option("-d, --dry", "Dry run. Don't actually do anything, just log what would happen")
     .action(async (opts) => {
+        const dry = Boolean(opts.dry);
         const startTime = new Date().getTime();
         await Core.ConfigSystem.initConfigSystem();
         await Core.TcArtifactsSystem.initSystem();
+        const campaignMapPrefix = "r2_a";
 
         if (!(await Core.TcArtifactsSystem.isCloudConnected())) {
             Core.Logger.error(Shared.Log.Channel.Cli, chalk.green("Failed to connect to TC Cloud. Aborting"));
@@ -195,7 +199,7 @@ program
             const queue: { map: string; info: Shared.TcArtifacts.MapInfo }[] = [];
             let sizeSum = 0;
             for (const [map, infos] of result.maps.entries()) {
-                if (map.startsWith("r2_")) {
+                if (map.startsWith(campaignMapPrefix)) {
                     queue.push({ map, info: infos[0] });
                     sizeSum += infos[0].size;
                 }
@@ -210,12 +214,47 @@ program
                     Shared.Log.Channel.Cli,
                     `Downloading ${chalk.blue(entry.map)} ${chalk.yellow(humanizePlus.fileSize(entry.info.size))}...`,
                 );
-                await Core.TcArtifactsSystem.downloadMap(entry.info.objectKey, entry.map + ".bsp");
+                if (!dry) {
+                    await Core.TcArtifactsSystem.downloadMap(entry.info.objectKey, entry.map + ".bsp");
+                }
             }
 
             const endTime = new Date().getTime();
             const totalTime = (endTime - startTime) / 1000;
             Core.Logger.info(Shared.Log.Channel.Cli, chalk.green(`Done! Took ${totalTime} seconds`));
+        }
+
+        if (opts.clean) {
+            const result = await Core.TcArtifactsSystem.listMaps();
+            if (!result) {
+                Core.Logger.info(Shared.Log.Channel.Cli, "No maps to delete");
+                return;
+            }
+
+            const now = new Date().getTime();
+            const ONE_DAY = 1000 * 60 * 60 * 24;
+            const MAX_AGE = ONE_DAY * 60;
+            for (const [map, infos] of result.maps.entries()) {
+                for (const info of infos) {
+                    const ageMillis = now - info.dateModified.getTime();
+                    const ageDays = ageMillis / ONE_DAY;
+                    const shouldDelete = !map.startsWith(campaignMapPrefix) || ageMillis > MAX_AGE;
+                    if (!shouldDelete) continue;
+
+                    if (!dry) {
+                        await Core.TcArtifactsSystem.deleteMap(info.objectKey);
+                    } else {
+                        Core.Logger.info(
+                            Shared.Log.Channel.Cli,
+                            chalk.gray(`Would now delete map`),
+                            chalk.blue(`${map} - ${info.objectKey}`),
+                            chalk.yellow(`${ageDays} days old`),
+                        );
+                    }
+                }
+            }
+
+            Core.Logger.info(Shared.Log.Channel.Cli, chalk.green("Done deleting maps"));
         }
     });
 
