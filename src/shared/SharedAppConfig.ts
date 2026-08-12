@@ -95,7 +95,7 @@ export interface AppConfig {
     assetDefaults?: AppConfigAssetDefaults;
 
     artifactCloud?: {
-        s3: {
+        s3?: {
             clientConfig?: any; //S3ClientConfig;
             bucket?: string;
             mapsPrefix?: string;

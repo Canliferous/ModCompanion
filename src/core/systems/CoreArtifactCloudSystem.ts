@@ -18,8 +18,13 @@ const RETRIES = 3;
 export const ArtifactCloudSystem = {
     async initSystem() {
         const config = ConfigSystem.getAppConfig();
-        if (!config.artifactCloud) {
-            console.warn("Artifact cloud not configured. Disabling system");
+        if (
+            !config.artifactCloud ||
+            !config.artifactCloud.s3 ||
+            !config.artifactCloud.s3.clientConfig ||
+            !config.artifactCloud.s3.bucket
+        ) {
+            Logger.warning(Shared.Log.Channel.ArtifactCloud, "Artifact cloud not configured. Disabling system");
             unconfigured = true;
         }
 
@@ -39,7 +44,7 @@ export const ArtifactCloudSystem = {
         return _useS3(async (client, bucket): Promise<Shared.ArtifactCloud.ListAllMapsReport | undefined> => {
             const response = await client.listObjectsV2({
                 Bucket: bucket,
-                Prefix: ConfigSystem.getAppConfig().artifactCloud?.s3.mapsPrefix ?? "",
+                Prefix: ConfigSystem.getAppConfig().artifactCloud?.s3?.mapsPrefix ?? "",
             });
             const contents = response?.Contents;
             if (contents === undefined || contents.length === 0) {
@@ -126,8 +131,18 @@ function _sleep(timeMs: number): Promise<void> {
 
 async function _connect() {
     const config = ConfigSystem.getAppConfig();
-    const client = new AWS.S3(config.artifactCloud?.s3.clientConfig);
-    const bucket = config.artifactCloud?.s3.bucket;
+    const client = new AWS.S3(config.artifactCloud?.s3?.clientConfig);
+    const bucket = config.artifactCloud?.s3?.bucket;
+
+    if (!client) {
+        Logger.warning(Shared.Log.Channel.ArtifactCloud, "Client config missing, cannot connect");
+        return;
+    }
+
+    if (!bucket) {
+        Logger.warning(Shared.Log.Channel.ArtifactCloud, "Bucket config missing, cannot connect");
+        return;
+    }
 
     try {
         const response = await client.listBuckets();
@@ -135,7 +150,7 @@ async function _connect() {
         if (!bucketFound) {
             Logger.warning(
                 Shared.Log.Channel.ArtifactCloud,
-                `TeamCity artifact cloud system connected but couldn't find bucket ${bucket}. Buckets are:`,
+                `Successfully connected to S3 but couldn't find bucket ${bucket}. Buckets are:`,
                 response.Buckets?.map((b) => b.Name).join(", ") ?? "(none)",
             );
         } else {
@@ -146,16 +161,20 @@ async function _connect() {
 }
 
 async function _useS3<T>(callback: (client: AWS.S3, bucket: string) => Promise<T>): Promise<T | undefined> {
-    if (unconfigured) return undefined;
+    try {
+        if (unconfigured) return undefined;
 
-    for (let i = 0; i < RETRIES; i++) {
-        if (s3Client && s3Bucket) {
-            return callback(s3Client, s3Bucket);
+        for (let i = 0; i < RETRIES; i++) {
+            if (s3Client && s3Bucket) {
+                return callback(s3Client, s3Bucket);
+            }
+
+            await _connect();
+            await _sleep(2000);
         }
 
-        await _connect();
-        await _sleep(2000);
+        return undefined;
+    } catch (e) {
+        return undefined;
     }
-
-    return undefined;
 }
