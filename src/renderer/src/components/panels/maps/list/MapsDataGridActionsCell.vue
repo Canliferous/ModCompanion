@@ -7,7 +7,7 @@
                 @click="() => compileStore.compileNow(mapPath)"
             />
         </UTooltip>
-        <MapsDataGridActionCloudButton v-if="tcArtifactsStore.connected" :map-path="mapPath" />
+        <MapsDataGridActionCloudButton v-if="artifactCloudStore.connected" :map-path="mapPath" />
         <UTooltip text="Open in Hammer">
             <UButton @click="() => handleOpenInHammer(mapPath)">
                 <template #leading>
@@ -43,13 +43,13 @@ import { useMapCompileStore } from "~/store/MapCompileStore.js";
 import { useMapListStore } from "~/store/MapListStore.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { AppDesign } from "~/design/AppDesign.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
 import MapsDataGridActionCloudButton from "~/components/panels/maps/list/MapsDataGridActionCloudButton.vue";
 import { openMapInGame, openMapInHammer } from "~/helper/LauncherHelper.js";
+import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 
 const compileStore = useMapCompileStore();
 const listStore = useMapListStore();
-const tcArtifactsStore = useTcArtifactsStore();
+const artifactCloudStore = useArtifactCloudStore();
 
 const props = defineProps<{ mapPath: string }>();
 

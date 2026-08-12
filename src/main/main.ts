@@ -64,7 +64,7 @@ const systems: System[] = [
             }),
     },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },
-    { name: "TeamCityArtifactCloud", initFunction: Core.TcArtifactsSystem.initSystem },
+    { name: "ArtifactCloud", initFunction: Core.ArtifactCloudSystem.initSystem },
     { name: "HotReload", initFunction: Core.HotReloadSystem.initSystem },
     { name: "Workers", initFunction: Core.WorkerSystem.initSystem, shutdownFunction: Core.WorkerSystem.deinitSystem },
     { name: "Materials", initFunction: Core.MaterialSystem.initSystem },

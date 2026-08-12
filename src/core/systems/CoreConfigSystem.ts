@@ -23,8 +23,15 @@ const ProjectConfigFileSchema = z.object({
             vtfOptions: z.optional(z.object<Shared.Vtf.SharedVtfCreateOptions>()),
         }),
     ),
-    teamCityArtifactCloud: z.optional(z.object<S3ClientConfig>()),
-    teamCityArtifactCloudBucket: z.optional(z.string()),
+    artifactCloud: z.optional(
+        z.object({
+            s3: z.object({
+                clientConfig: z.object<S3ClientConfig>(),
+                bucket: z.string(),
+                mapsPrefix: z.string(),
+            }),
+        }),
+    ),
     mapSourceDirs: z.optional(z.array(z.string())),
     mapPresets: z.optional(z.record(z.string(), z.array(z.string()))),
 });
@@ -100,8 +107,7 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
         mapPresets: c.mapPresets,
 
         assetDefaults: c.assetDefaults as Shared.AppConfig.AppConfigAssetDefaults,
-        teamCityArtifactCloud: c.teamCityArtifactCloud,
-        teamCityArtifactCloudBucket: c.teamCityArtifactCloudBucket,
+        artifactCloud: c.artifactCloud,
     };
 }
 

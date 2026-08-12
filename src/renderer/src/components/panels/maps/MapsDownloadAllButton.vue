@@ -1,5 +1,5 @@
 <template>
-    <UButton label="Download All" :disabled="downloading" @click="tcArtifactsStore.downloadAll()">
+    <UButton label="Download All" :disabled="downloading" @click="artifactCloudStore.downloadAll()">
         <template #leading>
             <template v-if="downloading">
                 <UIcon :name="AppDesign.Icons.Loading" class="size-5 animate-spin" />
@@ -13,11 +13,11 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
+import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 
-const tcArtifactsStore = useTcArtifactsStore();
+const artifactCloudStore = useArtifactCloudStore();
 
-const downloading = computed(() => tcArtifactsStore.activeDownloads.size > 0);
+const downloading = computed(() => artifactCloudStore.activeDownloads.size > 0);
 </script>
 
 <style scoped></style>

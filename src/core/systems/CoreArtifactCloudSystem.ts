@@ -15,11 +15,11 @@ let unconfigured = false;
 
 const RETRIES = 3;
 
-export const TcArtifactsSystem = {
+export const ArtifactCloudSystem = {
     async initSystem() {
         const config = ConfigSystem.getAppConfig();
-        if (!config.teamCityArtifactCloud || !config.teamCityArtifactCloudBucket) {
-            console.warn("TeamCity artifact cloud not configured. Disabling system");
+        if (!config.artifactCloud) {
+            console.warn("Artifact cloud not configured. Disabling system");
             unconfigured = true;
         }
 
@@ -35,18 +35,18 @@ export const TcArtifactsSystem = {
             return response?.Contents;
         });
     },
-    async listMaps(): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> {
-        return _useS3(async (client, bucket): Promise<Shared.TcArtifacts.ListAllMapsReport | undefined> => {
+    async listMaps(): Promise<Shared.ArtifactCloud.ListAllMapsReport | undefined> {
+        return _useS3(async (client, bucket): Promise<Shared.ArtifactCloud.ListAllMapsReport | undefined> => {
             const response = await client.listObjectsV2({
                 Bucket: bucket,
-                Prefix: "PortalRevolution2/PortalRevolution2_MapCompile/",
+                Prefix: ConfigSystem.getAppConfig().artifactCloud?.s3.mapsPrefix ?? "",
             });
             const contents = response?.Contents;
             if (contents === undefined || contents.length === 0) {
                 return undefined;
             }
 
-            const mapsMap = new Map<string, Shared.TcArtifacts.MapInfo[]>();
+            const mapsMap = new Map<string, Shared.ArtifactCloud.MapInfo[]>();
             for (const content of contents) {
                 if (content.Size === undefined || content.LastModified === undefined || content.Key === undefined)
                     continue;
@@ -54,7 +54,7 @@ export const TcArtifactsSystem = {
                 const mapName = filename(content.Key);
                 if (mapName === undefined) continue;
 
-                const entry: Shared.TcArtifacts.MapInfo = {
+                const entry: Shared.ArtifactCloud.MapInfo = {
                     size: content.Size,
                     dateModified: content.LastModified,
                     objectKey: content.Key,
@@ -76,17 +76,17 @@ export const TcArtifactsSystem = {
     },
     async downloadMap(objectKey: string, mapName: string): Promise<boolean> {
         const result = await _useS3(async (client, bucket): Promise<boolean> => {
-            Logger.info(Shared.Log.Channel.TcArtifacts, `Downloading map object ${objectKey} to ${mapName}`);
+            Logger.info(Shared.Log.Channel.ArtifactCloud, `Downloading map object ${objectKey} to ${mapName}`);
             const response = await client.getObject({ Bucket: bucket, Key: objectKey });
             const s3Stream = response.Body as NodeJS.ReadableStream;
             if (!s3Stream) {
-                Logger.warning(Shared.Log.Channel.TcArtifacts, "Failed to establish S3 stream");
+                Logger.warning(Shared.Log.Channel.ArtifactCloud, "Failed to establish S3 stream");
                 return false;
             }
 
             if (response.ContentLength) {
                 Logger.info(
-                    Shared.Log.Channel.TcArtifacts,
+                    Shared.Log.Channel.ArtifactCloud,
                     `Map file is ${humanizePlus.fileSize(response.ContentLength)}`,
                 );
             }
@@ -103,15 +103,15 @@ export const TcArtifactsSystem = {
 
             const writeStream = createWriteStream(fullPath);
             await pipeline(s3Stream, writeStream);
-            Logger.info(Shared.Log.Channel.TcArtifacts, `Download complete`);
+            Logger.info(Shared.Log.Channel.ArtifactCloud, `Download complete`);
             return true;
         });
         return result ?? false;
     },
     async deleteMap(objectKey: string): Promise<boolean> {
         const result = await _useS3(async (client, bucket): Promise<boolean> => {
-            Logger.info(Shared.Log.Channel.TcArtifacts, "Deleting map object", objectKey);
-            const response = await client.deleteObject({ Bucket: bucket, Key: objectKey });
+            Logger.info(Shared.Log.Channel.ArtifactCloud, "Deleting map object", objectKey);
+            await client.deleteObject({ Bucket: bucket, Key: objectKey });
             return true;
         });
         return result ?? false;
@@ -126,19 +126,21 @@ function _sleep(timeMs: number): Promise<void> {
 
 async function _connect() {
     const config = ConfigSystem.getAppConfig();
-    const client = new AWS.S3(config.teamCityArtifactCloud);
+    const client = new AWS.S3(config.artifactCloud?.s3.clientConfig);
+    const bucket = config.artifactCloud?.s3.bucket;
 
     try {
         const response = await client.listBuckets();
-        const bucketFound = response.Buckets?.some((b) => b.Name === config.teamCityArtifactCloudBucket);
+        const bucketFound = response.Buckets?.some((b) => b.Name === bucket);
         if (!bucketFound) {
             Logger.warning(
-                Shared.Log.Channel.TcArtifacts,
-                `TeamCity artifact cloud system connected but couldn't find bucket ${config.teamCityArtifactCloudBucket}. Buckets are: ${response.Buckets?.map((b) => b.Name).join(", ") ?? "<none>"}`,
+                Shared.Log.Channel.ArtifactCloud,
+                `TeamCity artifact cloud system connected but couldn't find bucket ${bucket}. Buckets are:`,
+                response.Buckets?.map((b) => b.Name).join(", ") ?? "(none)",
             );
         } else {
             s3Client = client;
-            s3Bucket = config.teamCityArtifactCloudBucket;
+            s3Bucket = bucket;
         }
     } catch (e) {}
 }

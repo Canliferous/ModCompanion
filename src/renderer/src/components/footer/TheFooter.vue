@@ -7,7 +7,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <USeparator orientation="vertical" />
-                <FooterTcArtifactsStatus />
+                <FooterArtifactCloudStatus />
                 <USeparator orientation="vertical" />
                 <template v-if="assetListStore.refreshing">
                     <FooterAssetScanProgress />

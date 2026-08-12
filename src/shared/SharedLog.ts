@@ -12,7 +12,7 @@ export enum Channel {
     HotReload = "Hot Reload",
     MainSystems = "Main Systems",
     Hotspot = "Hotspot",
-    TcArtifacts = "TcArtifacts",
+    ArtifactCloud = "ArtifactCloud",
     Cli = "CLI",
 }
 
@@ -28,7 +28,7 @@ export const AllChannels = [
     Channel.HotReload,
     Channel.MainSystems,
     Channel.Hotspot,
-    Channel.TcArtifacts,
+    Channel.ArtifactCloud,
     Channel.Cli,
 ];
 

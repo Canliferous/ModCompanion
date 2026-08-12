@@ -131,17 +131,17 @@ program
         const dry = Boolean(opts.dry);
         const startTime = new Date().getTime();
         await Core.ConfigSystem.initConfigSystem();
-        await Core.TcArtifactsSystem.initSystem();
+        await Core.ArtifactCloudSystem.initSystem();
         const campaignMapPrefix = "r2_a";
 
-        if (!(await Core.TcArtifactsSystem.isCloudConnected())) {
+        if (!(await Core.ArtifactCloudSystem.isCloudConnected())) {
             Core.Logger.error(Shared.Log.Channel.Cli, chalk.green("Failed to connect to TC Cloud. Aborting"));
             return;
         }
         Core.Logger.info(Shared.Log.Channel.Cli, chalk.green("TC Cloud connected!"));
 
         if (opts.list) {
-            const objects = await Core.TcArtifactsSystem.listAllObjects();
+            const objects = await Core.ArtifactCloudSystem.listAllObjects();
             if (!objects) {
                 Core.Logger.info(Shared.Log.Channel.Cli, "Nothing to list");
                 return;
@@ -165,7 +165,7 @@ program
         }
 
         if (opts.listMaps) {
-            const result = await Core.TcArtifactsSystem.listMaps();
+            const result = await Core.ArtifactCloudSystem.listMaps();
             if (!result) {
                 Core.Logger.info(Shared.Log.Channel.Cli, "Nothing to list");
                 return;
@@ -190,13 +190,13 @@ program
         }
 
         if (opts.getLatestMaps) {
-            const result = await Core.TcArtifactsSystem.listMaps();
+            const result = await Core.ArtifactCloudSystem.listMaps();
             if (!result) {
                 Core.Logger.info(Shared.Log.Channel.Cli, "No maps to download");
                 return;
             }
 
-            const queue: { map: string; info: Shared.TcArtifacts.MapInfo }[] = [];
+            const queue: { map: string; info: Shared.ArtifactCloud.MapInfo }[] = [];
             let sizeSum = 0;
             for (const [map, infos] of result.maps.entries()) {
                 if (map.startsWith(campaignMapPrefix)) {
@@ -215,7 +215,7 @@ program
                     `Downloading ${chalk.blue(entry.map)} ${chalk.yellow(humanizePlus.fileSize(entry.info.size))}...`,
                 );
                 if (!dry) {
-                    await Core.TcArtifactsSystem.downloadMap(entry.info.objectKey, entry.map + ".bsp");
+                    await Core.ArtifactCloudSystem.downloadMap(entry.info.objectKey, entry.map + ".bsp");
                 }
             }
 
@@ -225,7 +225,7 @@ program
         }
 
         if (opts.clean) {
-            const result = await Core.TcArtifactsSystem.listMaps();
+            const result = await Core.ArtifactCloudSystem.listMaps();
             if (!result) {
                 Core.Logger.info(Shared.Log.Channel.Cli, "No maps to delete");
                 return;
@@ -242,7 +242,7 @@ program
                     if (!shouldDelete) continue;
 
                     if (!dry) {
-                        await Core.TcArtifactsSystem.deleteMap(info.objectKey);
+                        await Core.ArtifactCloudSystem.deleteMap(info.objectKey);
                     } else {
                         Core.Logger.info(
                             Shared.Log.Channel.Cli,

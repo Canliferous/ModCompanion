@@ -39,20 +39,20 @@
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
+import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { filename } from "pathe/utils";
 import { fileSize } from "humanize-plus";
 
 const props = defineProps<{ mapPath: string }>();
 
-const tcArtifactsStore = useTcArtifactsStore();
+const artifactCloudStore = useArtifactCloudStore();
 
-const downloadPromise = computed(() => tcArtifactsStore.activeDownloads.get(props.mapPath));
+const downloadPromise = computed(() => artifactCloudStore.activeDownloads.get(props.mapPath));
 
 const maps = computed(() => {
     const n = filename(props.mapPath);
     if (n) {
-        return tcArtifactsStore.mapsList.get(n) ?? [];
+        return artifactCloudStore.mapsList.get(n) ?? [];
     } else {
         return [];
     }
@@ -64,7 +64,7 @@ const tooltip = computed(() =>
 );
 
 function handleDownloadLatest() {
-    tcArtifactsStore.downloadMap(props.mapPath, maps.value[0].objectKey);
+    artifactCloudStore.downloadMap(props.mapPath, maps.value[0].objectKey);
 }
 </script>
 

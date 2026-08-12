@@ -1,3 +1,4 @@
+import { ArtifactCloudSystem } from "./systems/CoreArtifactCloudSystem.js";
 import { AssetGroupsSystem } from "./systems/CoreAssetGroupsSystem.js";
 import { AssetWatcherSystem } from "./systems/CoreAssetWatcherSystem.js";
 import { ConfigSystem } from "./systems/CoreConfigSystem.js";
@@ -8,7 +9,6 @@ import { MaterialSystem } from "./systems/CoreMaterialSystem.js";
 import { MapCompileSystem } from "./systems/CoreMapCompileSystem.js";
 import { MareTfSystem } from "./systems/CoreMaretfSystem.js";
 import { StrataInteropSystem } from "./systems/CoreStrataInteropSystem.js";
-import { TcArtifactsSystem } from "./systems/CoreTcArtifactsSystem.js";
 import { WorkerSystem } from "./systems/CoreWorkerSystem.js";
 
 import { ConversionAgentSystem } from "./systems/conversion/CoreConversionAgentSystem.js";
@@ -30,6 +30,7 @@ import { MdlInfoHelper } from "./helpers/CoreMdlInfoHelper.js";
 import * as SourceFs from "./helpers/CoreSourceFs.js";
 
 export {
+    ArtifactCloudSystem,
     AssetGroupsSystem,
     AssetWatcherSystem,
     ConfigSystem,
@@ -40,7 +41,6 @@ export {
     MapCompileSystem,
     MareTfSystem,
     StrataInteropSystem,
-    TcArtifactsSystem,
     WorkerSystem,
     ConversionAgentSystem,
     ConversionChecksumSystem,

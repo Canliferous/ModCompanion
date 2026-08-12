@@ -3,13 +3,13 @@ import { useMapListStore } from "~/store/MapListStore.js";
 import { filename } from "pathe/utils";
 import * as Shared from "mod_companion_shared";
 
-export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
+export const useArtifactCloudStore = defineStore("artifact-cloud", () => {
     const connected = ref(false);
-    const mapsList = ref<Map<string, Shared.TcArtifacts.MapInfo[]>>(new Map());
+    const mapsList = ref<Map<string, Shared.ArtifactCloud.MapInfo[]>>(new Map());
     const activeDownloads = reactive<Map<string, Promise<boolean>>>(new Map());
 
     async function checkAlive() {
-        connected.value = await window.electronAPI.tcArtifacts.isConnected();
+        connected.value = await window.electronAPI.artifactCloud.isConnected();
 
         if (connected.value) {
             setTimeout(checkAlive, 15000);
@@ -20,14 +20,14 @@ export const useTcArtifactsStore = defineStore("tc-artifacts", () => {
     checkAlive();
 
     async function refresh(): Promise<void> {
-        const result = await window.electronAPI.tcArtifacts.listAllMaps();
+        const result = await window.electronAPI.artifactCloud.listAllMaps();
         if (result?.maps) {
             mapsList.value = result?.maps;
         }
     }
 
     async function downloadMap(mapPath: string, objectKey: string): Promise<boolean> {
-        const promise = window.electronAPI.tcArtifacts
+        const promise = window.electronAPI.artifactCloud
             .downloadMap(objectKey, mapPath)
             .finally(() => activeDownloads.delete(mapPath));
         activeDownloads.set(mapPath, promise);

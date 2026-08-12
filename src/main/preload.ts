@@ -180,11 +180,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
         build: () => ipcRenderer.invoke(Shared.Ipc.Channels.FgdBuild),
     },
 
-    tcArtifacts: {
-        isConnected: () => ipcRenderer.invoke(Shared.Ipc.Channels.TcArtifacts_IsConnected),
-        listAllMaps: () => ipcRenderer.invoke(Shared.Ipc.Channels.TcArtifacts_ListAllMaps),
+    artifactCloud: {
+        isConnected: () => ipcRenderer.invoke(Shared.Ipc.Channels.ArtifactCloud_IsConnected),
+        listAllMaps: () => ipcRenderer.invoke(Shared.Ipc.Channels.ArtifactCloud_ListAllMaps),
         downloadMap: (artifactKey: string, mapPath: string) =>
-            ipcRenderer.invoke(Shared.Ipc.Channels.TcArtifacts_DownloadMap, artifactKey, mapPath),
+            ipcRenderer.invoke(Shared.Ipc.Channels.ArtifactCloud_DownloadMap, artifactKey, mapPath),
     },
 
     log: {

@@ -142,9 +142,9 @@ declare global {
                 build: () => Promise<boolean>;
             };
 
-            tcArtifacts: {
+            artifactCloud: {
                 isConnected: () => Promise<boolean>;
-                listAllMaps: () => Promise<Shared.TcArtifacts.ListAllMapsReport | undefined>;
+                listAllMaps: () => Promise<Shared.ArtifactCloud.ListAllMapsReport | undefined>;
                 downloadMap: (artifactKey: string, mapPath: string) => Promise<boolean>;
             };
 

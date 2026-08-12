@@ -12,7 +12,7 @@ import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 import { registerClipboardApi } from "../api/MainClipboardApi.js";
 import { registerStrataInteropApi } from "../api/MainStrataInteropApi.js";
 import { registerFgdApi } from "../api/MainFgdApi.js";
-import { registerTcArtifactsApi } from "../api/MainTcArtifactsApi.js";
+import { registerArtifactCloudApi } from "../api/MainArtifactCloudApi.js";
 import { registerFileApi } from "../api/MainFileApi.js";
 import { registerLoggerApi } from "../api/MainLoggerApi.js";
 import { registerMdlInfoApi } from "../api/MainMdlInfoApi.js";
@@ -36,7 +36,7 @@ const apis: (() => boolean)[] = [
     registerClipboardApi,
     registerStrataInteropApi,
     registerFgdApi,
-    registerTcArtifactsApi,
+    registerArtifactCloudApi,
     registerFileApi,
     registerMdlInfoApi,
     VtfApi.register,

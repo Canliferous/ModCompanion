@@ -1,21 +1,21 @@
 <template>
     <div class="text-xs select-none">
-        <div v-if="tcArtifactsStore.connected" class="text-success flex gap-1 items-center">
+        <div v-if="artifactCloudStore.connected" class="text-success flex gap-1 items-center">
             <UIcon :name="AppDesign.Icons.NetworkConnected" />
-            <span>TC Cloud Connected</span>
+            <span>Cloud Connected</span>
         </div>
         <div v-else class="text-error flex gap-1 items-center">
             <UIcon :name="AppDesign.Icons.NetworkDisconnected" />
-            <span>TC Cloud not reachable</span>
+            <span>Cloud not reachable</span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { AppDesign } from "~/design/AppDesign.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
+import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 
-const tcArtifactsStore = useTcArtifactsStore();
+const artifactCloudStore = useArtifactCloudStore();
 </script>
 
 <style scoped></style>

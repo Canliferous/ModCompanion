@@ -72,9 +72,9 @@ export const Channels = {
 
     FgdBuild: "fgd_build",
 
-    TcArtifacts_IsConnected: "tc_artifacts_is_connected",
-    TcArtifacts_ListAllMaps: "tc_artifacts_list_all_maps",
-    TcArtifacts_DownloadMap: "tc_artifacts_download_map",
+    ArtifactCloud_IsConnected: "artifacts_cloud_is_connected",
+    ArtifactCloud_ListAllMaps: "artifacts_cloud_list_all_maps",
+    ArtifactCloud_DownloadMap: "artifacts_cloud_download_map",
 
     MdlInfoGet: "mdlinfo_get",
 

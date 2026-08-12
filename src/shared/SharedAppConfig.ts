@@ -1,5 +1,6 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
 import { SharedMapPresets } from "./SharedMap.js";
+import { S3ClientConfig } from "@aws-sdk/client-s3";
 
 export interface AppConfigAssetDefaults {
     vtfOptions?: SharedVtfCreateOptions;
@@ -93,6 +94,11 @@ export interface AppConfig {
 
     assetDefaults?: AppConfigAssetDefaults;
 
-    teamCityArtifactCloud?: any; //S3ClientConfig;
-    teamCityArtifactCloudBucket?: string;
+    artifactCloud?: {
+        s3: {
+            clientConfig?: any; //S3ClientConfig;
+            bucket?: string;
+            mapsPrefix?: string;
+        };
+    };
 }

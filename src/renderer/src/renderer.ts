@@ -6,7 +6,7 @@ import { initConfig } from "~/renderer-config.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { initIcons } from "~/renderer-icons.js";
 import { Logger } from "~/logger.js";
-import { useTcArtifactsStore } from "~/store/TcArtifactsStore.js";
+import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { useFileBrowserStore } from "~/store/FileBrowserStore.js";
 import * as Shared from "mod_companion_shared";
 
@@ -17,7 +17,7 @@ initIcons();
 
 function postInit() {
     useAssetGroupsStore().refresh();
-    useTcArtifactsStore().refresh();
+    useArtifactCloudStore().refresh();
     useFileBrowserStore().refreshDir("");
 }
 
