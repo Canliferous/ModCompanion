@@ -1,7 +1,7 @@
 <template>
     <!-- Dockview has z-index of 99 so we must be above it -->
     <div
-        class="bg-neutral-950/50 backdrop-blur-md absolute inset-0 p-1 flex flex-col justify-end transition-opacity overflow-y-clip"
+        class="flex h-full bg-neutral-950/50 backdrop-blur-md absolute inset-0 p-1 transition-opacity overflow-y-clip"
         :class="{
             'opacity-100 pointer-events-auto': isOpen,
             'opacity-0 pointer-events-none': !isOpen,
@@ -9,7 +9,7 @@
         @click.self="takeOverStore.close()"
     >
         <div
-            class="bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] content-start p-1 gap-1 transition-transform"
+            class="grow bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] content-start p-1 gap-1 transition-transform"
             :class="{
                 'translate-y-0': isOpen,
                 'translate-y-50': !isOpen,

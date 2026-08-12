@@ -106,6 +106,10 @@ export function printLogEvent(logEvent: Event) {
 
 export function stringifyLog(logEvent: Event, noDate: boolean = false, noMilliseconds: boolean = false): string {
     const prefix = getLogPrefix(logEvent, noDate, noMilliseconds);
-    const body = logEvent.data.map((d) => d.toString()).join(" ");
+    const body = stringifyLogData(logEvent.data);
     return prefix + " " + body;
+}
+
+export function stringifyLogData(data: any[]) {
+    return data.map((d) => d.toString()).join(" ");
 }

@@ -3,6 +3,7 @@
         <template #toolbar>
             <UCheckbox v-model="showTime" label="Show Time" size="sm" />
             <USeparator orientation="vertical" />
+            <UInput v-model="searchFilter" size="sm" class="min-w-30" placeholder="Search" />
             <USelect
                 v-model="typeFilter"
                 size="sm"
@@ -21,7 +22,7 @@
                 placeholder="Channels"
             />
             <UButton
-                variant="soft"
+                variant="ghost"
                 size="sm"
                 label="Clear"
                 :icon="AppDesign.Icons.ActionDelete"
@@ -29,7 +30,7 @@
             />
             <USeparator orientation="vertical" />
         </template>
-        <div ref="scroller" class="grid grid-cols-[auto_auto_auto_1fr] text-xs gap-x-1 overflow-y-scroll">
+        <div ref="scroller" class="grid grid-cols-[auto_auto_auto_1fr] text-xs gap-x-1 overflow-y-auto">
             <template v-for="(event, i) in events" :key="i">
                 <div class="grid col-span-full grid-cols-subgrid odd:bg-neutral-950/50 p-1">
                     <MLogTypeIcon :type="event.type" />
@@ -66,7 +67,12 @@ function handleTestLog() {
 const showTime = useRememberRef(ref(true), "log-show-time");
 
 const events = computed(() =>
-    logStore.logEvents.filter((e) => passesTypeFilter(e.type) && passesChannelFilter(e.channel)),
+    logStore.logEvents.filter(
+        (e) =>
+            passesTypeFilter(e.type) &&
+            passesChannelFilter(e.channel) &&
+            passesSearchFilter(Shared.Log.stringifyLogData(e.data)),
+    ),
 );
 
 const typeFilter = useRememberRef(ref<Shared.Log.Type[]>([]), "log-type-filter");
@@ -81,6 +87,11 @@ function passesTypeFilter(logType: Shared.Log.Type): boolean {
 const channelFilter = useRememberRef(ref<Shared.Log.Channel[]>([]), "log-channel-filter");
 function passesChannelFilter(logChannel: Shared.Log.Channel): boolean {
     return channelFilter.value.length === 0 ? true : channelFilter.value.includes(logChannel);
+}
+
+const searchFilter = useRememberRef(ref<string>(""), "log-search-filter");
+function passesSearchFilter(logMessage: string): boolean {
+    return logMessage.toLowerCase().includes(searchFilter.value.toLowerCase());
 }
 
 const scroller = useTemplateRef("scroller");
