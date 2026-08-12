@@ -46,7 +46,6 @@ const itemsAssets = computed<DropdownMenuItem[][]>(() => [
             icon: "empty",
             checked: hotReloadEnabled.value,
             onUpdateChecked(checked) {
-                console.log("Ite happened!");
                 hotReloadEnabled.value = checked;
             },
             onSelect(e: Event) {

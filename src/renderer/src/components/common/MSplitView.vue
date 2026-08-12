@@ -140,8 +140,6 @@ function resolveConstraints(sizes: number[]): number[] {
         additionalSize += size - originalSize;
     }
 
-    console.log(sizes, newSizes);
-
     // if (additionalSize > 0) {
     //     const sizeIdxWithoutMaxSize: number[] = [];
     //     for (let i = 0; i < props.sizes.length; i++) {
