@@ -64,6 +64,11 @@
     --inset-shadow-cave: inset -1px -1px 2px rgba(0, 0, 0, 0.2), inset 1px 1px 2px rgba(0, 0, 0, 0.9);
 }
 
+.grain {
+    background-image: url("/img/ui/grain_black_512.png");
+    background-size: 700px;
+    }
+
 .dockview-theme-modcomp,
 .dockview-theme-modcomp--nested {
     --dv-tabs-and-actions-container-background-color: transparent;
