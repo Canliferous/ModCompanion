@@ -67,7 +67,7 @@ function _getSettingsBounds(): WindowRect {
 }
 
 function _getAppIconPath() {
-    return pathe.join(Core.FileSystem.getMainAssetsDir(), "mod_companion_192.png");
+    return pathe.join(Core.FileSystem.getMainAssetsDir(), "uty_48x48.png");
 }
 
 function _saveWindow() {

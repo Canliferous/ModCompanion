@@ -1,7 +1,7 @@
 module.exports = {
     packagerConfig: {
         asar: true,
-        icon: "../assets/icons/mod_companion.ico",
+        icon: "../main_assets/uty",
     },
     rebuildConfig: {},
 };

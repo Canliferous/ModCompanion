@@ -7,9 +7,9 @@
             align: 'start',
         }"
     >
-        <UButton size="sm" variant="ghost">
+        <UButton size="sm" variant="ghost" class="py-0 px-2 gap-2">
             <template #leading>
-                <MBitmapIcon name="mod_companion_192" class="h-4 w-4" />
+                <MBitmapIcon name="uty_48x48" class="h-7 w-7" />
             </template>
             <template #default>
                 <span class="text-nowrap max-md:hidden text-muted">Mod Companion</span>
@@ -19,6 +19,10 @@
         <template #legend>
             <div class="select-none text-muted tabular-nums font-light text-center w-full">
                 Made with 💜 v{{ useSystemStore().version }}
+
+                <USeparator class="my-2 mx-auto w-10" />
+
+                UtyLity created by Tyson Tan
             </div>
         </template>
     </UDropdownMenu>

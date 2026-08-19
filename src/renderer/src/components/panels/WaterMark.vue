@@ -5,6 +5,8 @@
 
             <MAddPanelsGrid button-size="xl" />
         </div>
+
+        <img class="absolute right-0 bottom-0 w-2/5" src="/img/utylity.png" />
     </div>
 </template>
 
