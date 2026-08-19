@@ -1,5 +1,6 @@
 <template>
     <MPanelRoot no-scroll>
+        <template #header></template>
         <MLogArea :text="interopStore.log" />
 
         <template #footer>
