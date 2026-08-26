@@ -13,7 +13,7 @@ export function getVtfDefaults(): Shared.Vtf.SharedVtfCreateOptions {
         defaults.compressionMethod = Shared.Vtf.SharedVtfDefaultCompressionMethod;
     if (defaults.compressionLevel === undefined)
         defaults.compressionLevel = Shared.Vtf.SharedVtfDefaultCompressionLevel;
-    if (defaults.bumpScale === undefined) defaults.bumpScale = 1; // TODO: Where should this be grouped??
+    if (defaults.bumpScale === undefined) defaults.bumpScale = 1;
 
     return defaults;
 }

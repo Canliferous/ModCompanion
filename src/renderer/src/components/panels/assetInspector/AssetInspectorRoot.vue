@@ -78,7 +78,6 @@ function handleAssetUpdated(asset: Shared.Asset.Asset, api: DockviewApi): void {
 function updateTextureMeta(asset: Shared.Asset.TextureAsset) {
     const content = asset.def.contentFiles;
     if (content === undefined || content.length === 0) {
-        // TODO: Clear
         return;
     }
     const sourceFile = content[0];

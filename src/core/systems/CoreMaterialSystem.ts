@@ -18,8 +18,6 @@ export const MaterialSystem = {
     },
 };
 
-// todo: this takes about 70ms on my laptop right now, should move this to a worker thread
-
 function _buildMaterialTextureIndex(
     assetMap: Shared.Asset.AssetMap,
     indexMap: Map<Shared.Asset.AssetId, Shared.Asset.AssetId[]>,

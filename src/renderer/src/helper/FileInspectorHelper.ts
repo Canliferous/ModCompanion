@@ -78,7 +78,7 @@ export function getFileType(fileName: string): FileType {
     if (ext === ".txt") return FileType.TextGeneric;
     if (ext === ".kv") return FileType.TextGeneric;
     if (ext === ".vdf") return FileType.TextGeneric;
-    if (ext === ".vcd") return FileType.TextGeneric; // Todo: Add file preview for scenes with button to open in faceposer
+    if (ext === ".vcd") return FileType.TextGeneric;
     if (ext === ".json") return FileType.TextGeneric;
     if (ext === ".yml") return FileType.TextGeneric;
     if (ext === ".log") return FileType.TextGeneric;
