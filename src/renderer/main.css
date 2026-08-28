@@ -115,6 +115,7 @@
     .dv-active-group .dv-content-container {
         outline: 2px solid var(--dv-activegroup-visiblepanel-tab-background-color);
         outline-offset: -2px;
+        padding: 2px;
     }
 
     .dv-tabs-overflow-dropdown-default {

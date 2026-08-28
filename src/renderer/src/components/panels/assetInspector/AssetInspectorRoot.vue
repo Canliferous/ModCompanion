@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-[minmax(0,1fr)] grid-rows-1 h-full">
+    <div class="grid grid-cols-[minmax(0,1fr)] grid-rows-1 h-full p-1">
         <DockviewVue
             :theme="themeModcompNested"
             :default-tab-component="GlobalComponentNames.SubPanelTab"
