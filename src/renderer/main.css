@@ -67,7 +67,7 @@
 .grain {
     background-image: url("/img/ui/grain_black_512.png");
     background-size: 700px;
-    }
+}
 
 .dockview-theme-modcomp,
 .dockview-theme-modcomp--nested {
@@ -110,12 +110,12 @@
         box-shadow: var(--inset-shadow-rim);
         border-radius: var(--radius-md);
         border-top-left-radius: 0;
+        padding: 2px;
     }
 
     .dv-active-group .dv-content-container {
         outline: 2px solid var(--dv-activegroup-visiblepanel-tab-background-color);
         outline-offset: -2px;
-        padding: 2px;
     }
 
     .dv-tabs-overflow-dropdown-default {
