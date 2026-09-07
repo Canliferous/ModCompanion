@@ -12,7 +12,7 @@
                 <MBitmapIcon name="uty_48x48" class="h-7 w-7" />
             </template>
             <template #default>
-                <span class="text-nowrap max-md:hidden text-muted">Mod Companion</span>
+                <span class="text-nowrap max-md:hidden text-muted font-bold">Mod Companion</span>
             </template>
         </UButton>
 
@@ -22,7 +22,14 @@
 
                 <USeparator class="my-2 mx-auto w-10" />
 
-                UtyLity created by Tyson Tan
+                <img
+                    class="w-40 mx-auto my-2 -scale-x-100"
+                    src="/img/art/utylity_noshadow_800x450.png"
+                    alt="Uty-Lity Mascot - Artwork created by Tyson Tan"
+                />
+
+                <div>Uty-Lity Mascot</div>
+                <div>Created by Tyson Tan</div>
             </div>
         </template>
     </UDropdownMenu>
