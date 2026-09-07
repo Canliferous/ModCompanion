@@ -31,6 +31,9 @@
 @theme static {
     --font-sans: "Inter", sans-serif;
     --font-mono: "JetBrains Mono Variable", monospace;
+    --font-puff: "DynaPuff", "Inter", sans-serif;
+    --font-puff-condensed: "DynaPuff Condensed", "DynaPuff", "Inter", sans-serif;
+    --font-puff-semi-condensed: "DynaPuff SemiCondensed", "DynaPuff", "Inter", sans-serif;
 
     --color-neutral-50: oklch(98.5% 0 0);
     --color-neutral-100: oklch(97% 0 0);
@@ -63,6 +66,8 @@
     --inset-shadow-rim-halfstrong: inset 1px 1px 1px rgba(255, 255, 255, 0.3), inset -1px -1px 1px rgba(0, 0, 0, 0.4);
     --inset-shadow-rim-strong: inset 1px 1px 1px rgba(255, 255, 255, 0.9), inset -1px -1px 1px rgba(0, 0, 0, 0.4);
     --inset-shadow-cave: inset -1px -1px 2px rgba(0, 0, 0, 0.2), inset 1px 1px 2px rgba(0, 0, 0, 0.9);
+
+    --text-shadow-watermark-logo: 2px 2px 0px rgb(252, 237, 234), 4px 4px 8px rgb(0 0 0 / 0.5);
 }
 
 .grain {

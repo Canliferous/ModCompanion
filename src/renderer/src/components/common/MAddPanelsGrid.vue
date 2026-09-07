@@ -1,14 +1,12 @@
 <template>
-    <div class="grid grid-cols-2 gap-2">
-        <template v-for="panel in SpawnablePanelComponentNames" :key="panel">
-            <UButton
-                :label="PanelsBehaviors[panel].getTitle(undefined)"
-                :icon="PanelsBehaviors[panel].getIcon(undefined)"
-                :size="buttonSize"
-                @click="handleClick(panel)"
-            />
-        </template>
-    </div>
+    <template v-for="panel in SpawnablePanelComponentNames" :key="panel">
+        <UButton
+            :label="PanelsBehaviors[panel].getTitle(undefined)"
+            :icon="PanelsBehaviors[panel].getIcon(undefined)"
+            :size="buttonSize"
+            @click="handleClick(panel)"
+        />
+    </template>
 </template>
 
 <script setup lang="ts">

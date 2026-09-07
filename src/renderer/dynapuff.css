@@ -1,0 +1,113 @@
+/* Standard */
+
+@font-face {
+    font-family: 'DynaPuff';
+    font-style: normal;
+    font-weight: 400;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Regular") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff';
+    font-style: normal;
+    font-weight: 500;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Medium") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff';
+    font-style: normal;
+    font-weight: 600;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-SemiBold") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff';
+    font-style: normal;
+    font-weight: 700;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Bold") format('woff2');
+}
+
+/* Semi Condensed */
+
+@font-face {
+    font-family: 'DynaPuff SemiCondensed';
+    font-style: normal;
+    font-weight: 400;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-SemiCondensed-Regular") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff SemiCondensed';
+    font-style: normal;
+    font-weight: 500;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-SemiCondensed-Medium") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff SemiCondensed';
+    font-style: normal;
+    font-weight: 600;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-SemiCondensed-SemiBold") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff SemiCondensed';
+    font-style: normal;
+    font-weight: 700;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-SemiCondensed-Bold") format('woff2');
+}
+
+/* Condensed */
+
+@font-face {
+    font-family: 'DynaPuff Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Condensed-Regular") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff Condensed';
+    font-style: normal;
+    font-weight: 500;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Condensed-Medium") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff Condensed';
+    font-style: normal;
+    font-weight: 600;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Condensed-SemiBold") format('woff2');
+}
+
+@font-face {
+    font-family: 'DynaPuff Condensed';
+    font-style: normal;
+    font-weight: 700;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url("/fonts/dynapuff/DynaPuff-Condensed-Bold") format('woff2');
+}

@@ -4,7 +4,7 @@
             <UButton :icon="AppDesign.Icons.ActionAdd" variant="link" size="xs" />
 
             <template #content>
-                <div class="p-2">
+                <div class="p-2 grid grid-cols-2 gap-2">
                     <MAddPanelsGrid :spawn-options="spawnOptions" @button-clicked="handleClicked" />
                 </div>
             </template>
