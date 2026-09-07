@@ -1,12 +1,17 @@
 <template>
     <UPopover v-model:open="open">
-        <UButton size="xs" variant="ghost">
-            <span v-if="status === 'idle'" class="text-muted">Conversion Agent Idle</span>
-            <span v-if="status === 'working'" class="text-info flex items-center gap-1">
-                <MConversionStateIcon :state="Shared.Conversion.State.InProgress" />
+        <UButton
+            size="xs"
+            variant="ghost"
+            color="primary"
+            class="text-magenta-900 hover:bg-magenta-400 active:bg-magenta-500 font-semibold"
+        >
+            <span v-if="status === 'idle'">Conversion Agent Idle</span>
+            <span v-if="status === 'working'" class="flex items-center gap-1">
+                <MConversionStateIcon :state="Shared.Conversion.State.InProgress" no-color class="text-magenta-900" />
                 <span>Conversion Agent Busy</span>
             </span>
-            <span class="text-muted">
+            <span>
                 (<span class="tabular-nums">{{ total }}</span> total)
             </span>
         </UButton>

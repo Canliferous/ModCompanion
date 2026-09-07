@@ -1,5 +1,7 @@
 <template>
-    <div class="grid grid-cols-subgrid col-span-full gap-1 bg-neutral-850 py-1 px-2 h-full inset-shadow-rim">
+    <div
+        class="grid grid-cols-subgrid col-span-full gap-1 bg-magenta-300 py-0.5 px-2 h-full inset-shadow-rim-halfstrong"
+    >
         <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
             <div>
                 <USeparator orientation="vertical" />

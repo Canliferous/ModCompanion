@@ -2,7 +2,13 @@
     <div class="overflow-x-clip">
         <template v-if="logStore.latestEvent">
             <UTooltip text="Click to expand and collapse the message log">
-                <UButton variant="ghost" size="xs" class="text-xs text-muted w-full" @click="handleClick">
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="xs"
+                    class="text-xs w-full text-magenta-900 hover:bg-magenta-400 active:bg-magenta-500 font-semibold"
+                    @click="handleClick"
+                >
                     <div
                         class="flex justify-start items-center gap-1 text-nowrap w-full"
                         :class="getLogTypeTextColorWarnings(logStore.latestEvent.type)"
@@ -11,7 +17,7 @@
                             class="shrink-0"
                             :name="isOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight"
                         />
-                        <MLogTypeIcon :type="logStore.latestEvent.type" />
+                        <MLogTypeIcon :type="logStore.latestEvent.type" no-color />
                         <span>
                             {{ Shared.Log.getLogPrefix(logStore.latestEvent, true, true) }}
                         </span>
