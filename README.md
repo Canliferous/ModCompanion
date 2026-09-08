@@ -4,6 +4,8 @@ Modder's best friend <3
 
 Mod Companion is a desktop app we built to help us create Portal: Revolution 2.
 
+![Banner](art/readme_banner.png)
+
 ## User Guide
 
 Want to use the app? Here's what you should expect and how you can set it up for your mod
