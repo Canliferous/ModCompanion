@@ -1,42 +1,47 @@
 <template>
     <UTooltip :text="tooltip">
-        <!--        <UPopover>-->
-        <UButton
-            :disabled="disabled || downloadPromise !== undefined || maps.length === 0"
-            @click="handleDownloadLatest"
-        >
-            <template #leading>
-                <template v-if="downloadPromise !== undefined">
-                    <UIcon :name="AppDesign.Icons.Loading" class="size-5 animate-spin" />
+        <UPopover v-model:open="open">
+            <UButton
+                :disabled="disabled || downloadPromise !== undefined || maps.length === 0"
+                @click="handleDownloadQuickClicked"
+            >
+                <template #leading>
+                    <template v-if="downloadPromise !== undefined">
+                        <UIcon :name="AppDesign.Icons.Loading" class="size-5 animate-spin" />
+                    </template>
+                    <template v-else>
+                        <UIcon :name="AppDesign.Icons.ActionDownload" class="size-5" />
+                    </template>
                 </template>
-                <template v-else>
-                    <UIcon :name="AppDesign.Icons.ActionDownload" class="size-5" />
-                </template>
+            </UButton>
+            <template #content>
+                <div class="text-xs">
+                    <div class="p-2 grid grid-cols-1 gap-2 max-h-80 overflow-y-auto">
+                        <template v-for="map in maps" :key="map.dateModified.getTime()">
+                            <div>
+                                <UButton
+                                    size="sm"
+                                    variant="ghost"
+                                    class="w-full"
+                                    :icon="AppDesign.Icons.ActionDownload"
+                                    @click="() => handleDownloadMapClicked(map)"
+                                >
+                                    <div class="grow flex gap-4 justify-between select-none tabular-nums">
+                                        <span>
+                                            {{ map.dateModified.toDateString() }}
+                                        </span>
+                                        <span>
+                                            {{ fileSize(map.size) }}
+                                        </span>
+                                    </div>
+                                </UButton>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="text-center text-muted p-2">Tip: Hold shift to download quickly</div>
+                </div>
             </template>
-        </UButton>
-        <!--            <template #content>-->
-        <!--                <div class="p-2 grid grid-cols-[1fr_auto_auto] gap-2">-->
-        <!--                    <div-->
-        <!--                        v-for="map in maps"-->
-        <!--                        :key="map.dateModified.getTime()"-->
-        <!--                        class="grid grid-cols-subgrid col-span-full items-center"-->
-        <!--                    >-->
-        <!--                        <span class="select-none tabular-nums">-->
-        <!--                            {{ map.dateModified.toDateString() }}-->
-        <!--                        </span>-->
-        <!--                        <span class="select-none tabular-nums text-right">-->
-        <!--                            {{ fileSize(map.size) }}-->
-        <!--                        </span>-->
-        <!--                        <UButton-->
-        <!--                            size="sm"-->
-        <!--                            variant="ghost"-->
-        <!--                            :icon="AppDesign.Icons.ActionDownload"-->
-        <!--                            @click="handleDownload"-->
-        <!--                        />-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </template>-->
-        <!--        </UPopover>-->
+        </UPopover>
     </UTooltip>
 </template>
 
@@ -45,8 +50,10 @@ import { AppDesign } from "~/design/AppDesign.js";
 import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { filename } from "pathe/utils";
 import { fileSize } from "humanize-plus";
+import { MapInfo } from "mod_companion_shared/SharedArtifactCloud.js";
 
 const props = defineProps<{ mapPath: string; disabled?: boolean }>();
+const open = ref(false);
 
 const artifactCloudStore = useArtifactCloudStore();
 
@@ -66,8 +73,16 @@ const tooltip = computed(() =>
         : "No artifacts available",
 );
 
-function handleDownloadLatest() {
-    artifactCloudStore.downloadMap(props.mapPath, maps.value[0].objectKey);
+function handleDownloadQuickClicked(event: MouseEvent) {
+    if (event.shiftKey) {
+        artifactCloudStore.downloadMap(props.mapPath, maps.value[0].objectKey);
+        open.value = !open.value; // Prevent it from changing state because fuck this library
+    }
+}
+
+function handleDownloadMapClicked(map: MapInfo) {
+    artifactCloudStore.downloadMap(props.mapPath, map.objectKey);
+    open.value = false;
 }
 </script>
 
