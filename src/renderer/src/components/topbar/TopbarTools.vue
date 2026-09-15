@@ -61,6 +61,13 @@ const itemsTools = computed<DropdownMenuItem[][]>(() => [
                 fgdStore.buildFgd();
             },
         },
+        {
+            type: "separator",
+        },
+        {
+            label: "Developer Tools",
+            onSelect(e) {},
+        },
     ],
 ]);
 </script>
