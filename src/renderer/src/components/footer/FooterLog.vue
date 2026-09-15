@@ -9,10 +9,7 @@
                     class="text-xs w-full text-magenta-900 hover:bg-magenta-400 active:bg-magenta-500 font-semibold"
                     @click="handleClick"
                 >
-                    <div
-                        class="flex justify-start items-center gap-1 text-nowrap w-full"
-                        :class="getLogTypeTextColorWarnings(logStore.latestEvent.type)"
-                    >
+                    <div class="flex justify-start items-center gap-1 text-nowrap w-full">
                         <UIcon
                             class="shrink-0"
                             :name="isOpen ? AppDesign.Icons.ChevronUp : AppDesign.Icons.ChevronRight"
