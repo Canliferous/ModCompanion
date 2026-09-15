@@ -1,5 +1,6 @@
 <template>
     <MDataTable
+        ref="table"
         :row-height="32"
         :entries="listStore.filteredMapList"
         :columns="columns"
@@ -23,6 +24,7 @@ import * as Shared from "mod_companion_shared";
 
 const listStore = useMapListStore();
 const timeReportStore = useMapTimeReportStore();
+const table = useTemplateRef("table");
 
 const columns = computed(() => (timeReportStore.showReport ? reportColumns : listColumns));
 
@@ -123,6 +125,13 @@ const reportColumns: DataTableColumn<string>[] = [
 function handleActiveChanged(map: string | undefined): void {
     listStore.selectMap(map);
 }
+
+watch(
+    () => listStore.selectedMap,
+    (value, oldValue) => {
+        table.value?.activate((entry) => entry === value);
+    },
+);
 </script>
 
 <style scoped></style>
