@@ -2,10 +2,12 @@ import { defineStore } from "pinia";
 import { AppDesign } from "~/design/AppDesign.js";
 import MessageLogTakeOver from "~/components/takeovers/MessageLogTakeOver.vue";
 import AssetWizardTakeOver from "~/components/takeovers/AssetWizardTakeOver.vue";
+import DevToolsTakeOver from "~/components/takeovers/DevToolsTakeOver.vue";
 
 export enum TakeOverId {
     MessageLog,
     AssetWizard,
+    DevTools,
 }
 
 interface TakeOverDef {
@@ -24,6 +26,11 @@ export const TakeOverConfig: Record<TakeOverId, TakeOverDef> = {
         name: "Create Asset",
         icon: AppDesign.Icons.TakeOver_AssetWizard,
         component: AssetWizardTakeOver,
+    },
+    [TakeOverId.DevTools]: {
+        name: "Developer Tools",
+        icon: AppDesign.Icons.TakeOver_DevTools,
+        component: DevToolsTakeOver,
     },
 } as const;
 

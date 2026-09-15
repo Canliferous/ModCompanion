@@ -108,6 +108,7 @@ export const Icons = {
 
     TakeOver_AssetWizard: "mingcute:traffic-cone-fill",
     TakeOver_Log: "mingcute:list-check-fill",
+    TakeOver_DevTools: "mingcute:list-check-fill",
 
     Log: "mingcute:list-check-fill",
     LogType_Debug: "mingcute:bug-fill",

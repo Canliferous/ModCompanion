@@ -9,7 +9,7 @@
         @click.self="takeOverStore.close()"
     >
         <div
-            class="grow bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-row-[auto_auto_minmax(0,1fr)] content-start p-1 gap-1 transition-transform"
+            class="grow bg-neutral-850/50 inset-shadow-rim rounded shadow max-h-full grid grid-rows-[auto_auto_minmax(0,1fr)] content-start items-start p-1 gap-1 transition-transform"
             :class="{
                 'translate-y-0': isOpen,
                 'translate-y-50': !isOpen,

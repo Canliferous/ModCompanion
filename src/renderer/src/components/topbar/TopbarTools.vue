@@ -20,8 +20,10 @@ import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import { useFgdStore } from "~/store/FgdStore.js";
 import { getAppConfig } from "~/renderer-config.js";
 import * as Shared from "mod_companion_shared";
+import { TakeOverId, useTakeOverStore } from "~/store/TakeOverStore.js";
 
 const fgdStore = useFgdStore();
+const takeOverStore = useTakeOverStore();
 
 const fgdIcon = computed(() => {
     if (fgdStore.building) {
@@ -66,7 +68,9 @@ const itemsTools = computed<DropdownMenuItem[][]>(() => [
         },
         {
             label: "Developer Tools",
-            onSelect(e) {},
+            onSelect(e) {
+                takeOverStore.open(TakeOverId.DevTools);
+            },
         },
     ],
 ]);
