@@ -20,11 +20,6 @@ import "@fontsource/inter/800-italic.css";
 import "@fontsource/inter/900.css";
 import "@fontsource/inter/900-italic.css";
 
-import "./public/fonts/dynapuff/DynaPuff-Regular.ttf";
-import "./public/fonts/dynapuff/DynaPuff-Medium.ttf";
-import "./public/fonts/dynapuff/DynaPuff-SemiBold.ttf";
-import "./public/fonts/dynapuff/DynaPuff-Bold.ttf";
-
 import "@fontsource-variable/jetbrains-mono";
 
 import { initVue } from "~/renderer-vue.js";
