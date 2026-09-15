@@ -3,11 +3,11 @@
         <UTooltip text="Compile Now">
             <UButton
                 :icon="AppDesign.Icons.ActionCompileMap"
-                :disabled="listStore.mapQueue.includes(mapPath)"
+                :disabled="hasQueue"
                 @click="() => compileStore.compileNow(mapPath)"
             />
         </UTooltip>
-        <MapsDataGridActionCloudButton v-if="artifactCloudStore.connected" :map-path="mapPath" />
+        <MapsDataGridActionCloudButton v-if="artifactCloudStore.connected" :map-path="mapPath" :disabled="hasQueue" />
         <UTooltip text="Open in Hammer">
             <UButton @click="() => handleOpenInHammer(mapPath)">
                 <template #leading>

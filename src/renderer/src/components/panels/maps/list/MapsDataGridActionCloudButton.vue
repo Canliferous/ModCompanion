@@ -1,7 +1,10 @@
 <template>
     <UTooltip :text="tooltip">
         <!--        <UPopover>-->
-        <UButton :disabled="downloadPromise !== undefined || maps.length === 0" @click="handleDownloadLatest">
+        <UButton
+            :disabled="disabled || downloadPromise !== undefined || maps.length === 0"
+            @click="handleDownloadLatest"
+        >
             <template #leading>
                 <template v-if="downloadPromise !== undefined">
                     <UIcon :name="AppDesign.Icons.Loading" class="size-5 animate-spin" />
@@ -43,7 +46,7 @@ import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { filename } from "pathe/utils";
 import { fileSize } from "humanize-plus";
 
-const props = defineProps<{ mapPath: string }>();
+const props = defineProps<{ mapPath: string; disabled?: boolean }>();
 
 const artifactCloudStore = useArtifactCloudStore();
 
