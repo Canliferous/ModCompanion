@@ -10,6 +10,7 @@ import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
 import { initGlobalComponents } from "~/helper/GlobalComponents.js";
 import { useSystemStore } from "~/store/SystemStore.js";
+import { useMapPresetsStore } from "~/store/MapPresetsStore.js";
 
 export function initVue() {
     const pinia = createPinia();
@@ -35,4 +36,5 @@ function _initSystemStores() {
     useStrataInteropStore();
     useArtifactCloudStore();
     useSystemStore();
+    useMapPresetsStore();
 }
