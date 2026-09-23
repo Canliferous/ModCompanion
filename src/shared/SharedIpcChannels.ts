@@ -4,6 +4,8 @@ export const Channels = {
     AppCloseWindow: "app_close_window",
     AppMinimize: "app_minimize",
     AppMaximize: "app_maximize",
+    AppUnmaximize: "app_unmaximize",
+    AppToggleMaximized: "app_toggle_maximized",
     AppOpenExternal: "app_open_external",
     AppVersion: "app_version",
     AppRendererReady: "app_renderer_ready",

@@ -36,7 +36,7 @@ function handleMinimize(): void {
     window.electronAPI.app.minimize();
 }
 function handleMaximize(): void {
-    window.electronAPI.app.maximize();
+    window.electronAPI.app.toggleMaximized();
 }
 function handleClose(event: MouseEvent): void {
     if (event.shiftKey) {

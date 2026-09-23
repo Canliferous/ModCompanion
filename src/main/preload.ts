@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
         closeWindow: () => ipcRenderer.send(Shared.Ipc.Channels.AppCloseWindow),
         minimize: () => ipcRenderer.send(Shared.Ipc.Channels.AppMinimize),
         maximize: () => ipcRenderer.send(Shared.Ipc.Channels.AppMaximize),
+        unmaximize: () => ipcRenderer.send(Shared.Ipc.Channels.AppUnmaximize),
+        toggleMaximized: () => ipcRenderer.send(Shared.Ipc.Channels.AppToggleMaximized),
         openExternal: (payload: string) => ipcRenderer.send(Shared.Ipc.Channels.AppOpenExternal, payload),
         getAppVersion: () => ipcRenderer.invoke(Shared.Ipc.Channels.AppVersion),
         rendererReady: () => ipcRenderer.send(Shared.Ipc.Channels.AppRendererReady),

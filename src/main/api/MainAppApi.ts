@@ -22,6 +22,14 @@ export const AppApi = {
             WindowSystem.maximize();
         });
 
+        ipcMain.on(Shared.Ipc.Channels.AppUnmaximize, () => {
+            WindowSystem.unmaximize();
+        });
+
+        ipcMain.on(Shared.Ipc.Channels.AppToggleMaximized, () => {
+            WindowSystem.toggleMaximized();
+        });
+
         ipcMain.on(Shared.Ipc.Channels.AppOpenExternal, (e, payload: string) => {
             shell.openExternal(payload);
         });

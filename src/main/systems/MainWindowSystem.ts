@@ -48,6 +48,18 @@ export const WindowSystem = {
     maximize(): void {
         mainWindow?.maximize();
     },
+    unmaximize(): void {
+        mainWindow?.unmaximize();
+    },
+    toggleMaximized(): void {
+        if (mainWindow) {
+            if (mainWindow.isMaximized()) {
+                mainWindow.unmaximize();
+            } else {
+                mainWindow.maximize();
+            }
+        }
+    },
 };
 
 interface WindowRect {
