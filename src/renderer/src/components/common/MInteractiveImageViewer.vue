@@ -7,11 +7,29 @@
     >
         <div class="absolute w-full h-full checkerboard" />
         <img :src="src" class="origin-top-left" :style="transformStyle" draggable="false" />
+        <div
+            class="pt-4 opacity-25 hover:opacity-100 transition-opacity absolute bottom-0 left-0 right-0 flex justify-center from-transparent to-neutral-950 bg-linear-to-b"
+        >
+            <div class="inline-flex gap-1 bg-neutral-800 shadow p-1 rounded-t-xl">
+                <UButton
+                    :icon="AppDesign.Icons.ImageViewer_Action_Fill"
+                    variant="subtle"
+                    @click="handleResetTransform"
+                />
+                <!--                <UButtonGroup>-->
+                <!--                    <UButton label="R" variant="subtle" />-->
+                <!--                    <UButton label="G" variant="subtle" />-->
+                <!--                    <UButton label="B" variant="subtle" />-->
+                <!--                    <UButton label="A" variant="subtle" />-->
+                <!--                </UButtonGroup>-->
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useMouse, useMousePressed } from "@vueuse/core";
+import { AppDesign } from "~/design/AppDesign.js";
 
 const props = defineProps<{ src: string }>();
 
@@ -68,6 +86,12 @@ function handleWheel(event: WheelEvent) {
     transformY.value = my - localY * newZoom;
 
     zoom.value = newZoom;
+}
+
+function handleResetTransform() {
+    transformX.value = 0;
+    transformY.value = 0;
+    zoom.value = 1;
 }
 </script>
 

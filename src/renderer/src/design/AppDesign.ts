@@ -90,6 +90,8 @@ export const Icons = {
     ConversionStateFailed: "mingcute:close-line",
     ConversionStateNoChange: "mingcute:check-line",
 
+    ImageViewer_Action_Fill: "mingcute:fullscreen-fill",
+
     Panel_MapList: "mingcute:map-2-fill",
     Panel_MapCompileLog: "mingcute:list-check-fill",
     Panel_AssetBrowser: "mingcute:document-3-fill",
