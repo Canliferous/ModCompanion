@@ -79,7 +79,7 @@ program
         }
 
         Core.Logger.info(Shared.Log.Channel.Cli, "Starting to convert assets...");
-        const startTime = new Date().getTime();
+        const startTime = Date.now();
 
         let assetCount = 0;
         await Core.ConversionAgentSystem.runAndConvertUntilItIsDone(opts.force && files.length === 0, (assetId) => {
@@ -95,7 +95,7 @@ program
             }
         });
 
-        const endTime = new Date().getTime();
+        const endTime = Date.now();
         const duration = (endTime - startTime) / 1000;
         Core.Logger.info(Shared.Log.Channel.Cli, `Done! Converted ${assetCount} assets in ${duration} seconds`);
     });
@@ -129,7 +129,7 @@ program
     .option("-d, --dry", "Dry run. Don't actually do anything, just log what would happen")
     .action(async (opts) => {
         const dry = Boolean(opts.dry);
-        const startTime = new Date().getTime();
+        const startTime = Date.now();
         await Core.ConfigSystem.initConfigSystem();
         await Core.ArtifactCloudSystem.initSystem();
         const campaignMapPrefix = "r2_a";
@@ -219,7 +219,7 @@ program
                 }
             }
 
-            const endTime = new Date().getTime();
+            const endTime = Date.now();
             const totalTime = (endTime - startTime) / 1000;
             Core.Logger.info(Shared.Log.Channel.Cli, chalk.green(`Done! Took ${totalTime} seconds`));
         }
@@ -231,7 +231,7 @@ program
                 return;
             }
 
-            const now = new Date().getTime();
+            const now = Date.now();
             const ONE_DAY = 1000 * 60 * 60 * 24;
             const MAX_AGE = ONE_DAY * 60;
             for (const [map, infos] of result.maps.entries()) {

@@ -79,7 +79,7 @@ async function _recreateWatcher(dirs: string[]) {
 
     const rootPath = data.common.appConfig.rootPath;
     const fullDirs = dirs.map((d) => pathe.join(rootPath, d));
-    const timeStart = new Date().getTime();
+    const timeStart = Date.now();
 
     const fullDirsConcat = fullDirs.join(", ");
     messages.log.info(Shared.Log.Channel.FileBrowser, "Watching", fullDirsConcat);
@@ -94,7 +94,7 @@ async function _recreateWatcher(dirs: string[]) {
     watcher.on("change", _change);
     watcher.on("unlink", _delete);
     watcher.on("ready", () => {
-        const timeEnd = new Date().getTime();
+        const timeEnd = Date.now();
         const durationMillis = timeEnd - timeStart;
         messages.log.info(
             Shared.Log.Channel.FileBrowser,

@@ -77,7 +77,7 @@ async function _startSystems(): Promise<void> {
     const failedSystems: string[] = [];
     let totalStartupTimeMillis = 0;
     for (const system of systems) {
-        const timeStart = new Date().getTime();
+        const timeStart = Date.now();
         const systemResult = system.initFunction();
 
         success = false;
@@ -91,7 +91,7 @@ async function _startSystems(): Promise<void> {
             Core.Logger.error(Shared.Log.Channel.MainSystems, e);
             success = false;
         }
-        const timeEnd = new Date().getTime();
+        const timeEnd = Date.now();
         const totalMillis = timeEnd - timeStart;
         totalStartupTimeMillis += totalMillis;
 

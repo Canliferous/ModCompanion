@@ -274,7 +274,7 @@ async function _touchAsset(asset: Shared.Asset.AssetDef) {
     if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
     if (asset.gameFiles === undefined || asset.gameFiles.length === 0) return false;
 
-    const time = Math.floor(new Date().getTime() / 1000);
+    const time = Math.floor(Date.now() / 1000);
     for (const contentFile of asset.contentFiles) {
         const p = makeContentPathAbsolute(contentFile);
 

@@ -39,7 +39,7 @@ export const AssetGroupsSystem = {
         return fs.rm(filePath);
     },
     async scan() {
-        const startTime = new Date().getTime();
+        const startTime = Date.now();
         groups.clear();
         const dir = _getAssetGroupDir();
         const dirItems = await fs.readdir(dir);
@@ -64,7 +64,7 @@ export const AssetGroupsSystem = {
             groups.set(id, { filePath: dirItemFull, def: fileContentObj, id });
         }
 
-        const endTime = new Date().getTime();
+        const endTime = Date.now();
         Logger.info(Shared.Log.Channel.Assets, `Loaded ${groups.size} asset groups in ${endTime - startTime}ms`);
 
         notifyFunc?.({ groups });

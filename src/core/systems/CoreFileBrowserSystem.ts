@@ -102,7 +102,7 @@ export const FileBrowserSystem = {
 
     indexFiles() {
         Logger.info(Shared.Log.Channel.FileBrowser, "Indexing files...");
-        const timeStart = new Date().getTime();
+        const timeStart = Date.now();
         const worker = WorkerSystem.createWorker(
             Shared.Workers.WorkerFile.IndexFilesystem,
             {
@@ -112,7 +112,7 @@ export const FileBrowserSystem = {
             _handleIndexMessage,
         );
         worker.on("exit", () => {
-            const timeEnd = new Date().getTime();
+            const timeEnd = Date.now();
             const totalEntries = index.values().reduce((sum, a) => sum + a.length, 0);
             Logger.info(
                 Shared.Log.Channel.FileBrowser,
