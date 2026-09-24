@@ -2,7 +2,7 @@
     <TooltipProvider>
         <template v-if="model && asset">
             <div class="grid grid-rows-[auto_minmax(0,1fr)] h-full">
-                <header class="flex m-1">
+                <header class="flex m-1 mb-0">
                     <AssetInspectorConversion :asset-id="model.assetId" />
                     <div class="ml-auto">
                         <AssetInspectorSaved />
