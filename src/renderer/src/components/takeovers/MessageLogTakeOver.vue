@@ -30,9 +30,9 @@
             />
             <USeparator orientation="vertical" />
         </template>
-        <div ref="scroller" class="grid grid-cols-[auto_auto_auto_1fr] text-xs gap-x-1 overflow-y-auto">
+        <div ref="scroller" class="grid grid-cols-[auto_auto_auto_1fr] text-xs gap-x-2 overflow-y-auto font-mono">
             <template v-for="(event, i) in events" :key="i">
-                <div class="grid col-span-full grid-cols-subgrid odd:bg-neutral-950/50 p-1">
+                <div class="grid col-span-full grid-cols-subgrid p-1 border-b border-b-accented">
                     <MLogTypeIcon :type="event.type" />
                     <div v-show="showTime" class="whitespace-nowrap text-muted tabular-nums">
                         {{ Shared.Log.getLogTime(event.time) }}
