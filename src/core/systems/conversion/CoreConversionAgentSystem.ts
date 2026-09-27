@@ -279,14 +279,22 @@ async function _touchAsset(asset: Shared.Asset.AssetDef) {
         const p = makeContentPathAbsolute(contentFile);
 
         AssetWatcherSystem.ignore(p);
-        await fs.utimes(p, time, time);
+        try {
+            await fs.utimes(p, time, time);
+        } catch (e) {
+            Logger.warning(Shared.Log.Channel.ConversionAgent, "Failed to set change date of", p);
+        }
     }
 
     for (const gameFile of asset.gameFiles) {
         const p = makeGamePathAbsolute(gameFile);
 
         AssetWatcherSystem.ignore(p);
-        await fs.utimes(p, time, time);
+        try {
+            await fs.utimes(p, time, time);
+        } catch (e) {
+            Logger.warning(Shared.Log.Channel.ConversionAgent, "Failed to set change date of", p);
+        }
     }
 }
 

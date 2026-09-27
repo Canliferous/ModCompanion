@@ -37,10 +37,10 @@ export function isAbsoluteGameFile(filePath: string): boolean {
 
 export function makeContentPathAbsolute(contentRelativePath: string): string {
     const config = ConfigSystem.getAppConfig();
-    return pathe.join(config.contentPath, contentRelativePath);
+    return Shared.SourceFs.makeContentPathAbsolute(config.contentPath, contentRelativePath);
 }
 
 export function makeGamePathAbsolute(gameRelativePath: string): string {
     const config = ConfigSystem.getAppConfig();
-    return pathe.join(config.gamePath, gameRelativePath);
+    return Shared.SourceFs.makeGamePathAbsolute(config.gamePath, gameRelativePath);
 }

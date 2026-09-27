@@ -60,9 +60,9 @@ export const Icons = {
     ActionExploreToFolder: "mingcute:folder-2-fill",
 
     ActionMcaFile: "mingcute:file-star-fill",
-    ActionExploreToMca: "mingcute:folder-star-fill",
-    ActionBrowseToMca: "mingcute:folder-star-fill",
-    ActionOpenFileMca: "mingcute:file-star-fill",
+    ActionExploreToDefinition: "mingcute:folder-star-fill",
+    ActionBrowseToDefinition: "mingcute:folder-star-fill",
+    ActionOpenFileDefinition: "mingcute:file-star-fill",
 
     ActionLaunchFile: "mingcute:play-fill",
     ActionEdit: "mingcute:edit-line",

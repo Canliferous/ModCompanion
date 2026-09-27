@@ -1,6 +1,7 @@
 import { forwardSlashed } from "./SharedSourceFs.js";
 import { getCommonPrefix, removeTrailing } from "./SharedString.js";
 import * as pathe from "pathe";
+import * as sourcelib from "sourcelib";
 
 export interface VmtFile {
     // Root relative
@@ -9,19 +10,27 @@ export interface VmtFile {
     shaderName: string;
 }
 
-export function createAutoMaterial(vtfs: string[]): VmtFile | undefined {
-    const textureNames = vtfs.map(absolutePathToMaterialPath);
+export function serializeMaterial(vmt: VmtFile): string {
+    const serialized = sourcelib.kv.KvSerializer.serialize(vmt.contents, {
+        name: vmt.shaderName,
+        indentSpaces: 4,
+    });
+    return serialized;
+}
+
+export function createAutoMaterial(vtfRelativeToRoot: string[]): VmtFile | undefined {
+    const textureNames = vtfRelativeToRoot.map(rootRelativeToMaterialPath);
 
     const baseTexture = textureNames.find(isMaybeBaseTexture);
     const normalMap = textureNames.find(isMaybeNormalMap);
     const mraoMap = textureNames.find(isMaybeMraoMap);
 
-    const isProbablyModelMaterial = isMaybeModelMaterial(vtfs);
+    const isProbablyModelMaterial = isMaybeModelMaterial(vtfRelativeToRoot);
     const isProbablyPbr = baseTexture && normalMap && mraoMap;
     const isProbablyLightmappedGeneric = baseTexture && !isProbablyModelMaterial;
     const isProbablyVertexlitGeneric = baseTexture && isProbablyModelMaterial;
 
-    const filePath = guessMaterialPath(vtfs) + ".vmt";
+    const filePath = guessMaterialPath(vtfRelativeToRoot) + ".vmt";
 
     if (isProbablyPbr) {
         const pbrMaterial: Record<string, any> = {
@@ -97,7 +106,7 @@ export function isMaybeMraoMap(fileNameWithoutExit: string) {
     return false;
 }
 
-export function absolutePathToMaterialPath(vtfPath: string): string {
+export function rootRelativeToMaterialPath(vtfPath: string): string {
     const ext = pathe.extname(vtfPath);
     const result = vtfPath.replace(ext, "");
     const splits = forwardSlashed(result).split("/");

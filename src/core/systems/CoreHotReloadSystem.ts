@@ -29,14 +29,14 @@ function _handleFileChanged(filePath: string) {
     }
 
     if (ext === ".vtf") {
-        const vtfPath = Shared.Vmt.absolutePathToMaterialPath(filePath);
+        const vtfPath = Shared.Vmt.rootRelativeToMaterialPath(filePath);
         Logger.info(Shared.Log.Channel.HotReload, "Reloading texture", vtfPath);
         StrataInteropSystem.sendCommand(`mat_reloadtexture ${vtfPath}`);
         return;
     }
 
     if (ext === ".vmt") {
-        const vmtPath = Shared.Vmt.absolutePathToMaterialPath(filePath);
+        const vmtPath = Shared.Vmt.rootRelativeToMaterialPath(filePath);
         Logger.info(Shared.Log.Channel.HotReload, "Reloading material", vmtPath);
         StrataInteropSystem.sendCommand(`mat_reloadmaterial ${vmtPath}`);
         return;

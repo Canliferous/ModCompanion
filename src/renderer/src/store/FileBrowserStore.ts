@@ -29,8 +29,12 @@ export const useFileBrowserStore = defineStore("file-browser", () => {
         window.electronAPI.fileBrowser.updateOpenedDirs(currentDirs);
     }
 
-    async function createFile(rootRelativePath: string, data: string): Promise<void> {
-        await window.electronAPI.file.writeString(rootRelativePath, data, Shared.FileBrowser.PathBases.RootRelative);
+    async function createFile(
+        path: string,
+        data: string,
+        pathBase: Shared.FileBrowser.PathBase = Shared.FileBrowser.PathBases.RootRelative,
+    ): Promise<void> {
+        await window.electronAPI.file.writeString(path, data, pathBase);
     }
 
     panelsStore.modelsInitializedEvent.on(() => {

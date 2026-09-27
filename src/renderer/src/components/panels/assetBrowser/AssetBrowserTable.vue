@@ -24,7 +24,7 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import { DataTableColumn } from "~/components/common/dataTable/MDataTable.model.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { ContextMenuItem } from "@nuxt/ui/components/ContextMenu.vue.js";
-import { exploreToMca, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
+import { exploreToDefinition, openAssociatedFile, openMca } from "~/helper/AssetHelper.js";
 import AssetBrowserCellAssetName from "~/components/panels/assetBrowser/AssetBrowserCellAssetName.vue";
 import AssetBrowserCellConverted from "~/components/panels/assetBrowser/AssetBrowserCellConverted.vue";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
@@ -38,7 +38,7 @@ import {
     isAssetBrowserGroupEntry,
 } from "~/components/panels/assetBrowser/AssetBrowser.model.js";
 import AssetBrowserCellGroupName from "~/components/panels/assetBrowser/AssetBrowserCellGroupName.vue";
-import ClipboardHelper from "~/helper/ClipboardHelper.js";
+import { ClipboardHelper } from "~/helper/ClipboardHelper.js";
 import { summarizeConversionStates } from "~/helper/ConversionHelper.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
@@ -46,7 +46,8 @@ import { useAssetsFilter } from "~/composables/useFilter.js";
 import { usePanelsStore } from "~/store/PanelsStore.js";
 import { GlobalComponentNames } from "~/helper/GlobalComponents.js";
 import { AssetInspectorModel } from "~/components/panels/assetInspector/AssetInspector.model.js";
-import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
+import { getAppConfig } from "~/renderer-config.js";
+import { MaterialHelper } from "~/helper/MaterialHelper.js";
 
 const listStore = useAssetListStore();
 const conversionStore = useAssetConversionStore();
@@ -288,6 +289,15 @@ const items = computed(() => {
             const isAllGrouped = selAssets.every((selected: Shared.Asset.Asset) =>
                 assetGroupsStore.isGrouped(selected.def.id),
             );
+            const allTextures = !selAssets.some((value) => value.def.type !== Shared.Asset.Types.Texture);
+            let autoMaterial: Shared.Vmt.VmtFile | undefined;
+            if (allTextures) {
+                const texturePaths = Shared.Asset.getGameFilePaths(selAssets, getAppConfig().gamePath).map((f) =>
+                    Shared.SourceFs.makeGamePathAbsolute(getAppConfig().gamePath, f),
+                );
+                autoMaterial = Shared.Vmt.createAutoMaterial(texturePaths);
+            }
+
             options.push([
                 {
                     label: "Convert",
@@ -308,6 +318,14 @@ const items = computed(() => {
                     icon: AppDesign.Icons.ActionCreateAssetGroup,
                     color: isAnyGrouped ? "neutral" : "success",
                     disabled: isAnyGrouped,
+                },
+                {
+                    label: "Create Material",
+                    onSelect(e: Event) {
+                        MaterialHelper.createMaterial(autoMaterial!);
+                    },
+                    icon: AppDesign.Icons.ActionCreateAsset,
+                    disabled: !autoMaterial,
                 },
             ]);
 
@@ -341,14 +359,14 @@ const items = computed(() => {
                         onSelect() {
                             openMca(sel);
                         },
-                        icon: AppDesign.Icons.ActionOpenFileMca,
+                        icon: AppDesign.Icons.ActionOpenFileDefinition,
                     },
                     {
-                        label: "Explore to .mca",
+                        label: "Explore to definition",
                         onSelect() {
-                            exploreToMca(sel);
+                            exploreToDefinition(sel);
                         },
-                        icon: AppDesign.Icons.ActionExploreToMca,
+                        icon: AppDesign.Icons.ActionExploreToDefinition,
                     },
                     {
                         label: "Copy Name",

@@ -95,6 +95,15 @@ async function _scanGameFile(filePath: Shared.FileBrowser.FileEntry): Promise<Sh
     return undefined;
 }
 
+async function _tryReadAssetDef(fullPath: string): Promise<string | undefined> {
+    try {
+        return await fs.readFile(fullPath, "utf-8");
+    } catch (e) {
+        messages.log.warning(Shared.Log.Channel.Assets, "Failed to read asset definition at", fullPath);
+        return undefined;
+    }
+}
+
 async function _readMcaFile(fileName: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
     const fullPath = pathe.join(fileRootPath, fileName);
     const text = await fs.readFile(fullPath, "utf-8");
@@ -124,7 +133,9 @@ async function _readMcaFile(fileName: string, fileRootPath: string): Promise<Sha
 
 async function _readQcFile(fileName: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
     const fullPath = pathe.join(fileRootPath, fileName);
-    const text = await fs.readFile(fullPath, "utf-8");
+    const text = await _tryReadAssetDef(fullPath);
+    if (!text) return undefined;
+
     const qcDoc = sourcelib.qc.QcParser.parseText(text);
     const refs = sourcelib.qc.QcUtils.getAllReferencedModelInputFiles(qcDoc);
 
@@ -135,9 +146,21 @@ async function _readQcFile(fileName: string, fileRootPath: string): Promise<Shar
 
 async function _readVmtFile(fileName: string, fileRootPath: string): Promise<Shared.Asset.AssetDef | undefined> {
     const fullPath = pathe.join(fileRootPath, fileName);
-    const text = await fs.readFile(fullPath, "utf-8");
+    const text = await _tryReadAssetDef(fullPath);
+    if (!text) return undefined;
+
     const doc = sourcelib.kv.KvSerializer.deserializeText(text);
-    const vmt = doc[0] as Shared.AssetMaterial.VmtDocument;
+    let vmt: Shared.AssetMaterial.VmtDocument | undefined = undefined;
+    if (doc.length > 0) {
+        vmt = doc[0] as Shared.AssetMaterial.VmtDocument;
+    } else {
+        messages.log.warning(
+            Shared.Log.Channel.Assets,
+            "Failed to deserialize VMT",
+            fileName,
+            "It will still appear as an asset, but texture relationships cannot be created",
+        );
+    }
 
     const def = Shared.AssetMaterial.createMaterialAssetDefinition(data.common.appConfig, fullPath, vmt);
     return def;

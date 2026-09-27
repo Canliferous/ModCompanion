@@ -41,8 +41,8 @@ export function getGameOrContentRelativePath(filePath: string, gameName: string,
     return forwardSlashed(file.substring(start));
 }
 
-export function getRootRelativePath(filePath: string, rootPath: string): string {
-    const file = forwardSlashed(filePath);
+export function getRootRelativePath(absoluteFilePath: string, rootPath: string): string {
+    const file = forwardSlashed(absoluteFilePath);
     const root = forwardSlashed(rootPath);
 
     const isAbsolute = file.startsWith(root);
@@ -50,7 +50,7 @@ export function getRootRelativePath(filePath: string, rootPath: string): string 
         return forwardSlashed(file.substring(rootPath.length + 1));
     }
 
-    return filePath;
+    return absoluteFilePath;
 }
 
 export function isRelativeToRoot(filePath: string, gameName: string): boolean {
@@ -82,4 +82,12 @@ export function correctProjectPath(somePath: string, rootPath: string) {
     if (ind !== 0) return undefined;
 
     return Shared.SourceFs.stripPathStart(p, rootPath);
+}
+
+export function makeContentPathAbsolute(contentPath: string, contentRelativePath: string): string {
+    return pathe.join(contentPath, contentRelativePath);
+}
+
+export function makeGamePathAbsolute(gamePath: string, gameRelativePath: string): string {
+    return pathe.join(gamePath, gameRelativePath);
 }

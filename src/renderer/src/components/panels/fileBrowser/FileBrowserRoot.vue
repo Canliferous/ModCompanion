@@ -45,7 +45,6 @@
 
 <script setup lang="ts">
 import * as pathe from "pathe";
-import * as sourcelib from "sourcelib";
 import { watchImmediate } from "@vueuse/core";
 import * as Shared from "mod_companion_shared";
 import FileBrowserLocationBar from "~/components/panels/fileBrowser/FileBrowserLocationBar.vue";
@@ -57,7 +56,6 @@ import { useAssetListStore } from "~/store/AssetListStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
 import { useAssetGroupsStore } from "~/store/AssetGroupsStore.js";
 import { getAppConfig } from "~/renderer-config.js";
-import clipboardHelper from "~/helper/ClipboardHelper.js";
 import FileBrowserSearchBar from "~/components/panels/fileBrowser/FileBrowserSearchBar.vue";
 import FileBrowserEntryName from "~/components/panels/fileBrowser/FileBrowserEntryName.vue";
 import { useFileFilter } from "~/composables/useFilter.js";
@@ -68,6 +66,8 @@ import { usePanelsStore } from "~/store/PanelsStore.js";
 import { FileInspectorModel } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import FileBrowserEntrySize from "~/components/panels/fileBrowser/FileBrowserEntrySize.vue";
+import { MaterialHelper } from "~/helper/MaterialHelper.js";
+import { ClipboardHelper } from "~/helper/ClipboardHelper.js";
 
 const fileBrowserStore = useFileBrowserStore();
 const assetListStore = useAssetListStore();
@@ -237,8 +237,8 @@ const items = computed<ContextMenuItem[][]>(() => {
 
     const allFiles = !entries.some((e) => !e.isFile);
     const pathsArray = entries.map((e) => e.path);
-    const allVtfs = !entries.some((e) => !e.isFile || pathe.extname(e.name) !== ".vtf");
-    const autoMaterial = allVtfs ? Shared.Vmt.createAutoMaterial(pathsArray) : undefined;
+    const allVextures = !entries.some((e) => !e.isFile || pathe.extname(e.name) !== ".vtf");
+    const autoMaterial = allVextures ? Shared.Vmt.createAutoMaterial(pathsArray) : undefined;
 
     return [
         [
@@ -283,16 +283,11 @@ const items = computed<ContextMenuItem[][]>(() => {
                 },
             },
             {
-                label: "Create VMT",
+                label: "Create Material",
                 icon: AppDesign.Icons.ActionCreateAsset,
                 disabled: !autoMaterial,
                 onSelect(e: Event) {
-                    // TODO: Move this out
-                    const data = sourcelib.kv.KvSerializer.serialize(autoMaterial!.contents, {
-                        name: autoMaterial!.shaderName,
-                        indentSpaces: 4,
-                    });
-                    fileBrowserStore.createFile(autoMaterial!.filePath, data).then(refresh);
+                    MaterialHelper.createMaterial(autoMaterial!).then(refresh);
                 },
             },
         ],
@@ -302,7 +297,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 icon: AppDesign.Icons.Copy,
                 disabled: entries.length !== 1,
                 onSelect() {
-                    clipboardHelper.writeTextAndToast(entries[0].path);
+                    ClipboardHelper.writeTextAndToast(entries[0].path);
                 },
             },
             {
@@ -311,7 +306,7 @@ const items = computed<ContextMenuItem[][]>(() => {
                 disabled: entries.length !== 1,
                 onSelect() {
                     const fullPath = pathe.join(getAppConfig().rootPath, entries[0].path);
-                    clipboardHelper.writeTextAndToast(fullPath);
+                    ClipboardHelper.writeTextAndToast(fullPath);
                 },
             },
         ],

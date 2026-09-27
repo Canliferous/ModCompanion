@@ -14,7 +14,7 @@ function _deriveMaterialDisplayName(vmtFile: string): string {
 export function createMaterialAssetDefinition(
     config: AppConfig,
     vmtPath: string,
-    vmtDocument: VmtDocument,
+    vmtDocument: VmtDocument | undefined = undefined,
 ): MaterialAssetDef {
     const rootRelativeVmf = getRootRelativePath(vmtPath, config.gamePath);
 

@@ -1,6 +1,7 @@
 import { SharedVtfCreateOptions } from "./SharedVtf.js";
 import * as pathe from "pathe";
 import { VmtDocument } from "./SharedAssetMaterial.js";
+import { makeContentPathAbsolute, makeGamePathAbsolute } from "./SharedSourceFs.js";
 
 export type AssetId = string;
 export type AssetMap = Map<AssetId, Asset>;
@@ -205,6 +206,36 @@ export function isMaterialAssetDef(asset: AssetDef | undefined): asset is Materi
 
 export function isMaterialAsset(asset: Asset | undefined): asset is MaterialAsset {
     return isMaterialAssetDef(asset?.def);
+}
+
+// ------------------------
+
+export function getGameFilePaths(assets: Asset[], gamePath: string): string[] {
+    const paths: string[] = [];
+    for (const asset of assets) {
+        if (!asset.def.gameFiles) continue;
+        if (asset.def.gameFiles.length === 0) continue;
+        for (const gameFile of asset.def.gameFiles) {
+            const rootRelative = makeGamePathAbsolute(gamePath, gameFile);
+            paths.push(rootRelative);
+        }
+    }
+
+    return paths;
+}
+
+export function getContentFilePaths(assets: Asset[], contentPath: string): string[] {
+    const paths: string[] = [];
+    for (const asset of assets) {
+        if (!asset.def.contentFiles) continue;
+        if (asset.def.contentFiles.length === 0) continue;
+        for (const gameFile of asset.def.contentFiles) {
+            const rootRelative = makeContentPathAbsolute(contentPath, gameFile);
+            paths.push(rootRelative);
+        }
+    }
+
+    return paths;
 }
 
 // ------------------------
