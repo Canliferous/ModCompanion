@@ -14,7 +14,7 @@
 import { AppDesign, getAssetTypeIcon } from "~/design/AppDesign.js";
 import * as Shared from "mod_companion_shared";
 
-const model = defineModel<Shared.Asset.Type[]>({ default: [] });
+const model = defineModel<Shared.Asset.Type[]>();
 
 const items = Shared.Asset.ValidTypes.map((k) => ({
     id: k,
