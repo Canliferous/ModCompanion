@@ -10,10 +10,10 @@ import { notifyConversionsUpdated } from "./api/MainConversionApi.js";
 import { notifyMapCompileLog, notifyMapCompileProgress, notifyMapQueueUpdated } from "./api/MainMapCompileApi.js";
 import { FileBrowserApi } from "./api/MainFileBrowserApi.js";
 import {
-    notifyStrataInteropConnected,
-    notifyStrataInteropDisconnected,
-    notifyStrataInteropLog,
-} from "./api/MainStrataInteropApi.js";
+    notifyGameInteropConnected,
+    notifyGameInteropDisconnected,
+    notifyGameInteropLog,
+} from "./api/MainGameInteropApi.js";
 
 type SystemInitFunction = () => Promise<boolean> | boolean;
 type SystemShutdownFunction = () => Promise<void> | void;
@@ -55,12 +55,12 @@ const systems: System[] = [
     { name: "MareTf", initFunction: Core.MareTfSystem.initSystem },
     { name: "ConversionAgent", initFunction: () => Core.ConversionAgentSystem.initSystem(notifyConversionsUpdated) },
     {
-        name: "StrataInterop",
+        name: "GameInterop",
         initFunction: () =>
-            Core.StrataInteropSystem.initSystem({
-                connectedFunc: notifyStrataInteropConnected,
-                disconnectedFunc: notifyStrataInteropDisconnected,
-                messageFunc: notifyStrataInteropLog,
+            Core.GameInteropSystem.initSystem({
+                connectedFunc: notifyGameInteropConnected,
+                disconnectedFunc: notifyGameInteropDisconnected,
+                messageFunc: notifyGameInteropLog,
             }),
     },
     { name: "AssetGroups", initFunction: () => Core.AssetGroupsSystem.initSystem(notifyAssetGroupsUpdated) },

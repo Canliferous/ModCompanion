@@ -3,18 +3,22 @@
         <UButtonGroup>
             <UButton
                 size="sm"
-                :variant="interopStore.connected ? 'subtle' : 'outline'"
-                :color="interopStore.connected ? 'success' : 'neutral'"
+                :variant="gameInteropStore.connected ? 'subtle' : 'outline'"
+                :color="gameInteropStore.connected ? 'success' : 'neutral'"
                 @click="handleClickGame"
             >
                 <MBitmapIcon :name="AppDesign.BitmapIcon.Launchers[Shared.Launchers.Launchers.Game]" />
                 <span
                     class="text-nowrap overflow-x-clip text-ellipsis max-md:hidden"
-                    :class="interopStore.connected ? 'text-success' : 'text-muted'"
+                    :class="gameInteropStore.connected ? 'text-success' : 'text-muted'"
                 >
                     {{ Shared.Launchers.GameLauncherOptions[lastRunGameConfig]?.name }}
                 </span>
-                <UIcon v-if="interopStore.connected" :name="AppDesign.Icons.InteropConnected" class="text-success" />
+                <UIcon
+                    v-if="gameInteropStore.connected"
+                    :name="AppDesign.Icons.InteropConnected"
+                    class="text-success"
+                />
             </UButton>
             <UDropdownMenu
                 :items="gameItems"
@@ -24,10 +28,10 @@
             >
                 <UButton
                     size="sm"
-                    :variant="interopStore.connected ? 'subtle' : 'outline'"
-                    :class="interopStore.connected ? 'text-success' : 'text-muted'"
+                    :variant="gameInteropStore.connected ? 'subtle' : 'outline'"
+                    :class="gameInteropStore.connected ? 'text-success' : 'text-muted'"
                     :trailing-icon="AppDesign.Icons.ChevronDown"
-                    :color="interopStore.connected ? 'success' : 'neutral'"
+                    :color="gameInteropStore.connected ? 'success' : 'neutral'"
                 />
             </UDropdownMenu>
         </UButtonGroup>
@@ -48,10 +52,10 @@
 import { AppDesign } from "~/design/AppDesign.js";
 import { DropdownMenuItem } from "@nuxt/ui/components/DropdownMenu.vue.js";
 import * as Shared from "mod_companion_shared";
-import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { useRememberRef } from "~/composables/useRemember.js";
+import { useGameInteropStore } from "~/store/GameInteropStore.js";
 
-const interopStore = useStrataInteropStore();
+const gameInteropStore = useGameInteropStore();
 
 const lastRunGameConfig = useRememberRef(ref<number>(1), "last-run-game-config-idx");
 

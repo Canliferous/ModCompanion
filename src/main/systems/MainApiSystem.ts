@@ -10,7 +10,7 @@ import { registerConversionApi } from "../api/MainConversionApi.js";
 import { registerHotReloadApi } from "../api/MainHotReloadApi.js";
 import { registerAssetGroupsApi } from "../api/MainAssetGroupsApi.js";
 import { registerClipboardApi } from "../api/MainClipboardApi.js";
-import { registerStrataInteropApi } from "../api/MainStrataInteropApi.js";
+import { registerGameInteropApi } from "../api/MainGameInteropApi.js";
 import { registerFgdApi } from "../api/MainFgdApi.js";
 import { registerArtifactCloudApi } from "../api/MainArtifactCloudApi.js";
 import { registerFileApi } from "../api/MainFileApi.js";
@@ -34,7 +34,7 @@ const apis: (() => boolean)[] = [
     registerHotReloadApi,
     registerAssetGroupsApi,
     registerClipboardApi,
-    registerStrataInteropApi,
+    registerGameInteropApi,
     registerFgdApi,
     registerArtifactCloudApi,
     registerFileApi,

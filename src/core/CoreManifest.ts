@@ -8,7 +8,7 @@ import { Logger } from "./systems/CoreLogSystem.js";
 import { MaterialSystem } from "./systems/CoreMaterialSystem.js";
 import { MapCompileSystem } from "./systems/CoreMapCompileSystem.js";
 import { MareTfSystem } from "./systems/CoreMaretfSystem.js";
-import { StrataInteropSystem } from "./systems/CoreStrataInteropSystem.js";
+import { GameInteropSystem } from "./systems/CoreGameInteropSystem.js";
 import { WorkerSystem } from "./systems/CoreWorkerSystem.js";
 
 import { ConversionAgentSystem } from "./systems/conversion/CoreConversionAgentSystem.js";
@@ -40,7 +40,7 @@ export {
     MaterialSystem,
     MapCompileSystem,
     MareTfSystem,
-    StrataInteropSystem,
+    GameInteropSystem,
     WorkerSystem,
     ConversionAgentSystem,
     ConversionChecksumSystem,

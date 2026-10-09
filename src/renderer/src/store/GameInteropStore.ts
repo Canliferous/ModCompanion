@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useStrataInteropStore = defineStore("strata-interop", () => {
+export const useGameInteropStore = defineStore("game-interop", () => {
     const connected = ref(false);
     const log = ref("");
     const commandHistory = ref<string[]>([]);

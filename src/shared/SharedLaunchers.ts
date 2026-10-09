@@ -1,4 +1,4 @@
-import { NetconPort } from "./SharedStrataInterop.js";
+import { NetconPort } from "./SharedGameInterop.js";
 
 export enum Launchers {
     Game = "game",

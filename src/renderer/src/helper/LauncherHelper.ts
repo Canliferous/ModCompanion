@@ -9,7 +9,7 @@ export function openMapInGame(mapName: string): void {
     const n = filename(mapName);
     window.electronAPI.app.launch(
         Shared.Launchers.Launchers.Game,
-        `-dev -condebug -netconport ${Shared.StrataInterop.NetconPort} +map ${n}`,
+        `-dev -condebug -netconport ${Shared.GameInterop.NetconPort} +map ${n}`,
     );
 }
 

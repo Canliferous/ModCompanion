@@ -17,7 +17,7 @@ import * as Map from "./SharedMap.js";
 import * as MdlInfo from "./SharedMdlInfoReport.js";
 import * as PlayPauseStop from "./SharedPlayPauseStopState.js";
 import * as SourceFs from "./SharedSourceFs.js";
-import * as StrataInterop from "./SharedStrataInterop.js";
+import * as GameInterop from "./SharedGameInterop.js";
 import * as String from "./SharedString.js";
 import * as Timing from "./SharedTiming.js";
 import * as Vmt from "./SharedVmt.js";
@@ -44,7 +44,7 @@ export {
     MdlInfo,
     PlayPauseStop,
     SourceFs,
-    StrataInterop,
+    GameInterop,
     String,
     Timing,
     Vmt,

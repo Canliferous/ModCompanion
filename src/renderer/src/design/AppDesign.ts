@@ -106,7 +106,7 @@ export const Icons = {
     Panel_AssetInspector_General: "mingcute:list-check-fill",
     Panel_Conversions: "mingcute:list-check-2-fill",
     Panel_ConversionDetails: "mingcute:lightning-fill",
-    Panel_StrataConsole: "mingcute:terminal-fill",
+    Panel_GameConsole: "mingcute:terminal-fill",
 
     TakeOver_AssetWizard: "mingcute:traffic-cone-fill",
     TakeOver_Log: "mingcute:list-check-fill",

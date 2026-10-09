@@ -7,7 +7,7 @@
                 <UInput
                     v-model="prompt"
                     class="grow"
-                    :placeholder="interopStore.connected ? 'Enter command' : 'Strata Interop is not connected'"
+                    :placeholder="interopStore.connected ? 'Enter command' : 'Game Interop is not connected'"
                     :disabled="!interopStore.connected"
                     @keydown.enter="handleSubmit"
                 />
@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
 import { AppDesign } from "~/design/AppDesign.js";
+import { useGameInteropStore } from "~/store/GameInteropStore.js";
 
-const interopStore = useStrataInteropStore();
+const interopStore = useGameInteropStore();
 
 const prompt = ref("");
 

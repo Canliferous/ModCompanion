@@ -5,7 +5,7 @@ import App from "~/components/App.vue";
 import { useMapConsoleStore } from "~/store/MapConsoleStore.js";
 import { useAssetConversionStore } from "~/store/AssetConversionStore.js";
 import { createMemoryHistory, createRouter } from "vue-router";
-import { useStrataInteropStore } from "~/store/StrataInteropStore.js";
+import { useGameInteropStore } from "~/store/GameInteropStore.js";
 import { useArtifactCloudStore } from "~/store/ArtifactCloudStore.js";
 import { useMessageLogStore } from "~/store/MessageLogStore.js";
 import { initGlobalComponents } from "~/helper/GlobalComponents.js";
@@ -33,7 +33,7 @@ function _initSystemStores() {
     useMessageLogStore();
     useMapConsoleStore();
     useAssetConversionStore();
-    useStrataInteropStore();
+    useGameInteropStore();
     useArtifactCloudStore();
     useSystemStore();
     useMapPresetsStore();

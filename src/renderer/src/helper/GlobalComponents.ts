@@ -11,7 +11,7 @@ import AssetInspectorGeneralPanel from "~/components/panels/assetInspector/gener
 import PanelTab from "~/components/panelTabs/PanelTab.vue";
 import MapCompileLogPanel from "~/components/panels/mapCompileLog/MapCompileLogPanel.vue";
 import ConversionsPanel from "~/components/panels/conversions/ConversionsPanel.vue";
-import StrataConsolePanel from "~/components/panels/strataConsole/StrataConsolePanel.vue";
+import GameConsolePanel from "~/components/panels/gameConsole/GameConsolePanel.vue";
 import WaterMark from "~/components/panels/WaterMark.vue";
 import AddPanelAction from "~/components/panels/AddPanelAction.vue";
 import AssetInspectorTextureHotspotEditorPanel from "~/components/panels/assetInspector/textureHotspotEditor/AssetInspectorTextureHotspotEditorPanel.vue";
@@ -21,7 +21,7 @@ import { AssetBrowserBehavior } from "~/components/panels/assetBrowser/AssetBrow
 import { FileBrowserBehavior } from "~/components/panels/fileBrowser/FileBrowser.model.js";
 import { FileInspectorBehavior } from "~/components/panels/fileInspector/FileInspector.model.js";
 import { MapsBehavior } from "~/components/panels/maps/Maps.model.js";
-import { StrataConsoleBehavior } from "~/components/panels/strataConsole/StrataConsole.model.js";
+import { GameConsoleBehavior } from "~/components/panels/gameConsole/GameConsole.model.js";
 import SubPanelTab from "~/components/panelTabs/SubPanelTab.vue";
 import { ConversionsBehavior } from "~/components/panels/conversions/Conversions.model.js";
 import { MapCompileLogBehavior } from "~/components/panels/mapCompileLog/MapCompileLog.model.js";
@@ -41,7 +41,7 @@ export const GlobalComponentNames = {
     AssetBrowser: "_AssetBrowser",
     AssetInspector: "_AssetInspector",
     Conversions: "_Conversions",
-    StrataConsole: "_StrataConsole",
+    GameConsole: "_StrataConsole", // legacy name to not break old layout save data
     PanelTab: "_PanelTab",
     SubPanelTab: "_SubPanelTab",
     AddPanelAction: "_AddPanelAction",
@@ -63,7 +63,7 @@ export const GlobalComponentMapping: Record<GlobalComponentName, Component> = {
     _FileInspector: FileInspectorPanel,
     _MapList: MapsPanel,
     _MapCompileLog: MapCompileLogPanel,
-    _StrataConsole: StrataConsolePanel,
+    _StrataConsole: GameConsolePanel,
     _Conversions: ConversionsPanel,
     _PanelTab: PanelTab,
     _SubPanelTab: SubPanelTab,
@@ -89,7 +89,7 @@ export const PanelComponentNames = [
     GlobalComponentNames.FileInspector,
     GlobalComponentNames.MapList,
     GlobalComponentNames.MapCompileLog,
-    GlobalComponentNames.StrataConsole,
+    GlobalComponentNames.GameConsole,
     GlobalComponentNames.Conversions,
 ];
 export type PanelComponentName = (typeof PanelComponentNames)[number];
@@ -99,7 +99,7 @@ export const SpawnablePanelComponentNames = [
     GlobalComponentNames.FileBrowser,
     GlobalComponentNames.MapList,
     GlobalComponentNames.MapCompileLog,
-    GlobalComponentNames.StrataConsole,
+    GlobalComponentNames.GameConsole,
     GlobalComponentNames.Conversions,
 ];
 export type SpawnablePanelComponentName = (typeof SpawnablePanelComponentNames)[number];
@@ -131,7 +131,7 @@ export const PanelsBehaviors: Record<PanelComponentName, PanelBehavior<any>> = {
     [GlobalComponentNames.FileInspector]: FileInspectorBehavior,
     [GlobalComponentNames.MapList]: MapsBehavior,
     [GlobalComponentNames.MapCompileLog]: MapCompileLogBehavior,
-    [GlobalComponentNames.StrataConsole]: StrataConsoleBehavior,
+    [GlobalComponentNames.GameConsole]: GameConsoleBehavior,
     [GlobalComponentNames.Conversions]: ConversionsBehavior,
 };
 

@@ -17,9 +17,9 @@ interface Props {
     messageFunc?: ((message: string) => void) | undefined;
 }
 
-export const StrataInteropSystem = {
+export const GameInteropSystem = {
     initSystem(funcs?: Props): boolean {
-        _initStrataInteropSocket();
+        _initGameInteropSocket();
 
         notifyConnectedFunc = funcs?.connectedFunc;
         notifyDisconnectedFunc = funcs?.disconnectedFunc;
@@ -28,7 +28,7 @@ export const StrataInteropSystem = {
     },
     sendCommand(command: string) {
         if (socket) {
-            Logger.info(Shared.Log.Channel.GameInterop, "Sending command to strata", command);
+            Logger.info(Shared.Log.Channel.GameInterop, "Sending command to game", command);
             socket.write(command + "\n");
         }
     },
@@ -54,11 +54,11 @@ function _connect(port: number): Promise<net.Socket | undefined> {
 async function _healthcheck() {
     if (!socket) {
         if (reconnect) {
-            const s = await _connect(Shared.StrataInterop.NetconPort);
+            const s = await _connect(Shared.GameInterop.NetconPort);
             if (s) {
                 s.on("close", () => {
                     socket = undefined;
-                    Logger.info(Shared.Log.Channel.GameInterop, "Strata disconnected");
+                    Logger.info(Shared.Log.Channel.GameInterop, "Game disconnected");
                     notifyDisconnectedFunc?.();
                 });
 
@@ -68,7 +68,7 @@ async function _healthcheck() {
                 });
 
                 socket = s;
-                Logger.info(Shared.Log.Channel.GameInterop, "Strata connected");
+                Logger.info(Shared.Log.Channel.GameInterop, "Game connected");
                 notifyConnectedFunc?.();
             }
         }
@@ -76,6 +76,6 @@ async function _healthcheck() {
     }
 }
 
-function _initStrataInteropSocket(): void {
+function _initGameInteropSocket(): void {
     healthCheckInterval = setInterval(() => _healthcheck(), healthCheckIntervalMs);
 }
