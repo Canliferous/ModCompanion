@@ -29,7 +29,7 @@ export const AssetGroupsSystem = {
         assetGroupDef: Shared.AssetGroup.GroupDefinition,
     ): Promise<Shared.AssetGroup.SharedAssetGroup> {
         const filePath = pathe.join(_getAssetGroupDir(), id + ".json");
-        const contents = JSON.stringify(assetGroupDef);
+        const contents = JSON.stringify(assetGroupDef, null, 4);
         await fs.writeFile(filePath, contents);
         Logger.info(Shared.Log.Channel.Assets, "Wrote asset group", filePath, assetGroupDef);
         return { filePath, def: assetGroupDef, id };
