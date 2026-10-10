@@ -7,9 +7,15 @@ import * as Shared from "mod_companion_shared";
 
 export const ConversionChecksumSystem = {
     checksums: new Map<Shared.Asset.AssetId, string>(),
+    enabled: true,
+
     async initChecksums(map: Map<Shared.Asset.AssetId, Shared.Asset.Asset>) {
-        const startTime = new Date();
-        {
+        if (!this.enabled) {
+            Logger.info(Shared.Log.Channel.ConversionAgent, `Created no checksums because the system is disabled`);
+            return;
+        }
+
+        const { millis } = await Shared.Timing.timeMillisAsync(async () => {
             const assets = map.values();
             const promises = assets.map(async (asset) => {
                 if (!asset.def.contentFiles) return;
@@ -19,12 +25,8 @@ export const ConversionChecksumSystem = {
             });
 
             await Promise.allSettled(promises);
-        }
-        const endTime = new Date();
-        Logger.info(
-            Shared.Log.Channel.ConversionAgent,
-            `Initialized asset checksums in ${endTime.getTime() - startTime.getTime()}ms`,
-        );
+        });
+        Logger.info(Shared.Log.Channel.ConversionAgent, `Initialized asset checksums in`, millis, "ms");
     },
     async createChecksum(contentFiles: string[]) {
         const contentPath = ConfigSystem.getAppConfig().contentPath;
@@ -41,6 +43,7 @@ export const ConversionChecksumSystem = {
         return sum;
     },
     async hasChanged(asset: Shared.Asset.AssetDef): Promise<boolean> {
+        if (!this.enabled) return false;
         if (asset.contentFiles === undefined || asset.contentFiles.length === 0) return false;
 
         const newSum = await this.createChecksum(asset.contentFiles);

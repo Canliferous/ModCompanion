@@ -175,6 +175,8 @@ async function _startConversion(id: Shared.Asset.AssetId): Promise<string | unde
     const force = previousState === Shared.Conversion.State.PendingForced;
 
     if (!force) {
+        // The purpose of checksums is to avoid unnecessary conversions when the file was touched without contents changing
+        // Blender source tools for example reexports all model files in bulk but only one may have its contents updated
         const hasChanged = await ConversionChecksumSystem.hasChanged(asset.def);
         if (!hasChanged) {
             const isStale = await _isAssetStale(asset.def);
