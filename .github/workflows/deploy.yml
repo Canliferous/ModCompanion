@@ -1,5 +1,7 @@
 name: deploy.yml
 on:
+  workflow_dispatch:
+
 
 jobs:
   deploy:
