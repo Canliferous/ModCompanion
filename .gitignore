@@ -28,6 +28,9 @@ node_modules/
 .env
 .env.test
 
+# My vscode
+.vscode
+
 .vite/
 
 .idea
