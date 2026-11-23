@@ -9,6 +9,8 @@ import { AssetWatcherSystem } from "../CoreAssetWatcherSystem.js";
 import { Logger } from "../CoreLogSystem.js";
 import * as Shared from "mod_companion_shared";
 import { AssetRepositorySystem } from "../asset/CoreAssetRepositorySystem.js";
+import { ConfigSystem } from "../CoreConfigSystem.js";
+import * as pathe from "pathe";
 
 const MAX_PARALLEL_JOBS = 1;
 const CONVERSION_INTERVAL_MS = 100;
@@ -83,7 +85,7 @@ export const ConversionAgentSystem = {
             }
 
             const valid = _isValidAsset(asset.def);
-            const contentExists = _doContentFilesExist(asset.def);
+            const contentExists = _areContentFilesValid(asset.def);
             if (!valid || !contentExists) {
                 _setState(asset.def.id, Shared.Conversion.State.Invalid);
                 continue;
@@ -127,6 +129,14 @@ async function _runAgent(): Promise<void> {
     notifyFunc?.(event);
 }
 
+function _shouldAutoConvert(asset: Shared.Asset.Asset): boolean {
+    const autoConvertPaths = ConfigSystem.getAppConfig().conversionAgent?.autoConvertPaths;
+    if (!autoConvertPaths) return true;
+    if (asset.defFilePath === undefined) return false;
+
+    return autoConvertPaths.some((p) => asset.defFilePath!.startsWith(p));
+}
+
 function _getAssetsToConvert(): { assets: Shared.Asset.AssetId[]; totalAssetsToConvertCount: number } {
     let freeJobsCount = MAX_PARALLEL_JOBS - conversionJobs.size;
     let queueLength = 0;
@@ -150,13 +160,19 @@ function _getAssetsToConvert(): { assets: Shared.Asset.AssetId[]; totalAssetsToC
 
 async function _startConversion(id: Shared.Asset.AssetId): Promise<string | undefined> {
     const asset = AssetRepositorySystem.getAssetFromId(id);
-    const previousState = _getState(id);
     if (!asset) {
         _setState(id, Shared.Conversion.State.Unknown);
         return undefined;
     }
 
-    if (!_isConvertible(asset?.def)) {
+    const previousState = _getState(id);
+    const force = previousState === Shared.Conversion.State.PendingForced;
+    if (!force && !_shouldAutoConvert(asset)) {
+        _setState(id, Shared.Conversion.State.NoChange);
+        return undefined;
+    }
+
+    if (!_isConvertible(asset.def)) {
         return undefined;
     }
 
@@ -164,12 +180,10 @@ async function _startConversion(id: Shared.Asset.AssetId): Promise<string | unde
     ConversionEventSystem.pushNewEvent(asset.def.id, startTime, previousState);
     _setState(id, Shared.Conversion.State.InProgress);
 
-    if (!_isValidAsset(asset.def) || !_doContentFilesExist(asset.def)) {
+    if (!_isValidAsset(asset.def) || !_areContentFilesValid(asset.def)) {
         _setState(id, Shared.Conversion.State.Invalid);
         return undefined;
     }
-
-    const force = previousState === Shared.Conversion.State.PendingForced;
 
     if (!force) {
         // The purpose of checksums is to avoid unnecessary conversions when the file was touched without contents changing
@@ -230,9 +244,25 @@ function _isConvertible(asset: Shared.Asset.AssetDef): boolean {
     return false;
 }
 
-function _doContentFilesExist(asset: Shared.Asset.AssetDef): boolean {
-    if (asset.contentFiles === undefined) return false;
-    for (const c of asset.contentFiles) {
+function _areContentFilesValid(assetDef: Shared.Asset.AssetDef): boolean {
+    if (assetDef.type === Shared.Asset.Types.Texture) {
+        return _doAllContentFilesExist(assetDef);
+    }
+
+    // only check if the qc file exists for models. let studiomdl find out if the asset is correct
+    if (Shared.Asset.isModelAssetDef(assetDef)) {
+        const qcFile = ModelConverter.getQcFile(assetDef);
+        if (!qcFile) return false;
+        const fullQcFile = pathe.join(ConfigSystem.getAppConfig().contentPath, qcFile);
+        return existsSync(fullQcFile);
+    }
+
+    return true;
+}
+
+function _doAllContentFilesExist(assetDef: Shared.Asset.AssetDef): boolean {
+    if (assetDef.contentFiles === undefined) return false;
+    for (const c of assetDef.contentFiles) {
         const absPath = makeContentPathAbsolute(c);
         if (!existsSync(absPath)) return false;
     }
