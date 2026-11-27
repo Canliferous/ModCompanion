@@ -25,6 +25,8 @@ async function _buildAssets(
                 asset = await _scanContentFile(filePath);
             } else if (filePath.path.startsWith("game")) {
                 asset = await _scanGameFile(filePath);
+            } else if (filePath.path.startsWith("momentum")) {
+                asset = await _scanGameFile(filePath);
             }
 
             if (!asset) continue;
