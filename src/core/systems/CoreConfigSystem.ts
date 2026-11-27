@@ -81,27 +81,27 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
     return {
         gameName: c.searchPath,
         rootPath: root,
-        contentPath: pathe.join(root, "content", c.searchPath),
-        gamePath: pathe.join(root, "game", c.searchPath),
-        gameRootPath: pathe.join(root, "game"),
+        contentPath: pathe.join(root, c.searchPath),
+        gamePath: pathe.join(root, c.searchPath),
+        gameRootPath: pathe.join(root),
 
-        textureSourcePath: pathe.join(root, "content", c.searchPath, "materialsrc"),
-        textureOutputPath: pathe.join(root, "game", c.searchPath, "materials"),
-        modelSourcePath: pathe.join(root, "content", c.searchPath, "models"),
-        modelOutputPath: pathe.join(root, "game", c.searchPath, "models"),
-        mapSourcePath: pathe.join(root, "content", c.searchPath, "maps"),
-        mapOutputPath: pathe.join(root, "game", c.searchPath, "maps"),
-        scriptsPath: pathe.join(root, "game", c.searchPath, "scripts"),
+        textureSourcePath: pathe.join(root, c.searchPath, "materialsrc"),
+        textureOutputPath: pathe.join(root, c.searchPath, "materials"),
+        modelSourcePath: pathe.join(root, c.searchPath, "modelsrc"),
+        modelOutputPath: pathe.join(root, c.searchPath, "models"),
+        mapSourcePath: pathe.join(root, c.searchPath, "maps"),
+        mapOutputPath: pathe.join(root, c.searchPath, "maps"),
+        scriptsPath: pathe.join(root, c.searchPath, "scripts"),
 
         studioMdlPath: _buildBinaryPath(root, "studiomdl"),
         hlmvPath: _buildBinaryPath(root, "hlmv", true),
         hammerPath: _buildBinaryPath(root, "hammer", true),
         faceposerPath: _buildBinaryPath(root, "hlfaceposer", true),
         mdlInfoPath: _buildBinaryPath(root, "mdlinfo"),
-        gameExePath: _buildBinaryPath(root, c.launcherName ?? "revolution"),
+        gameExePath: _buildBinaryPath(root, c.launcherName ?? "momentum"),
 
         vbspExePath: _buildBinaryPath(root, "vbsp"),
-        postcompilerExePath: pathe.join(root, "game/bin/win64/postcompiler/postcompiler.exe"),
+        postcompilerExePath: pathe.join(root, "bin/win64/postcompiler/postcompiler.exe"),
         vvisExePath: _buildBinaryPath(root, "vvis"),
         vradExePath: _buildBinaryPath(root, "vrad"),
 
@@ -127,11 +127,11 @@ function _createConfig(c: ProjectConfigFile, cfgPath: string): Shared.AppConfig.
 function _buildBinaryPath(root: string, binaryName: string, proton?: boolean): string {
     const platform = os.platform();
     if (platform === "linux" && !proton) {
-        return pathe.join(root, "game/bin/linux64", binaryName);
+        return pathe.join(root, "bin/linux64", binaryName);
     }
 
     if (platform === "win32" || proton) {
-        return pathe.join(root, "game/bin/win64", binaryName + ".exe");
+        return pathe.join(root, "bin/win64", binaryName + ".exe");
     }
 
     return pathe.join(root, binaryName);
@@ -205,5 +205,5 @@ async function _loadProjectConfig(): Promise<{ cfg: ProjectConfigFile; cfgPath: 
 
 function _transformAssetContentIncludePaths(paths: string[] | undefined, searchPath: string): string[] | undefined {
     if (paths === undefined) return undefined;
-    return paths.map((p) => pathe.join("content", searchPath, p));
+    return paths.map((p) => pathe.join(searchPath, p));
 }

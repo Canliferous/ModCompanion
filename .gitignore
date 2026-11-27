@@ -41,3 +41,4 @@ build
 auto-imports.d.ts
 components.d.ts
 appconfig.json
+projectconfig.json
