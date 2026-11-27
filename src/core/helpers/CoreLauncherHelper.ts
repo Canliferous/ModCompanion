@@ -13,9 +13,9 @@ export function runLauncher(type: Shared.Launchers.Launchers, args?: string) {
 
     const workingDir = ConfigSystem.getAppConfig().gameRootPath;
 
-    let cmd = exe;
+    let cmd = `"${exe}"`;
     if (args) {
-        cmd = `${exe} ${args}`;
+        cmd = `"${exe}" "${args}"`;
     }
 
     if (_isWine(exe) && os.platform() === "linux") {
