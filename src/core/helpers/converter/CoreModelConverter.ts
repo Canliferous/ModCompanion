@@ -19,7 +19,7 @@ export const ModelConverter = {
     },
     async createMdl(qcPath: string): Promise<string> {
         const config = ConfigSystem.getAppConfig();
-        const cmd = `${config.studioMdlPath} -game ${config.gamePath} ${qcPath}`;
+        const cmd = `"${config.studioMdlPath}" -game "${config.gamePath}" "${qcPath}"`;
 
         return runConverter(cmd, config.gamePath, "StudioMDL");
     },

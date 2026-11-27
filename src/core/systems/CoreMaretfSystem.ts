@@ -88,12 +88,12 @@ export const MareTfSystem = {
 };
 
 function _runMaretfInfo(inputPath: string): Promise<string> {
-    const cmd = `${binary} info --verbose --info-output-mode=kv1 ${inputPath}`;
+    const cmd = `"${binary}" info --verbose --info-output-mode=kv1 "${inputPath}"`;
     return runProcess(cmd, "MareTF Info");
 }
 
 function _runMaretfExtract(inputPath: string): Promise<string> {
-    const cmd = `${binary} extract --extract-stdout ${inputPath}`;
+    const cmd = `"${binary}" extract --extract-stdout "${inputPath}"`;
     return runProcess(cmd, "MareTF Extract");
 }
 
@@ -103,6 +103,6 @@ function _buildMateTfCreateCommand(
     options: Shared.Vtf.SharedVtfCreateOptions,
 ): string {
     const args = Shared.Vtf.buildMareTfCreateArgs(options);
-    const cmd = `${binary} -y create ${inputPath} -o ${outputPath} ${args}`;
+    const cmd = `"${binary}" -y create "${inputPath}" -o "${outputPath}" ${args}`;
     return cmd;
 }
