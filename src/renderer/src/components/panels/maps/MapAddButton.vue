@@ -14,7 +14,7 @@ import { useAsyncState } from "@vueuse/core";
 
 const listStore = useMapListStore();
 
-const mapFileEntries = useAsyncState(window.electronAPI.fileBrowser.listFiles("content/revolution/maps"), {
+const mapFileEntries = useAsyncState(window.electronAPI.fileBrowser.listFiles("momentum/maps"), {
     valid: false,
     entries: [],
 });
